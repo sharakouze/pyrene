@@ -8,7 +8,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{e36c2f27-7cb3-4daf-bd1d-05e4a5172e5d}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql100DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
@@ -23,6 +23,7 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
+    <GenerateCreateScript>True</GenerateCreateScript>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -34,6 +35,7 @@
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <SqlTargetName>Tmpi_Pyrene_Database</SqlTargetName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -46,6 +48,7 @@
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <SqlTargetName>Tmpi_Pyrene_Database</SqlTargetName>
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
@@ -65,13 +68,14 @@
     <Folder Include="Scripts\Merge" />
     <Folder Include="Security" />
     <Folder Include="Security\Schemas" />
+    <Folder Include="Stock" />
+    <Folder Include="Stock\Tables" />
+    <Folder Include="Budget" />
+    <Folder Include="Budget\Tables" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Core\Tables\Compteur.sql" />
     <Build Include="Core\Tables\CompteurValeur.sql" />
-    <Build Include="Core\Tables\Exercice.sql" />
-    <Build Include="Core\Tables\Fourn.sql" />
-    <Build Include="Core\Tables\FournBanque.sql" />
     <Build Include="Core\Tables\Mandat.sql" />
     <Build Include="Core\Tables\MandatMandataire.sql" />
     <Build Include="Core\Tables\Personne.sql" />
@@ -83,9 +87,22 @@
     <Build Include="Gmao\Tables\Atelier.sql" />
     <Build Include="Gmao\Tables\AtelierResponsable.sql" />
     <Build Include="Gmao\Tables\Equip.sql" />
-    <Build Include="Scripts\Merge\Script1.sql" />
-    <Build Include="Scripts\Merge\Script2.sql" />
+    <None Include="Scripts\Merge\Script_0_00.sql" />
+    <None Include="Scripts\Merge\Script_0_04.sql" />
     <Build Include="Security\Schemas\Core.sql" />
     <Build Include="Security\Schemas\Gmao.sql" />
+    <Build Include="Stock\Tables\Fourn.sql" />
+    <Build Include="Stock\Tables\FournBanque.sql" />
+    <Build Include="Security\Schemas\Stock.sql" />
+    <Build Include="Core\Tables\Tiers.sql" />
+    <Build Include="Core\Tables\TiersContact.sql" />
+    <Build Include="Budget\Tables\Exercice.sql" />
+    <Build Include="Security\Schemas\Budget.sql" />
+    <Build Include="Stock\Tables\TVA.sql" />
+    <Build Include="Stock\Tables\FournContact.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Merge\Script_0_01.sql" />
+    <None Include="Scripts\Merge\Script_0_03.sql" />
   </ItemGroup>
 </Project>

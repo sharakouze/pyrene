@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[Equip]
+﻿CREATE TABLE [Gmao].[Equip]
 (
 	[CleEquip] INT NOT NULL IDENTITY, 
     [CodEquip] VARCHAR(100) NOT NULL, 

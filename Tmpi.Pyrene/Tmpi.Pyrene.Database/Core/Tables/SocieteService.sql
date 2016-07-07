@@ -7,13 +7,13 @@
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NOT NULL,
-    [IdExterne] VARCHAR(100) NULL,
+    [CodExterne] VARCHAR(100) NULL,
     [CleSecteur] INT NOT NULL,
     [AdrRue] VARCHAR(200) NULL,
     [AdrCode] VARCHAR(10) NULL,
     [AdrVille] VARCHAR(100) NULL,
     [NumTelep] VARCHAR(25) NULL,
-    [NumTelec] VARCHAR(25) NULL,
+    [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
     CONSTRAINT [PK_SocieteService] PRIMARY KEY ([CleService]),
     CONSTRAINT [UN_SocieteService_CodService] UNIQUE ([CodService]),
@@ -22,4 +22,8 @@
 
 GO
 
-CREATE INDEX [IX_SocieteService_CodService] ON [Core].[SocieteService] ([CodService]);
+CREATE INDEX [IX_SocieteService_LibService] ON [Core].[SocieteService] ([LibService]);
+
+GO
+
+CREATE INDEX [IX_SocieteService_CleSecteur] ON [Core].[SocieteService] ([CleSecteur]);

@@ -1,4 +1,4 @@
-﻿CREATE TABLE [Core].[Fourn]
+﻿CREATE TABLE [Stock].[Fourn]
 (
     [CleFourn] INT NOT NULL IDENTITY,
     [CodFourn] VARCHAR(100) NOT NULL,
@@ -7,7 +7,7 @@
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NOT NULL,
-    [IdExterne] VARCHAR(100) NULL,
+    [CodExterne] VARCHAR(100) NULL,
     [AdrRue] VARCHAR(200) NULL,
     [AdrCode] VARCHAR(10) NULL,
     [AdrVille] VARCHAR(100) NULL,
@@ -16,7 +16,6 @@
     [NumEmail] VARCHAR(100) NULL,
 	[CodCompta] VARCHAR(100) NULL,
     [NumClient] VARCHAR(100) NULL,
-    [NomContact] VARCHAR(100) NULL,
     [NumTVAIntra] VARCHAR(25) NULL,
     [MntFPort] DECIMAL(15,2) NULL,
 	[MntFPortGratuit] DECIMAL(15,2) NULL,
@@ -34,4 +33,4 @@
 
 GO
 
-CREATE INDEX [IX_Fourn_LibFourn] ON [Core].[Fourn] ([LibFourn]);
+CREATE INDEX [IX_Fourn_LibFourn] ON [Stock].[Fourn] ([LibFourn]);

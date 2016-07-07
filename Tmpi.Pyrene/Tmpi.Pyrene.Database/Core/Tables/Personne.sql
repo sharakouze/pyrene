@@ -1,14 +1,14 @@
 ﻿CREATE TABLE [Core].[Personne]
 (
 	[ClePersonne] INT NOT NULL IDENTITY,
-    [CodPersonne] VARCHAR(50) NOT NULL,
-    [PrePersonne] VARCHAR(50) NULL,
-    [NomPersonne] VARCHAR(50) NOT NULL,
+    [CodPersonne] VARCHAR(100) NOT NULL,
+    [PrePersonne] VARCHAR(100) NULL,
+    [NomPersonne] VARCHAR(100) NOT NULL,
     [TxtPersonne] VARCHAR(500) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NOT NULL,
-	[IdExterne] VARCHAR(100) NULL,
+	[CodExterne] VARCHAR(100) NULL,
     [TypGenre] TINYINT NULL,
     [NumTelep] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,

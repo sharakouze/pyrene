@@ -7,7 +7,7 @@
     [EstActif] BIT NOT NULL, 
     [DatCreation] DATETIME NOT NULL, 
     [DatModif] DATETIME NOT NULL,
-	[IdExterne] VARCHAR(100) NULL,
+	[CodExterne] VARCHAR(100) NULL,
 	CONSTRAINT [PK_Atelier] PRIMARY KEY ([CleAtelier]), 
     CONSTRAINT [UN_Atelier_CodAtelier] UNIQUE ([CodAtelier]),
 )

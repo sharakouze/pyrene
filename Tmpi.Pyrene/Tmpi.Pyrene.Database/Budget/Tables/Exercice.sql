@@ -1,13 +1,13 @@
-﻿CREATE TABLE [Core].[Exercice]
+﻿CREATE TABLE [Budget].[Exercice]
 (
     [CleExercice] INT NOT NULL IDENTITY,
     [CodExercice] VARCHAR(100)  NOT NULL,
     [LibExercice] VARCHAR(200) NOT NULL,
     [TxtExercice] VARCHAR(500) NULL,
+    [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NOT NULL,
-    [IdExterne] VARCHAR(100) NULL,
-    [NivExercice] TINYINT NOT NULL,
+    [CodExterne] VARCHAR(100) NULL,
     [DatDebut] DATETIME NOT NULL,
     [DatFin] DATETIME NOT NULL,
     CONSTRAINT [PK_Exercice] PRIMARY KEY ([CleExercice]), 
@@ -16,4 +16,4 @@
 
 GO
 
-CREATE INDEX [IX_Exercice_LibExercice] ON [Core].[Exercice] ([LibExercice]);
+CREATE INDEX [IX_Exercice_LibExercice] ON [Budget].[Exercice] ([LibExercice]);

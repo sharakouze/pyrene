@@ -1,13 +1,13 @@
-﻿
+﻿/* REMARQUES :
+*/
+
 set xact_abort on;
 
+GO
 
-
-
-
-
-
-
+--
+-- ATELIERS et RESPONSABLES
+--
 
 begin transaction;
 
@@ -16,9 +16,9 @@ set identity_insert [Gmao].[Atelier] on;
 merge into [Gmao].[Atelier] as target
 using (
 	select CleAtelier,
-		ltrim(rtrim(CodAtelier)) as CodAtelier,
-		ltrim(rtrim(LibAtelier)) as LibAtelier,
-		ltrim(rtrim(TxtAtelier)) as TxtAtelier,
+		CodAtelier,
+		LibAtelier,
+		TxtAtelier,
 		1 as EstActif,
 		DatSaisie as DatCreation,
 		DatSaisie as DatModif
@@ -32,6 +32,10 @@ then -- insert new rows
 	values (CleAtelier, CodAtelier, LibAtelier, TxtAtelier, EstActif, DatCreation, DatModif);
 	
 set identity_insert [Gmao].[Atelier] off;
+
+commit transaction;
+
+begin transaction;
 
 merge into [Gmao].[AtelierResponsable] as target
 using (
@@ -47,3 +51,14 @@ then -- insert new rows
 	values (CleAtelier, ClePersonne);
 
 commit transaction;
+
+GO
+
+--
+-- EQUIPEMENTS
+--
+
+begin transaction;
+commit transaction;
+
+GO
