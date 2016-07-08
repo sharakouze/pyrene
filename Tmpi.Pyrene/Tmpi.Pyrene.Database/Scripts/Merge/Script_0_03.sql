@@ -13,9 +13,9 @@ GO
 
 begin transaction;
 
-set identity_insert [Budget].[Exercice] on;
+set identity_insert [BUD].[Exercice] on;
 
-merge into [Budget].[Exercice] as target
+merge into [BUD].[Exercice] as target
 using (
 	select CleExercice,
 		CodExercice,
@@ -43,7 +43,7 @@ then -- insert new rows
 	values (CleExercice, CodExercice, LibExercice, TxtExercice, EstActif, DatCreation, DatModif, CodExterne,
 		DatDebut, DatFin);
 	
-set identity_insert [Budget].[Exercice] off;
+set identity_insert [BUD].[Exercice] off;
 
 commit transaction;
 

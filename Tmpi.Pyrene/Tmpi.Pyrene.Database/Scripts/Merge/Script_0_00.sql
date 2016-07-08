@@ -19,41 +19,42 @@ GO
 
 begin transaction;
 
-set identity_insert [Core].[Societe] on;
+set identity_insert [GEN].[Societe] on;
 
-merge into [Core].[Societe] as target
+merge into [GEN].[Societe] as target
 using (
-	select CleSociete,
-		CodSociete,
-		LibSociete,
-		TxtSociete,
-		EstActif,
-		DatCreation,
-		coalesce(DatModif,DatCreation) as DatModif,
-		CleExterne as CodExterne,
-		AdrRue,
-		AdrCode,
-		AdrVille,
-		NumTelep,
-		NumTelec as NumFax,
-		NumEmail
-	from [SA_TMPI].[Gen_SocSociete]
-	where CleSociete>0
+	select S.CleSociete,
+		S.CodSociete,
+		S.LibSociete,
+		S.TxtSociete,
+		S.EstActif,
+		S.DatCreation,
+		coalesce(S.DatModif,S.DatCreation) as DatModif,
+		S.CleExterne as CodExterne,
+		S.AdrRue,
+		S.AdrCode,
+		S.AdrVille,
+		P.LibPays as AdrPays,
+		S.NumTelep,
+		S.NumTelec as NumFax,
+		S.NumEmail
+	from [SA_TMPI].[Gen_SocSociete] S left join [SA_TMPI].[Gen_Pays] P on S.ClePays=P.ClePays
+	where S.CleSociete>0
 ) as source
 on (target.CleSociete=source.CleSociete)
 when not matched by target
 then -- insert new rows
 	insert (CleSociete, CodSociete, LibSociete, TxtSociete, EstActif, DatCreation, DatModif, CodExterne,
-		AdrRue, AdrCode, AdrVille, NumTelep, NumFax, NumEmail)
+		AdrRue, AdrCode, AdrVille, AdrPays, NumTelep, NumFax, NumEmail)
 	values (CleSociete, CodSociete, LibSociete, TxtSociete, EstActif, DatCreation, DatModif, CodExterne,
-		AdrRue, AdrCode, AdrVille, NumTelep, NumFax, NumEmail);
-	
-set identity_insert [Core].[Societe] off;
+		AdrRue, AdrCode, AdrVille, AdrPays, NumTelep, NumFax, NumEmail);
+
+set identity_insert [GEN].[Societe] off;
 
 -- ajout société par défaut si la table est vide pour des raisons d'intégrité des données
-if not exists (select * from [Core].[Societe])
+if not exists (select * from [GEN].[Societe])
 begin
-	insert into [Core].[Societe] (CodSociete, LibSociete, EstActif, DatCreation, DatModif)
+	insert into [GEN].[Societe] (CodSociete, LibSociete, EstActif, DatCreation, DatModif)
 	values ('SOC', 'Société par défaut', 1, GETDATE(), GETDATE());
 end;
 
@@ -62,11 +63,11 @@ commit transaction;
 begin transaction;
 
 declare @w_CleSocieteDef int;
-select @w_CleSocieteDef=min(CleSociete) from [Core].[Societe];
+select @w_CleSocieteDef=min(CleSociete) from [GEN].[Societe];
 
-set identity_insert [Core].[SocieteSecteur] on;
+set identity_insert [GEN].[SocieteSecteur] on;
 
-merge into [Core].[SocieteSecteur] as target
+merge into [GEN].[SocieteSecteur] as target
 using (
 	select CleSecteur,
 		CodSecteur,
@@ -80,6 +81,7 @@ using (
 		AdrRue,
 		AdrCode,
 		AdrVille,
+		null as AdrPays,
 		NumTelep,
 		NumTelec as NumFax,
 		NumEmail
@@ -90,16 +92,16 @@ on (target.CleSecteur=source.CleSecteur)
 when not matched by target
 then -- insert new rows
 	insert (CleSecteur, CodSecteur, LibSecteur, TxtSecteur, EstActif, DatCreation, DatModif, CodExterne,
-		CleSociete, AdrRue, AdrCode, AdrVille, NumTelep, NumFax, NumEmail)
+		CleSociete, AdrRue, AdrCode, AdrVille, AdrPays, NumTelep, NumFax, NumEmail)
 	values (CleSecteur, CodSecteur, LibSecteur, TxtSecteur, EstActif, DatCreation, DatModif, CodExterne,
-		CleSociete, AdrRue, AdrCode, AdrVille, NumTelep, NumFax, NumEmail);
+		CleSociete, AdrRue, AdrCode, AdrVille, AdrPays, NumTelep, NumFax, NumEmail);
 	
-set identity_insert [Core].[SocieteSecteur] off;
+set identity_insert [GEN].[SocieteSecteur] off;
 
 -- ajout secteur par défaut si la table est vide pour des raisons d'intégrité des données
-if not exists (select * from [Core].[SocieteSecteur])
+if not exists (select * from [GEN].[SocieteSecteur])
 begin
-	insert into [Core].[SocieteSecteur] (CodSecteur, LibSecteur, EstActif, DatCreation, DatModif, CleSociete)
+	insert into [GEN].[SocieteSecteur] (CodSecteur, LibSecteur, EstActif, DatCreation, DatModif, CleSociete)
 	values ('SEC', 'Secteur par défaut', 1, GETDATE(), GETDATE(), @w_CleSocieteDef);
 end;
 
@@ -108,11 +110,11 @@ commit transaction;
 begin transaction;
 
 declare @w_CleSecteurDef int;
-select @w_CleSecteurDef=min(CleSecteur) from [Core].[SocieteSecteur];
+select @w_CleSecteurDef=min(CleSecteur) from [GEN].[SocieteSecteur];
 
-set identity_insert [Core].[SocieteService] on;
+set identity_insert [GEN].[SocieteService] on;
 
-merge into [Core].[SocieteService] as target
+merge into [GEN].[SocieteService] as target
 using (
 	select CleService,
 		CodService,
@@ -126,6 +128,7 @@ using (
 		AdrRue,
 		AdrCode,
 		AdrVille,
+		null as AdrPays,
 		NumTelep,
 		NumTelec as NumFax,
 		NumEmail
@@ -136,11 +139,11 @@ on (target.CleService=source.CleService)
 when not matched by target
 then -- insert new rows
 	insert (CleService, CodService, LibService, TxtService, EstActif, DatCreation, DatModif, CodExterne,
-		CleSecteur, AdrRue, AdrCode, AdrVille, NumTelep, NumFax, NumEmail)
+		CleSecteur, AdrRue, AdrCode, AdrVille, AdrPays, NumTelep, NumFax, NumEmail)
 	values (CleService, CodService, LibService, TxtService, EstActif, DatCreation, DatModif, CodExterne,
-		CleSecteur, AdrRue, AdrCode, AdrVille, NumTelep, NumFax, NumEmail);
+		CleSecteur, AdrRue, AdrCode, AdrVille, AdrPays, NumTelep, NumFax, NumEmail);
 	
-set identity_insert [Core].[SocieteService] off;
+set identity_insert [GEN].[SocieteService] off;
 
 commit transaction;
 
@@ -152,9 +155,9 @@ GO
 
 begin transaction;
 
-set identity_insert [Core].[Personne] on;
+set identity_insert [GEN].[Personne] on;
 
-merge into [Core].[Personne] as target
+merge into [GEN].[Personne] as target
 using (
 	select ClePersonne,
 		CodPersonne,
@@ -179,13 +182,13 @@ then -- insert new rows
 	values (ClePersonne, CodPersonne, PrePersonne, NomPersonne, TxtPersonne, EstActif, DatCreation, DatModif, CodExterne,
 		TypGenre, NumTelep, NumEmail);
 	
-set identity_insert [Core].[Personne] off;
+set identity_insert [GEN].[Personne] off;
 
 commit transaction;
 
 begin transaction;
 
-merge into [Core].[PersonneSignature] as target
+merge into [GEN].[PersonneSignature] as target
 using (
 	select ClePersonne,
 		ImgPersonne as ImgSignature,
@@ -207,9 +210,9 @@ commit transaction;
 
 begin transaction;
 
-set identity_insert [Core].[PersonneProfil] on;
+set identity_insert [GEN].[PersonneProfil] on;
 
-merge into [Core].[PersonneProfil] as target
+merge into [GEN].[PersonneProfil] as target
 using (
 	select ClePersonneProfil as CleProfil,
 		ClePersonne,
@@ -226,7 +229,7 @@ then -- insert new rows
 	insert (CleProfil, ClePersonne, CodProfil, CleSociete, CleSecteur, CleService)
 	values (CleProfil, ClePersonne, CodProfil, CleSociete, CleSecteur, CleService);
 	
-set identity_insert [Core].[PersonneProfil] off;
+set identity_insert [GEN].[PersonneProfil] off;
 
 commit transaction;
 
@@ -238,9 +241,9 @@ GO
 
 begin transaction;
 
-set identity_insert [Core].[Compteur] on;
+set identity_insert [GEN].[Compteur] on;
 
-merge into [Core].[Compteur] as target
+merge into [GEN].[Compteur] as target
 using (
 	select N.CleMNumero as CleCompteur, 
 		N.CodMNumero as CodCompteur, 
@@ -276,19 +279,19 @@ then -- insert new rows
 		TypCompteur, CleSociete, CleSecteur, CleService, TypPeriodicite, 
 		ValPrefixe1, ValFormatDate1, ValPrefixe2, NbrDigit, ValSuffixe1, ValFormatDate2, ValSuffixe2, LstFormatMois);
 	
-set identity_insert [Core].[Compteur] off;
+set identity_insert [GEN].[Compteur] off;
 
 -- mise à jour eventuelle de CleSociete
 update CPT
 set CPT.CleSociete=SEC.CleSociete
-from [Core].[Compteur] CPT inner join [Core].[SocieteSecteur] SEC on CPT.CleSecteur=SEC.CleSecteur
+from [GEN].[Compteur] CPT inner join [GEN].[SocieteSecteur] SEC on CPT.CleSecteur=SEC.CleSecteur
 where CPT.CleSociete is null and CPT.CleSecteur is not null;
 
 commit transaction;
 
 begin transaction;
 
-merge into [Core].[CompteurValeur] as target
+merge into [GEN].[CompteurValeur] as target
 using (
 	select N.CleMNumero as CleCompteur,
 		V.CodPeriode as ValPeriode,
@@ -312,9 +315,9 @@ GO
 
 begin transaction;
 
-set identity_insert [Core].[Mandat] on;
+set identity_insert [GEN].[Mandat] on;
 
-merge into [Core].[Mandat] as target
+merge into [GEN].[Mandat] as target
 using (
 	select CleMandat,
 		CodMandat,
@@ -339,15 +342,15 @@ then -- insert new rows
 	values (CleMandat, CodMandat, LibMandat, TxtMandat, EstActif, DatCreation, DatModif, CodExterne,
 		TypMandat, NivMandat, NbrSignature, TxtMessage);
 	
-set identity_insert [Core].[Mandat] off;
+set identity_insert [GEN].[Mandat] off;
 
 commit transaction;
 
 begin transaction;
 
-set identity_insert [Core].[MandatMandataire] on;
+set identity_insert [GEN].[MandatMandataire] on;
 
-merge into [Core].[MandatMandataire] as target
+merge into [GEN].[MandatMandataire] as target
 using (
 	select CleMdtMandataire as CleMandataire,
 		CleMandat,
@@ -365,7 +368,7 @@ then -- insert new rows
 	insert (CleMandataire, CleMandat, ClePersonne, CleSociete, CleSecteur, CleService, EstSuspendu)
 	values (CleMandataire, CleMandat, ClePersonne, CleSociete, CleSecteur, CleService, EstSuspendu);
 	
-set identity_insert [Core].[MandatMandataire] off;
+set identity_insert [GEN].[MandatMandataire] off;
 
 commit transaction;
 
@@ -379,6 +382,49 @@ begin transaction;
 commit transaction;
 
 begin transaction;
+
+set identity_insert [GEN].[TiersContact] on;
+
+merge into [GEN].[TiersContact] as target
+using (
+	select C.CleContact, 
+		C.CleTiers, 
+		C.NomContact, 
+		C.TxtContact, 
+		C.NumTelep, 
+		C.NumEmail, 
+		nullif(C.CleGenre,0) as TypGenre, 
+		F.CodFonction
+	from [SA_TMPI].[Gen_TrsContact] C left join [SA_TMPI].[Gen_Trs_Fonction] F on C.CleFonction=F.CleFonction
+	where C.CleTiers>0
+) as source
+on (target.CleContact=source.CleContact)
+when not matched by target
+then -- insert new rows
+	insert (CleContact, CleTiers, NomContact, TxtContact, NumTelep, NumEmail, TypGenre, CodFonction)
+	values (CleContact, CleTiers, NomContact, TxtContact, NumTelep, NumEmail, TypGenre, CodFonction);
+	
+set identity_insert [GEN].[TiersContact] off;
+
+merge into [GEN].[TiersContact] as target
+using (
+	select CleTiers, 
+		NomContact, 
+		null as TxtContact, 
+		null as NumTelep, 
+		null as NumEmail, 
+		null as TypGenre, 
+		null as CodFonction
+	from [SA_TMPI].[Gen_TrsTiers]
+	where CleTiers>0
+		and NomContact is not null
+) as source
+on (target.CleTiers=source.CleTiers and target.NomContact=source.NomContact)
+when not matched by target
+then -- insert new rows
+	insert (CleTiers, NomContact, TxtContact, NumTelep, NumEmail, TypGenre, CodFonction)
+	values (CleTiers, NomContact, TxtContact, NumTelep, NumEmail, TypGenre, CodFonction);
+
 commit transaction;
 
 GO
