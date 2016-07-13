@@ -28,7 +28,6 @@
 
 namespace Tmpi.Pyrene.Core.Models.Entities
 {
-    using Tmpi.Pyrene.Core.Models.Enums;
 
 }
 // </auto-generated>

@@ -1,4 +1,4 @@
-﻿namespace Tmpi.Pyrene.Core.Models.Enums
+﻿namespace Tmpi.Pyrene.Core.Models.Entities
 {
     public enum TypGenre : byte
     {
