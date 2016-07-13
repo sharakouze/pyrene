@@ -12,6 +12,7 @@
 
 namespace Tmpi.Pyrene.Core.Models.Entities
 {
+    using Tmpi.Pyrene.Core.Models.Enums;
 
     // Mandat
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.21.1.0")]
@@ -25,7 +26,7 @@ namespace Tmpi.Pyrene.Core.Models.Entities
         public System.DateTime DatCreation { get; set; } // DatCreation
         public System.DateTime DatModif { get; set; } // DatModif
         public string CodExterne { get; set; } // CodExterne (length: 100)
-        public byte TypMandat { get; set; } // TypMandat
+        public TypMandat TypMandat { get; set; } // TypMandat
         public byte NivMandat { get; set; } // NivMandat
         public byte NbrSignature { get; set; } // NbrSignature
         public string TxtMessage { get; set; } // TxtMessage

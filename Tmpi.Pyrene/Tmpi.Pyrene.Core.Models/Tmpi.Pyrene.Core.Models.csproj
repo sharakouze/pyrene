@@ -87,6 +87,10 @@
     <Compile Include="Entities\SocieteService.cs">
       <DependentUpon>CoreDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Enums\TypMandat.cs" />
+    <Compile Include="Enums\TypGenre.cs" />
+    <Compile Include="Enums\TypPeriodicite.cs" />
+    <Compile Include="Enums\TypCompteur.cs" />
     <Compile Include="Messages\Requests\SelectSociete.cs" />
     <Compile Include="Messages\Responses\SelectSocieteResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -97,9 +101,7 @@
     <None Include="Entities\EF.Reverse.POCO.ttinclude" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Enums\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Entities\CoreDatabase.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

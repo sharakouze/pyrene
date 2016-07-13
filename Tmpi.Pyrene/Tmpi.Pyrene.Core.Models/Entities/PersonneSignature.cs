@@ -12,6 +12,7 @@
 
 namespace Tmpi.Pyrene.Core.Models.Entities
 {
+    using Tmpi.Pyrene.Core.Models.Enums;
 
     // PersonneSignature
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.21.1.0")]

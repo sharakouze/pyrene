@@ -32,7 +32,7 @@
     NullableShortHand = true; //true => T?, false => Nullable<T>
     AddUnitTestingDbContext = true; // Will add a FakeDbContext and FakeDbSet for easy unit testing
     IncludeQueryTraceOn9481Flag = false; // If SqlServer 2014 appears frozen / take a long time when this file is saved, try setting this to true (you will also need elevated privileges).
-    AdditionalNamespaces = new[] { "" };  // To include extra namespaces, include them here. i.e. "Microsoft.AspNet.Identity.EntityFramework"
+    AdditionalNamespaces = new[] { "Tmpi.Pyrene.Core.Models.Enums" };  // To include extra namespaces, include them here. i.e. "Microsoft.AspNet.Identity.EntityFramework"
     AdditionalContextInterfaceItems = new[] // To include extra db context interface items, include them here. Also set MakeClassesPartial=true, and implement the partial DbContext class functions.
     {
         ""  //  example: "void SetAutoDetectChangesEnabled(bool flag);"
@@ -171,6 +171,10 @@
     // As long as the type can be mapped to your new type, all is well.
     //EnumsDefinitions.Add(new EnumDefinition { Schema = "dbo", Table = "match_table_name", Column = "match_column_name", EnumType = "name_of_enum" });
     //EnumsDefinitions.Add(new EnumDefinition { Schema = "dbo", Table = "OrderHeader", Column = "OrderStatus", EnumType = "OrderStatusType" }); // This will replace OrderHeader.OrderStatus type to be an OrderStatusType enum
+	EnumsDefinitions.Add(new EnumDefinition { Schema = "CORE", Table = "Compteur", Column = "TypCompteur", EnumType = "TypCompteur" });
+	EnumsDefinitions.Add(new EnumDefinition { Schema = "CORE", Table = "Compteur", Column = "TypPeriodicite", EnumType = "TypPeriodicite" });
+	EnumsDefinitions.Add(new EnumDefinition { Schema = "CORE", Table = "Mandat", Column = "TypMandat", EnumType = "TypMandat" });
+	EnumsDefinitions.Add(new EnumDefinition { Schema = "CORE", Table = "Personne", Column = "TypGenre", EnumType = "TypGenre" });
 
     // Use the following function if you need to apply additional modifications to a column
     // eg. normalise names etc.

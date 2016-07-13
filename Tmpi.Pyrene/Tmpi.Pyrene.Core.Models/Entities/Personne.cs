@@ -12,6 +12,7 @@
 
 namespace Tmpi.Pyrene.Core.Models.Entities
 {
+    using Tmpi.Pyrene.Core.Models.Enums;
 
     // Personne
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.21.1.0")]
@@ -26,7 +27,7 @@ namespace Tmpi.Pyrene.Core.Models.Entities
         public System.DateTime DatCreation { get; set; } // DatCreation
         public System.DateTime DatModif { get; set; } // DatModif
         public string CodExterne { get; set; } // CodExterne (length: 100)
-        public byte? TypGenre { get; set; } // TypGenre
+        public TypGenre? TypGenre { get; set; } // TypGenre
         public string NumTelep { get; set; } // NumTelep (length: 25)
         public string NumEmail { get; set; } // NumEmail (length: 100)
 
