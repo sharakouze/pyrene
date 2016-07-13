@@ -28,7 +28,7 @@
     [CleProprietaire] INT NULL,
     CONSTRAINT [PK_Fourn] PRIMARY KEY ([CleFourn]),
     CONSTRAINT [UN_Fourn_CodFourn] UNIQUE ([CodFourn]), 
-    CONSTRAINT [FK_Fourn_CleProprietaire] FOREIGN KEY ([CleProprietaire]) REFERENCES [GEN].[Personne]([ClePersonne])
+    CONSTRAINT [FK_Fourn_CleProprietaire] FOREIGN KEY ([CleProprietaire]) REFERENCES [CORE].[Personne]([ClePersonne])
 );
 
 GO

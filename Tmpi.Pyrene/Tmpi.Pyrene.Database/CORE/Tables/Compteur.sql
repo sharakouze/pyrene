@@ -1,4 +1,4 @@
-﻿CREATE TABLE [GEN].[Compteur] (
+﻿CREATE TABLE [CORE].[Compteur] (
     [CleCompteur] INT NOT NULL IDENTITY,
     [CodCompteur] VARCHAR(100) NOT NULL,
     [LibCompteur] VARCHAR(200) NOT NULL,
@@ -23,12 +23,12 @@
     CONSTRAINT [PK_Compteur] PRIMARY KEY ([CleCompteur]),
     CONSTRAINT [UN_Compteur_CodCompteur] UNIQUE ([CodCompteur]),
     CONSTRAINT [UN_Compteur_TypCompteur] UNIQUE ([TypCompteur], [CleSociete], [CleSecteur], [CleService]),
-    CONSTRAINT [FK_Compteur_CleSociete] FOREIGN KEY ([CleSociete]) REFERENCES [GEN].[Societe] ([CleSociete]),
-    CONSTRAINT [FK_Compteur_CleSecteur] FOREIGN KEY ([CleSecteur]) REFERENCES [GEN].[SocieteSecteur] ([CleSecteur]),
-    CONSTRAINT [FK_Compteur_CleService] FOREIGN KEY ([CleService]) REFERENCES [GEN].[SocieteService] ([CleService]),
+    CONSTRAINT [FK_Compteur_CleSociete] FOREIGN KEY ([CleSociete]) REFERENCES [CORE].[Societe] ([CleSociete]),
+    CONSTRAINT [FK_Compteur_CleSecteur] FOREIGN KEY ([CleSecteur]) REFERENCES [CORE].[SocieteSecteur] ([CleSecteur]),
+    CONSTRAINT [FK_Compteur_CleService] FOREIGN KEY ([CleService]) REFERENCES [CORE].[SocieteService] ([CleService]),
 );
 
 
 GO
 
-CREATE INDEX [IX_Compteur_LibCompteur] ON [GEN].[Compteur] ([LibCompteur]);
+CREATE INDEX [IX_Compteur_LibCompteur] ON [CORE].[Compteur] ([LibCompteur]);

@@ -1,4 +1,4 @@
-﻿CREATE TABLE [GEN].[Personne]
+﻿CREATE TABLE [CORE].[Personne]
 (
 	[ClePersonne] INT NOT NULL IDENTITY,
     [CodPersonne] VARCHAR(100) NOT NULL,
@@ -18,4 +18,4 @@
 
 GO
 
-CREATE INDEX [IX_Personne_NomPersonne] ON [GEN].[Personne] ([NomPersonne]);
+CREATE INDEX [IX_Personne_NomPersonne] ON [CORE].[Personne] ([NomPersonne]);

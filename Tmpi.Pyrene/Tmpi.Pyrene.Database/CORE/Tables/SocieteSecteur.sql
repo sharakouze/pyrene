@@ -1,4 +1,4 @@
-﻿CREATE TABLE [GEN].[SocieteSecteur]
+﻿CREATE TABLE [CORE].[SocieteSecteur]
 (
     [CleSecteur] INT NOT NULL IDENTITY,
     [CodSecteur] VARCHAR(100)  NOT NULL,
@@ -18,13 +18,13 @@
     [NumEmail] VARCHAR(100) NULL,
     CONSTRAINT [PK_SocieteSecteur] PRIMARY KEY ([CleSecteur]),
     CONSTRAINT [UN_SocieteSecteur_CodSecteur] UNIQUE ([CodSecteur]),
-    CONSTRAINT [FK_SocieteSecteur_CleSociete] FOREIGN KEY ([CleSociete]) REFERENCES [GEN].[Societe] ([CleSociete]),
+    CONSTRAINT [FK_SocieteSecteur_CleSociete] FOREIGN KEY ([CleSociete]) REFERENCES [CORE].[Societe] ([CleSociete]),
 );
 
 GO
 
-CREATE INDEX [IX_SocieteSecteur_LibSecteur] ON [GEN].[SocieteSecteur] ([LibSecteur]);
+CREATE INDEX [IX_SocieteSecteur_LibSecteur] ON [CORE].[SocieteSecteur] ([LibSecteur]);
 
 GO
 
-CREATE INDEX [IX_SocieteSecteur_CleSociete] ON [GEN].[SocieteSecteur] ([CleSociete]);
+CREATE INDEX [IX_SocieteSecteur_CleSociete] ON [CORE].[SocieteSecteur] ([CleSociete]);

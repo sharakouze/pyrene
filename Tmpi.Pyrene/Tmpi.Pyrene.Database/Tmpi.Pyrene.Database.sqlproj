@@ -60,14 +60,12 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="GEN" />
-    <Folder Include="GEN\Tables" />
+    <Folder Include="CORE" />
+    <Folder Include="CORE\Tables" />
     <Folder Include="EQU" />
     <Folder Include="EQU\Tables" />
     <Folder Include="Scripts" />
     <Folder Include="Scripts\Merge" />
-    <Folder Include="Security" />
-    <Folder Include="Security\Schemas" />
     <Folder Include="STO" />
     <Folder Include="STO\Tables" />
     <Folder Include="BUD" />
@@ -76,36 +74,37 @@
     <Folder Include="TRS\Tables" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="GEN\Tables\Compteur.sql" />
-    <Build Include="GEN\Tables\CompteurValeur.sql" />
-    <Build Include="GEN\Tables\Mandat.sql" />
-    <Build Include="GEN\Tables\MandatMandataire.sql" />
-    <Build Include="GEN\Tables\Personne.sql" />
-    <Build Include="GEN\Tables\PersonneProfil.sql" />
-    <Build Include="GEN\Tables\PersonneSignature.sql" />
-    <Build Include="GEN\Tables\Societe.sql" />
-    <Build Include="GEN\Tables\SocieteSecteur.sql" />
-    <Build Include="GEN\Tables\SocieteService.sql" />
+    <Build Include="CORE\Tables\Compteur.sql" />
+    <Build Include="CORE\Tables\CompteurValeur.sql" />
+    <Build Include="CORE\Tables\Mandat.sql" />
+    <Build Include="CORE\Tables\MandatMandataire.sql" />
+    <Build Include="CORE\Tables\Personne.sql" />
+    <Build Include="CORE\Tables\PersonneProfil.sql" />
+    <Build Include="CORE\Tables\PersonneSignature.sql" />
+    <Build Include="CORE\Tables\Societe.sql" />
+    <Build Include="CORE\Tables\SocieteSecteur.sql" />
+    <Build Include="CORE\Tables\SocieteService.sql" />
     <Build Include="EQU\Tables\Atelier.sql" />
     <Build Include="EQU\Tables\AtelierResponsable.sql" />
     <Build Include="EQU\Tables\Equip.sql" />
     <None Include="Scripts\Merge\Script_0_00.sql" />
     <None Include="Scripts\Merge\Script_0_04.sql" />
-    <Build Include="Security\Schemas\GEN.sql" />
-    <Build Include="Security\Schemas\EQU.sql" />
     <Build Include="STO\Tables\Fourn.sql" />
     <Build Include="STO\Tables\FournBanque.sql" />
-    <Build Include="Security\Schemas\STO.sql" />
     <Build Include="BUD\Tables\Exercice.sql" />
-    <Build Include="Security\Schemas\BUD.sql" />
     <Build Include="STO\Tables\TVA.sql" />
     <Build Include="STO\Tables\FournContact.sql" />
     <Build Include="TRS\Tables\Tiers.sql" />
     <Build Include="TRS\Tables\TiersContact.sql" />
-    <Build Include="Security\Schemas\TRS.sql" />
+    <Build Include="BUD\BUD.sql" />
+    <Build Include="CORE\CORE.sql" />
+    <Build Include="EQU\EQU.sql" />
+    <Build Include="STO\STO.sql" />
+    <Build Include="TRS\TRS.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Merge\Script_0_01.sql" />
     <None Include="Scripts\Merge\Script_0_03.sql" />
+    <None Include="Tmpi.Pyrene.Database.publish.xml" />
   </ItemGroup>
 </Project>

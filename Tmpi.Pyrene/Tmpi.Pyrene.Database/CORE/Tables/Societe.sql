@@ -1,4 +1,4 @@
-﻿CREATE TABLE [GEN].[Societe]
+﻿CREATE TABLE [CORE].[Societe]
 (
 	[CleSociete] INT NOT NULL IDENTITY,
 	[CodSociete] VARCHAR(100)  NOT NULL,
@@ -21,4 +21,4 @@
 
 GO
 
-CREATE INDEX [IX_Societe_LibSociete] ON [GEN].[Societe] ([LibSociete]);
+CREATE INDEX [IX_Societe_LibSociete] ON [CORE].[Societe] ([LibSociete]);

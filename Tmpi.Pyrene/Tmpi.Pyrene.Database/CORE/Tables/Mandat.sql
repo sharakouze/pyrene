@@ -1,4 +1,4 @@
-﻿CREATE TABLE [GEN].[Mandat]
+﻿CREATE TABLE [CORE].[Mandat]
 (
     [CleMandat] INT NOT NULL IDENTITY,
     [CodMandat] VARCHAR(100) NOT NULL,
@@ -19,4 +19,4 @@
 
 GO
 
-CREATE INDEX [IX_Mandat_LibMandat] ON [GEN].[Mandat] ([LibMandat]);
+CREATE INDEX [IX_Mandat_LibMandat] ON [CORE].[Mandat] ([LibMandat]);
