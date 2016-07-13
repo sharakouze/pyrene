@@ -22,8 +22,12 @@ namespace Tmpi.Pyrene.Core.Models.Messages.Requests
         int TotalCount { get; set; }
     }
 
-    class SelectSociete
+    class SelectSociete : IPagingRequest
     {
-        
+        public int Skip { get; set; }
+
+        public string[] Sort { get; set; }
+
+        public int Take { get; set; }
     }
 }

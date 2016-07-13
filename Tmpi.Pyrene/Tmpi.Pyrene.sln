@@ -9,6 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.Core.Models", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{1C7D6E93-C9D3-48EA-8276-ED30514EE51C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.Core", "Tmpi.Pyrene.Core\Tmpi.Pyrene.Core.csproj", "{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{0EB21691-0EE0-423C-88AD-1D684D519DD1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{91D10F6A-08E0-4D35-B2EA-DC1F8AC11AD6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,11 +31,17 @@ Global
 		{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{E36C2F27-7CB3-4DAF-BD1D-05E4A5172E5D} = {91D10F6A-08E0-4D35-B2EA-DC1F8AC11AD6}
 		{E515A547-3E09-4F2E-B1F0-09D3E16FB36A} = {1C7D6E93-C9D3-48EA-8276-ED30514EE51C}
+		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768} = {0EB21691-0EE0-423C-88AD-1D684D519DD1}
 	EndGlobalSection
 EndGlobal
