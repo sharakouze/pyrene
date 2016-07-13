@@ -97,7 +97,9 @@
     <None Include="Entities\EF.Reverse.POCO.ttinclude" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Enums\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Entities\CoreDatabase.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

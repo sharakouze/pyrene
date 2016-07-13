@@ -47,6 +47,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -57,6 +58,53 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\CompteurConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CompteurValeurConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CoreContext.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CoreDatabase.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\FakeCoreContext.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\FakeDbSet.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ICoreContext.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\MandatConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\MandatMandataireConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\PersonneConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\PersonneProfilConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\PersonneSignatureConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\SocieteConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\SocieteSecteurConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\SocieteServiceConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -67,10 +115,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Data\EF.Reverse.POCO.Core.ttinclude" />
+    <None Include="Data\EF.Reverse.POCO.ttinclude" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Data\" />
+    <Content Include="Data\CoreDatabase.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CoreDatabase.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
