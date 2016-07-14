@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,8 +8,10 @@ using Tmpi.Pyrene.Core.Models.Entities;
 
 namespace Tmpi.Pyrene.Core.Models.Messages.Responses
 {
-    class SelectSocieteResponse
+    public class SelectSocieteResponse
     {
-        List<Societe> Result { get; set; }
+        public IList Result { get; set; }
+
+        public int TotalCount { get; set; }
     }
 }
