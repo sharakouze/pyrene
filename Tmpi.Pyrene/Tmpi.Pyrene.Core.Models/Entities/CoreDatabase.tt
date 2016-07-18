@@ -42,7 +42,7 @@
     // to use the data annotation [JsonIgnore] on reverse navigation and foreign keys.
     AdditionalReverseNavigationsDataAnnotations = new string[] // Data Annotations for ReverseNavigationProperty.
     {
-        "Newtonsoft.Json.JsonIgnore"
+        //"Newtonsoft.Json.JsonIgnore"
     };
     AdditionalForeignKeysDataAnnotations = new string[] // Data Annotations for ForeignKeys.
     {
