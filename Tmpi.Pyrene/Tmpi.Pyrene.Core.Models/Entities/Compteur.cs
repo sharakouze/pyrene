@@ -40,7 +40,6 @@ namespace Tmpi.Pyrene.Core.Models.Entities
         public string LstFormatMois { get; set; } // LstFormatMois (length: 500)
 
         // Reverse navigation
-        [Newtonsoft.Json.JsonIgnore]
         public virtual System.Collections.Generic.ICollection<CompteurValeur> CompteurValeur { get; set; } // Many to many mapping
 
         // Foreign keys

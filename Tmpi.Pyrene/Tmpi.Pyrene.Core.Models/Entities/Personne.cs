@@ -31,11 +31,8 @@ namespace Tmpi.Pyrene.Core.Models.Entities
         public string NumEmail { get; set; } // NumEmail (length: 100)
 
         // Reverse navigation
-        [Newtonsoft.Json.JsonIgnore]
         public virtual PersonneSignature PersonneSignature { get; set; } // PersonneSignature.FK_PersonneSignature_ClePersonne
-        [Newtonsoft.Json.JsonIgnore]
         public virtual System.Collections.Generic.ICollection<MandatMandataire> MandatMandataire { get; set; } // MandatMandataire.FK_MandatMandataire_ClePersonne
-        [Newtonsoft.Json.JsonIgnore]
         public virtual System.Collections.Generic.ICollection<PersonneProfil> PersonneProfil { get; set; } // PersonneProfil.FK_PersonneProfil_ClePersonne
 
         public Personne()
