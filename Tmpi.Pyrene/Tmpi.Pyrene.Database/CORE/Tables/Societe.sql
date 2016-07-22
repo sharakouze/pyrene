@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [CORE].[Societe]
 (
-	[CleSociete] INT NOT NULL IDENTITY,
-	[CodSociete] VARCHAR(100)  NOT NULL,
-	[LibSociete] VARCHAR(200) NOT NULL,
+    [CleSociete] INT NOT NULL IDENTITY,
+    [CodSociete] VARCHAR(100)  NOT NULL,
+    [LibSociete] VARCHAR(200) NOT NULL,
     [TxtSociete] VARCHAR(500) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,

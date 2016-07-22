@@ -1,10 +1,10 @@
 ﻿CREATE TABLE [TRS].[TiersContact]
 (
-	[CleContact] INT NOT NULL IDENTITY,
-	[CleTiers] INT NOT NULL,
-	[NomContact] VARCHAR(100) NOT NULL,
-	[PreContact] VARCHAR(100) NULL,
-	[TxtContact] VARCHAR(500) NOT NULL,
+    [CleContact] INT NOT NULL IDENTITY,
+    [CleTiers] INT NOT NULL,
+    [NomContact] VARCHAR(100) NOT NULL,
+    [PreContact] VARCHAR(100) NULL,
+    [TxtContact] VARCHAR(500) NOT NULL,
     [NumTelep] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
     [TypGenre] TINYINT NULL,
