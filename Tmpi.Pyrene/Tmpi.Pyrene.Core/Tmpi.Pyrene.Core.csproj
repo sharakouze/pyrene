@@ -62,6 +62,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Business\SocieteProcessor.cs" />
     <Compile Include="Data\CompteurConfiguration.cs">
       <DependentUpon>CoreDatabase.tt</DependentUpon>
     </Compile>
