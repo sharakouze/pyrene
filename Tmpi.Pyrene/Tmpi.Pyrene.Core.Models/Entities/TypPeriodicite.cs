@@ -1,5 +1,8 @@
 ﻿namespace Tmpi.Pyrene.Core.Models.Entities
 {
+    /// <summary>
+    /// Spécifie la périodicité d'un compteur.
+    /// </summary>
     public enum TypPeriodicite : byte
     {
         Undefined = 0,

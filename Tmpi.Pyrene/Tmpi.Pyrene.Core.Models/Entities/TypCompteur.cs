@@ -1,5 +1,8 @@
 ﻿namespace Tmpi.Pyrene.Core.Models.Entities
 {
+    /// <summary>
+    /// Spécifie le type d'un compteur.
+    /// </summary>
     public enum TypCompteur : short
     {
         Undefined = 0,

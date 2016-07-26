@@ -1,29 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Tmpi.Pyrene.Infrastructure.Messages;
 
 namespace Tmpi.Pyrene.Core.Models.Messages.Requests
 {
-    interface ISortableRequest
+    public class SelectSociete : IPaginableRequest
     {
-        string[] Sort { get; set; }
-    }
+        public IEnumerable<int> CleSocieteList { get; set; } = new List<int>();
 
-    interface IPagingRequest : ISortableRequest
-    {
-        int Skip { get; set; }
-        int Take { get; set; }
-    }
+        public string ResultType { get; set; }
 
-    interface IPagingResponse
-    {
-        int TotalCount { get; set; }
-    }
-
-    class SelectSociete : IPagingRequest
-    {
         public int Skip { get; set; }
 
         public string[] Sort { get; set; }

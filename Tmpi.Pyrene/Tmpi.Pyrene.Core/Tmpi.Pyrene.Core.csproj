@@ -120,6 +120,10 @@
       <Project>{e515a547-3e09-4f2e-b1f0-09d3e16fb36a}</Project>
       <Name>Tmpi.Pyrene.Core.Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tmpi.Pyrene.Infrastructure\Tmpi.Pyrene.Infrastructure.csproj">
+      <Project>{26e9e3cd-2f17-45a5-ba02-55c38f8c48a8}</Project>
+      <Name>Tmpi.Pyrene.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
