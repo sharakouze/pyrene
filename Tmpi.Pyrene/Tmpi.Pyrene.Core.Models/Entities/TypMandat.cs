@@ -1,4 +1,6 @@
-﻿namespace Tmpi.Pyrene.Core.Models.Entities
+﻿#pragma warning disable 1591
+
+namespace Tmpi.Pyrene.Core.Models.Entities
 {
     /// <summary>
     /// Spécifie le type d'un mandat.

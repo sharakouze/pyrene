@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Text;
-using System.Threading.Tasks;
 using Nelibur.ServiceModel.Services.Operations;
 using Tmpi.Pyrene.Core.Data;
 using Tmpi.Pyrene.Core.Models.Entities;
-using Tmpi.Pyrene.Core.Models.Messages.Requests;
+using Tmpi.Pyrene.Core.Models.Messages;
 using Tmpi.Pyrene.Core.Models.Messages.Responses;
-using System.Data.Entity;
-using System.Collections;
 using Tmpi.Pyrene.Infrastructure.Messages;
 
 namespace Tmpi.Pyrene.Core.Business
@@ -39,28 +33,6 @@ namespace Tmpi.Pyrene.Core.Business
 
                 q = q.ToPaging(request, soc => soc.CleSociete);
 
-
-
-                if (request.Skip > 0)
-                {
-                    q = q.Skip(request.Skip);
-                }
-                if (request.Take > 0)
-                {
-                    q = q.Take(request.Take);
-                }
-
-                if (request.Sort == null || !request.Sort.Any())
-                {
-                    q = q.OrderBy(soc => soc.LibSociete); // Tri par défaut.
-                }
-                else
-                {
-                    foreach (string s in request.Sort)
-                    {
-                        //source = source.OrderBy(s);
-                    }
-                }
 
                 switch (request.ResultType)
                 {

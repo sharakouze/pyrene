@@ -1,7 +1,7 @@
 ﻿namespace Tmpi.Pyrene.Infrastructure.Messages
 {
     /// <summary>
-    /// Fournit les fonctionnalités permettant 
+    /// Répresente une requête dont le résultat est paginable. 
     /// </summary>
     public interface IPaginableRequest : ISortableRequest
     {

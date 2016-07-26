@@ -1,4 +1,4 @@
-﻿<#@ include file="..\..\Common\EF.Reverse.POCO.Core.ttinclude" #>
+﻿<#@ include file="..\..\Shared\EF.Reverse.POCO.Core.ttinclude" #>
 <#
     // v2.21.1
     // Please make changes to the settings below.
@@ -503,6 +503,6 @@
     if (tables.Count > 0 || storedProcs.Count > 0)
     {
 #>
-<#@ include file="..\..\Common\EF.Reverse.POCO.ttinclude" #>
+<#@ include file="..\..\Shared\EF.Reverse.POCO.ttinclude" #>
 <#@ import namespace="System.Xml.Schema" #>
 <# } #>

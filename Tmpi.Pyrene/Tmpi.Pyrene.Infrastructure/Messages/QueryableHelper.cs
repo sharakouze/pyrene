@@ -1,15 +1,19 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Dynamic;
 using System.Linq.Expressions;
 
 namespace Tmpi.Pyrene.Infrastructure.Messages
 {
-    public static class Ext
+    public static class QueryableHelper
     {
-        public static IQueryable<T> ToPaging<T, TKey>(this IQueryable<T> source, IPaginableRequest request,
-            Expression<Func<T, TKey>> keySelector)
+        public static IQueryable<T> ToPaging<T, TKey>(this IQueryable<T> source, IPaginableRequest request, 
+            Expression<Func<T, TKey>> keySelector = null)
         {
+            Debug.Assert(source != null);
+            Debug.Assert(request != null);
+
             if (request.Skip > 0)
             {
                 source = source.Skip(request.Skip);
@@ -21,7 +25,10 @@ namespace Tmpi.Pyrene.Infrastructure.Messages
 
             if (request.Sort == null || !request.Sort.Any())
             {
-                source = source.OrderBy(keySelector); // Tri par défaut.
+                if (keySelector != null)
+                {
+                    source = source.OrderBy(keySelector); // Tri par défaut.
+                }
             }
             else
             {

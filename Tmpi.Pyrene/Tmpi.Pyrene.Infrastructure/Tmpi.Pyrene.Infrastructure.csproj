@@ -43,7 +43,7 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Messages\Ext.cs" />
+    <Compile Include="Messages\QueryableHelper.cs" />
     <Compile Include="Messages\IPaginableRequest.cs" />
     <Compile Include="Messages\ISortableRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Tmpi.Pyrene.Infrastructure.Messages;
 
-namespace Tmpi.Pyrene.Core.Models.Messages.Requests
+namespace Tmpi.Pyrene.Core.Models.Messages
 {
     public class SelectSociete : IPaginableRequest
     {
