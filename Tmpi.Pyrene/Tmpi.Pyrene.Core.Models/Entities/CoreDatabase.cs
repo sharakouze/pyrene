@@ -9,7 +9,7 @@
 // The following connection settings were used to generate this file:
 //     Configuration file:     "Tmpi.Pyrene.Core.Models\App.config"
 //     Connection String Name: "CoreModel"
-//     Connection String:      "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TMPI_PYRENE;Integrated Security=True;MultipleActiveResultSets=True;App=EntityFramework"
+//     Connection String:      "Server=(localdb)\MSSQLLocalDB;Database=TMPI_PYRENE;Integrated Security=True;MultipleActiveResultSets=True;App=EntityFramework"
 // ------------------------------------------------------------------------------------------------
 // Database Edition       : Express Edition (64-bit)
 // Database Engine Edition: Express

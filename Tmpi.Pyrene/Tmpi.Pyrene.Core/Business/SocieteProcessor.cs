@@ -21,7 +21,7 @@ namespace Tmpi.Pyrene.Core.Business
             {
                 var q = ctx.Set<Societe>().AsQueryable();
 
-                if (request.CleSocieteList != null && request.CleSocieteList.Any())
+                if (!EnumerableHelper.IsNullOrEmpty(request.CleSocieteList))
                 {
                     q = q.Where(soc => request.CleSocieteList.Contains(soc.CleSociete));
                 }
@@ -31,17 +31,19 @@ namespace Tmpi.Pyrene.Core.Business
                     TotalCount = q.Count(),
                 };
 
-                q = q.ToPaging(request, soc => soc.CleSociete);
+                q = QueryableHelper.Pagination(q, request);
 
+                if (EnumerableHelper.IsNullOrEmpty(request.Sort))
+                {
+                    q = q.OrderBy(soc => soc.LibSociete); // Tri par défaut.
+                }
 
                 switch (request.ResultType)
                 {
-                    case "":
-                        response.Result = q.Select(soc => new
-                        {
-                            soc.CodExterne
-                        }
-                        ).ToList();
+
+                    case BaseResultType.Entity:
+                    default:
+                        response.Result = q.Select(soc => soc).ToList();
                         break;
                 }
 

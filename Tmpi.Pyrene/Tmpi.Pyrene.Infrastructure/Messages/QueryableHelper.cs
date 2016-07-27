@@ -1,15 +1,22 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
 
 namespace Tmpi.Pyrene.Infrastructure.Messages
 {
+    /// <summary>
+    /// Fournit des méthodes statiques permettant de manipuler des <see cref="IQueryable"/>.
+    /// </summary>
     public static class QueryableHelper
     {
-        public static IQueryable<T> ToPaging<T, TKey>(this IQueryable<T> source, IPaginableRequest request, 
-            Expression<Func<T, TKey>> keySelector = null)
+        /// <summary>
+        /// blablabla dans une séquence.
+        /// </summary>
+        /// <typeparam name="T">Type des éléments de <paramref name="source"/>.</typeparam>
+        /// <param name="source"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static IQueryable<T> Pagination<T>(IQueryable<T> source, IPaginableRequest request)
         {
             Debug.Assert(source != null);
             Debug.Assert(request != null);
@@ -23,18 +30,11 @@ namespace Tmpi.Pyrene.Infrastructure.Messages
                 source = source.Take(request.Take);
             }
 
-            if (request.Sort == null || !request.Sort.Any())
+            if (request.Sort != null)
             {
-                if (keySelector != null)
+                foreach (string sort in request.Sort)
                 {
-                    source = source.OrderBy(keySelector); // Tri par défaut.
-                }
-            }
-            else
-            {
-                foreach (string s in request.Sort)
-                {
-                    source = source.OrderBy(s);
+                    source = source.OrderBy(sort);
                 }
             }
 
