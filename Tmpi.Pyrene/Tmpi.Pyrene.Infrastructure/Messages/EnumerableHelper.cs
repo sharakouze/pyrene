@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Tmpi.Pyrene.Infrastructure.Messages
 {
     /// <summary>
-    /// Fournit des méthodes statiques permettant de manipuler des <see cref="IEnumerable"/>.
+    /// Fournit des méthodes statiques permettant de manipuler des <see cref="IEnumerable{T}"/>.
     /// </summary>
     public static class EnumerableHelper
     {

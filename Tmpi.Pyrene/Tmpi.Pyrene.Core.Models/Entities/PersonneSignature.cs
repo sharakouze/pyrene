@@ -22,7 +22,6 @@ namespace Tmpi.Pyrene.Core.Models.Entities
         public string TypMime { get; set; } // TypMime (length: 255)
 
         // Foreign keys
-        [Newtonsoft.Json.JsonIgnore]
         public virtual Personne Personne { get; set; } // FK_PersonneSignature_ClePersonne
     }
 

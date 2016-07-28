@@ -46,7 +46,7 @@
     };
     AdditionalForeignKeysDataAnnotations = new string[] // Data Annotations for ForeignKeys.
     {
-        "Newtonsoft.Json.JsonIgnore"
+        //"Newtonsoft.Json.JsonIgnore"
     };
 
     // Migrations *************************************************************************************************************************

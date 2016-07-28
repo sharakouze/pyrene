@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Tmpi.Pyrene.Infrastructure.Messages;
 
 namespace Tmpi.Pyrene.Core.Models.Messages
@@ -11,11 +12,16 @@ namespace Tmpi.Pyrene.Core.Models.Messages
         Entity,
         Simple,
         PrimaryKey,
+        Name,
+        Code
     }
 
+    /// <summary>
+    /// Représente une requête qui retourne l'entité <see cref="Entities.Societe"/> mise en forme.
+    /// </summary>
     public class SelectSociete : IPaginableRequest, IFilterableRequest
     {
-        public IEnumerable<int> CleSocieteList { get; set; } = new List<int>();
+        public IEnumerable<int> CleSocieteList { get; set; }
 
         public string Filter { get; set; }
 

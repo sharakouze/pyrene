@@ -43,11 +43,8 @@ namespace Tmpi.Pyrene.Core.Models.Entities
         public virtual System.Collections.Generic.ICollection<CompteurValeur> CompteurValeur { get; set; } // Many to many mapping
 
         // Foreign keys
-        [Newtonsoft.Json.JsonIgnore]
         public virtual Societe Societe { get; set; } // FK_Compteur_CleSociete
-        [Newtonsoft.Json.JsonIgnore]
         public virtual SocieteSecteur SocieteSecteur { get; set; } // FK_Compteur_CleSecteur
-        [Newtonsoft.Json.JsonIgnore]
         public virtual SocieteService SocieteService { get; set; } // FK_Compteur_CleService
 
         public Compteur()

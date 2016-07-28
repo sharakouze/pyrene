@@ -17,25 +17,34 @@ namespace Tmpi.Pyrene.Core.Business
         {
             Debug.Assert(request != null);
 
+            var response = new SelectSocieteResponse();
+
             using (var ctx = new CoreContext())
             {
                 var q = ctx.Set<Societe>().AsQueryable();
 
                 if (!EnumerableHelper.IsNullOrEmpty(request.CleSocieteList))
                 {
-                    q = q.Where(soc => request.CleSocieteList.Contains(soc.CleSociete));
+                    q = from soc in q
+                        where request.CleSocieteList.Contains(soc.CleSociete)
+                        select soc;
                 }
 
-                var response = new SelectSocieteResponse()
+                if (!string.IsNullOrEmpty(request.Filter))
                 {
-                    TotalCount = q.Count(),
-                };
+                    q = q.Where(request.Filter);
+                }
+
+                response.TotalCount = q.Count();
 
                 q = QueryableHelper.Paging(q, request);
 
                 if (EnumerableHelper.IsNullOrEmpty(request.Sort))
                 {
-                    q = q.OrderBy(soc => soc.LibSociete); // Tri par défaut.
+                    // Tri par défaut.
+                    q = from soc in q
+                        orderby soc.LibSociete
+                        select soc;
                 }
 
                 switch (request.ResultType)
@@ -46,9 +55,9 @@ namespace Tmpi.Pyrene.Core.Business
                         response.Result = q.Select(soc => soc).ToList();
                         break;
                 }
-
-                return response;
             }
+
+            return response;
         }
     }
 }

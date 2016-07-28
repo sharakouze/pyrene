@@ -22,7 +22,6 @@ namespace Tmpi.Pyrene.Core.Models.Entities
         public int ValCompteur { get; set; } // ValCompteur
 
         // Foreign keys
-        [Newtonsoft.Json.JsonIgnore]
         public virtual Compteur Compteur { get; set; } // FK_CompteurValeur_CleCompteur
     }
 

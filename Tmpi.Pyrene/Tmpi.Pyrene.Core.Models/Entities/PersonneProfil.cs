@@ -25,13 +25,9 @@ namespace Tmpi.Pyrene.Core.Models.Entities
         public int? CleService { get; set; } // CleService
 
         // Foreign keys
-        [Newtonsoft.Json.JsonIgnore]
         public virtual Personne Personne { get; set; } // FK_PersonneProfil_ClePersonne
-        [Newtonsoft.Json.JsonIgnore]
         public virtual Societe Societe { get; set; } // FK_PersonneProfil_CleSociete
-        [Newtonsoft.Json.JsonIgnore]
         public virtual SocieteSecteur SocieteSecteur { get; set; } // FK_PersonneProfil_CleSecteur
-        [Newtonsoft.Json.JsonIgnore]
         public virtual SocieteService SocieteService { get; set; } // FK_PersonneProfil_CleService
     }
 

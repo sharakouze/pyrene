@@ -26,15 +26,10 @@ namespace Tmpi.Pyrene.Core.Models.Entities
         public bool EstSuspendu { get; set; } // EstSuspendu
 
         // Foreign keys
-        [Newtonsoft.Json.JsonIgnore]
         public virtual Mandat Mandat { get; set; } // FK_MandatMandataire_CleMandat
-        [Newtonsoft.Json.JsonIgnore]
         public virtual Personne Personne { get; set; } // FK_MandatMandataire_ClePersonne
-        [Newtonsoft.Json.JsonIgnore]
         public virtual Societe Societe { get; set; } // FK_MandatMandataire_CleSociete
-        [Newtonsoft.Json.JsonIgnore]
         public virtual SocieteSecteur SocieteSecteur { get; set; } // FK_MandatMandataire_CleSecteur
-        [Newtonsoft.Json.JsonIgnore]
         public virtual SocieteService SocieteService { get; set; } // FK_MandatMandataire_CleService
     }
 

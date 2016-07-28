@@ -41,7 +41,6 @@ namespace Tmpi.Pyrene.Core.Models.Entities
         public virtual System.Collections.Generic.ICollection<SocieteService> SocieteService { get; set; } // SocieteService.FK_SocieteService_CleSecteur
 
         // Foreign keys
-        [Newtonsoft.Json.JsonIgnore]
         public virtual Societe Societe { get; set; } // FK_SocieteSecteur_CleSociete
 
         public SocieteSecteur()
