@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // Les informations générales relatives à un assembly dépendent de 
@@ -6,9 +7,20 @@ using System.Runtime.InteropServices;
 // associées à un assembly.
 [assembly: AssemblyTitle("Tmpi.Pyrene.Infrastructure.Tests")]
 [assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("TMPI")]
+[assembly: AssemblyProduct("Tmpi.Pyrene.Infrastructure.Tests")]
+[assembly: AssemblyCopyright("Copyright © TMPI 2016")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+// L'affectation de la valeur false à ComVisible rend les types invisibles dans cet assembly 
+// aux composants COM.  Si vous devez accéder à un type dans cet assembly à partir de 
+// COM, affectez la valeur true à l'attribut ComVisible sur ce type.
+[assembly: ComVisible(false)]
 
 // Le GUID suivant est pour l'ID de la typelib si ce projet est exposé à COM
-[assembly: Guid("f8f4b6a7-d05d-464c-8b61-2028ca7aee1c")]
+[assembly: Guid("164662de-245e-409b-97be-31ccf4733e0c")]
 
 // Les informations de version pour un assembly se composent des quatre valeurs suivantes :
 //

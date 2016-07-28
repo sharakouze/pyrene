@@ -1,69 +1,114 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tmpi.Pyrene.Infrastructure.Messages;
 
 namespace Tmpi.Pyrene.Infrastructure.Tests
 {
-    /// <summary>
-    /// Description résumée pour QueryableHelperTests
-    /// </summary>
     [TestClass]
     public class QueryableHelperTests
     {
-        public QueryableHelperTests()
+        public class PaginableRequest : IPaginableRequest
         {
-            //
-            // TODO: ajoutez ici la logique du constructeur
-            //
+            public int Skip { get; set; }
+            public string[] Sort { get; set; }
+            public int Take { get; set; }
         }
-
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Obtient ou définit le contexte de test qui fournit
-        ///des informations sur la série de tests active, ainsi que ses fonctionnalités.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        #region Attributs de tests supplémentaires
-        //
-        // Vous pouvez utiliser les attributs supplémentaires suivants lorsque vous écrivez vos tests :
-        //
-        // Utilisez ClassInitialize pour exécuter du code avant d'exécuter le premier test de la classe
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Utilisez ClassCleanup pour exécuter du code une fois que tous les tests d'une classe ont été exécutés
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Utilisez TestInitialize pour exécuter du code avant d'exécuter chaque test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Utilisez TestCleanup pour exécuter du code après que chaque test a été exécuté
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
 
         [TestMethod]
-        public void TestMethod1()
+        public void Paging_EmptyRequest_ShouldDoNothing()
         {
-            //
-            // TODO: ajoutez ici la logique du test
-            //
+            var request = new PaginableRequest()
+            {
+                Skip = 0,
+                Take = 0,
+                Sort = null
+            };
+
+            var src = new int[] { 2, 1, 3, 5, 4 };
+            var result = QueryableHelper.Paging(src.AsQueryable(), request);
+
+            Assert.AreEqual(src.Count(), result.Count());
+            Assert.AreEqual(src.First(), result.First());
+            Assert.AreEqual(src.Last(), result.Last());
+        }
+
+        [TestMethod]
+        public void Paging_Skip1Take2_ShouldReturnValidResult()
+        {
+            var request = new PaginableRequest()
+            {
+                Skip = 1,
+                Take = 2,
+                Sort = null
+            };
+
+            var src = new int[] { 2, 1, 3, 5, 4 };
+            var result = QueryableHelper.Paging(src.AsQueryable(), request);
+            var lst = result.ToList();
+
+            Assert.AreEqual(2, lst.Count);
+            Assert.AreEqual(1, lst[0]);
+            Assert.AreEqual(3, lst[1]);
+        }
+
+        [TestMethod]
+        public void Paging_SkipMoreThanInputLength_ShouldReturnEmptyResult()
+        {
+            var request = new PaginableRequest()
+            {
+                Skip = 10,
+                Take = 10,
+                Sort = null
+            };
+
+            var src = new int[] { 2, 1, 3, 5, 4 };
+            var result = QueryableHelper.Paging(src.AsQueryable(), request);
+
+            Assert.IsFalse(result.Any());
+        }
+
+        [TestMethod]
+        public void Paging_SimpleSortRequest_ShouldReturnSortedResult()
+        {
+            var request = new PaginableRequest()
+            {
+                Skip = 0,
+                Take = 0,
+                Sort = new[] { "P1" }
+            };
+
+            var src = "nicolas".Select(c => new { P1 = c.ToString() });
+            var result = QueryableHelper.Paging(src.AsQueryable(), request);
+
+            Assert.AreEqual(src.Count(), result.Count());
+            Assert.AreEqual("a", result.First().P1);
+            Assert.AreEqual("s", result.Last().P1);
+        }
+
+        [TestMethod]
+        public void Paging_MultipleSortRequest_ShouldReturnSortedResult()
+        {
+            var request = new PaginableRequest()
+            {
+                Skip = 0,
+                Take = 0,
+                Sort = new[] { "P1", "P2 desc" }
+            };
+
+            var src = new[]
+            {
+                new { P1 = "z", P2 = 0 },
+                new { P1 = "a", P2 = 5 },
+                new { P1 = "x", P2 = 1 },
+                new { P1 = "a", P2 = 9 },
+                new { P1 = "a", P2 = 1 },
+            };
+            var result = QueryableHelper.Paging(src.AsQueryable(), request);
+
+            Assert.AreEqual(src.Count(), result.Count());
+            Assert.AreEqual("a", result.First().P1);
+            Assert.AreEqual(9, result.First().P2);
+            Assert.AreEqual("z", result.Last().P1);
         }
     }
 }

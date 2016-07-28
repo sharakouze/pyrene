@@ -10,13 +10,13 @@ namespace Tmpi.Pyrene.Infrastructure.Messages
     public static class QueryableHelper
     {
         /// <summary>
-        /// blablabla dans une séquence.
+        /// Retourne la pagination des éléments dans une séquence.
         /// </summary>
         /// <typeparam name="T">Type des éléments de <paramref name="source"/>.</typeparam>
-        /// <param name="source"></param>
+        /// <param name="source">Source à partir de laquelle retourner les éléments.</param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public static IQueryable<T> Pagination<T>(IQueryable<T> source, IPaginableRequest request)
+        public static IQueryable<T> Paging<T>(IQueryable<T> source, IPaginableRequest request)
         {
             Debug.Assert(source != null);
             Debug.Assert(request != null);
@@ -36,6 +36,19 @@ namespace Tmpi.Pyrene.Infrastructure.Messages
                 {
                     source = source.OrderBy(sort);
                 }
+            }
+
+            return source;
+        }
+
+        public static IQueryable<T> Filtering<T>(IQueryable<T> source, IFilterableRequest request)
+        {
+            Debug.Assert(source != null);
+            Debug.Assert(request != null);
+
+            if (!string.IsNullOrWhiteSpace(request.Filter))
+            {
+                source = source.Where(request.Filter);
             }
 
             return source;

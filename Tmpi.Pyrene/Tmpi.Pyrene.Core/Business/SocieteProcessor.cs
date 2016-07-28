@@ -31,7 +31,7 @@ namespace Tmpi.Pyrene.Core.Business
                     TotalCount = q.Count(),
                 };
 
-                q = QueryableHelper.Pagination(q, request);
+                q = QueryableHelper.Paging(q, request);
 
                 if (EnumerableHelper.IsNullOrEmpty(request.Sort))
                 {
