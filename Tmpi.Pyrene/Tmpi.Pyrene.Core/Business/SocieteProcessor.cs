@@ -21,10 +21,12 @@ namespace Tmpi.Pyrene.Core.Business
 
             using (var ctx = new CoreContext())
             {
-                var q = ctx.Set<Societe>().AsQueryable();
+                var q = from soc in ctx.Set<Societe>()
+                        select soc;
 
                 if (!EnumerableHelper.IsNullOrEmpty(request.CleSocieteList))
                 {
+                    // Filtre sur les clés primaires.
                     q = from soc in q
                         where request.CleSocieteList.Contains(soc.CleSociete)
                         select soc;
@@ -37,7 +39,7 @@ namespace Tmpi.Pyrene.Core.Business
 
                 response.TotalCount = q.Count();
 
-                q = QueryableHelper.Paging(q, request);
+                q = QueryableHelper.Paging(q, request); // Pagination du résultat.
 
                 if (EnumerableHelper.IsNullOrEmpty(request.Sort))
                 {
@@ -49,6 +51,17 @@ namespace Tmpi.Pyrene.Core.Business
 
                 switch (request.ResultType)
                 {
+                    case BaseResultType.Simple:
+                        var s = from soc in q
+                                select new SimpleResult<int>()
+                                {
+                                    CleObjet = soc.CleSociete,
+                                    CodObjet = soc.CodSociete,
+                                    LibObjet = soc.LibSociete,
+                                    EstActif = soc.EstActif,
+                                };
+                        response.Result = s.ToList();
+                        break;
 
                     case BaseResultType.Entity:
                     default:

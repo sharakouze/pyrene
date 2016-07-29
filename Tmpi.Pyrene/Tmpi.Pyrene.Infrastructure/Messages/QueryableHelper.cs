@@ -5,7 +5,7 @@ using System.Linq.Dynamic;
 namespace Tmpi.Pyrene.Infrastructure.Messages
 {
     /// <summary>
-    /// Fournit des méthodes statiques permettant de manipuler des <see cref="IQueryable"/>.
+    /// Fournit des méthodes statiques permettant de manipuler des <see cref="IQueryable{T}"/>.
     /// </summary>
     public static class QueryableHelper
     {
@@ -15,7 +15,7 @@ namespace Tmpi.Pyrene.Infrastructure.Messages
         /// <typeparam name="T">Type des éléments de <paramref name="source"/>.</typeparam>
         /// <param name="source">Source à partir de laquelle retourner les éléments.</param>
         /// <param name="request"></param>
-        /// <returns></returns>
+        /// <returns><see cref="IQueryable{T}"/> paginé.</returns>
         public static IQueryable<T> Paging<T>(IQueryable<T> source, IPaginableRequest request)
         {
             Debug.Assert(source != null);
@@ -36,19 +36,6 @@ namespace Tmpi.Pyrene.Infrastructure.Messages
                 {
                     source = source.OrderBy(sort);
                 }
-            }
-
-            return source;
-        }
-
-        public static IQueryable<T> Filtering<T>(IQueryable<T> source, IFilterableRequest request)
-        {
-            Debug.Assert(source != null);
-            Debug.Assert(request != null);
-
-            if (!string.IsNullOrWhiteSpace(request.Filter))
-            {
-                source = source.Where(request.Filter);
             }
 
             return source;

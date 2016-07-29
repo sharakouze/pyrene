@@ -77,8 +77,10 @@
     <Compile Include="Entities\TypGenre.cs" />
     <Compile Include="Entities\TypPeriodicite.cs" />
     <Compile Include="Entities\TypCompteur.cs" />
+    <Compile Include="Messages\DeleteSociete.cs" />
     <Compile Include="Messages\SelectSociete.cs" />
     <Compile Include="Messages\Responses\SelectSocieteResponse.cs" />
+    <Compile Include="Messages\UpdateSociete.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

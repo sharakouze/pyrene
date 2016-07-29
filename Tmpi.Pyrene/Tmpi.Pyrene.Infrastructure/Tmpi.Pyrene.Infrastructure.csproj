@@ -48,6 +48,7 @@
     <Compile Include="Messages\QueryableHelper.cs" />
     <Compile Include="Messages\IPaginableRequest.cs" />
     <Compile Include="Messages\ISortableRequest.cs" />
+    <Compile Include="Messages\SimpleResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
