@@ -1,4 +1,4 @@
-﻿CREATE TABLE [STO].[Fourn]
+﻿CREATE TABLE [Sto].[Fourn]
 (
     [CleFourn] INT NOT NULL IDENTITY,
     [CodFourn] VARCHAR(100) NOT NULL,
@@ -28,9 +28,9 @@
     [CleProprietaire] INT NULL,
     CONSTRAINT [PK_Fourn] PRIMARY KEY ([CleFourn]),
     CONSTRAINT [UN_Fourn_CodFourn] UNIQUE ([CodFourn]), 
-    CONSTRAINT [FK_Fourn_CleProprietaire] FOREIGN KEY ([CleProprietaire]) REFERENCES [CORE].[Personne]([ClePersonne])
+    CONSTRAINT [FK_Fourn_CleProprietaire] FOREIGN KEY ([CleProprietaire]) REFERENCES [Gen].[Personne]([ClePersonne])
 );
 
 GO
 
-CREATE INDEX [IX_Fourn_LibFourn] ON [STO].[Fourn] ([LibFourn]);
+CREATE INDEX [IX_Fourn_LibFourn] ON [Sto].[Fourn] ([LibFourn]);

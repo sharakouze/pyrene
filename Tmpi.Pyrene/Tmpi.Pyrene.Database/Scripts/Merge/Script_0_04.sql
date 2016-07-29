@@ -11,9 +11,9 @@ GO
 
 begin transaction;
 
-set identity_insert [EQU].[Atelier] on;
+set identity_insert [Equ].[Atelier] on;
 
-merge into [EQU].[Atelier] as target
+merge into [Equ].[Atelier] as target
 using (
 	select CleAtelier,
 		CodAtelier,
@@ -31,13 +31,13 @@ then -- insert new rows
 	insert (CleAtelier, CodAtelier, LibAtelier, TxtAtelier, EstActif, DatCreation, DatModif)
 	values (CleAtelier, CodAtelier, LibAtelier, TxtAtelier, EstActif, DatCreation, DatModif);
 	
-set identity_insert [EQU].[Atelier] off;
+set identity_insert [Equ].[Atelier] off;
 
 commit transaction;
 
 begin transaction;
 
-merge into [EQU].[AtelierResponsable] as target
+merge into [Equ].[AtelierResponsable] as target
 using (
 	select CleAtelier,
 		ClePersonne

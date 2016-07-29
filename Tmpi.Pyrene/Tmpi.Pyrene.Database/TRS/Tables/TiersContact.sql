@@ -1,4 +1,4 @@
-﻿CREATE TABLE [TRS].[TiersContact]
+﻿CREATE TABLE [Trs].[TiersContact]
 (
     [CleContact] INT NOT NULL IDENTITY,
     [CleTiers] INT NOT NULL,
@@ -11,9 +11,9 @@
     [CodFonction] VARCHAR(100) NULL,
     CONSTRAINT [PK_TiersContact] PRIMARY KEY ([CleContact]), 
     CONSTRAINT [UN_TiersContact_CleTiers] UNIQUE ([CleTiers], [NomContact]), 
-    CONSTRAINT [FK_TiersContact_CleTiers] FOREIGN KEY ([CleTiers]) REFERENCES [TRS].[Tiers]([CleTiers]), 
+    CONSTRAINT [FK_TiersContact_CleTiers] FOREIGN KEY ([CleTiers]) REFERENCES [Trs].[Tiers]([CleTiers]), 
 );
 
 GO
 
-CREATE INDEX [IX_TiersContact_CleTiers] ON [TRS].[TiersContact] ([CleTiers]);
+CREATE INDEX [IX_TiersContact_CleTiers] ON [Trs].[TiersContact] ([CleTiers]);

@@ -1,4 +1,4 @@
-﻿CREATE TABLE [EQU].[Atelier]
+﻿CREATE TABLE [Equ].[Atelier]
 (
     [CleAtelier] INT NOT NULL IDENTITY, 
     [CodAtelier] VARCHAR(100) NOT NULL,
@@ -14,4 +14,4 @@
 
 GO
 
-CREATE INDEX [IX_Atelier_LibAtelier] ON [EQU].[Atelier] ([LibAtelier]);
+CREATE INDEX [IX_Atelier_LibAtelier] ON [Equ].[Atelier] ([LibAtelier]);

@@ -1,4 +1,4 @@
-﻿CREATE TABLE [TRS].[Tiers]
+﻿CREATE TABLE [Trs].[Tiers]
 (
     [CleTiers] INT IDENTITY NOT NULL,
     [NumTiers] VARCHAR(100) NOT NULL,
@@ -36,4 +36,4 @@
 
 GO
 
-CREATE INDEX [IX_Tiers_NomTiers] ON [TRS].[Tiers] ([NomTiers]);
+CREATE INDEX [IX_Tiers_NomTiers] ON [Trs].[Tiers] ([NomTiers]);

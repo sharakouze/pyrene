@@ -1,4 +1,4 @@
-﻿CREATE TABLE [EQU].[Equip]
+﻿CREATE TABLE [Equ].[Equip]
 (
     [CleEquip] INT NOT NULL IDENTITY, 
     [CodEquip] VARCHAR(100) NOT NULL, 
@@ -14,4 +14,4 @@
 
 GO
 
-CREATE INDEX [IX_Equip_LibEquip] ON [EQU].[Equip] ([LibEquip]);
+CREATE INDEX [IX_Equip_LibEquip] ON [Equ].[Equip] ([LibEquip]);

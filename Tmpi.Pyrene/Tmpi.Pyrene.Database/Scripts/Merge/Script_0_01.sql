@@ -13,9 +13,9 @@ GO
 
 begin transaction;
 
-set identity_insert [STO].[TVA] on;
+set identity_insert [Sto].[TVA] on;
 
-merge into [STO].[TVA] as target
+merge into [Sto].[TVA] as target
 using (
 	select CleTVA,
 		CodTVA,
@@ -35,7 +35,7 @@ then -- insert new rows
 	insert (CleTVA, CodTVA, LibTVA, TxtTVA, EstActif, DatCreation, DatModif, CodExterne, TauTVA)
 	values (CleTVA, CodTVA, LibTVA, TxtTVA, EstActif, DatCreation, DatModif, CodExterne, TauTVA);
 	
-set identity_insert [STO].[TVA] off;
+set identity_insert [Sto].[TVA] off;
 
 commit transaction;
 
@@ -47,9 +47,9 @@ GO
 
 begin transaction;
 
-set identity_insert [STO].[Fourn] on;
+set identity_insert [Sto].[Fourn] on;
 
-merge into [STO].[Fourn] as target
+merge into [Sto].[Fourn] as target
 using (
 	select CleFourn, 
 		CodFourn,
@@ -93,13 +93,13 @@ then -- insert new rows
 		NumTVAIntra, MntFPort, MntFPortGratuit, MntCommandeMin, DelLivraison, DelPaiement, ValNote,
 		TypModeReglement, EstEnvoiMailBonCde, CleProprietaire);
 	
-set identity_insert [STO].[Fourn] off;
+set identity_insert [Sto].[Fourn] off;
 
 commit transaction;
 
 begin transaction;
 
-merge into [STO].[FournContact] as target
+merge into [Sto].[FournContact] as target
 using (
 	select CleFourn,
 		NomContact
@@ -117,9 +117,9 @@ commit transaction;
 
 begin transaction;
 
-set identity_insert [STO].[FournBanque] on;
+set identity_insert [Sto].[FournBanque] on;
 
-merge into [STO].[FournBanque] as target
+merge into [Sto].[FournBanque] as target
 using (
 	select CleRib as CleBanque,
 		CleFourn,
@@ -139,7 +139,7 @@ then -- insert new rows
 	insert (CleBanque, CleFourn, LibBanque, RibBanque, RibGuichet, RibCompte, RibCle, EstDefaut)
 	values (CleBanque, CleFourn, LibBanque, RibBanque, RibGuichet, RibCompte, RibCle, EstDefaut);
 	
-set identity_insert [STO].[FournBanque] off;
+set identity_insert [Sto].[FournBanque] off;
 
 commit transaction;
 

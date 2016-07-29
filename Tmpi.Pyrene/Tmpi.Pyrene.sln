@@ -5,10 +5,6 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Tmpi.Pyrene.Database", "Tmpi.Pyrene.Database\Tmpi.Pyrene.Database.sqlproj", "{E36C2F27-7CB3-4DAF-BD1D-05E4A5172E5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.Core.Models", "Tmpi.Pyrene.Core.Models\Tmpi.Pyrene.Core.Models.csproj", "{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{1C7D6E93-C9D3-48EA-8276-ED30514EE51C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.Core", "Tmpi.Pyrene.Core\Tmpi.Pyrene.Core.csproj", "{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{0EB21691-0EE0-423C-88AD-1D684D519DD1}"
@@ -20,6 +16,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{AD2338EE-38D8-48CA-8B11-C5249DA9205E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.Infrastructure.Tests", "Tests\Tmpi.Pyrene.Infrastructure.Tests\Tmpi.Pyrene.Infrastructure.Tests.csproj", "{164662DE-245E-409B-97BE-31CCF4733E0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.Models", "Tmpi.Pyrene.Models\Tmpi.Pyrene.Models.csproj", "{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +31,6 @@ Global
 		{E36C2F27-7CB3-4DAF-BD1D-05E4A5172E5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E36C2F27-7CB3-4DAF-BD1D-05E4A5172E5D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E36C2F27-7CB3-4DAF-BD1D-05E4A5172E5D}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,15 +43,19 @@ Global
 		{164662DE-245E-409B-97BE-31CCF4733E0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{164662DE-245E-409B-97BE-31CCF4733E0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{164662DE-245E-409B-97BE-31CCF4733E0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E36C2F27-7CB3-4DAF-BD1D-05E4A5172E5D} = {50F15E47-FC18-4687-A7D8-F9FF4B7F0FAD}
-		{E515A547-3E09-4F2E-B1F0-09D3E16FB36A} = {1C7D6E93-C9D3-48EA-8276-ED30514EE51C}
 		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768} = {0EB21691-0EE0-423C-88AD-1D684D519DD1}
 		{26E9E3CD-2F17-45A5-BA02-55C38F8C48A8} = {50F15E47-FC18-4687-A7D8-F9FF4B7F0FAD}
 		{164662DE-245E-409B-97BE-31CCF4733E0C} = {AD2338EE-38D8-48CA-8B11-C5249DA9205E}
+		{E515A547-3E09-4F2E-B1F0-09D3E16FB36A} = {0EB21691-0EE0-423C-88AD-1D684D519DD1}
 	EndGlobalSection
 EndGlobal

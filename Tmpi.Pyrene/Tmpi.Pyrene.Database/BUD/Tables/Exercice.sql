@@ -1,4 +1,4 @@
-﻿CREATE TABLE [BUD].[Exercice]
+﻿CREATE TABLE [Bud].[Exercice]
 (
     [CleExercice] INT NOT NULL IDENTITY,
     [CodExercice] VARCHAR(100) NOT NULL,
@@ -16,4 +16,4 @@
 
 GO
 
-CREATE INDEX [IX_Exercice_LibExercice] ON [BUD].[Exercice] ([LibExercice]);
+CREATE INDEX [IX_Exercice_LibExercice] ON [Bud].[Exercice] ([LibExercice]);

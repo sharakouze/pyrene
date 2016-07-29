@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tmpi.Pyrene.Models</RootNamespace>
+    <AssemblyName>Tmpi.Pyrene.Models</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Tmpi.Pyrene.Models.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Entities\Bud_Exercice.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Equ_Atelier.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Equ_Equip.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Gen_Compteur.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Gen_CompteurValeur.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Gen_Mandat.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Gen_MandatMandataire.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Gen_Personne.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Gen_PersonneProfil.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Gen_PersonneSignature.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Gen_Societe.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Gen_SocieteSecteur.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Gen_SocieteService.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\PyreneDatabase.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Sto_Fourn.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Sto_FournBanque.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Sto_FournContact.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Sto_Tva.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Trs_Tiers.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Trs_TiersContact.cs">
+      <DependentUpon>PyreneDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TypMandat.cs" />
+    <Compile Include="Entities\TypGenre.cs" />
+    <Compile Include="Entities\TypPeriodicite.cs" />
+    <Compile Include="Entities\TypCompteur.cs" />
+    <Compile Include="Messages\DeleteSociete.cs" />
+    <Compile Include="Messages\SelectSociete.cs" />
+    <Compile Include="Messages\Responses\SelectSocieteResponse.cs" />
+    <Compile Include="Messages\UpdateSociete.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tmpi.Pyrene.Infrastructure\Tmpi.Pyrene.Infrastructure.csproj">
+      <Project>{26e9e3cd-2f17-45a5-ba02-55c38f8c48a8}</Project>
+      <Name>Tmpi.Pyrene.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Entities\PyreneDatabase.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PyreneDatabase.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

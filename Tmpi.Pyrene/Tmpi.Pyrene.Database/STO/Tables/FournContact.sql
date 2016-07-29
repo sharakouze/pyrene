@@ -1,4 +1,4 @@
-﻿CREATE TABLE [STO].[FournContact]
+﻿CREATE TABLE [Sto].[FournContact]
 (
 	[Id] INT NOT NULL PRIMARY KEY,
 	[NomContact] VARCHAR(100) NOT NULL

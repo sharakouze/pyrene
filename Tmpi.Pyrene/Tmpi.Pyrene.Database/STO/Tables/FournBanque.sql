@@ -1,4 +1,4 @@
-﻿CREATE TABLE [STO].[FournBanque]
+﻿CREATE TABLE [Sto].[FournBanque]
 (
     [CleBanque] INT NOT NULL IDENTITY,
     [CleFourn] INT NOT NULL,
@@ -9,5 +9,5 @@
     [RibCle] VARCHAR(2) NOT NULL,
     [EstDefaut] BIT NOT NULL,
     CONSTRAINT [PK_FournBanque] PRIMARY KEY ([CleBanque]),
-    CONSTRAINT [FK_FournBanque_CleFourn] FOREIGN KEY ([CleFourn]) REFERENCES [STO].[Fourn] ([CleFourn]) ON DELETE CASCADE
+    CONSTRAINT [FK_FournBanque_CleFourn] FOREIGN KEY ([CleFourn]) REFERENCES [Sto].[Fourn] ([CleFourn]) ON DELETE CASCADE
 );
