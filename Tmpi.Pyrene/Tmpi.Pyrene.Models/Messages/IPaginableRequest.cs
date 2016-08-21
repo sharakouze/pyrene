@@ -1,4 +1,4 @@
-﻿namespace Tmpi.Pyrene.Infrastructure.Messages
+﻿namespace Tmpi.Pyrene.Models.Messages
 {
     /// <summary>
     /// Représente une requête dont le résultat est paginable. 

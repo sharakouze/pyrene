@@ -7,7 +7,7 @@
 // Do not make changes directly to this file - edit the template instead.
 // 
 // The following connection settings were used to generate this file:
-//     Configuration file:     "Tmpi.Pyrene.Core.Models\App.config"
+//     Configuration file:     "Tmpi.Pyrene.Core\App.config"
 //     Connection String Name: "CoreModel"
 //     Connection String:      "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TMPI_PYRENE;Integrated Security=True;MultipleActiveResultSets=True;App=EntityFramework"
 // ------------------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@
 
 namespace Tmpi.Pyrene.Core.Data
 {
-    using Tmpi.Pyrene.Core.Models.Entities;
+    using Tmpi.Pyrene.Models.Entities;
 
 }
 // </auto-generated>

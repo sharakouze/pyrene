@@ -1,6 +1,6 @@
 ﻿#pragma warning disable 1591
 
-namespace Tmpi.Pyrene.Core.Models.Entities
+namespace Tmpi.Pyrene.Models.Entities
 {
     /// <summary>
     /// Spécifie la périodicité d'un compteur.

@@ -12,7 +12,7 @@
 
 namespace Tmpi.Pyrene.Core.Data
 {
-    using Tmpi.Pyrene.Core.Models.Entities;
+    using Tmpi.Pyrene.Models.Entities;
 
     using System.Linq;
 

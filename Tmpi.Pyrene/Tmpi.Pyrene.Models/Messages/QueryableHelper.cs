@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Dynamic;
 
-namespace Tmpi.Pyrene.Infrastructure.Messages
+namespace Tmpi.Pyrene.Models.Messages
 {
     /// <summary>
     /// Fournit des méthodes statiques permettant de manipuler des <see cref="IQueryable{T}"/>.

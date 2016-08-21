@@ -12,18 +12,18 @@
 
 namespace Tmpi.Pyrene.Core.Data
 {
-    using Tmpi.Pyrene.Core.Models.Entities;
+    using Tmpi.Pyrene.Models.Entities;
 
     // SocieteSecteur
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.21.1.0")]
-    public class SocieteSecteurConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<SocieteSecteur>
+    public class Gen_SocieteSecteurConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Gen_SocieteSecteur>
     {
-        public SocieteSecteurConfiguration()
-            : this("CORE")
+        public Gen_SocieteSecteurConfiguration()
+            : this("Gen")
         {
         }
 
-        public SocieteSecteurConfiguration(string schema)
+        public Gen_SocieteSecteurConfiguration(string schema)
         {
             ToTable(schema + ".SocieteSecteur");
             HasKey(x => x.CleSecteur);
@@ -46,7 +46,7 @@ namespace Tmpi.Pyrene.Core.Data
             Property(x => x.NumEmail).HasColumnName(@"NumEmail").IsOptional().IsUnicode(false).HasColumnType("varchar").HasMaxLength(100);
 
             // Foreign keys
-            HasRequired(a => a.Societe).WithMany(b => b.SocieteSecteur).HasForeignKey(c => c.CleSociete).WillCascadeOnDelete(false); // FK_SocieteSecteur_CleSociete
+            HasRequired(a => a.Gen_Societe).WithMany(b => b.Gen_SocieteSecteur).HasForeignKey(c => c.CleSociete).WillCascadeOnDelete(false); // FK_SocieteSecteur_CleSociete
         }
     }
 

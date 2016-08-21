@@ -1,6 +1,6 @@
 ﻿#pragma warning disable 1591
 
-namespace Tmpi.Pyrene.Core.Models.Entities
+namespace Tmpi.Pyrene.Models.Entities
 {
     /// <summary>
     /// Spécifie le genre d'une personne.

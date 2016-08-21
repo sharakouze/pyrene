@@ -104,22 +104,23 @@
     <Compile Include="Entities\TypGenre.cs" />
     <Compile Include="Entities\TypPeriodicite.cs" />
     <Compile Include="Entities\TypCompteur.cs" />
-    <Compile Include="Messages\DeleteSociete.cs" />
-    <Compile Include="Messages\SelectSociete.cs" />
+    <Compile Include="Messages\DeleteGenSociete.cs" />
+    <Compile Include="Messages\EnumerableHelper.cs" />
+    <Compile Include="Messages\IFilterableRequest.cs" />
+    <Compile Include="Messages\IPaginableRequest.cs" />
+    <Compile Include="Messages\ISortableRequest.cs" />
+    <Compile Include="Messages\QueryableHelper.cs" />
+    <Compile Include="Messages\SelectRequest.cs" />
+    <Compile Include="Messages\SelectGenSociete.cs" />
     <Compile Include="Messages\Responses\SelectSocieteResponse.cs" />
-    <Compile Include="Messages\UpdateSociete.cs" />
+    <Compile Include="Messages\SimpleResult.cs" />
+    <Compile Include="Messages\UpdateGenSociete.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Tmpi.Pyrene.Infrastructure\Tmpi.Pyrene.Infrastructure.csproj">
-      <Project>{26e9e3cd-2f17-45a5-ba02-55c38f8c48a8}</Project>
-      <Name>Tmpi.Pyrene.Infrastructure</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Entities\PyreneDatabase.tt">

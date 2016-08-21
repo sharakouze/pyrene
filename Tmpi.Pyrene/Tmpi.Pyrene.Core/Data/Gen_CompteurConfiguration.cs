@@ -12,18 +12,18 @@
 
 namespace Tmpi.Pyrene.Core.Data
 {
-    using Tmpi.Pyrene.Core.Models.Entities;
+    using Tmpi.Pyrene.Models.Entities;
 
     // Compteur
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.21.1.0")]
-    public class CompteurConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Compteur>
+    public class Gen_CompteurConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Gen_Compteur>
     {
-        public CompteurConfiguration()
-            : this("CORE")
+        public Gen_CompteurConfiguration()
+            : this("Gen")
         {
         }
 
-        public CompteurConfiguration(string schema)
+        public Gen_CompteurConfiguration(string schema)
         {
             ToTable(schema + ".Compteur");
             HasKey(x => x.CleCompteur);
@@ -51,9 +51,9 @@ namespace Tmpi.Pyrene.Core.Data
             Property(x => x.LstFormatMois).HasColumnName(@"LstFormatMois").IsOptional().IsUnicode(false).HasColumnType("varchar").HasMaxLength(500);
 
             // Foreign keys
-            HasOptional(a => a.Societe).WithMany(b => b.Compteur).HasForeignKey(c => c.CleSociete).WillCascadeOnDelete(false); // FK_Compteur_CleSociete
-            HasOptional(a => a.SocieteSecteur).WithMany(b => b.Compteur).HasForeignKey(c => c.CleSecteur).WillCascadeOnDelete(false); // FK_Compteur_CleSecteur
-            HasOptional(a => a.SocieteService).WithMany(b => b.Compteur).HasForeignKey(c => c.CleService).WillCascadeOnDelete(false); // FK_Compteur_CleService
+            HasOptional(a => a.Gen_Societe).WithMany(b => b.Gen_Compteur).HasForeignKey(c => c.CleSociete).WillCascadeOnDelete(false); // FK_Compteur_CleSociete
+            HasOptional(a => a.Gen_SocieteSecteur).WithMany(b => b.Gen_Compteur).HasForeignKey(c => c.CleSecteur).WillCascadeOnDelete(false); // FK_Compteur_CleSecteur
+            HasOptional(a => a.Gen_SocieteService).WithMany(b => b.Gen_Compteur).HasForeignKey(c => c.CleService).WillCascadeOnDelete(false); // FK_Compteur_CleService
         }
     }
 

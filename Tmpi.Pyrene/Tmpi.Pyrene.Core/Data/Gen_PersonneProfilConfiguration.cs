@@ -12,18 +12,18 @@
 
 namespace Tmpi.Pyrene.Core.Data
 {
-    using Tmpi.Pyrene.Core.Models.Entities;
+    using Tmpi.Pyrene.Models.Entities;
 
     // PersonneProfil
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.21.1.0")]
-    public class PersonneProfilConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<PersonneProfil>
+    public class Gen_PersonneProfilConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Gen_PersonneProfil>
     {
-        public PersonneProfilConfiguration()
-            : this("CORE")
+        public Gen_PersonneProfilConfiguration()
+            : this("Gen")
         {
         }
 
-        public PersonneProfilConfiguration(string schema)
+        public Gen_PersonneProfilConfiguration(string schema)
         {
             ToTable(schema + ".PersonneProfil");
             HasKey(x => x.CleProfil);
@@ -36,10 +36,10 @@ namespace Tmpi.Pyrene.Core.Data
             Property(x => x.CleService).HasColumnName(@"CleService").IsOptional().HasColumnType("int");
 
             // Foreign keys
-            HasOptional(a => a.Societe).WithMany(b => b.PersonneProfil).HasForeignKey(c => c.CleSociete).WillCascadeOnDelete(false); // FK_PersonneProfil_CleSociete
-            HasOptional(a => a.SocieteSecteur).WithMany(b => b.PersonneProfil).HasForeignKey(c => c.CleSecteur).WillCascadeOnDelete(false); // FK_PersonneProfil_CleSecteur
-            HasOptional(a => a.SocieteService).WithMany(b => b.PersonneProfil).HasForeignKey(c => c.CleService).WillCascadeOnDelete(false); // FK_PersonneProfil_CleService
-            HasRequired(a => a.Personne).WithMany(b => b.PersonneProfil).HasForeignKey(c => c.ClePersonne); // FK_PersonneProfil_ClePersonne
+            HasOptional(a => a.Gen_Societe).WithMany(b => b.Gen_PersonneProfil).HasForeignKey(c => c.CleSociete).WillCascadeOnDelete(false); // FK_PersonneProfil_CleSociete
+            HasOptional(a => a.Gen_SocieteSecteur).WithMany(b => b.Gen_PersonneProfil).HasForeignKey(c => c.CleSecteur).WillCascadeOnDelete(false); // FK_PersonneProfil_CleSecteur
+            HasOptional(a => a.Gen_SocieteService).WithMany(b => b.Gen_PersonneProfil).HasForeignKey(c => c.CleService).WillCascadeOnDelete(false); // FK_PersonneProfil_CleService
+            HasRequired(a => a.Gen_Personne).WithMany(b => b.Gen_PersonneProfil).HasForeignKey(c => c.ClePersonne); // FK_PersonneProfil_ClePersonne
         }
     }
 

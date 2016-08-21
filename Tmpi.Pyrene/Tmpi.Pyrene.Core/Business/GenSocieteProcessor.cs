@@ -3,17 +3,17 @@ using System.Linq;
 using System.Linq.Dynamic;
 using Nelibur.ServiceModel.Services.Operations;
 using Tmpi.Pyrene.Core.Data;
-using Tmpi.Pyrene.Core.Models.Entities;
-using Tmpi.Pyrene.Core.Models.Messages;
-using Tmpi.Pyrene.Core.Models.Messages.Responses;
+using Tmpi.Pyrene.Models.Entities;
+using Tmpi.Pyrene.Models.Messages;
+using Tmpi.Pyrene.Models.Messages.Responses;
 using Tmpi.Pyrene.Infrastructure.Messages;
 
 namespace Tmpi.Pyrene.Core.Business
 {
-    public class SocieteProcessor :
-        IGet<SelectSociete>
+    public class GenSocieteProcessor :
+        IGet<SelectGenSociete>
     {
-        public object Get(SelectSociete request)
+        public object Get(SelectGenSociete request)
         {
             Debug.Assert(request != null);
 
@@ -21,7 +21,7 @@ namespace Tmpi.Pyrene.Core.Business
 
             using (var ctx = new CoreContext())
             {
-                var q = from soc in ctx.Set<Societe>()
+                var q = from soc in ctx.Set<Gen_Societe>()
                         select soc;
 
                 if (!EnumerableHelper.IsNullOrEmpty(request.CleSocieteList))

@@ -12,36 +12,36 @@
 
 namespace Tmpi.Pyrene.Core.Data
 {
-    using Tmpi.Pyrene.Core.Models.Entities;
+    using Tmpi.Pyrene.Models.Entities;
 
     using System.Linq;
 
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.21.1.0")]
     public class FakeCoreContext : ICoreContext
     {
-        public System.Data.Entity.DbSet<Compteur> Compteur { get; set; }
-        public System.Data.Entity.DbSet<CompteurValeur> CompteurValeur { get; set; }
-        public System.Data.Entity.DbSet<Mandat> Mandat { get; set; }
-        public System.Data.Entity.DbSet<MandatMandataire> MandatMandataire { get; set; }
-        public System.Data.Entity.DbSet<Personne> Personne { get; set; }
-        public System.Data.Entity.DbSet<PersonneProfil> PersonneProfil { get; set; }
-        public System.Data.Entity.DbSet<PersonneSignature> PersonneSignature { get; set; }
-        public System.Data.Entity.DbSet<Societe> Societe { get; set; }
-        public System.Data.Entity.DbSet<SocieteSecteur> SocieteSecteur { get; set; }
-        public System.Data.Entity.DbSet<SocieteService> SocieteService { get; set; }
+        public System.Data.Entity.DbSet<Gen_Compteur> Gen_Compteur { get; set; }
+        public System.Data.Entity.DbSet<Gen_CompteurValeur> Gen_CompteurValeur { get; set; }
+        public System.Data.Entity.DbSet<Gen_Mandat> Gen_Mandat { get; set; }
+        public System.Data.Entity.DbSet<Gen_MandatMandataire> Gen_MandatMandataire { get; set; }
+        public System.Data.Entity.DbSet<Gen_Personne> Gen_Personne { get; set; }
+        public System.Data.Entity.DbSet<Gen_PersonneProfil> Gen_PersonneProfil { get; set; }
+        public System.Data.Entity.DbSet<Gen_PersonneSignature> Gen_PersonneSignature { get; set; }
+        public System.Data.Entity.DbSet<Gen_Societe> Gen_Societe { get; set; }
+        public System.Data.Entity.DbSet<Gen_SocieteSecteur> Gen_SocieteSecteur { get; set; }
+        public System.Data.Entity.DbSet<Gen_SocieteService> Gen_SocieteService { get; set; }
 
         public FakeCoreContext()
         {
-            Compteur = new FakeDbSet<Compteur>("CleCompteur");
-            CompteurValeur = new FakeDbSet<CompteurValeur>("CleCompteur", "ValPeriode");
-            Mandat = new FakeDbSet<Mandat>("CleMandat");
-            MandatMandataire = new FakeDbSet<MandatMandataire>("CleMandataire");
-            Personne = new FakeDbSet<Personne>("ClePersonne");
-            PersonneProfil = new FakeDbSet<PersonneProfil>("CleProfil");
-            PersonneSignature = new FakeDbSet<PersonneSignature>("ClePersonne");
-            Societe = new FakeDbSet<Societe>("CleSociete");
-            SocieteSecteur = new FakeDbSet<SocieteSecteur>("CleSecteur");
-            SocieteService = new FakeDbSet<SocieteService>("CleService");
+            Gen_Compteur = new FakeDbSet<Gen_Compteur>("CleCompteur");
+            Gen_CompteurValeur = new FakeDbSet<Gen_CompteurValeur>("CleCompteur", "ValPeriode");
+            Gen_Mandat = new FakeDbSet<Gen_Mandat>("CleMandat");
+            Gen_MandatMandataire = new FakeDbSet<Gen_MandatMandataire>("CleMandataire");
+            Gen_Personne = new FakeDbSet<Gen_Personne>("ClePersonne");
+            Gen_PersonneProfil = new FakeDbSet<Gen_PersonneProfil>("CleProfil");
+            Gen_PersonneSignature = new FakeDbSet<Gen_PersonneSignature>("ClePersonne");
+            Gen_Societe = new FakeDbSet<Gen_Societe>("CleSociete");
+            Gen_SocieteSecteur = new FakeDbSet<Gen_SocieteSecteur>("CleSecteur");
+            Gen_SocieteService = new FakeDbSet<Gen_SocieteService>("CleService");
         }
 
         public int SaveChangesCount { get; private set; }

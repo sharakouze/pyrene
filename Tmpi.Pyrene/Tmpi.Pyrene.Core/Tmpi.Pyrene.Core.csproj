@@ -66,13 +66,7 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Business\SocieteProcessor.cs" />
-    <Compile Include="Data\CompteurConfiguration.cs">
-      <DependentUpon>CoreDatabase.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\CompteurValeurConfiguration.cs">
-      <DependentUpon>CoreDatabase.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Business\GenSocieteProcessor.cs" />
     <Compile Include="Data\CoreContext.cs">
       <DependentUpon>CoreDatabase.tt</DependentUpon>
     </Compile>
@@ -87,39 +81,45 @@
     <Compile Include="Data\FakeDbSet.cs">
       <DependentUpon>CoreDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\Gen_CompteurConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Gen_CompteurValeurConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Gen_MandatConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Gen_MandatMandataireConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Gen_PersonneConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Gen_PersonneProfilConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Gen_PersonneSignatureConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Gen_SocieteConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Gen_SocieteSecteurConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Gen_SocieteServiceConfiguration.cs">
+      <DependentUpon>CoreDatabase.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\ICoreContext.cs">
-      <DependentUpon>CoreDatabase.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\MandatConfiguration.cs">
-      <DependentUpon>CoreDatabase.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\MandatMandataireConfiguration.cs">
-      <DependentUpon>CoreDatabase.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\PersonneConfiguration.cs">
-      <DependentUpon>CoreDatabase.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\PersonneProfilConfiguration.cs">
-      <DependentUpon>CoreDatabase.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\PersonneSignatureConfiguration.cs">
-      <DependentUpon>CoreDatabase.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\SocieteConfiguration.cs">
-      <DependentUpon>CoreDatabase.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\SocieteSecteurConfiguration.cs">
-      <DependentUpon>CoreDatabase.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\SocieteServiceConfiguration.cs">
       <DependentUpon>CoreDatabase.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Tmpi.Pyrene.Infrastructure\Tmpi.Pyrene.Infrastructure.csproj">
-      <Project>{26e9e3cd-2f17-45a5-ba02-55c38f8c48a8}</Project>
-      <Name>Tmpi.Pyrene.Infrastructure</Name>
+    <ProjectReference Include="..\Tmpi.Pyrene.Models\Tmpi.Pyrene.Models.csproj">
+      <Project>{e515a547-3e09-4f2e-b1f0-09d3e16fb36a}</Project>
+      <Name>Tmpi.Pyrene.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

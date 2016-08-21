@@ -12,30 +12,31 @@
 
 namespace Tmpi.Pyrene.Core.Data
 {
-    using Tmpi.Pyrene.Core.Models.Entities;
+    using Tmpi.Pyrene.Models.Entities;
 
-    // Societe
+    // SocieteService
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.21.1.0")]
-    public class SocieteConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Societe>
+    public class Gen_SocieteServiceConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Gen_SocieteService>
     {
-        public SocieteConfiguration()
-            : this("CORE")
+        public Gen_SocieteServiceConfiguration()
+            : this("Gen")
         {
         }
 
-        public SocieteConfiguration(string schema)
+        public Gen_SocieteServiceConfiguration(string schema)
         {
-            ToTable(schema + ".Societe");
-            HasKey(x => x.CleSociete);
+            ToTable(schema + ".SocieteService");
+            HasKey(x => x.CleService);
 
-            Property(x => x.CleSociete).HasColumnName(@"CleSociete").IsRequired().HasColumnType("int").HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
-            Property(x => x.CodSociete).HasColumnName(@"CodSociete").IsRequired().IsUnicode(false).HasColumnType("varchar").HasMaxLength(100);
-            Property(x => x.LibSociete).HasColumnName(@"LibSociete").IsRequired().IsUnicode(false).HasColumnType("varchar").HasMaxLength(200);
-            Property(x => x.TxtSociete).HasColumnName(@"TxtSociete").IsOptional().IsUnicode(false).HasColumnType("varchar").HasMaxLength(500);
+            Property(x => x.CleService).HasColumnName(@"CleService").IsRequired().HasColumnType("int").HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
+            Property(x => x.CodService).HasColumnName(@"CodService").IsRequired().IsUnicode(false).HasColumnType("varchar").HasMaxLength(100);
+            Property(x => x.LibService).HasColumnName(@"LibService").IsRequired().IsUnicode(false).HasColumnType("varchar").HasMaxLength(200);
+            Property(x => x.TxtService).HasColumnName(@"TxtService").IsOptional().IsUnicode(false).HasColumnType("varchar").HasMaxLength(500);
             Property(x => x.EstActif).HasColumnName(@"EstActif").IsRequired().HasColumnType("bit");
             Property(x => x.DatCreation).HasColumnName(@"DatCreation").IsRequired().HasColumnType("datetime");
             Property(x => x.DatModif).HasColumnName(@"DatModif").IsRequired().HasColumnType("datetime");
             Property(x => x.CodExterne).HasColumnName(@"CodExterne").IsOptional().IsUnicode(false).HasColumnType("varchar").HasMaxLength(100);
+            Property(x => x.CleSecteur).HasColumnName(@"CleSecteur").IsRequired().HasColumnType("int");
             Property(x => x.AdrRue).HasColumnName(@"AdrRue").IsOptional().IsUnicode(false).HasColumnType("varchar").HasMaxLength(200);
             Property(x => x.AdrCode).HasColumnName(@"AdrCode").IsOptional().IsUnicode(false).HasColumnType("varchar").HasMaxLength(10);
             Property(x => x.AdrVille).HasColumnName(@"AdrVille").IsOptional().IsUnicode(false).HasColumnType("varchar").HasMaxLength(100);
@@ -43,6 +44,9 @@ namespace Tmpi.Pyrene.Core.Data
             Property(x => x.NumTelep).HasColumnName(@"NumTelep").IsOptional().IsUnicode(false).HasColumnType("varchar").HasMaxLength(25);
             Property(x => x.NumFax).HasColumnName(@"NumFax").IsOptional().IsUnicode(false).HasColumnType("varchar").HasMaxLength(25);
             Property(x => x.NumEmail).HasColumnName(@"NumEmail").IsOptional().IsUnicode(false).HasColumnType("varchar").HasMaxLength(100);
+
+            // Foreign keys
+            HasRequired(a => a.Gen_SocieteSecteur).WithMany(b => b.Gen_SocieteService).HasForeignKey(c => c.CleSecteur).WillCascadeOnDelete(false); // FK_SocieteService_CleSecteur
         }
     }
 

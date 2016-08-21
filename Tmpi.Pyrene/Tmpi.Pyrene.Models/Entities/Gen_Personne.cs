@@ -26,7 +26,7 @@ namespace Tmpi.Pyrene.Models.Entities
         public System.DateTime DatCreation { get; set; } // DatCreation
         public System.DateTime DatModif { get; set; } // DatModif
         public string CodExterne { get; set; } // CodExterne (length: 100)
-        public byte? TypGenre { get; set; } // TypGenre
+        public TypGenre? TypGenre { get; set; } // TypGenre
         public string NumTelep { get; set; } // NumTelep (length: 25)
         public string NumEmail { get; set; } // NumEmail (length: 100)
 

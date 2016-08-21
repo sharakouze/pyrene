@@ -12,18 +12,18 @@
 
 namespace Tmpi.Pyrene.Core.Data
 {
-    using Tmpi.Pyrene.Core.Models.Entities;
+    using Tmpi.Pyrene.Models.Entities;
 
     // MandatMandataire
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.21.1.0")]
-    public class MandatMandataireConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<MandatMandataire>
+    public class Gen_MandatMandataireConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Gen_MandatMandataire>
     {
-        public MandatMandataireConfiguration()
-            : this("CORE")
+        public Gen_MandatMandataireConfiguration()
+            : this("Gen")
         {
         }
 
-        public MandatMandataireConfiguration(string schema)
+        public Gen_MandatMandataireConfiguration(string schema)
         {
             ToTable(schema + ".MandatMandataire");
             HasKey(x => x.CleMandataire);
@@ -37,11 +37,11 @@ namespace Tmpi.Pyrene.Core.Data
             Property(x => x.EstSuspendu).HasColumnName(@"EstSuspendu").IsRequired().HasColumnType("bit");
 
             // Foreign keys
-            HasOptional(a => a.Societe).WithMany(b => b.MandatMandataire).HasForeignKey(c => c.CleSociete).WillCascadeOnDelete(false); // FK_MandatMandataire_CleSociete
-            HasOptional(a => a.SocieteSecteur).WithMany(b => b.MandatMandataire).HasForeignKey(c => c.CleSecteur).WillCascadeOnDelete(false); // FK_MandatMandataire_CleSecteur
-            HasOptional(a => a.SocieteService).WithMany(b => b.MandatMandataire).HasForeignKey(c => c.CleService).WillCascadeOnDelete(false); // FK_MandatMandataire_CleService
-            HasRequired(a => a.Mandat).WithMany(b => b.MandatMandataire).HasForeignKey(c => c.CleMandat); // FK_MandatMandataire_CleMandat
-            HasRequired(a => a.Personne).WithMany(b => b.MandatMandataire).HasForeignKey(c => c.ClePersonne).WillCascadeOnDelete(false); // FK_MandatMandataire_ClePersonne
+            HasOptional(a => a.Gen_Societe).WithMany(b => b.Gen_MandatMandataire).HasForeignKey(c => c.CleSociete).WillCascadeOnDelete(false); // FK_MandatMandataire_CleSociete
+            HasOptional(a => a.Gen_SocieteSecteur).WithMany(b => b.Gen_MandatMandataire).HasForeignKey(c => c.CleSecteur).WillCascadeOnDelete(false); // FK_MandatMandataire_CleSecteur
+            HasOptional(a => a.Gen_SocieteService).WithMany(b => b.Gen_MandatMandataire).HasForeignKey(c => c.CleService).WillCascadeOnDelete(false); // FK_MandatMandataire_CleService
+            HasRequired(a => a.Gen_Mandat).WithMany(b => b.Gen_MandatMandataire).HasForeignKey(c => c.CleMandat); // FK_MandatMandataire_CleMandat
+            HasRequired(a => a.Gen_Personne).WithMany(b => b.Gen_MandatMandataire).HasForeignKey(c => c.ClePersonne).WillCascadeOnDelete(false); // FK_MandatMandataire_ClePersonne
         }
     }
 

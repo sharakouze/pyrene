@@ -56,12 +56,6 @@
     <Compile Include="EnumerableHelperTests.cs" />
     <Compile Include="QueryableHelperTests.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Tmpi.Pyrene.Infrastructure\Tmpi.Pyrene.Infrastructure.csproj">
-      <Project>{26e9e3cd-2f17-45a5-ba02-55c38f8c48a8}</Project>
-      <Name>Tmpi.Pyrene.Infrastructure</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

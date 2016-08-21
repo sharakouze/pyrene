@@ -12,20 +12,20 @@
 
 namespace Tmpi.Pyrene.Core.Data
 {
-    using Tmpi.Pyrene.Core.Models.Entities;
+    using Tmpi.Pyrene.Models.Entities;
 
     public interface ICoreContext : System.IDisposable
     {
-        System.Data.Entity.DbSet<Compteur> Compteur { get; set; } // Compteur
-        System.Data.Entity.DbSet<CompteurValeur> CompteurValeur { get; set; } // CompteurValeur
-        System.Data.Entity.DbSet<Mandat> Mandat { get; set; } // Mandat
-        System.Data.Entity.DbSet<MandatMandataire> MandatMandataire { get; set; } // MandatMandataire
-        System.Data.Entity.DbSet<Personne> Personne { get; set; } // Personne
-        System.Data.Entity.DbSet<PersonneProfil> PersonneProfil { get; set; } // PersonneProfil
-        System.Data.Entity.DbSet<PersonneSignature> PersonneSignature { get; set; } // PersonneSignature
-        System.Data.Entity.DbSet<Societe> Societe { get; set; } // Societe
-        System.Data.Entity.DbSet<SocieteSecteur> SocieteSecteur { get; set; } // SocieteSecteur
-        System.Data.Entity.DbSet<SocieteService> SocieteService { get; set; } // SocieteService
+        System.Data.Entity.DbSet<Gen_Compteur> Gen_Compteur { get; set; } // Compteur
+        System.Data.Entity.DbSet<Gen_CompteurValeur> Gen_CompteurValeur { get; set; } // CompteurValeur
+        System.Data.Entity.DbSet<Gen_Mandat> Gen_Mandat { get; set; } // Mandat
+        System.Data.Entity.DbSet<Gen_MandatMandataire> Gen_MandatMandataire { get; set; } // MandatMandataire
+        System.Data.Entity.DbSet<Gen_Personne> Gen_Personne { get; set; } // Personne
+        System.Data.Entity.DbSet<Gen_PersonneProfil> Gen_PersonneProfil { get; set; } // PersonneProfil
+        System.Data.Entity.DbSet<Gen_PersonneSignature> Gen_PersonneSignature { get; set; } // PersonneSignature
+        System.Data.Entity.DbSet<Gen_Societe> Gen_Societe { get; set; } // Societe
+        System.Data.Entity.DbSet<Gen_SocieteSecteur> Gen_SocieteSecteur { get; set; } // SocieteSecteur
+        System.Data.Entity.DbSet<Gen_SocieteService> Gen_SocieteService { get; set; } // SocieteService
 
         int SaveChanges();
         System.Threading.Tasks.Task<int> SaveChangesAsync();

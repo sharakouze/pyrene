@@ -12,23 +12,23 @@
 
 namespace Tmpi.Pyrene.Core.Data
 {
-    using Tmpi.Pyrene.Core.Models.Entities;
+    using Tmpi.Pyrene.Models.Entities;
 
     using System.Linq;
 
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.21.1.0")]
     public class CoreContext : System.Data.Entity.DbContext, ICoreContext
     {
-        public System.Data.Entity.DbSet<Compteur> Compteur { get; set; } // Compteur
-        public System.Data.Entity.DbSet<CompteurValeur> CompteurValeur { get; set; } // CompteurValeur
-        public System.Data.Entity.DbSet<Mandat> Mandat { get; set; } // Mandat
-        public System.Data.Entity.DbSet<MandatMandataire> MandatMandataire { get; set; } // MandatMandataire
-        public System.Data.Entity.DbSet<Personne> Personne { get; set; } // Personne
-        public System.Data.Entity.DbSet<PersonneProfil> PersonneProfil { get; set; } // PersonneProfil
-        public System.Data.Entity.DbSet<PersonneSignature> PersonneSignature { get; set; } // PersonneSignature
-        public System.Data.Entity.DbSet<Societe> Societe { get; set; } // Societe
-        public System.Data.Entity.DbSet<SocieteSecteur> SocieteSecteur { get; set; } // SocieteSecteur
-        public System.Data.Entity.DbSet<SocieteService> SocieteService { get; set; } // SocieteService
+        public System.Data.Entity.DbSet<Gen_Compteur> Gen_Compteur { get; set; } // Compteur
+        public System.Data.Entity.DbSet<Gen_CompteurValeur> Gen_CompteurValeur { get; set; } // CompteurValeur
+        public System.Data.Entity.DbSet<Gen_Mandat> Gen_Mandat { get; set; } // Mandat
+        public System.Data.Entity.DbSet<Gen_MandatMandataire> Gen_MandatMandataire { get; set; } // MandatMandataire
+        public System.Data.Entity.DbSet<Gen_Personne> Gen_Personne { get; set; } // Personne
+        public System.Data.Entity.DbSet<Gen_PersonneProfil> Gen_PersonneProfil { get; set; } // PersonneProfil
+        public System.Data.Entity.DbSet<Gen_PersonneSignature> Gen_PersonneSignature { get; set; } // PersonneSignature
+        public System.Data.Entity.DbSet<Gen_Societe> Gen_Societe { get; set; } // Societe
+        public System.Data.Entity.DbSet<Gen_SocieteSecteur> Gen_SocieteSecteur { get; set; } // SocieteSecteur
+        public System.Data.Entity.DbSet<Gen_SocieteService> Gen_SocieteService { get; set; } // SocieteService
 
         static CoreContext()
         {
@@ -78,30 +78,30 @@ namespace Tmpi.Pyrene.Core.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Configurations.Add(new CompteurConfiguration());
-            modelBuilder.Configurations.Add(new CompteurValeurConfiguration());
-            modelBuilder.Configurations.Add(new MandatConfiguration());
-            modelBuilder.Configurations.Add(new MandatMandataireConfiguration());
-            modelBuilder.Configurations.Add(new PersonneConfiguration());
-            modelBuilder.Configurations.Add(new PersonneProfilConfiguration());
-            modelBuilder.Configurations.Add(new PersonneSignatureConfiguration());
-            modelBuilder.Configurations.Add(new SocieteConfiguration());
-            modelBuilder.Configurations.Add(new SocieteSecteurConfiguration());
-            modelBuilder.Configurations.Add(new SocieteServiceConfiguration());
+            modelBuilder.Configurations.Add(new Gen_CompteurConfiguration());
+            modelBuilder.Configurations.Add(new Gen_CompteurValeurConfiguration());
+            modelBuilder.Configurations.Add(new Gen_MandatConfiguration());
+            modelBuilder.Configurations.Add(new Gen_MandatMandataireConfiguration());
+            modelBuilder.Configurations.Add(new Gen_PersonneConfiguration());
+            modelBuilder.Configurations.Add(new Gen_PersonneProfilConfiguration());
+            modelBuilder.Configurations.Add(new Gen_PersonneSignatureConfiguration());
+            modelBuilder.Configurations.Add(new Gen_SocieteConfiguration());
+            modelBuilder.Configurations.Add(new Gen_SocieteSecteurConfiguration());
+            modelBuilder.Configurations.Add(new Gen_SocieteServiceConfiguration());
         }
 
         public static System.Data.Entity.DbModelBuilder CreateModel(System.Data.Entity.DbModelBuilder modelBuilder, string schema)
         {
-            modelBuilder.Configurations.Add(new CompteurConfiguration(schema));
-            modelBuilder.Configurations.Add(new CompteurValeurConfiguration(schema));
-            modelBuilder.Configurations.Add(new MandatConfiguration(schema));
-            modelBuilder.Configurations.Add(new MandatMandataireConfiguration(schema));
-            modelBuilder.Configurations.Add(new PersonneConfiguration(schema));
-            modelBuilder.Configurations.Add(new PersonneProfilConfiguration(schema));
-            modelBuilder.Configurations.Add(new PersonneSignatureConfiguration(schema));
-            modelBuilder.Configurations.Add(new SocieteConfiguration(schema));
-            modelBuilder.Configurations.Add(new SocieteSecteurConfiguration(schema));
-            modelBuilder.Configurations.Add(new SocieteServiceConfiguration(schema));
+            modelBuilder.Configurations.Add(new Gen_CompteurConfiguration(schema));
+            modelBuilder.Configurations.Add(new Gen_CompteurValeurConfiguration(schema));
+            modelBuilder.Configurations.Add(new Gen_MandatConfiguration(schema));
+            modelBuilder.Configurations.Add(new Gen_MandatMandataireConfiguration(schema));
+            modelBuilder.Configurations.Add(new Gen_PersonneConfiguration(schema));
+            modelBuilder.Configurations.Add(new Gen_PersonneProfilConfiguration(schema));
+            modelBuilder.Configurations.Add(new Gen_PersonneSignatureConfiguration(schema));
+            modelBuilder.Configurations.Add(new Gen_SocieteConfiguration(schema));
+            modelBuilder.Configurations.Add(new Gen_SocieteSecteurConfiguration(schema));
+            modelBuilder.Configurations.Add(new Gen_SocieteServiceConfiguration(schema));
             return modelBuilder;
         }
     }

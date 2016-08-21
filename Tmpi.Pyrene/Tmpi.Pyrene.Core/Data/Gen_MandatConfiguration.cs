@@ -12,18 +12,18 @@
 
 namespace Tmpi.Pyrene.Core.Data
 {
-    using Tmpi.Pyrene.Core.Models.Entities;
+    using Tmpi.Pyrene.Models.Entities;
 
     // Mandat
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.21.1.0")]
-    public class MandatConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Mandat>
+    public class Gen_MandatConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Gen_Mandat>
     {
-        public MandatConfiguration()
-            : this("CORE")
+        public Gen_MandatConfiguration()
+            : this("Gen")
         {
         }
 
-        public MandatConfiguration(string schema)
+        public Gen_MandatConfiguration(string schema)
         {
             ToTable(schema + ".Mandat");
             HasKey(x => x.CleMandat);
@@ -36,7 +36,7 @@ namespace Tmpi.Pyrene.Core.Data
             Property(x => x.DatCreation).HasColumnName(@"DatCreation").IsRequired().HasColumnType("datetime");
             Property(x => x.DatModif).HasColumnName(@"DatModif").IsRequired().HasColumnType("datetime");
             Property(x => x.CodExterne).HasColumnName(@"CodExterne").IsOptional().IsUnicode(false).HasColumnType("varchar").HasMaxLength(100);
-            Property(x => x.TypMandat).HasColumnName(@"TypMandat").IsRequired().HasColumnType("tinyint");
+            Property(x => x.TypMandat).HasColumnName(@"TypMandat").IsRequired().HasColumnType("smallint");
             Property(x => x.NivMandat).HasColumnName(@"NivMandat").IsRequired().HasColumnType("tinyint");
             Property(x => x.NbrSignature).HasColumnName(@"NbrSignature").IsRequired().HasColumnType("tinyint");
             Property(x => x.TxtMessage).HasColumnName(@"TxtMessage").IsOptional().IsUnicode(false).HasColumnType("varchar");

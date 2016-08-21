@@ -1,4 +1,4 @@
-﻿<#@ include file="EF.Reverse.POCO.Core.ttinclude" #>
+﻿<#@ include file="..\..\Shared\EF.Reverse.POCO.Core.ttinclude" #>
 <#
     // v2.21.1
     // Please make changes to the settings below.
@@ -32,7 +32,7 @@
     NullableShortHand = true; //true => T?, false => Nullable<T>
     AddUnitTestingDbContext = true; // Will add a FakeDbContext and FakeDbSet for easy unit testing
     IncludeQueryTraceOn9481Flag = false; // If SqlServer 2014 appears frozen / take a long time when this file is saved, try setting this to true (you will also need elevated privileges).
-    AdditionalNamespaces = new[] { "Tmpi.Pyrene.Core.Models.Entities" };  // To include extra namespaces, include them here. i.e. "Microsoft.AspNet.Identity.EntityFramework"
+    AdditionalNamespaces = new[] { "Tmpi.Pyrene.Models.Entities" };  // To include extra namespaces, include them here. i.e. "Microsoft.AspNet.Identity.EntityFramework"
     AdditionalContextInterfaceItems = new[] // To include extra db context interface items, include them here. Also set MakeClassesPartial=true, and implement the partial DbContext class functions.
     {
         ""  //  example: "void SetAutoDetectChangesEnabled(bool flag);"
@@ -104,7 +104,7 @@
     // If there are multiple schemas, then the table name is prefixed with the schema, except for dbo.
     // Ie. dbo.hello will be Hello.
     //     abc.hello will be AbcHello.
-    PrependSchemaName = false;   // Control if the schema name is prepended to the table name
+    PrependSchemaName = true;   // Control if the schema name is prepended to the table name
 
 
     // Filtering **************************************************************************************************************************
@@ -123,8 +123,8 @@
     //              TableFilterInclude = new Regex("(.*_FR_.*)|(data_.*)");
     //              TableFilterInclude = new Regex("^table_name1$|^table_name2$|etc");
     //              ColumnFilterExclude = new Regex("^FK_.*$");
-    SchemaFilterExclude = null;
-    SchemaFilterInclude = new Regex("CORE");
+    SchemaFilterExclude = new Regex("SA_TMPI");
+    SchemaFilterInclude = new Regex("Gen");
     TableFilterExclude = null;
     TableFilterInclude = null;
     ColumnFilterExclude = null;
@@ -499,6 +499,6 @@
     if (tables.Count > 0 || storedProcs.Count > 0)
     {
 #>
-<#@ include file="EF.Reverse.POCO.ttinclude" #>
+<#@ include file="..\..\Shared\EF.Reverse.POCO.ttinclude" #>
 <#@ import namespace="System.Xml.Schema" #>
 <# } #>

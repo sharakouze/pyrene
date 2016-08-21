@@ -12,18 +12,18 @@
 
 namespace Tmpi.Pyrene.Core.Data
 {
-    using Tmpi.Pyrene.Core.Models.Entities;
+    using Tmpi.Pyrene.Models.Entities;
 
     // PersonneSignature
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.21.1.0")]
-    public class PersonneSignatureConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<PersonneSignature>
+    public class Gen_PersonneSignatureConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Gen_PersonneSignature>
     {
-        public PersonneSignatureConfiguration()
-            : this("CORE")
+        public Gen_PersonneSignatureConfiguration()
+            : this("Gen")
         {
         }
 
-        public PersonneSignatureConfiguration(string schema)
+        public Gen_PersonneSignatureConfiguration(string schema)
         {
             ToTable(schema + ".PersonneSignature");
             HasKey(x => x.ClePersonne);
@@ -33,7 +33,7 @@ namespace Tmpi.Pyrene.Core.Data
             Property(x => x.TypMime).HasColumnName(@"TypMime").IsRequired().IsUnicode(false).HasColumnType("varchar").HasMaxLength(255);
 
             // Foreign keys
-            HasRequired(a => a.Personne).WithOptional(b => b.PersonneSignature); // FK_PersonneSignature_ClePersonne
+            HasRequired(a => a.Gen_Personne).WithOptional(b => b.Gen_PersonneSignature); // FK_PersonneSignature_ClePersonne
         }
     }
 

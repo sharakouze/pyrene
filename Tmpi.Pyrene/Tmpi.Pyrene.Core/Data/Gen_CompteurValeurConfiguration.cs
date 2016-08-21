@@ -12,18 +12,18 @@
 
 namespace Tmpi.Pyrene.Core.Data
 {
-    using Tmpi.Pyrene.Core.Models.Entities;
+    using Tmpi.Pyrene.Models.Entities;
 
     // CompteurValeur
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.21.1.0")]
-    public class CompteurValeurConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<CompteurValeur>
+    public class Gen_CompteurValeurConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Gen_CompteurValeur>
     {
-        public CompteurValeurConfiguration()
-            : this("CORE")
+        public Gen_CompteurValeurConfiguration()
+            : this("Gen")
         {
         }
 
-        public CompteurValeurConfiguration(string schema)
+        public Gen_CompteurValeurConfiguration(string schema)
         {
             ToTable(schema + ".CompteurValeur");
             HasKey(x => new { x.CleCompteur, x.ValPeriode });
@@ -33,7 +33,7 @@ namespace Tmpi.Pyrene.Core.Data
             Property(x => x.ValCompteur).HasColumnName(@"ValCompteur").IsRequired().HasColumnType("int");
 
             // Foreign keys
-            HasRequired(a => a.Compteur).WithMany(b => b.CompteurValeur).HasForeignKey(c => c.CleCompteur); // FK_CompteurValeur_CleCompteur
+            HasRequired(a => a.Gen_Compteur).WithMany(b => b.Gen_CompteurValeur).HasForeignKey(c => c.CleCompteur); // FK_CompteurValeur_CleCompteur
         }
     }
 

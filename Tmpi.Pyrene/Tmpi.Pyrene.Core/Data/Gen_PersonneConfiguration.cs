@@ -12,18 +12,18 @@
 
 namespace Tmpi.Pyrene.Core.Data
 {
-    using Tmpi.Pyrene.Core.Models.Entities;
+    using Tmpi.Pyrene.Models.Entities;
 
     // Personne
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.21.1.0")]
-    public class PersonneConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Personne>
+    public class Gen_PersonneConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Gen_Personne>
     {
-        public PersonneConfiguration()
-            : this("CORE")
+        public Gen_PersonneConfiguration()
+            : this("Gen")
         {
         }
 
-        public PersonneConfiguration(string schema)
+        public Gen_PersonneConfiguration(string schema)
         {
             ToTable(schema + ".Personne");
             HasKey(x => x.ClePersonne);

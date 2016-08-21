@@ -25,11 +25,11 @@ namespace Tmpi.Pyrene.Models.Entities
         public System.DateTime DatCreation { get; set; } // DatCreation
         public System.DateTime DatModif { get; set; } // DatModif
         public string CodExterne { get; set; } // CodExterne (length: 100)
-        public short TypCompteur { get; set; } // TypCompteur
+        public TypCompteur TypCompteur { get; set; } // TypCompteur
         public int? CleSociete { get; set; } // CleSociete
         public int? CleSecteur { get; set; } // CleSecteur
         public int? CleService { get; set; } // CleService
-        public byte TypPeriodicite { get; set; } // TypPeriodicite
+        public TypPeriodicite TypPeriodicite { get; set; } // TypPeriodicite
         public string ValPrefixe1 { get; set; } // ValPrefixe1 (length: 25)
         public string ValFormatDate1 { get; set; } // ValFormatDate1 (length: 25)
         public string ValPrefixe2 { get; set; } // ValPrefixe2 (length: 25)
