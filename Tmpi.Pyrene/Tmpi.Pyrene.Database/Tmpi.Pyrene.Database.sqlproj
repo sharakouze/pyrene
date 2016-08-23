@@ -60,51 +60,33 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="Gen" />
-    <Folder Include="Gen\Tables" />
-    <Folder Include="Equ" />
-    <Folder Include="Equ\Tables" />
     <Folder Include="Scripts" />
     <Folder Include="Scripts\Merge" />
-    <Folder Include="Sto" />
-    <Folder Include="Sto\Tables" />
-    <Folder Include="Bud" />
-    <Folder Include="Bud\Tables" />
-    <Folder Include="Trs" />
-    <Folder Include="Trs\Tables" />
+    <Folder Include="Tables" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Gen\Tables\Compteur.sql" />
-    <Build Include="Gen\Tables\CompteurValeur.sql" />
-    <Build Include="Gen\Tables\Mandat.sql" />
-    <Build Include="Gen\Tables\MandatMandataire.sql" />
-    <Build Include="Gen\Tables\Personne.sql" />
-    <Build Include="Gen\Tables\PersonneProfil.sql" />
-    <Build Include="Gen\Tables\PersonneSignature.sql" />
-    <Build Include="Gen\Tables\Societe.sql" />
-    <Build Include="Gen\Tables\SocieteSecteur.sql" />
-    <Build Include="Gen\Tables\SocieteService.sql" />
-    <Build Include="Equ\Tables\Atelier.sql" />
-    <Build Include="Equ\Tables\AtelierResponsable.sql" />
-    <Build Include="Equ\Tables\Equip.sql" />
-    <None Include="Scripts\Merge\Script_0_00.sql" />
-    <None Include="Scripts\Merge\Script_0_04.sql" />
-    <Build Include="Sto\Tables\Fourn.sql" />
-    <Build Include="Sto\Tables\FournBanque.sql" />
-    <Build Include="Bud\Tables\Exercice.sql" />
-    <Build Include="Sto\Tables\TVA.sql" />
-    <Build Include="Sto\Tables\FournContact.sql" />
-    <Build Include="Trs\Tables\Tiers.sql" />
-    <Build Include="Trs\Tables\TiersContact.sql" />
-    <Build Include="Bud\Bud.sql" />
-    <Build Include="Gen\Gen.sql" />
-    <Build Include="Equ\Equ.sql" />
-    <Build Include="Sto\Sto.sql" />
-    <Build Include="Trs\Trs.sql" />
+    <None Include="Scripts\Merge\Script_0_0.sql" />
+    <Build Include="Tables\GenExercice.sql" />
+    <Build Include="Tables\GenTVA.sql" />
+    <Build Include="Tables\GenFourn.sql" />
+    <Build Include="Tables\GenFournBanque.sql" />
+    <Build Include="Tables\GenFournContact.sql" />
+    <Build Include="Tables\GenSocieteService.sql" />
+    <Build Include="Tables\GenCompteur.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\Merge\Script_0_01.sql" />
-    <None Include="Scripts\Merge\Script_0_03.sql" />
     <None Include="Tmpi.Pyrene.Database.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Tables\GenCompteurValeur.sql" />
+    <Build Include="Tables\GenMandat.sql" />
+    <Build Include="Tables\GenMandatMandataire.sql" />
+    <Build Include="Tables\GenPersonne.sql" />
+    <Build Include="Tables\GenPersonneProfil.sql" />
+    <Build Include="Tables\GenPersonneSignature.sql" />
+    <Build Include="Tables\GenSociete.sql" />
+    <Build Include="Tables\GenSocieteSecteur.sql" />
+    <Build Include="Tables\GenTiers.sql" />
+    <Build Include="Tables\GenTiersContact.sql" />
   </ItemGroup>
 </Project>
