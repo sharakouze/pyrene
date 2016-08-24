@@ -44,14 +44,23 @@
     <Compile Include="Types\GenCompteur.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
+    <Compile Include="Types\GenCompteur.part.cs">
+      <DependentUpon>Gen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Types\GenCompteurValeur.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenExercice.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
+    <Compile Include="Types\GenExercice.part.cs">
+      <DependentUpon>Gen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Types\GenFourn.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Types\GenFourn.part.cs">
+      <DependentUpon>Gen.cs</DependentUpon>
     </Compile>
     <Compile Include="Types\GenFournBanque.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
@@ -59,14 +68,21 @@
     <Compile Include="Types\GenFournContact.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
+    <Compile Include="Types\Gen.cs" />
     <Compile Include="Types\GenMandat.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Types\GenMandat.part.cs">
+      <DependentUpon>Gen.cs</DependentUpon>
     </Compile>
     <Compile Include="Types\GenMandatMandataire.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenPersonne.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Types\GenPersonne.part.cs">
+      <DependentUpon>Gen.cs</DependentUpon>
     </Compile>
     <Compile Include="Types\GenPersonneProfil.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
@@ -77,14 +93,26 @@
     <Compile Include="Types\GenSociete.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
+    <Compile Include="Types\GenSociete.part.cs">
+      <DependentUpon>Gen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Types\GenSocieteSecteur.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Types\GenSocieteSecteur.part.cs">
+      <DependentUpon>Gen.cs</DependentUpon>
     </Compile>
     <Compile Include="Types\GenSocieteService.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
+    <Compile Include="Types\GenSocieteService.part.cs">
+      <DependentUpon>Gen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Types\GenTiers.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Types\GenTiers.part.cs">
+      <DependentUpon>Gen.cs</DependentUpon>
     </Compile>
     <Compile Include="Types\GenTiersContact.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
@@ -92,20 +120,18 @@
     <Compile Include="Types\GenTVA.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
+    <Compile Include="Types\GenTVA.part.cs">
+      <DependentUpon>Gen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Types\IHasAddress.cs" />
+    <Compile Include="Types\IAuditable.cs" />
     <Compile Include="Types\TypMandat.cs" />
     <Compile Include="Types\TypGenre.cs" />
     <Compile Include="Types\TypPeriodicite.cs" />
     <Compile Include="Types\TypCompteur.cs" />
     <Compile Include="Messages\DeleteGenSociete.cs" />
-    <Compile Include="Messages\EnumerableHelper.cs" />
-    <Compile Include="Messages\IFilterableRequest.cs" />
-    <Compile Include="Messages\IPaginableRequest.cs" />
-    <Compile Include="Messages\ISortableRequest.cs" />
-    <Compile Include="Messages\QueryableHelper.cs" />
-    <Compile Include="Messages\SelectRequest.cs" />
     <Compile Include="Messages\SelectGenSociete.cs" />
     <Compile Include="Messages\Responses\SelectSocieteResponse.cs" />
-    <Compile Include="Messages\SimpleResult.cs" />
     <Compile Include="Messages\UpdateGenSociete.cs" />
     <Compile Include="Types\OrmLite.Poco.cs">
       <AutoGen>True</AutoGen>

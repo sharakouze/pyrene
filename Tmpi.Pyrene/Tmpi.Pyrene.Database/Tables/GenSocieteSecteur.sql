@@ -18,7 +18,7 @@
     [NumEmail] VARCHAR(100) NULL,
     CONSTRAINT [PK_GenSocieteSecteur] PRIMARY KEY ([CleSecteur]),
     CONSTRAINT [UN_GenSocieteSecteur_CodSecteur] UNIQUE ([CodSecteur]),
-    CONSTRAINT [FK_GenSocieteSecteur_CleSociete] FOREIGN KEY ([CleSociete]) REFERENCES [GenSociete] ([CleSociete]),
+    CONSTRAINT [FK_GenSocieteSecteur_CleSociete] FOREIGN KEY ([CleSociete]) REFERENCES [GenSociete] ([CleSociete]) ON DELETE CASCADE,
 );
 
 GO

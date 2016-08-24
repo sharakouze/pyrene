@@ -1,4 +1,4 @@
-﻿namespace Tmpi.Pyrene.Models.Messages
+﻿namespace Tmpi.Pyrene.ServiceModel.Messages
 {
     public abstract class SelectRequest : IPaginableRequest, IFilterableRequest
     {

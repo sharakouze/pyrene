@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tmpi.Pyrene.Models.Messages
+namespace Tmpi.Pyrene.ServiceModel.Messages
 {
     public class DeleteGenSociete
     {
