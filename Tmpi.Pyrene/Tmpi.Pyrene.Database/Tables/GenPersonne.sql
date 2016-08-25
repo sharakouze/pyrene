@@ -11,6 +11,7 @@
     [CodExterne] VARCHAR(100) NULL,
     [TypGenre] TINYINT NULL,
     [NumTelep] VARCHAR(25) NULL,
+    [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
     CONSTRAINT [PK_GenPersonne] PRIMARY KEY ([ClePersonne]),
     CONSTRAINT [UN_GenPersonne_CodPersonne] UNIQUE ([CodPersonne])

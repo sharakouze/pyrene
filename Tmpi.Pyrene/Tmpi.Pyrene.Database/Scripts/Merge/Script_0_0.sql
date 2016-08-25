@@ -9,7 +9,7 @@ Gen_CptCompteur disparait et est fusionné avec Gen_Cpt_MNumero.
 Suppression de CleLogiciel qu'on retrouve par déduction dans TypMandat.
 
 - Fourn :
-Implementer plusieurs contacts ?
+Plusieurs contacts possibles.
 
 - Exercice :
 NivExercice devient EstActif.
@@ -199,6 +199,7 @@ BEGIN TRY
 			CleExterne as CodExterne,
 			CleGenre as TypGenre,
 			NumTelep,
+			null as NumFax,
 			NumEmail
 		from $(SourceSchemaName).[Gen_SocPersonne]
 		where ClePersonne>0
@@ -207,9 +208,9 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (ClePersonne, CodPersonne, PrePersonne, NomPersonne, TxtPersonne, EstActif, DatCreation, DatModif, CodExterne,
-			TypGenre, NumTelep, NumEmail)
+			TypGenre, NumTelep, NumFax, NumEmail)
 		values (ClePersonne, CodPersonne, PrePersonne, NomPersonne, TxtPersonne, EstActif, DatCreation, DatModif, CodExterne,
-			TypGenre, NumTelep, NumEmail);
+			TypGenre, NumTelep, NumFax, NumEmail);
 	
 	SET IDENTITY_INSERT [GenPersonne] OFF;
 
@@ -443,78 +444,6 @@ END CATCH;
 GO
 
 --
--- TIERS et CONTACTS
---
-
-BEGIN TRY
-	BEGIN TRANSACTION;
-
-	SET IDENTITY_INSERT [GenTiers] ON;
-
-	SET IDENTITY_INSERT [GenTiers] OFF;
-
-	COMMIT;
-END TRY
-BEGIN CATCH
-	SET IDENTITY_INSERT [GenTiers] OFF;
-	THROW;
-END CATCH;
-
-BEGIN TRY
-	BEGIN TRANSACTION;
-
-	SET IDENTITY_INSERT [GenTiersContact] ON;
-
-	merge into [GenTiersContact] as target
-	using (
-		select C.CleContact, 
-			C.CleTiers, 
-			C.NomContact, 
-			C.TxtContact, 
-			C.NumTelep, 
-			C.NumEmail, 
-			nullif(C.CleGenre,0) as TypGenre, 
-			F.CodFonction
-		from $(SourceSchemaName).[Gen_TrsContact] C left join $(SourceSchemaName).[Gen_Trs_Fonction] F on C.CleFonction=F.CleFonction
-		where C.CleTiers>0
-	) as source
-	on (target.CleContact=source.CleContact)
-	when not matched by target
-	then -- insert new rows
-		insert (CleContact, CleTiers, NomContact, TxtContact, NumTelep, NumEmail, TypGenre, CodFonction)
-		values (CleContact, CleTiers, NomContact, TxtContact, NumTelep, NumEmail, TypGenre, CodFonction);
-	
-	SET IDENTITY_INSERT [GenTiersContact] OFF;
-
-	merge into [GenTiersContact] as target
-	using (
-		select CleTiers, 
-			NomContact, 
-			null as TxtContact, 
-			null as NumTelep, 
-			null as NumEmail, 
-			null as TypGenre, 
-			null as CodFonction
-		from $(SourceSchemaName).[Gen_TrsTiers]
-		where CleTiers>0
-			and NomContact is not null
-	) as source
-	on (target.CleTiers=source.CleTiers and target.NomContact=source.NomContact)
-	when not matched by target
-	then -- insert new rows
-		insert (CleTiers, NomContact, TxtContact, NumTelep, NumEmail, TypGenre, CodFonction)
-		values (CleTiers, NomContact, TxtContact, NumTelep, NumEmail, TypGenre, CodFonction);
-
-	COMMIT;
-END TRY
-BEGIN CATCH
-	SET IDENTITY_INSERT [GenTiersContact] OFF;
-	THROW;
-END CATCH;
-
-GO
-
---
 -- TVA
 --
 
@@ -625,6 +554,7 @@ BEGIN TRY
 			NomContact,
 			null as TxtContact, 
 			null as NumTelep, 
+			null as NumFax, 
 			null as NumEmail, 
 			null as TypGenre, 
 			null as CodFonction
@@ -635,8 +565,8 @@ BEGIN TRY
 	on (target.CleFourn=source.CleFourn and target.NomContact=source.NomContact)
 	when not matched by target
 	then -- insert new rows
-		insert (CleFourn, NomContact, TxtContact, NumTelep, NumEmail, TypGenre, CodFonction)
-		values (CleFourn, NomContact, TxtContact, NumTelep, NumEmail, TypGenre, CodFonction);
+		insert (CleFourn, NomContact, TxtContact, NumTelep, NumFax, NumEmail, TypGenre, CodFonction)
+		values (CleFourn, NomContact, TxtContact, NumTelep, NumFax, NumEmail, TypGenre, CodFonction);
 
 	COMMIT;
 END TRY

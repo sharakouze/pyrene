@@ -41,6 +41,7 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Messages\GetGenSociete.cs" />
     <Compile Include="Types\GenCompteur.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
@@ -69,6 +70,9 @@
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\Gen.cs" />
+    <Compile Include="Types\GenFournContact.part.cs">
+      <DependentUpon>Gen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Types\GenMandat.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
@@ -108,15 +112,6 @@
     <Compile Include="Types\GenSocieteService.part.cs">
       <DependentUpon>Gen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenTiers.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenTiers.part.cs">
-      <DependentUpon>Gen.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenTiersContact.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
     <Compile Include="Types\GenTVA.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
@@ -125,6 +120,7 @@
     </Compile>
     <Compile Include="Types\IHasAddress.cs" />
     <Compile Include="Types\IAuditable.cs" />
+    <Compile Include="Types\IHasContact.cs" />
     <Compile Include="Types\TypMandat.cs" />
     <Compile Include="Types\TypGenre.cs" />
     <Compile Include="Types\TypPeriodicite.cs" />

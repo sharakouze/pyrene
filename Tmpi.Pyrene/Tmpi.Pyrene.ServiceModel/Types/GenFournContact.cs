@@ -19,7 +19,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
         [AutoIncrement]
 		[PrimaryKey]
         public int CleContact { get; set;}
-         [References(typeof(GenTiers))]          
+         [References(typeof(GenFourn))]          
         [Required]
         public int CleFourn { get; set;}
         [Required]
@@ -27,6 +27,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
         public string PreContact { get; set;}
         public string TxtContact { get; set;}
         public string NumTelep { get; set;}
+        public string NumFax { get; set;}
         public string NumEmail { get; set;}
         public TypGenre? TypGenre { get; set;}
         public string CodFonction { get; set;}

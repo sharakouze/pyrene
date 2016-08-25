@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.ServiceModel", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.ServiceInterface", "Tmpi.Pyrene.ServiceInterface\Tmpi.Pyrene.ServiceInterface.csproj", "{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{4DC56D4D-1213-4B68-B991-EB4F95756CFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DC56D4D-1213-4B68-B991-EB4F95756CFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DC56D4D-1213-4B68-B991-EB4F95756CFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DC56D4D-1213-4B68-B991-EB4F95756CFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DC56D4D-1213-4B68-B991-EB4F95756CFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -33,8 +33,8 @@ namespace Tmpi.Pyrene.ServiceModel.Types
         public string CodExterne { get; set;}
         public string AdrRue { get; set;}
         public string AdrCode { get; set;}
-        public string AdrVille { get; set; }
-        public string AdrPays { get; set; }
+        public string AdrVille { get; set;}
+        public string AdrPays { get; set;}
         public string NumTelep { get; set;}
         public string NumFax { get; set;}
         public string NumEmail { get; set;}

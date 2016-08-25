@@ -34,6 +34,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
         public string CodExterne { get; set;}
         public TypGenre? TypGenre { get; set;}
         public string NumTelep { get; set;}
+        public string NumFax { get; set;}
         public string NumEmail { get; set;}
     }
 

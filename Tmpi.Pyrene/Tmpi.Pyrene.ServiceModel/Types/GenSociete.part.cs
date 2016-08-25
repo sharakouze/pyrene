@@ -3,7 +3,7 @@
     /// <summary>
     /// Représente une société.
     /// </summary>
-    partial class GenSociete : IAuditable, IHasAddress
+    partial class GenSociete : IAuditable, IHasAddress, IHasContact
     {
     }
 }

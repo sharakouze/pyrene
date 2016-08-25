@@ -86,7 +86,5 @@
     <Build Include="Tables\GenPersonneSignature.sql" />
     <Build Include="Tables\GenSociete.sql" />
     <Build Include="Tables\GenSocieteSecteur.sql" />
-    <Build Include="Tables\GenTiers.sql" />
-    <Build Include="Tables\GenTiersContact.sql" />
   </ItemGroup>
 </Project>

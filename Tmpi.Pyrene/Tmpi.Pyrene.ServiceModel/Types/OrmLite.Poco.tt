@@ -31,7 +31,6 @@
 	tables["GenCompteur"]["TypPeriodicite"].PropertyType = "TypPeriodicite";
 	tables["GenMandat"]["TypMandat"].PropertyType = "TypMandat";
 	tables["GenPersonne"]["TypGenre"].PropertyType = "TypGenre";
-	tables["GenTiersContact"]["TypGenre"].PropertyType = "TypGenre";
 	tables["GenFournContact"]["TypGenre"].PropertyType = "TypGenre";
 
 	// Generate output
