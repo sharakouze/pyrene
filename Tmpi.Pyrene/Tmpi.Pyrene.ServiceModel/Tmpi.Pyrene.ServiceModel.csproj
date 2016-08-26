@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ServiceStack.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.Interfaces.4.0.62\lib\portable-wp80+sl5+net40+win8+wpa81+monotouch+monoandroid+xamarin.ios10\ServiceStack.Interfaces.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Interfaces.4.5.0\lib\portable-wp80+sl5+net45+win8+wpa81+monotouch+monoandroid+xamarin.ios10\ServiceStack.Interfaces.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -41,79 +41,89 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Messages\GetGenSociete.cs" />
-    <Compile Include="Types\GenCompteur.cs">
+    <Compile Include="GenCompteur.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenCompteurValeur.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenExercice.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenFourn.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenFournBanque.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenFournContact.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenMandat.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenMandatMandataire.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenPersonne.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenPersonneProfil.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenPersonneSignature.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenSociete.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenSocieteSecteur.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenSocieteService.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenTVA.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetGenSociete.cs" />
+    <Compile Include="OrmLite.Poco.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OrmLite.SP.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OrmLite.SP.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenCompteur.part.cs">
       <DependentUpon>Gen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenCompteurValeur.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenExercice.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
     <Compile Include="Types\GenExercice.part.cs">
       <DependentUpon>Gen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenFourn.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
     <Compile Include="Types\GenFourn.part.cs">
       <DependentUpon>Gen.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenFournBanque.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenFournContact.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\Gen.cs" />
     <Compile Include="Types\GenFournContact.part.cs">
       <DependentUpon>Gen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenMandat.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
     <Compile Include="Types\GenMandat.part.cs">
       <DependentUpon>Gen.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenMandatMandataire.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenPersonne.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenPersonne.part.cs">
       <DependentUpon>Gen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenPersonneProfil.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenPersonneSignature.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenSociete.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
     <Compile Include="Types\GenSociete.part.cs">
       <DependentUpon>Gen.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenSocieteSecteur.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenSocieteSecteur.part.cs">
       <DependentUpon>Gen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenSocieteService.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
     <Compile Include="Types\GenSocieteService.part.cs">
       <DependentUpon>Gen.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenTVA.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenTVA.part.cs">
       <DependentUpon>Gen.cs</DependentUpon>
@@ -126,34 +136,23 @@
     <Compile Include="Types\TypPeriodicite.cs" />
     <Compile Include="Types\TypCompteur.cs" />
     <Compile Include="Messages\DeleteGenSociete.cs" />
-    <Compile Include="Messages\SelectGenSociete.cs" />
     <Compile Include="Messages\Responses\SelectSocieteResponse.cs" />
     <Compile Include="Messages\UpdateGenSociete.cs" />
-    <Compile Include="Types\OrmLite.Poco.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Types\OrmLite.SP.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>OrmLite.SP.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Types\OrmLite.Core.ttinclude" />
+    <None Include="OrmLite.Core.ttinclude" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Types\OrmLite.Poco.tt">
+    <Content Include="OrmLite.Poco.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>OrmLite.Poco.cs</LastGenOutput>
     </Content>
-    <Content Include="Types\OrmLite.SP.tt">
+    <Content Include="OrmLite.SP.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>OrmLite.SP.cs</LastGenOutput>
     </Content>

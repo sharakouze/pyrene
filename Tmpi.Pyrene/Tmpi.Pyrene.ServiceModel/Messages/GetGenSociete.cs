@@ -1,15 +1,16 @@
 ﻿using ServiceStack;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Tmpi.Pyrene.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
-    [Route("/GenSociete/{CleSociete}")]
-    public class GetGenSociete
+    /// <summary>
+    /// Retourne une entité <see cref="GenSociete" />.
+    /// </summary>
+    public class GetGenSociete : IReturn<GenSociete>
     {
+        /// <summary>
+        /// Clé primaire de l'entité <see cref="GenSociete" /> à retourner.
+        /// </summary>
         public int CleSociete { get; set; }
     }
 }

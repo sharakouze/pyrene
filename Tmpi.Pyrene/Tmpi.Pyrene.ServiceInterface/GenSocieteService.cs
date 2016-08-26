@@ -7,7 +7,7 @@ using Tmpi.Pyrene.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.ServiceInterface
 {
-    public class GenSocieteServices : Service
+    public class GenSocieteService : Service
     {
         /// <summary>
         /// Retourne blablabla

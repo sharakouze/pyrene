@@ -6,8 +6,8 @@
     <ProjectGuid>{164662DE-245E-409B-97BE-31CCF4733E0C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tmpi.Pyrene.Infrastructure.Tests</RootNamespace>
-    <AssemblyName>Tmpi.Pyrene.Infrastructure.Tests</AssemblyName>
+    <RootNamespace>Tmpi.Pyrene.ServiceInterface.Tests</RootNamespace>
+    <AssemblyName>Tmpi.Pyrene.ServiceInterface.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -52,9 +52,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="GenSocieteServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EnumerableHelperTests.cs" />
-    <Compile Include="QueryableHelperTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tmpi.Pyrene.ServiceInterface\Tmpi.Pyrene.ServiceInterface.csproj">
+      <Project>{813f65d3-22f1-41db-84fc-7cfffbead768}</Project>
+      <Name>Tmpi.Pyrene.ServiceInterface</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

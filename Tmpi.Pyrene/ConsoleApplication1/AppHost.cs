@@ -4,10 +4,10 @@ using Tmpi.Pyrene.ServiceInterface;
 
 namespace ConsoleApplication1
 {
-    public class AppHost : AppHostBase
+    public class AppHost : AppHostHttpListenerBase
     {
         public AppHost()
-            : base("WebApplication1", typeof(GenSocieteServices).Assembly) { }
+            : base("ConsoleApplication1", typeof(GenSocieteService).Assembly) { }
 
         public override void Configure(Container container)
         {

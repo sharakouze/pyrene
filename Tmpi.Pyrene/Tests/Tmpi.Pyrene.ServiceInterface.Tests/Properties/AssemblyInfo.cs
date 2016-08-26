@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("Tmpi.Pyrene.Infrastructure.Tests")]
+[assembly: AssemblyTitle("Tmpi.Pyrene.ServiceInterface.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TMPI")]
-[assembly: AssemblyProduct("Tmpi.Pyrene.Infrastructure.Tests")]
+[assembly: AssemblyProduct("Tmpi.Pyrene.ServiceInterface.Tests")]
 [assembly: AssemblyCopyright("Copyright © TMPI 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
