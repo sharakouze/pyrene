@@ -86,7 +86,15 @@
     <Compile Include="GenTVA.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
+    <Compile Include="Messages\GetGenCompteur.cs" />
+    <Compile Include="Messages\GetGenExercice.cs" />
+    <Compile Include="Messages\GetGenFourn.cs" />
+    <Compile Include="Messages\GetGenMandat.cs" />
+    <Compile Include="Messages\GetGenPersonne.cs" />
     <Compile Include="Messages\GetGenSociete.cs" />
+    <Compile Include="Messages\GetGenTVA.cs" />
+    <Compile Include="Messages\IDeleteByIdRequest.cs" />
+    <Compile Include="Messages\IGetByIdRequest.cs" />
     <Compile Include="OrmLite.Poco.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -22,6 +22,8 @@ namespace Tmpi.Pyrene.ServiceInterface
                 throw new ArgumentNullException(nameof(request));
             }
 
+            //Db.Select<GenCompteur>();
+
             var soc = new GenSociete()
             {
                 CleSociete = request.CleSociete,
