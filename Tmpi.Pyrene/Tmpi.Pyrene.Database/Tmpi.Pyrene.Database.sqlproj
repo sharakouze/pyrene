@@ -71,7 +71,7 @@
     <Build Include="Tables\GenFourn.sql" />
     <Build Include="Tables\GenFournBanque.sql" />
     <Build Include="Tables\GenFournContact.sql" />
-    <Build Include="Tables\GenSocieteService.sql" />
+    <Build Include="Tables\GenService.sql" />
     <Build Include="Tables\GenCompteur.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +85,9 @@
     <Build Include="Tables\GenPersonneProfil.sql" />
     <Build Include="Tables\GenPersonneSignature.sql" />
     <Build Include="Tables\GenSociete.sql" />
-    <Build Include="Tables\GenSocieteSecteur.sql" />
+    <Build Include="Tables\GenSecteur.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="Tmpi.Pyrene.Database.refactorlog" />
   </ItemGroup>
 </Project>

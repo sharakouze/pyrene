@@ -34,10 +34,10 @@ BEGIN TRY
 
 	merge into [GenSociete] as target
 	using (
-		select S.CleSociete,
-			S.CodSociete,
-			S.LibSociete,
-			S.TxtSociete,
+		select S.CleSociete as Id,
+			S.CodSociete as CodObjet,
+			S.LibSociete as LibObjet,
+			S.TxtSociete as TxtObjet,
 			S.EstActif,
 			S.DatCreation,
 			coalesce(S.DatModif,S.DatCreation) as DatModif,
@@ -52,12 +52,12 @@ BEGIN TRY
 		from $(SourceSchemaName).[Gen_SocSociete] S left join $(SourceSchemaName).[Gen_Pays] P on S.ClePays=P.ClePays
 		where S.CleSociete>0
 	) as source
-	on (target.CleSociete=source.CleSociete)
+	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (CleSociete, CodSociete, LibSociete, TxtSociete, EstActif, DatCreation, DatModif, CodExterne,
+		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrVille, AdrPays, NumTelep, NumFax, NumEmail)
-		values (CleSociete, CodSociete, LibSociete, TxtSociete, EstActif, DatCreation, DatModif, CodExterne,
+		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrVille, AdrPays, NumTelep, NumFax, NumEmail);
 
 	SET IDENTITY_INSERT [GenSociete] OFF;
@@ -65,7 +65,7 @@ BEGIN TRY
 	-- ajout société par défaut si la table est vide pour des raisons d'intégrité des données
 	if not exists (select * from [GenSociete])
 	begin
-		insert into [GenSociete] (CodSociete, LibSociete, EstActif, DatCreation, DatModif)
+		insert into [GenSociete] (CodObjet, LibObjet, EstActif, DatCreation, DatModif)
 		values ('SOC', 'Société par défaut', 1, GETDATE(), GETDATE());
 	end;
 
@@ -82,14 +82,14 @@ BEGIN TRY
 	declare @w_CleSocieteDef int;
 	select @w_CleSocieteDef=min(CleSociete) from [GenSociete];
 
-	SET IDENTITY_INSERT [GenSocieteSecteur] ON;
+	SET IDENTITY_INSERT [GenSecteur] ON;
 
-	merge into [GenSocieteSecteur] as target
+	merge into [GenSecteur] as target
 	using (
-		select CleSecteur,
-			CodSecteur,
-			LibSecteur,
-			TxtSecteur,
+		select CleSecteur as Id,
+			CodSecteur as CodObjet,
+			LibSecteur as LibObjet,
+			TxtSecteur as TxtObjet,
 			EstActif,
 			DatCreation,
 			coalesce(DatModif,DatCreation) as DatModif,
@@ -108,24 +108,24 @@ BEGIN TRY
 	on (target.CleSecteur=source.CleSecteur)
 	when not matched by target
 	then -- insert new rows
-		insert (CleSecteur, CodSecteur, LibSecteur, TxtSecteur, EstActif, DatCreation, DatModif, CodExterne,
+		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			CleSociete, AdrRue, AdrCode, AdrVille, AdrPays, NumTelep, NumFax, NumEmail)
-		values (CleSecteur, CodSecteur, LibSecteur, TxtSecteur, EstActif, DatCreation, DatModif, CodExterne,
+		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			CleSociete, AdrRue, AdrCode, AdrVille, AdrPays, NumTelep, NumFax, NumEmail);
 	
-	SET IDENTITY_INSERT [GenSocieteSecteur] OFF;
+	SET IDENTITY_INSERT [GenSecteur] OFF;
 
 	-- ajout secteur par défaut si la table est vide pour des raisons d'intégrité des données
-	if not exists (select * from [GenSocieteSecteur])
+	if not exists (select * from [GenSecteur])
 	begin
-		insert into [GenSocieteSecteur] (CodSecteur, LibSecteur, EstActif, DatCreation, DatModif, CleSociete)
+		insert into [GenSecteur] (CodSecteur, LibSecteur, EstActif, DatCreation, DatModif, CleSociete)
 		values ('SEC', 'Secteur par défaut', 1, GETDATE(), GETDATE(), @w_CleSocieteDef);
 	end;
 
 	COMMIT;
 END TRY
 BEGIN CATCH
-	SET IDENTITY_INSERT [GenSocieteSecteur] OFF;
+	SET IDENTITY_INSERT [GenSecteur] OFF;
 	THROW;
 END CATCH;
 
@@ -133,7 +133,7 @@ BEGIN TRY
 	BEGIN TRANSACTION;
 
 	declare @w_CleSecteurDef int;
-	select @w_CleSecteurDef=min(CleSecteur) from [GenSocieteSecteur];
+	select @w_CleSecteurDef=min(CleSecteur) from [GenSecteur];
 
 	SET IDENTITY_INSERT [GenSocieteService] ON;
 
@@ -331,7 +331,7 @@ BEGIN TRY
 	-- mise à jour eventuelle de CleSociete
 	update CPT
 	set CPT.CleSociete=SEC.CleSociete
-	from [GenCompteur] CPT inner join [GenSocieteSecteur] SEC on CPT.CleSecteur=SEC.CleSecteur
+	from [GenCompteur] CPT inner join [GenSecteur] SEC on CPT.CleSecteur=SEC.CleSecteur
 	where CPT.CleSociete is null and CPT.CleSecteur is not null;
 
 	COMMIT;

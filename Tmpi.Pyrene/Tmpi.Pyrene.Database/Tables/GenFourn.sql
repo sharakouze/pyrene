@@ -1,9 +1,9 @@
 ﻿CREATE TABLE [GenFourn]
 (
-    [CleFourn] INT NOT NULL IDENTITY,
-    [CodFourn] VARCHAR(100) NOT NULL,
-    [LibFourn] VARCHAR(200) NOT NULL,
-    [TxtFourn] VARCHAR(500) NULL,
+    [Id] INT NOT NULL IDENTITY,
+    [CodObjet] VARCHAR(100) NOT NULL,
+    [LibObjet] VARCHAR(200) NOT NULL,
+    [TxtObjet] VARCHAR(500) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NOT NULL,
@@ -26,12 +26,12 @@
     [ValNote] DECIMAL(5,2) NULL,
     [TypModeReglement] TINYINT NULL,
     [EstEnvoiMailBonCde] BIT NOT NULL,
-    [CleProprietaire] INT NULL,
-    CONSTRAINT [PK_GenFourn] PRIMARY KEY ([CleFourn]),
-    CONSTRAINT [UN_GenFourn_CodFourn] UNIQUE ([CodFourn]), 
-    CONSTRAINT [FK_GenFourn_CleProprietaire] FOREIGN KEY ([CleProprietaire]) REFERENCES [GenPersonne] ([ClePersonne])
+    [GenPersonneId] INT NULL,
+    CONSTRAINT [PK_GenFourn] PRIMARY KEY ([Id]),
+    CONSTRAINT [UN_GenFourn_CodObjet] UNIQUE ([CodObjet]), 
+    CONSTRAINT [FK_GenFourn_GenPersonneId] FOREIGN KEY ([GenPersonneId]) REFERENCES [GenPersonne] ([Id])
 );
 
 GO
 
-CREATE INDEX [IX_GenFourn_LibFourn] ON [GenFourn] ([LibFourn]);
+CREATE INDEX [IX_GenFourn_LibObjet] ON [GenFourn] ([LibObjet]);
