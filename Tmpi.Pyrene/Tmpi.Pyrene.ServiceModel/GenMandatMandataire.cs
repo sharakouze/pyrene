@@ -14,23 +14,23 @@ using ServiceStack;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    public partial class GenMandatMandataire 
+    public partial class GenMandatMandataire : IHasId<int> 
     {
+        [Alias("Id")]
         [AutoIncrement]
-		[PrimaryKey]
-        public int CleMandataire { get; set;}
+        public int Id { get; set;}
          [References(typeof(GenMandat))]          
         [Required]
-        public int CleMandat { get; set;}
+        public int CleGenMandat { get; set;}
          [References(typeof(GenPersonne))]          
         [Required]
-        public int ClePersonne { get; set;}
+        public int CleGenPersonne { get; set;}
          [References(typeof(GenSociete))]          
-        public int? CleSociete { get; set;}
-         [References(typeof(GenSocieteSecteur))]          
-        public int? CleSecteur { get; set;}
-         [References(typeof(GenSocieteService))]          
-        public int? CleService { get; set;}
+        public int? CleGenSociete { get; set;}
+         [References(typeof(GenSecteur))]          
+        public int? CleGenSecteur { get; set;}
+         [References(typeof(GenService))]          
+        public int? CleGenService { get; set;}
         [Required]
         public bool EstSuspendu { get; set;}
     }

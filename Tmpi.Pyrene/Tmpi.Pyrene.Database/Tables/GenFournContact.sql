@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [GenFournContact]
 (
     [Id] INT NOT NULL IDENTITY,
-    [GenFournId] INT NOT NULL,
+    [CleGenFourn] INT NOT NULL,
     [NomContact] VARCHAR(100) NOT NULL,
     [PreContact] VARCHAR(100) NULL,
     [TxtContact] VARCHAR(500) NULL,
@@ -11,6 +11,6 @@
     [TypGenre] TINYINT NULL,
     [CodFonction] VARCHAR(100) NULL,
     CONSTRAINT [PK_GenFournContact] PRIMARY KEY ([Id]), 
-    CONSTRAINT [UN_GenFournContact_GenFournId_1] UNIQUE ([GenFournId], [NomContact]), 
-    CONSTRAINT [FK_GenFournContact_GenFournId] FOREIGN KEY ([GenFournId]) REFERENCES [GenFourn] ([Id]) ON DELETE CASCADE, 
+    CONSTRAINT [UN_GenFournContact_CleGenFourn_1] UNIQUE ([CleGenFourn], [NomContact]), 
+    CONSTRAINT [FK_GenFournContact_CleGenFourn] FOREIGN KEY ([CleGenFourn]) REFERENCES [GenFourn] ([Id]) ON DELETE CASCADE, 
 );

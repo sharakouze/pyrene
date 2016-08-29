@@ -14,14 +14,14 @@ using ServiceStack;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    public partial class GenFournBanque 
+    public partial class GenFournBanque : IHasId<int> 
     {
+        [Alias("Id")]
         [AutoIncrement]
-		[PrimaryKey]
-        public int CleBanque { get; set;}
+        public int Id { get; set;}
          [References(typeof(GenFourn))]          
         [Required]
-        public int CleFourn { get; set;}
+        public int CleGenFourn { get; set;}
         [Required]
         public string LibBanque { get; set;}
         [Required]

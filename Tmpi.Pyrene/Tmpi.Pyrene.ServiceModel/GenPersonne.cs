@@ -14,17 +14,16 @@ using ServiceStack;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    public partial class GenPersonne 
+    public partial class GenPersonne : IHasId<int> 
     {
+        [Alias("Id")]
         [AutoIncrement]
-		[PrimaryKey]
-        public int ClePersonne { get; set;}
+        public int Id { get; set;}
         [Required]
-        public string CodPersonne { get; set;}
+        public string CodObjet { get; set;}
         [Required]
-        public string NomPersonne { get; set;}
-        public string PrePersonne { get; set;}
-        public string TxtPersonne { get; set;}
+        public string LibObjet { get; set;}
+        public string TxtObjet { get; set;}
         [Required]
         public bool EstActif { get; set;}
         [Required]
@@ -32,6 +31,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
         [Required]
         public DateTime DatModif { get; set;}
         public string CodExterne { get; set;}
+        public string PrePersonne { get; set;}
         public TypGenre? TypGenre { get; set;}
         public string NumTelep { get; set;}
         public string NumFax { get; set;}

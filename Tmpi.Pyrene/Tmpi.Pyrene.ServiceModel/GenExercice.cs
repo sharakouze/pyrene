@@ -14,16 +14,16 @@ using ServiceStack;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    public partial class GenExercice 
+    public partial class GenExercice : IHasId<int> 
     {
+        [Alias("Id")]
         [AutoIncrement]
-		[PrimaryKey]
-        public int CleExercice { get; set;}
+        public int Id { get; set;}
         [Required]
-        public string CodExercice { get; set;}
+        public string CodObjet { get; set;}
         [Required]
-        public string LibExercice { get; set;}
-        public string TxtExercice { get; set;}
+        public string LibObjet { get; set;}
+        public string TxtObjet { get; set;}
         [Required]
         public bool EstActif { get; set;}
         [Required]

@@ -14,16 +14,16 @@ using ServiceStack;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    public partial class GenTVA 
+    public partial class GenTVA : IHasId<int> 
     {
+        [Alias("Id")]
         [AutoIncrement]
-		[PrimaryKey]
-        public int CleTVA { get; set;}
+        public int Id { get; set;}
         [Required]
-        public string CodTVA { get; set;}
+        public string CodObjet { get; set;}
         [Required]
-        public string LibTVA { get; set;}
-        public string TxtTVA { get; set;}
+        public string LibObjet { get; set;}
+        public string TxtObjet { get; set;}
         [Required]
         public bool EstActif { get; set;}
         [Required]

@@ -14,15 +14,11 @@ using ServiceStack;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    public partial class GenCompteurValeur 
+    public partial class __RefactorLog : IHasId<Guid> 
     {
-         [References(typeof(GenCompteur))]          
+        [Alias("OperationKey")]
         [Required]
-        public int CleGenCompteur { get; set;}
-        [Required]
-        public int ValPeriode { get; set;}
-        [Required]
-        public int ValCompteur { get; set;}
+        public Guid Id { get; set;}
     }
 
 }

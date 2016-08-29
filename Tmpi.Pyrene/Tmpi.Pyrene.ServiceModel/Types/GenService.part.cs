@@ -3,7 +3,7 @@
     /// <summary>
     /// Représente un service de la société.
     /// </summary>
-    partial class GenSocieteService : IAuditable, IHasAddress, IHasContact
+    partial class GenService : IAuditable, IHasAddress, IHasContact
     {
     }
 }

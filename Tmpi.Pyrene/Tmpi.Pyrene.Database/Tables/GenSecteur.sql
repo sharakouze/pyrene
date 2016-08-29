@@ -8,7 +8,7 @@
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NOT NULL,
     [CodExterne] VARCHAR(100) NULL,
-    [GenSocieteId] INT NOT NULL,
+    [CleGenSociete] INT NOT NULL,
     [AdrRue] VARCHAR(200) NULL,
     [AdrCode] VARCHAR(10) NULL,
     [AdrVille] VARCHAR(100) NULL,
@@ -16,15 +16,15 @@
     [NumTelep] VARCHAR(25) NULL,
     [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
-    CONSTRAINT [PK_GenSocieteSecteur] PRIMARY KEY ([Id]),
-    CONSTRAINT [UN_GenSocieteSecteur_CodObjet] UNIQUE ([CodObjet]),
-    CONSTRAINT [FK_GenSocieteSecteur_GenSocieteId] FOREIGN KEY ([GenSocieteId]) REFERENCES [GenSociete] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [PK_GenSecteur] PRIMARY KEY ([Id]),
+    CONSTRAINT [UN_GenSecteur_CodObjet] UNIQUE ([CodObjet]),
+    CONSTRAINT [FK_GenSecteur_CleGenSociete] FOREIGN KEY ([CleGenSociete]) REFERENCES [GenSociete] ([Id]) ON DELETE CASCADE,
 );
 
 GO
 
-CREATE INDEX [IX_GenSocieteSecteur_LibObjet] ON [GenSecteur] ([LibObjet]);
+CREATE INDEX [IX_GenSecteur_LibObjet] ON [GenSecteur] ([LibObjet]);
 
 GO
 
-CREATE INDEX [IX_GenSocieteSecteur_GenSocieteId] ON [GenSecteur] ([GenSocieteId]);
+CREATE INDEX [IX_GenSecteur_CleGenSociete] ON [GenSecteur] ([CleGenSociete]);

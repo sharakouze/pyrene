@@ -74,25 +74,109 @@
     <Compile Include="GenPersonneSignature.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
+    <Compile Include="GenSecteur.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenService.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
     <Compile Include="GenSociete.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenSocieteSecteur.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenSocieteService.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
     <Compile Include="GenTVA.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetGenCompteur.cs" />
-    <Compile Include="Messages\GetGenExercice.cs" />
-    <Compile Include="Messages\GetGenFourn.cs" />
-    <Compile Include="Messages\GetGenMandat.cs" />
-    <Compile Include="Messages\GetGenPersonne.cs" />
-    <Compile Include="Messages\GetGenSociete.cs" />
-    <Compile Include="Messages\GetGenTVA.cs" />
+    <Compile Include="Messages\DeleteByIdRequestBase.cs" />
+    <Compile Include="Messages\DeleteGenCompteur.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\DeleteGenExercice.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\DeleteGenFourn.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\DeleteGenFournBanque.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\DeleteGenFournContact.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\DeleteGenMandat.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\DeleteGenMandatMandataire.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\DeleteGenPersonne.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\DeleteGenPersonneProfil.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\DeleteGenPersonneSignature.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\DeleteGenSecteur.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\DeleteGenService.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\DeleteGenSociete.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\DeleteGenTVA.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GenBaseRequests.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetByIdRequestBase.cs" />
+    <Compile Include="Messages\GetGenCompteur.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetGenExercice.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetGenFourn.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetGenFournBanque.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetGenFournContact.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetGenMandat.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetGenMandatMandataire.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetGenPersonne.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetGenPersonneProfil.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetGenPersonneSignature.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetGenSecteur.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetGenService.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetGenSociete.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\GetGenTVA.generated.cs">
+      <DependentUpon>GenBaseRequests.tt</DependentUpon>
+    </Compile>
     <Compile Include="Messages\IDeleteByIdRequest.cs" />
     <Compile Include="Messages\IGetByIdRequest.cs" />
     <Compile Include="OrmLite.Poco.cs">
@@ -124,13 +208,13 @@
     <Compile Include="Types\GenPersonne.part.cs">
       <DependentUpon>Gen.cs</DependentUpon>
     </Compile>
+    <Compile Include="Types\GenSecteur.part.cs">
+      <DependentUpon>Gen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Types\GenService.part.cs">
+      <DependentUpon>Gen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Types\GenSociete.part.cs">
-      <DependentUpon>Gen.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenSocieteSecteur.part.cs">
-      <DependentUpon>Gen.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenSocieteService.part.cs">
       <DependentUpon>Gen.cs</DependentUpon>
     </Compile>
     <Compile Include="Types\GenTVA.part.cs">
@@ -143,10 +227,12 @@
     <Compile Include="Types\TypGenre.cs" />
     <Compile Include="Types\TypPeriodicite.cs" />
     <Compile Include="Types\TypCompteur.cs" />
-    <Compile Include="Messages\DeleteGenSociete.cs" />
     <Compile Include="Messages\Responses\SelectSocieteResponse.cs" />
     <Compile Include="Messages\UpdateGenSociete.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="__RefactorLog.cs">
+      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -156,6 +242,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Messages\GenBaseRequests.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>GenBaseRequests.cs</LastGenOutput>
+    </Content>
     <Content Include="OrmLite.Poco.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>OrmLite.Poco.cs</LastGenOutput>

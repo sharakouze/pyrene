@@ -3,7 +3,7 @@
     /// <summary>
     /// Représente un secteur de la société.
     /// </summary>
-    partial class GenSocieteSecteur : IAuditable, IHasAddress, IHasContact
+    partial class GenSecteur : IAuditable, IHasAddress, IHasContact
     {
     }
 }

@@ -14,12 +14,12 @@ using ServiceStack;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    public partial class GenPersonneSignature 
+    public partial class GenPersonneSignature : IHasId<int> 
     {
+        [Alias("CleGenPersonne")]
          [References(typeof(GenPersonne))]          
         [Required]
-		[PrimaryKey]
-        public int ClePersonne { get; set;}
+        public int Id { get; set;}
         [Required]
         public byte[] ImgSignature { get; set;}
         [Required]

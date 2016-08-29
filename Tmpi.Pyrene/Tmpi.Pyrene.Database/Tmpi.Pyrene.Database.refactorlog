@@ -511,4 +511,144 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="GenSocieteId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="a73ac7ef-4dab-4685-bccb-c161ee4c685a" ChangeDateTime="08/29/2016 08:40:57">
+    <Property Name="ElementName" Value="[dbo].[GenCompteur].[GenSocieteId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenCompteur]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenSociete" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="821b930e-556d-49fb-a397-eb291651a708" ChangeDateTime="08/29/2016 08:41:03">
+    <Property Name="ElementName" Value="[dbo].[GenCompteur].[GenSecteurId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenCompteur]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenSecteur" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b088946f-cfd9-4db8-bc2b-8d22bbd5ad44" ChangeDateTime="08/29/2016 08:41:08">
+    <Property Name="ElementName" Value="[dbo].[GenCompteur].[GenServiceId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenCompteur]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenService" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="66de6c85-2622-4dc8-a95c-3afbb9a7c39a" ChangeDateTime="08/29/2016 08:47:52">
+    <Property Name="ElementName" Value="[dbo].[GenCompteurValeur].[GenCompteurId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenCompteurValeur]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenCompteur" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6036320a-2df5-484d-870c-4e8d39a97bd0" ChangeDateTime="08/29/2016 08:50:32">
+    <Property Name="ElementName" Value="[dbo].[GenFourn].[GenPersonneId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenFourn]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenPersonne" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="383498fe-eb6d-4eef-9e84-2eddfcdfb541" ChangeDateTime="08/29/2016 12:12:00">
+    <Property Name="ElementName" Value="[dbo].[GenFournBanque].[GenFournId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenFournBanque]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenFourn" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="34f47199-a7e0-4070-b873-944f1b924b63" ChangeDateTime="08/29/2016 12:12:37">
+    <Property Name="ElementName" Value="[dbo].[GenFournContact].[GenFournId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenFournContact]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenFourn" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e275264e-0a16-4d13-b4d1-1cb72a10ab80" ChangeDateTime="08/29/2016 12:13:46">
+    <Property Name="ElementName" Value="[dbo].[GenMandatMandataire].[GenMandatId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenMandatMandataire]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenMandat" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="87a82be9-a827-4b64-8879-3efa08e4e330" ChangeDateTime="08/29/2016 12:13:51">
+    <Property Name="ElementName" Value="[dbo].[GenMandatMandataire].[GenPersonneId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenMandatMandataire]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenPersonne" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e1cb474f-af76-4f2b-b8b5-dd4e4eed61d9" ChangeDateTime="08/29/2016 12:13:56">
+    <Property Name="ElementName" Value="[dbo].[GenMandatMandataire].[GenSocieteId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenMandatMandataire]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenSociete" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="25465077-7bf8-4bf7-b487-7fc65613bba6" ChangeDateTime="08/29/2016 12:14:01">
+    <Property Name="ElementName" Value="[dbo].[GenMandatMandataire].[GenSecteurId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenMandatMandataire]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CkeGenSecteur" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="68879042-c1bb-4c9f-8146-02fa44586a93" ChangeDateTime="08/29/2016 12:14:05">
+    <Property Name="ElementName" Value="[dbo].[GenMandatMandataire].[CkeGenSecteur]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenMandatMandataire]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenSecteur" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a356abd5-ac3f-45d8-a738-f400f61f6e6b" ChangeDateTime="08/29/2016 12:14:10">
+    <Property Name="ElementName" Value="[dbo].[GenMandatMandataire].[GenServiceId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenMandatMandataire]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenService" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="508ce567-e7bd-45ad-a5e2-ae22dad6e052" ChangeDateTime="08/29/2016 12:15:21">
+    <Property Name="ElementName" Value="[dbo].[GenPersonneProfil].[GenPersonneId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenPersonneProfil]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenPersonne" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="8a861e2d-2240-404c-b2ca-b536896c4082" ChangeDateTime="08/29/2016 12:15:28">
+    <Property Name="ElementName" Value="[dbo].[GenPersonneProfil].[CodObjet]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenPersonneProfil]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CodProfil" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="26aff983-d0f7-40e3-ad4d-d130bf69985c" ChangeDateTime="08/29/2016 12:15:32">
+    <Property Name="ElementName" Value="[dbo].[GenPersonneProfil].[GenSocieteId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenPersonneProfil]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenSociete" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6fd4a4c8-b30e-4cfc-8c54-3b07a1646570" ChangeDateTime="08/29/2016 12:15:37">
+    <Property Name="ElementName" Value="[dbo].[GenPersonneProfil].[GenSecteurId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenPersonneProfil]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenSecteur" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="840dd135-7942-4c8c-8ad1-2b497cc5e884" ChangeDateTime="08/29/2016 12:15:41">
+    <Property Name="ElementName" Value="[dbo].[GenPersonneProfil].[GenServiceId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenPersonneProfil]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenService" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f26321cf-b87d-45c0-b28f-5470e4ec3f82" ChangeDateTime="08/29/2016 12:16:14">
+    <Property Name="ElementName" Value="[dbo].[GenPersonneSignature].[GenPersonneId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenPersonneSignature]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenPersonne" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bb128306-7590-4699-b4b0-3a5a303e13f7" ChangeDateTime="08/29/2016 12:16:56">
+    <Property Name="ElementName" Value="[dbo].[GenSecteur].[GenSocieteId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenSecteur]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleGenSociete" />
+  </Operation>
 </Operations>

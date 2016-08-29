@@ -7,7 +7,7 @@
 	ClassSuffix = "";
 	bool SplitIntoMultipleFiles = true;		// if true: Generates one file for every class
 	bool MakeSingular = false;			// if true: Changes the classname to singular if tablename is not singular
-	bool UseIdAsPK = false;				// if true: Changes the primary key property name to Id
+	bool UseIdAsPK = true;				// if true: Changes the primary key property name to Id
 	bool GenerateConstructor = false;		// if true: Generates the default empty constructor
 	bool UseSchemaAttribute = true;		// if true: Adds explicit '[Schema]' attribute
 	bool CreateAutoQueryTypes = false; //if true: Will create <TypeName>Query types with all possible search fields explicitly typed

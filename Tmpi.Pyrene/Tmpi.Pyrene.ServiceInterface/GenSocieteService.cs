@@ -22,7 +22,10 @@ namespace Tmpi.Pyrene.ServiceInterface
                 throw new ArgumentNullException(nameof(request));
             }
 
-            //Db.Select<GenCompteur>();
+            var q = Db.From<GenCompteur>().Join<GenCompteurValeur>();
+            q.ToAbsoluteUri();
+
+            var qqq = Db.Select<GenSociete>().Join<GenCompteur>();
 
             var soc = new GenSociete()
             {

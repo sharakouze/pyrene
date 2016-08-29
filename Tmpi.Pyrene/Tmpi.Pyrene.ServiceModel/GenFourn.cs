@@ -14,16 +14,16 @@ using ServiceStack;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    public partial class GenFourn 
+    public partial class GenFourn : IHasId<int> 
     {
+        [Alias("Id")]
         [AutoIncrement]
-		[PrimaryKey]
-        public int CleFourn { get; set;}
+        public int Id { get; set;}
         [Required]
-        public string CodFourn { get; set;}
+        public string CodObjet { get; set;}
         [Required]
-        public string LibFourn { get; set;}
-        public string TxtFourn { get; set;}
+        public string LibObjet { get; set;}
+        public string TxtObjet { get; set;}
         [Required]
         public bool EstActif { get; set;}
         [Required]
@@ -51,7 +51,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
         [Required]
         public bool EstEnvoiMailBonCde { get; set;}
          [References(typeof(GenPersonne))]          
-        public int? CleProprietaire { get; set;}
+        public int? CleGenPersonne { get; set;}
     }
 
 }

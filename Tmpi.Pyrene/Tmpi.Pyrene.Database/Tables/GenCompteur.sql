@@ -8,9 +8,9 @@
     [DatModif] DATETIME NOT NULL,
     [CodExterne] VARCHAR(100) NULL,
     [TypCompteur] SMALLINT NOT NULL,
-    [GenSocieteId] INT NULL,
-    [GenSecteurId] INT NULL,
-    [GenServiceId] INT NULL,
+    [CleGenSociete] INT NULL,
+    [CleGenSecteur] INT NULL,
+    [CleGenService] INT NULL,
     [TypPeriodicite] TINYINT NOT NULL,
     [ValPrefixe1] VARCHAR (25) NULL,
     [ValFormatDate1] VARCHAR (25) NULL,
@@ -22,10 +22,10 @@
     [LstFormatMois] VARCHAR(500) NULL,
     CONSTRAINT [PK_GenCompteur] PRIMARY KEY ([Id]),
     CONSTRAINT [UN_GenCompteur_CodObjet] UNIQUE ([CodObjet]),
-    CONSTRAINT [UN_GenCompteur_TypCompteur_1] UNIQUE ([TypCompteur], [GenSocieteId], [GenSecteurId], [GenServiceId]),
-    CONSTRAINT [FK_GenCompteur_GenSocieteId] FOREIGN KEY ([GenSocieteId]) REFERENCES [GenSociete] ([Id]),
-    CONSTRAINT [FK_GenCompteur_GenSecteurId] FOREIGN KEY ([GenSecteurId]) REFERENCES [GenSecteur] ([Id]),
-    CONSTRAINT [FK_GenCompteur_GenServiceId] FOREIGN KEY ([GenServiceId]) REFERENCES [GenService] ([Id]),
+    CONSTRAINT [UN_GenCompteur_TypCompteur_1] UNIQUE ([TypCompteur], [CleGenSociete], [CleGenSecteur], [CleGenService]),
+    CONSTRAINT [FK_GenCompteur_CleGenSociete] FOREIGN KEY ([CleGenSociete]) REFERENCES [GenSociete] ([Id]),
+    CONSTRAINT [FK_GenCompteur_CleGenSecteur] FOREIGN KEY ([CleGenSecteur]) REFERENCES [GenSecteur] ([Id]),
+    CONSTRAINT [FK_GenCompteur_CleGenService] FOREIGN KEY ([CleGenService]) REFERENCES [GenService] ([Id]),
 );
 
 

@@ -14,14 +14,14 @@ using ServiceStack;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    public partial class GenFournContact 
+    public partial class GenFournContact : IHasId<int> 
     {
+        [Alias("Id")]
         [AutoIncrement]
-		[PrimaryKey]
-        public int CleContact { get; set;}
+        public int Id { get; set;}
          [References(typeof(GenFourn))]          
         [Required]
-        public int CleFourn { get; set;}
+        public int CleGenFourn { get; set;}
         [Required]
         public string NomContact { get; set;}
         public string PreContact { get; set;}

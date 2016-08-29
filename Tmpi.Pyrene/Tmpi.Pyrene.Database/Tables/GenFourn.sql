@@ -26,10 +26,10 @@
     [ValNote] DECIMAL(5,2) NULL,
     [TypModeReglement] TINYINT NULL,
     [EstEnvoiMailBonCde] BIT NOT NULL,
-    [GenPersonneId] INT NULL,
+    [CleGenPersonne] INT NULL,
     CONSTRAINT [PK_GenFourn] PRIMARY KEY ([Id]),
     CONSTRAINT [UN_GenFourn_CodObjet] UNIQUE ([CodObjet]), 
-    CONSTRAINT [FK_GenFourn_GenPersonneId] FOREIGN KEY ([GenPersonneId]) REFERENCES [GenPersonne] ([Id])
+    CONSTRAINT [FK_GenFourn_CleGenPersonne] FOREIGN KEY ([CleGenPersonne]) REFERENCES [GenPersonne] ([Id])
 );
 
 GO
