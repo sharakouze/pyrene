@@ -16,42 +16,75 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-	
+	[CompositeIndex(true, "TypCompteur", "CleGenSociete", "CleGenSecteur", "CleGenService")]
 	public partial class GenCompteur : IHasId<int>
 	{
-        [Alias("Id")]
-        [AutoIncrement]
-        public int Id { get; set;}
-        [Required]
-        public string CodObjet { get; set;}
-        [Required]
-        public string LibObjet { get; set;}
-        public string TxtObjet { get; set;}
-        [Required]
-        public bool EstActif { get; set;}
-        [Required]
-        public DateTime DatCreation { get; set;}
-        [Required]
-        public DateTime DatModif { get; set;}
-        public string CodExterne { get; set;}
-        [Required]
-        public TypCompteur TypCompteur { get; set;}
-         [References(typeof(GenSociete))]
-        public int? CleGenSociete { get; set;}
-         [References(typeof(GenSecteur))]
-        public int? CleGenSecteur { get; set;}
-         [References(typeof(GenService))]
-        public int? CleGenService { get; set;}
-        [Required]
-        public TypPeriodicite TypPeriodicite { get; set;}
-        public string ValPrefixe1 { get; set;}
-        public string ValFormatDate1 { get; set;}
-        public string ValPrefixe2 { get; set;}
-        [Required]
-        public byte NbrDigit { get; set;}
-        public string ValSuffixe1 { get; set;}
-        public string ValFormatDate2 { get; set;}
-        public string ValSuffixe2 { get; set;}
-        public string LstFormatMois { get; set;}
-}
+		[AutoIncrement]
+		public int Id { get; set; }
+
+		[StringLength(100)]
+		[Required]
+		[Index(true)]
+		public string CodObjet { get; set; }
+
+		[StringLength(200)]
+		[Required]
+		[Index]
+		public string LibObjet { get; set; }
+
+		[StringLength(500)]
+		public string TxtObjet { get; set; }
+
+		[Required]
+		public bool EstActif { get; set; }
+
+		[Required]
+		public DateTime DatCreation { get; set; }
+
+		[Required]
+		public DateTime DatModif { get; set; }
+
+		[StringLength(100)]
+		public string CodExterne { get; set; }
+
+		[Required]
+		public TypCompteur TypCompteur { get; set; }
+
+		[References(typeof(GenSociete))]
+		public int? CleGenSociete { get; set; }
+
+		[References(typeof(GenSecteur))]
+		public int? CleGenSecteur { get; set; }
+
+		[References(typeof(GenService))]
+		public int? CleGenService { get; set; }
+
+		[Required]
+		public TypPeriodicite TypPeriodicite { get; set; }
+
+		[StringLength(25)]
+		public string ValPrefixe1 { get; set; }
+
+		[StringLength(25)]
+		public string ValFormatDate1 { get; set; }
+
+		[StringLength(25)]
+		public string ValPrefixe2 { get; set; }
+
+		[Required]
+		public byte NbrDigit { get; set; }
+
+		[StringLength(25)]
+		public string ValSuffixe1 { get; set; }
+
+		[StringLength(25)]
+		public string ValFormatDate2 { get; set; }
+
+		[StringLength(25)]
+		public string ValSuffixe2 { get; set; }
+
+		[StringLength(500)]
+		public string LstFormatMois { get; set; }
+
+	}
 }

@@ -16,33 +16,61 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-	
 	public partial class GenService : IHasId<int>
 	{
-        [Alias("Id")]
-        [AutoIncrement]
-        public int Id { get; set;}
-        [Required]
-        public string CodObjet { get; set;}
-        [Required]
-        public string LibObjet { get; set;}
-        public string TxtObjet { get; set;}
-        [Required]
-        public bool EstActif { get; set;}
-        [Required]
-        public DateTime DatCreation { get; set;}
-        [Required]
-        public DateTime DatModif { get; set;}
-        public string CodExterne { get; set;}
-         [References(typeof(GenSecteur))]
-        [Required]
-        public int CleSecteur { get; set;}
-        public string AdrRue { get; set;}
-        public string AdrCode { get; set;}
-        public string AdrVille { get; set;}
-        public string AdrPays { get; set;}
-        public string NumTelep { get; set;}
-        public string NumFax { get; set;}
-        public string NumEmail { get; set;}
-}
+		[AutoIncrement]
+		public int Id { get; set; }
+
+		[StringLength(100)]
+		[Required]
+		[Index(true)]
+		public string CodObjet { get; set; }
+
+		[StringLength(200)]
+		[Required]
+		[Index]
+		public string LibObjet { get; set; }
+
+		[StringLength(500)]
+		public string TxtObjet { get; set; }
+
+		[Required]
+		public bool EstActif { get; set; }
+
+		[Required]
+		public DateTime DatCreation { get; set; }
+
+		[Required]
+		public DateTime DatModif { get; set; }
+
+		[StringLength(100)]
+		public string CodExterne { get; set; }
+
+		[ForeignKey(typeof(GenSecteur), OnDelete = "CASCADE")]
+		[Required]
+		[Index]
+		public int CleGenSecteur { get; set; }
+
+		[StringLength(200)]
+		public string AdrRue { get; set; }
+
+		[StringLength(10)]
+		public string AdrCode { get; set; }
+
+		[StringLength(100)]
+		public string AdrVille { get; set; }
+
+		[StringLength(100)]
+		public string AdrPays { get; set; }
+
+		[StringLength(25)]
+		public string NumTelep { get; set; }
+
+		[StringLength(25)]
+		public string NumFax { get; set; }
+
+		[StringLength(100)]
+		public string NumEmail { get; set; }
+
+	}
 }

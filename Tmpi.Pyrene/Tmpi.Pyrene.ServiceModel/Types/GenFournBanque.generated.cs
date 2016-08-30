@@ -16,26 +16,37 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-	
 	public partial class GenFournBanque : IHasId<int>
 	{
-        [Alias("Id")]
-        [AutoIncrement]
-        public int Id { get; set;}
-         [References(typeof(GenFourn))]
-        [Required]
-        public int CleGenFourn { get; set;}
-        [Required]
-        public string LibBanque { get; set;}
-        [Required]
-        public string RibBanque { get; set;}
-        [Required]
-        public string RibGuichet { get; set;}
-        [Required]
-        public string RibCompte { get; set;}
-        [Required]
-        public string RibCle { get; set;}
-        [Required]
-        public bool EstDefaut { get; set;}
-}
+		[AutoIncrement]
+		public int Id { get; set; }
+
+		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
+		[Required]
+		public int CleGenFourn { get; set; }
+
+		[StringLength(200)]
+		[Required]
+		public string LibBanque { get; set; }
+
+		[StringLength(5)]
+		[Required]
+		public string RibBanque { get; set; }
+
+		[StringLength(5)]
+		[Required]
+		public string RibGuichet { get; set; }
+
+		[StringLength(11)]
+		[Required]
+		public string RibCompte { get; set; }
+
+		[StringLength(2)]
+		[Required]
+		public string RibCle { get; set; }
+
+		[Required]
+		public bool EstDefaut { get; set; }
+
+	}
 }

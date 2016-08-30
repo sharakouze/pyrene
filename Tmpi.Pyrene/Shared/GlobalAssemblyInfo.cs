@@ -28,6 +28,4 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyInformationalVersion("4.0")]
 
-[assembly: CLSCompliant(true)]
-
 [assembly: NeutralResourcesLanguage("fr")]

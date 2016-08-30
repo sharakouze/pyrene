@@ -16,23 +16,39 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-	
+	[CompositeIndex(true, "CleGenFourn", "NomContact")]
 	public partial class GenFournContact : IHasId<int>
 	{
-        [Alias("Id")]
-        [AutoIncrement]
-        public int Id { get; set;}
-         [References(typeof(GenFourn))]
-        [Required]
-        public int CleGenFourn { get; set;}
-        [Required]
-        public string NomContact { get; set;}
-        public string PreContact { get; set;}
-        public string TxtContact { get; set;}
-        public string NumTelep { get; set;}
-        public string NumFax { get; set;}
-        public string NumEmail { get; set;}
-        public TypGenre? TypGenre { get; set;}
-        public string CodFonction { get; set;}
-}
+		[AutoIncrement]
+		public int Id { get; set; }
+
+		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
+		[Required]
+		public int CleGenFourn { get; set; }
+
+		[StringLength(100)]
+		[Required]
+		public string NomContact { get; set; }
+
+		[StringLength(100)]
+		public string PreContact { get; set; }
+
+		[StringLength(500)]
+		public string TxtContact { get; set; }
+
+		[StringLength(25)]
+		public string NumTelep { get; set; }
+
+		[StringLength(25)]
+		public string NumFax { get; set; }
+
+		[StringLength(100)]
+		public string NumEmail { get; set; }
+
+		public TypGenre? TypGenre { get; set; }
+
+		[StringLength(100)]
+		public string CodFonction { get; set; }
+
+	}
 }

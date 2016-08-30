@@ -16,27 +16,41 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-	
 	public partial class GenExercice : IHasId<int>
 	{
-        [Alias("Id")]
-        [AutoIncrement]
-        public int Id { get; set;}
-        [Required]
-        public string CodObjet { get; set;}
-        [Required]
-        public string LibObjet { get; set;}
-        public string TxtObjet { get; set;}
-        [Required]
-        public bool EstActif { get; set;}
-        [Required]
-        public DateTime DatCreation { get; set;}
-        [Required]
-        public DateTime DatModif { get; set;}
-        public string CodExterne { get; set;}
-        [Required]
-        public DateTime DatDebut { get; set;}
-        [Required]
-        public DateTime DatFin { get; set;}
-}
+		[AutoIncrement]
+		public int Id { get; set; }
+
+		[StringLength(100)]
+		[Required]
+		[Index(true)]
+		public string CodObjet { get; set; }
+
+		[StringLength(200)]
+		[Required]
+		[Index]
+		public string LibObjet { get; set; }
+
+		[StringLength(500)]
+		public string TxtObjet { get; set; }
+
+		[Required]
+		public bool EstActif { get; set; }
+
+		[Required]
+		public DateTime DatCreation { get; set; }
+
+		[Required]
+		public DateTime DatModif { get; set; }
+
+		[StringLength(100)]
+		public string CodExterne { get; set; }
+
+		[Required]
+		public DateTime DatDebut { get; set; }
+
+		[Required]
+		public DateTime DatFin { get; set; }
+
+	}
 }

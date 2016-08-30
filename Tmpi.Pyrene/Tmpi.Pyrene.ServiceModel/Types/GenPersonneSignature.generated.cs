@@ -16,16 +16,19 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-	
 	public partial class GenPersonneSignature : IHasId<int>
 	{
         [Alias("CleGenPersonne")]
-         [References(typeof(GenPersonne))]
-        [Required]
-        public int Id { get; set;}
-        [Required]
-        public byte[] ImgSignature { get; set;}
-        [Required]
-        public string TypMime { get; set;}
-}
+		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
+		[Required]
+		public int Id { get; set; }
+
+		[Required]
+		public byte[] ImgSignature { get; set; }
+
+		[StringLength(255)]
+		[Required]
+		public string TypMime { get; set; }
+
+	}
 }

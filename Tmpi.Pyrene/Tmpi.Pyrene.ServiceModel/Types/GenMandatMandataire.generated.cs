@@ -16,25 +16,31 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-	
+	[CompositeIndex(true, "CleGenMandat", "CleGenPersonne", "CleGenSociete", "CleGenSecteur", "CleGenService")]
 	public partial class GenMandatMandataire : IHasId<int>
 	{
-        [Alias("Id")]
-        [AutoIncrement]
-        public int Id { get; set;}
-         [References(typeof(GenMandat))]
-        [Required]
-        public int CleGenMandat { get; set;}
-         [References(typeof(GenPersonne))]
-        [Required]
-        public int CleGenPersonne { get; set;}
-         [References(typeof(GenSociete))]
-        public int? CleGenSociete { get; set;}
-         [References(typeof(GenSecteur))]
-        public int? CleGenSecteur { get; set;}
-         [References(typeof(GenService))]
-        public int? CleGenService { get; set;}
-        [Required]
-        public bool EstSuspendu { get; set;}
-}
+		[AutoIncrement]
+		public int Id { get; set; }
+
+		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
+		[Required]
+		public int CleGenMandat { get; set; }
+
+		[References(typeof(GenPersonne))]
+		[Required]
+		public int CleGenPersonne { get; set; }
+
+		[References(typeof(GenSociete))]
+		public int? CleGenSociete { get; set; }
+
+		[References(typeof(GenSecteur))]
+		public int? CleGenSecteur { get; set; }
+
+		[References(typeof(GenService))]
+		public int? CleGenService { get; set; }
+
+		[Required]
+		public bool EstSuspendu { get; set; }
+
+	}
 }

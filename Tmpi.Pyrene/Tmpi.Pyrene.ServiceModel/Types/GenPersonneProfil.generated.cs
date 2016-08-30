@@ -16,22 +16,29 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-	
+	[CompositeIndex(true, "CleGenPersonne", "CleGenSociete", "CleGenSecteur", "CleGenService")]
+	[CompositeIndex(true, "CodProfil", "CleGenPersonne")]
 	public partial class GenPersonneProfil : IHasId<int>
 	{
-        [Alias("Id")]
-        [AutoIncrement]
-        public int Id { get; set;}
-         [References(typeof(GenPersonne))]
-        [Required]
-        public int CleGenPersonne { get; set;}
-        [Required]
-        public string CodProfil { get; set;}
-         [References(typeof(GenSociete))]
-        public int? CleGenSociete { get; set;}
-         [References(typeof(GenSecteur))]
-        public int? CleGenSecteur { get; set;}
-         [References(typeof(GenService))]
-        public int? CleGenService { get; set;}
-}
+		[AutoIncrement]
+		public int Id { get; set; }
+
+		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
+		[Required]
+		public int CleGenPersonne { get; set; }
+
+		[StringLength(100)]
+		[Required]
+		public string CodProfil { get; set; }
+
+		[References(typeof(GenSociete))]
+		public int? CleGenSociete { get; set; }
+
+		[References(typeof(GenSecteur))]
+		public int? CleGenSecteur { get; set; }
+
+		[References(typeof(GenService))]
+		public int? CleGenService { get; set; }
+
+	}
 }

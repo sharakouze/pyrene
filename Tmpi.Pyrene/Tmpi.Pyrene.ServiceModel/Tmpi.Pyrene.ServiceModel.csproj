@@ -204,9 +204,6 @@
     <Compile Include="Messages\Responses\SelectSocieteResponse.cs" />
     <Compile Include="Messages\UpdateGenSociete.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Types\__RefactorLog.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

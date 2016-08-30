@@ -16,28 +16,49 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-	
 	public partial class GenPersonne : IHasId<int>
 	{
-        [Alias("Id")]
-        [AutoIncrement]
-        public int Id { get; set;}
-        [Required]
-        public string CodObjet { get; set;}
-        [Required]
-        public string LibObjet { get; set;}
-        public string TxtObjet { get; set;}
-        [Required]
-        public bool EstActif { get; set;}
-        [Required]
-        public DateTime DatCreation { get; set;}
-        [Required]
-        public DateTime DatModif { get; set;}
-        public string CodExterne { get; set;}
-        public string PrePersonne { get; set;}
-        public TypGenre? TypGenre { get; set;}
-        public string NumTelep { get; set;}
-        public string NumFax { get; set;}
-        public string NumEmail { get; set;}
-}
+		[AutoIncrement]
+		public int Id { get; set; }
+
+		[StringLength(100)]
+		[Required]
+		[Index(true)]
+		public string CodObjet { get; set; }
+
+		[StringLength(100)]
+		[Required]
+		[Index]
+		public string LibObjet { get; set; }
+
+		[StringLength(500)]
+		public string TxtObjet { get; set; }
+
+		[Required]
+		public bool EstActif { get; set; }
+
+		[Required]
+		public DateTime DatCreation { get; set; }
+
+		[Required]
+		public DateTime DatModif { get; set; }
+
+		[StringLength(100)]
+		public string CodExterne { get; set; }
+
+		[StringLength(100)]
+		public string PrePersonne { get; set; }
+
+		public TypGenre? TypGenre { get; set; }
+
+		[StringLength(25)]
+		public string NumTelep { get; set; }
+
+		[StringLength(25)]
+		public string NumFax { get; set; }
+
+		[StringLength(100)]
+		public string NumEmail { get; set; }
+
+	}
 }

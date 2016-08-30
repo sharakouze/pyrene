@@ -16,15 +16,17 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-	
 	public partial class GenCompteurValeur
 	{
-         [References(typeof(GenCompteur))]
-        [Required]
-        public int CleGenCompteur { get; set;}
-        [Required]
-        public int ValPeriode { get; set;}
-        [Required]
-        public int ValCompteur { get; set;}
-}
+		[ForeignKey(typeof(GenCompteur), OnDelete = "CASCADE")]
+		[Required]
+		public int CleGenCompteur { get; set; }
+
+		[Required]
+		public int ValPeriode { get; set; }
+
+		[Required]
+		public int ValCompteur { get; set; }
+
+	}
 }

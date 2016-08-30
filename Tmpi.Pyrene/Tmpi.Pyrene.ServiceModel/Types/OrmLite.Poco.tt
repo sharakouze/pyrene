@@ -17,13 +17,12 @@
 	bool CreateAutoQueryTypes = false; //if true: Will create <TypeName>Query types with all possible search fields explicitly typed
 	bool AddNamedConnection = false; //if true: Adds NamedConnection attribute so AutoQuery will override default IDbConnection
 	bool IncludeReferences = true; //if true: Addes References(typeof(ReferenceTableType)) to FKs
+	bool IncludeIndices = true; // index
 	string UseSpecificNamedConnection = ""; //if not null: Will use name provided as NamedConnection and AddNamedConnection = true, else ConnectionStringName is used as default NamedConnection
 	// ----- Settings END -----
 
     // Read schema
 	var tables = LoadTables(MakeSingular);
-
-
 /*
 	// Tweak Schema
 	tables["tablename"].Ignore = true;							// To ignore a table
@@ -32,12 +31,19 @@
 	tables["tablename"]["columnname"].PropertyName="newname";	// To change the property name of a column
 	tables["tablename"]["columnname"].PropertyType="bool";		// To change the property type of a column
 */
-
+	// ----- Tweak Schema START -----
+	try
+	{
+		tables["__RefactorLog"].Ignore = true;
+	}
+	catch {
+	}
 	tables["GenCompteur"]["TypCompteur"].PropertyType = "TypCompteur";
 	tables["GenCompteur"]["TypPeriodicite"].PropertyType = "TypPeriodicite";
 	tables["GenMandat"]["TypMandat"].PropertyType = "TypMandat";
 	tables["GenPersonne"]["TypGenre"].PropertyType = "TypGenre";
 	tables["GenFournContact"]["TypGenre"].PropertyType = "TypGenre";
+	// ----- Tweak Schema END -----
 
 	// get a reference to the project of this t4 template
 	var project = VisualStudioHelper.CurrentProject;
@@ -88,7 +94,7 @@ namespace <#= fileNamespace #>
 			continue;
 		}
 
-		manager.StartNewFile(tbl.Name + ".generated.cs");
+		manager.StartNewFile(tbl.ClassName + ".generated.cs");
 
 		if (CreateAutoQueryTypes && AddNamedConnection)
 		{
@@ -110,22 +116,32 @@ namespace <#= fileNamespace #>
 	[Schema("<#= tbl.Schema #>")]
 <#
 		} // end if
+		
+		if (IncludeIndices && tbl.Indices != null)
+		{
+			foreach (var indx in tbl.Indices.Where(i => i.IndexColumns.Count > 1))
+			{
+#>
+	[CompositeIndex(<#= indx.IsUnique ? "true, " : "" #>"<#= string.Join("\", \"", indx.IndexColumns.Select(i => i.Name)) #>")]
+<#
+			} // end foreach
+		} // end if
 
-		var words = new List<string>();
-		words.Add("public");
+		var classDefinitionWords = new List<string>();
+		classDefinitionWords.Add("public");
 		if (MakeClassesPartial)
         {
-			words.Add("partial");
+			classDefinitionWords.Add("partial");
         }
-		words.Add("class");
-		words.Add(tbl.ClassName);
+		classDefinitionWords.Add("class");
+		classDefinitionWords.Add(tbl.ClassName);
 		if (tbl.HasPK() && UseIdAsPK)
         {
-			words.Add(":");
-			words.Add("IHasId<" + tbl.PK.PropertyType + ">");
+			classDefinitionWords.Add(":");
+			classDefinitionWords.Add("IHasId<" + tbl.PK.PropertyType + ">");
         }
-#>	
-	<#= string.Join(" ", words) #>
+#>
+	<#= string.Join(" ", classDefinitionWords) #>
 	{
 <#
 		if (GenerateEmptyConstructor)
@@ -141,140 +157,194 @@ namespace <#= fileNamespace #>
 		} // end if
 
 		var priorProperyNames = new List<string>();
-		foreach(Column col in from c in tbl.Columns where !c.Ignore select c)
+		foreach(Column col in tbl.Columns)
 		{
+			if (col.Ignore)
+			{
+				continue;
+			}
+
 			if (priorProperyNames.Contains(col.PropertyName)) //Change duplicate style names
 			{
 				col.PropertyName = "_" + col.PropertyName;
 			}
 			priorProperyNames.Add(col.PropertyName);
-			if ((col.Name!=col.PropertyName) || (col.IsPK && UseIdAsPK))
+			if ((col.Name != col.PropertyName) || (col.IsPK && UseIdAsPK && col.Name != "Id"))
 			{
 #>
-        [Alias("<#=col.Name#>")]
+        [Alias("<#= col.Name #>")]
 <#
-			}
+			} // end if
+
 			if (col.PropertyType == "string" && col.Size > 0)
 			{
 #>
-        [StringLength(<#=col.Size#>)]
+		[StringLength(<#= col.Size #>)]
 <#
-			}
+			} // end if
+
 			if (col.IsAutoIncrement)
 			{
 #>
-        [AutoIncrement]
+		[AutoIncrement]
 <#
-			}
+			} // end if
+
 			if (col.IsComputed)
 			{
 #>
 		[Compute]        
 <#
-			}
+			} // end if
+
 			if (IncludeReferences && tbl.FKeys != null && tbl.FKeys.Any(x => x.FromColumn ==  col.PropertyName))
-			{ 
- 				var toTable = MakeSingular ? tbl.FKeys.First(x => x.FromColumn == col.PropertyName).ToTableSingular : tbl.FKeys.First(x => x.FromColumn == col.PropertyName).ToTable;
+			{
+				var fKey = tbl.FKeys.First(x => x.FromColumn == col.PropertyName);
+ 				var toTable = MakeSingular ? fKey.ToTableSingular : fKey.ToTable;
+				if (fKey.IsDeleteCascade)
+				{
 #>
-         [References(typeof(<#=toTable#>))]
+		[ForeignKey(typeof(<#= toTable #>), OnDelete = "CASCADE")]
 <#
+				} // end if
+				else
+				{
+#>
+		[References(typeof(<#= toTable #>))]
+<#
+				} // end else
 			}
+
 			if (col.IsNullable != true && col.IsAutoIncrement != true)
 			{
 #>
-        [Required]
+		[Required]
 <#
-			}
+			} // end if
+
+			if (IncludeIndices && tbl.Indices != null)
+			{
+				var q = from idx in tbl.Indices
+						from idxcol in idx.IndexColumns
+						where idx.IndexColumns.Count == 1
+						where string.Equals(idxcol.Name, col.PropertyName, StringComparison.InvariantCultureIgnoreCase)
+						select idx;
+				if (q.Any())
+				{
+					var indx = q.First();
+#>
+		[Index<#= indx.IsUnique ? "(true)" : "" #>]
+<#
+				} // end if
+			} // end if
+
 			if (!col.IsPK)
 			{
 #>
-        public <#=col.ProperPropertyType#> <#=col.PropertyName#> { get; set;}
+		public <#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
+
 <#
-			}
+			} // end if
+
 			if (col.IsPK && UseIdAsPK)
 			{
 #>
-        public <#=col.ProperPropertyType#> Id { get; set;}
+		public <#= col.ProperPropertyType #> Id { get; set; }
+
 <#
-			}
+			} // end if
 			if (col.IsPK && !UseIdAsPK)
 			{
 #>
 		[PrimaryKey]
-        public <#=col.ProperPropertyType#> <#=col.PropertyName#> { get; set;}
+		public <#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
+
 <#
-			}
-		}
+			} // end if
+		} // end foreach
 #>
-}
+	}
 <#
+		manager.EndBlock(); // end newfile
+
 		if (CreateAutoQueryTypes)
 		{
+			manager.StartNewFile(tbl.ClassName + "Query.generated.cs");
+			
+			var queryClassDefinitionWords = new List<string>();
+			queryClassDefinitionWords.Add("public");
+			if (MakeClassesPartial)
+			{
+				queryClassDefinitionWords.Add("partial");
+			}
 #>
-	public partial class <#=tbl.ClassName#>Query: QueryDb<<#=tbl.ClassName#>>
+	<#= string.Join(" ", queryClassDefinitionWords) #> class <#= tbl.ClassName #>Query : QueryDb<<#= tbl.ClassName #>>
 	{
 <#
-		foreach(Column col in from c in tbl.Columns where !c.Ignore select c)
+		foreach (Column col in tbl.Columns)
 		{
+			if (col.Ignore)
+			{
+				continue;
+			}
+
 			var ormName = (col.IsPK && UseIdAsPK) ? "Id" : col.PropertyName;
 			var isString = col.ProperPropertyType == "string";
-			var nullablePropType = col.ProperPropertyType.Replace("?","") + "?";
+			var nullablePropType = col.ProperPropertyType.Replace("?", "") + "?";
 			var isArray = col.ProperPropertyType.Contains("[]");
 			var isBool = col.ProperPropertyType.Contains("bool");
 			var isGuid = col.ProperPropertyType.Contains("Guid");
+			
 			if (!col.IsPK)
 			{
-#>
-        public <#=!isArray && !isString ? nullablePropType : col.ProperPropertyType#> <#=ormName#> { get; set;}
+#>		public <#= !isArray && !isString ? nullablePropType : col.ProperPropertyType #> <#= ormName #> { get; set; }
 <#
 			}
 			if (col.IsPK && UseIdAsPK)
 			{
-#>
-        public <#=isString ? "string" : nullablePropType#> Id { get; set;}
+#>		public <#= isString ? "string" : nullablePropType #> Id { get; set; }
 <#
 			}
 			if (col.IsPK && !UseIdAsPK)
 			{
-#> 
-        public <#=isString ? "string" : nullablePropType#> <#=col.PropertyName#> { get; set;}
+#>		public <#= isString ? "string" : nullablePropType#> <#= col.PropertyName #> { get; set; }
 <#
 			}
 			if (isString)
 			{
-#>
-	    public <#=col.ProperPropertyType#> <#=ormName#>StartsWith { get; set;}
-		public <#=col.ProperPropertyType#> <#=ormName#>EndsWith { get; set;}
-		public <#=col.ProperPropertyType#> <#=ormName#>Contains { get; set;}
-		public <#=col.ProperPropertyType#> <#=ormName#>Like { get; set;} 
-		public <#=col.ProperPropertyType#>[] <#=ormName#>Between { get; set;}
-		public <#=col.ProperPropertyType#>[] <#=ormName#>In { get; set;}
+#>		public <#= col.ProperPropertyType #> <#= ormName #>StartsWith { get; set; }
+		public <#= col.ProperPropertyType #> <#= ormName #>EndsWith { get; set; }
+		public <#= col.ProperPropertyType #> <#= ormName #>Contains { get; set; }
+		public <#= col.ProperPropertyType #> <#= ormName #>Like { get; set; } 
+		public <#= col.ProperPropertyType #>[] <#= ormName #>Between { get; set; }
+		public <#= col.ProperPropertyType #>[] <#= ormName #>In { get; set; }
 <#
 			}
 			else if (!isArray && !isBool)
 			{
 				if (!isGuid)
 				{
-#>  
-	    public <#=nullablePropType#> <#=ormName#>GreaterThanOrEqualTo { get; set;}
-		public <#=nullablePropType#> <#=ormName#>GreaterThan { get; set;}
-		public <#=nullablePropType#> <#=ormName#>LessThan { get; set;}
-		public <#=nullablePropType#> <#=ormName#>LessThanOrEqualTo { get; set;}
-		public <#=nullablePropType#> <#=ormName#>NotEqualTo { get; set;}
-		public <#=col.ProperPropertyType#>[] <#=ormName#>Between { get; set;}
+#>		public <#= nullablePropType #> <#= ormName #>GreaterThanOrEqualTo { get; set; }
+		public <#= nullablePropType #> <#= ormName #>GreaterThan { get; set; }
+		public <#= nullablePropType #> <#= ormName #>LessThan { get; set; }
+		public <#= nullablePropType #> <#= ormName #>LessThanOrEqualTo { get; set; }
+		public <#= nullablePropType #> <#= ormName #>NotEqualTo { get; set; }
+		public <#= col.ProperPropertyType #>[] <#= ormName #>Between { get; set; }
 <#
 				}
-#>
-		public <#=col.ProperPropertyType#>[] <#=ormName#>In { get; set;}
+#>		public <#= col.ProperPropertyType #>[] <#= ormName #>In { get; set; }
 <#
-			}
-		}
+			} // end elseif
 #>
-}
+
+<#
+		} // end foreach
+#>
+	}
 <#
 		}
 
-		manager.EndBlock();
+		manager.EndBlock(); // end newfile
 	} // end foreach
 	
 	manager.StartFooter();

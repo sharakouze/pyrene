@@ -73,32 +73,39 @@ namespace <#= fileNamespace #>
 				continue;
             }
 
-			var getByIdRequestName = "Get" + codeClass.Name;
-            manager.StartNewFile(getByIdRequestName + ".generated.cs");
+			var getByIdClassName = "Get" + codeClass.Name;
+            manager.StartNewFile(getByIdClassName + ".generated.cs");
+
+			var classDefinitionWords = new List<string>();
+			classDefinitionWords.Add("public");
+			if (MakeClassesPartial)
+			{
+				classDefinitionWords.Add("partial");
+			}
 #>
 	/// <summary>
 	/// Retourne une entité <see cref="<#= codeClass.Name #>" />.
 	/// </summary>
-	<#= MakeClassesPartial ? "public partial" : "public" #> class <#= getByIdRequestName #> : GetByIdRequestBase<<#= codeClass.Name #>>
+	<#= string.Join(" ", classDefinitionWords) #> class <#= getByIdClassName #> : GetByIdRequestBase<<#= codeClass.Name #>>
 	{
 	}
 <#
 			manager.EndBlock(); // end newfile
 
-			var deleteByIdRequestName = "Delete" + codeClass.Name;
-            manager.StartNewFile(deleteByIdRequestName + ".generated.cs");
+			var deleteByIdClassName = "Delete" + codeClass.Name;
+            manager.StartNewFile(deleteByIdClassName + ".generated.cs");
 #>
 	/// <summary>
 	/// Supprime une entité <see cref="<#= codeClass.Name #>" />.
 	/// </summary>
-	<#= MakeClassesPartial ? "public partial" : "public" #> class <#= deleteByIdRequestName #> : DeleteByIdRequestBase
+	<#= string.Join(" ", classDefinitionWords) #> class <#= deleteByIdClassName #> : DeleteByIdRequestBase
 	{
 	}
 <#
+			manager.EndBlock(); // end newfile
         } // end if
     } // end foreach
 
-	manager.EndBlock(); // end newfile
 	manager.StartFooter();
 #>
 }
