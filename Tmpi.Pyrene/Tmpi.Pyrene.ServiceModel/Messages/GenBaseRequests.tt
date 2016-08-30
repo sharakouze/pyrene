@@ -1,33 +1,32 @@
 ﻿<#@ template language="C#" hostspecific="true" #>
-<#@ import namespace="System.Text.RegularExpressions" #>
 <#@ include file="$(SolutionDir)Shared\MultipleOutputHelper.ttinclude" #>
 <#@ include file="$(SolutionDir)Shared\VisualStudioHelper.ttinclude" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
 <#
-	// Settings START
+	// ----- Settings START -----
 	string Namespace = ""; // vide = DefaultNamespace
 	string SourceNamespace = "Tmpi.Pyrene.ServiceModel.Types";
+	bool MakeClassesPartial = true;
 	bool SplitIntoMultipleFiles = true;
 	Regex ClassFilterInclude = new Regex("^Gen", RegexOptions.IgnoreCase);
 	Regex ClassFilterExclude = null;
-	// Settings END
+	// ----- Settings END -----
 
 	// get a reference to the project of this t4 template
 	var project = VisualStudioHelper.CurrentProject;
-    // get all class items from the code model
-    var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementClass, false);
 
+	// namespace
 	var fileNamespace = Namespace;
 	if (string.IsNullOrWhiteSpace(fileNamespace))
     {
-		var defaultNamespace = project.Properties.Item("DefaultNamespace").Value;
-		var templateDir = Path.GetDirectoryName(Host.TemplateFile);
+		var defaultNamespace = project.Properties.Item("DefaultNamespace").Value.ToString();
 		var fullPath = project.Properties.Item("FullPath").Value.ToString();
-		fullPath = 
-			fullPath.EndsWith("\\") 
-				? fullPath.Substring(0, fullPath.Length-1) 
-				: fullPath;
-		var subNamespace = 
-			templateDir.Replace(fullPath, string.Empty).Replace("\\", ".");
+		if (fullPath.EndsWith("\\"))
+        {
+			fullPath = fullPath.Substring(0, fullPath.Length - 1);
+        }
+		var templateDir = Path.GetDirectoryName(Host.TemplateFile);
+		var subNamespace = templateDir.Replace(fullPath, string.Empty).Replace("\\", ".");
 		fileNamespace = string.Concat(defaultNamespace, subNamespace);
 	}
 
@@ -50,15 +49,17 @@
 using <#= SourceNamespace #>;
 
 <#
-	}
+	} // end if
 #>
 namespace <#= fileNamespace #>
 {
 <#
-	manager.EndBlock();
+	manager.EndBlock(); // end header
     
+    // get all class items from the code model
+    var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementClass, false);
 	// iterate all classes
-    foreach(EnvDTE.CodeClass codeClass in allClasses)
+    foreach (EnvDTE.CodeClass codeClass in allClasses)
     {
         // get all interfaces implemented by this class
         var allInterfaces = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(codeClass.ImplementedInterfaces, EnvDTE.vsCMElement.vsCMElementInterface, true);
@@ -78,11 +79,11 @@ namespace <#= fileNamespace #>
 	/// <summary>
 	/// Retourne une entité <see cref="<#= codeClass.Name #>" />.
 	/// </summary>
-	public partial class <#= getByIdRequestName #> : GetByIdRequestBase<<#= codeClass.Name #>>
+	<#= MakeClassesPartial ? "public partial" : "public" #> class <#= getByIdRequestName #> : GetByIdRequestBase<<#= codeClass.Name #>>
 	{
 	}
 <#
-			manager.EndBlock();
+			manager.EndBlock(); // end newfile
 
 			var deleteByIdRequestName = "Delete" + codeClass.Name;
             manager.StartNewFile(deleteByIdRequestName + ".generated.cs");
@@ -90,16 +91,19 @@ namespace <#= fileNamespace #>
 	/// <summary>
 	/// Supprime une entité <see cref="<#= codeClass.Name #>" />.
 	/// </summary>
-	public partial class <#= deleteByIdRequestName #> : DeleteByIdRequestBase
+	<#= MakeClassesPartial ? "public partial" : "public" #> class <#= deleteByIdRequestName #> : DeleteByIdRequestBase
 	{
 	}
 <#
-        }
-    }
+        } // end if
+    } // end foreach
 
+	manager.EndBlock(); // end newfile
 	manager.StartFooter();
 #>
 }
 <#
+	manager.EndBlock(); // end footer
+
 	manager.Process(SplitIntoMultipleFiles);
 #>

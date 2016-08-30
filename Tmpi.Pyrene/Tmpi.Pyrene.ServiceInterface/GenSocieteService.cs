@@ -22,16 +22,16 @@ namespace Tmpi.Pyrene.ServiceInterface
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var q = Db.From<GenCompteur>().Join<GenCompteurValeur>();
-            q.ToAbsoluteUri();
+            //var q = Db.From<GenCompteur>().Join<GenCompteurValeur>();
+            //q.ToAbsoluteUri();
 
-            var qqq = Db.Select<GenSociete>().Join<GenCompteur>();
+            //var qqq = Db.Select<GenSociete>().Join<GenCompteur>();
 
             var soc = new GenSociete()
             {
-                CleSociete = request.CleSociete,
-                CodSociete = "XYZ",
-                LibSociete = "test"
+                Id = request.Id,
+                CodObjet = "XYZ",
+                LibObjet = "test"
             };
             //var soc = Db.SingleById<GenSociete>(request.CleSociete);
             return soc;
