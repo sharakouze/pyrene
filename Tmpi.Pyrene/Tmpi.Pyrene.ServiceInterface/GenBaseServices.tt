@@ -59,7 +59,6 @@ namespace <#= fileNamespace #>
 
 	var srcProject = VisualStudioHelper.GetProject(SourceProject);
     
-	var lstServiceClass = new List<string>();
 	var lstMessageClass = new List<string>();
 
     // get all class items from the code model
@@ -89,12 +88,17 @@ namespace <#= fileNamespace #>
     } // end foreach
 
 	lstMessageClass.Sort();
+
+	var dic = new Dictionary<string, List<string>>();
 	foreach(var msg in lstMessageClass)
-    {
-#>
-<#= msg #>
-<#
-    }
+	{
+		if (msg.StarstWith("Get"))
+		{
+			if (dic.ContainsKey(msg.Substring(3)))
+			{
+			}
+		}
+	}
 
 	manager.StartFooter();
 #>
