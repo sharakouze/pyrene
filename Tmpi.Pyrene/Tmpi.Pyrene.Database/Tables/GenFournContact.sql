@@ -11,6 +11,6 @@
     [TypGenre] INT NULL,
     [CodFonction] VARCHAR(100) NULL,
     CONSTRAINT [PK_GenFournContact] PRIMARY KEY ([Id]), 
-    CONSTRAINT [UN_GenFournContact_CleGenFourn_1] UNIQUE ([CleGenFourn], [NomContact]), 
+    CONSTRAINT [UK_GenFournContact_CleGenFourn_NomContact] UNIQUE ([CleGenFourn], [NomContact]), 
     CONSTRAINT [FK_GenFournContact_CleGenFourn] FOREIGN KEY ([CleGenFourn]) REFERENCES [GenFourn] ([Id]) ON DELETE CASCADE, 
 );

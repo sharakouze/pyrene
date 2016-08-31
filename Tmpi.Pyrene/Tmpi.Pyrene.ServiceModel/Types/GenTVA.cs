@@ -3,7 +3,7 @@
     /// <summary>
     /// Représente un taux de TVA.
     /// </summary>
-    partial class GenTVA : IAuditable
+    partial class GenTVA : IAuditable, IHasCodLibTxt
     {
     }
 }

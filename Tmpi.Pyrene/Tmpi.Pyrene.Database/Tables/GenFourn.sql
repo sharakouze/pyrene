@@ -28,7 +28,7 @@
     [EstEnvoiMailBonCde] BIT NOT NULL,
     [CleGenPersonne] INT NULL,
     CONSTRAINT [PK_GenFourn] PRIMARY KEY ([Id]),
-    CONSTRAINT [UN_GenFourn_CodObjet] UNIQUE ([CodObjet]), 
+    CONSTRAINT [UK_GenFourn_CodObjet] UNIQUE ([CodObjet]), 
     CONSTRAINT [FK_GenFourn_CleGenPersonne] FOREIGN KEY ([CleGenPersonne]) REFERENCES [GenPersonne] ([Id])
 );
 

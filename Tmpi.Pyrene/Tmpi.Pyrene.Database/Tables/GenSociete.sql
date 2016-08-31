@@ -16,7 +16,7 @@
     [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
     CONSTRAINT [PK_GenSociete] PRIMARY KEY ([Id]),
-    CONSTRAINT [UN_GenSociete_CodObjet] UNIQUE ([CodObjet])
+    CONSTRAINT [UK_GenSociete_CodObjet] UNIQUE ([CodObjet])
 );
 
 GO

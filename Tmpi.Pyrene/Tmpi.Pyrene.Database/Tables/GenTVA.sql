@@ -10,7 +10,7 @@
     [CodExterne] VARCHAR(100) NULL,
     [TauTVA] DECIMAL(5,2) NOT NULL,
     CONSTRAINT [PK_GenTVA] PRIMARY KEY ([Id]),
-    CONSTRAINT [UN_GenTVA_CodObjet] UNIQUE ([CodObjet])
+    CONSTRAINT [UK_GenTVA_CodObjet] UNIQUE ([CodObjet])
 );
 
 GO

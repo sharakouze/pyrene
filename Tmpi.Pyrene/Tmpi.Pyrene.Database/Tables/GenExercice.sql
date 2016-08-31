@@ -11,7 +11,7 @@
     [DatDebut] DATETIME NOT NULL,
     [DatFin] DATETIME NOT NULL,
     CONSTRAINT [PK_GenExercice] PRIMARY KEY ([Id]), 
-    CONSTRAINT [UN_GenExercice_CodObjet] UNIQUE ([CodObjet]),
+    CONSTRAINT [UK_GenExercice_CodObjet] UNIQUE ([CodObjet]),
 );
 
 GO

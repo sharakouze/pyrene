@@ -3,7 +3,7 @@
     /// <summary>
     /// Représente un mandat de validation hiérarchique.
     /// </summary>
-    partial class GenMandat : IAuditable
+    partial class GenMandat : IAuditable, IHasCodLibTxt
     {
     }
 }

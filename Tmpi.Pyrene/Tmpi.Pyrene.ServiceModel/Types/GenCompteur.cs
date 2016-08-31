@@ -3,7 +3,7 @@
     /// <summary>
     /// Représente un compteur et son modèle de numérotation.
     /// </summary>
-    partial class GenCompteur : IAuditable
+    partial class GenCompteur : IAuditable, IHasCodLibTxt
     {
     }
 }

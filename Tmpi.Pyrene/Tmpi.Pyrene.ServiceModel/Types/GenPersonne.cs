@@ -3,7 +3,7 @@
     /// <summary>
     /// Représente un utilisateur.
     /// </summary>
-    partial class GenPersonne : IAuditable, IHasContact
+    partial class GenPersonne : IAuditable, IHasContact, IHasCodLibTxt
     {
     }
 }

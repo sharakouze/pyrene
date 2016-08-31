@@ -58,21 +58,24 @@ namespace <#= fileNamespace #>
     
     // get all class items from the code model
     var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementClass, false);
+	if (!string.IsNullOrWhiteSpace(SourceNamespace))
+    {
+		allClasses = allClasses.Where(c => c.FullName.StartsWith(SourceNamespace)).ToList();
+    }
 	// iterate all classes
     foreach (EnvDTE.CodeClass codeClass in allClasses)
     {
-        // get all interfaces implemented by this class
-        var allInterfaces = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(codeClass.ImplementedInterfaces, EnvDTE.vsCMElement.vsCMElementInterface, true);
-        if (allInterfaces.OfType<EnvDTE.CodeInterface>()
-                         .Any(i => i.Name == "IHasId"))
+		var included = ClassFilterInclude == null || ClassFilterInclude.IsMatch(codeClass.Name);
+		var excluded = ClassFilterExclude != null && ClassFilterExclude.IsMatch(codeClass.Name);
+		if (!included || excluded)
         {
-			var included = ClassFilterInclude == null || ClassFilterInclude.IsMatch(codeClass.Name);
-			var excluded = ClassFilterExclude != null && ClassFilterExclude.IsMatch(codeClass.Name);
-			if (!included || excluded)
-            {
-				continue;
-            }
+			continue;
+        }
 
+        // get all interfaces implemented by this class
+		var allInterfaces = VisualStudioHelper.CodeModel.GetImplementedInterfaces(codeClass);
+		if (allInterfaces.Any(i => i.FullName == "ServiceStack.Model.IHasId<System.Int32>" || i.FullName == "ServiceStack.Model.IHasIntId"))
+        {
 			var getByIdClassName = "Get" + codeClass.Name;
             manager.StartNewFile(getByIdClassName + ".generated.cs");
 

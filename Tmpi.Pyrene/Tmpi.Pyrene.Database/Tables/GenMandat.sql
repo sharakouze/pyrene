@@ -13,8 +13,8 @@
     [NbrSignature] TINYINT NOT NULL,
     [TxtMessage] VARCHAR(MAX) NULL,
     CONSTRAINT [PK_GenMandat] PRIMARY KEY ([Id]),
-    CONSTRAINT [UN_GenMandat_CodObjet_1] UNIQUE ([CodObjet], [NivMandat]),
-    CONSTRAINT [UN_GenMandat_TypMandat_1] UNIQUE ([TypMandat], [NivMandat]),
+    CONSTRAINT [UK_GenMandat_CodObjet_NivMandat] UNIQUE ([CodObjet], [NivMandat]),
+    CONSTRAINT [UK_GenMandat_TypMandat_NivMandat] UNIQUE ([TypMandat], [NivMandat]),
 );
 
 GO

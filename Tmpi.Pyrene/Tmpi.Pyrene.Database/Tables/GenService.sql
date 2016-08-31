@@ -17,7 +17,7 @@
     [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
     CONSTRAINT [PK_GenService] PRIMARY KEY ([Id]),
-    CONSTRAINT [UN_GenService_CodObjet] UNIQUE ([CodObjet]),
+    CONSTRAINT [UK_GenService_CodObjet] UNIQUE ([CodObjet]),
     CONSTRAINT [FK_GenService_CleGenSecteur] FOREIGN KEY ([CleGenSecteur]) REFERENCES [GenSecteur] ([Id]) ON DELETE CASCADE,
 );
 
