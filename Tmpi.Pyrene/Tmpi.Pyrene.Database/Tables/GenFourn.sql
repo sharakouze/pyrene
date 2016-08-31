@@ -24,7 +24,7 @@
     [DelLivraison] TINYINT NULL,
     [DelPaiement] TINYINT NULL,
     [ValNote] DECIMAL(5,2) NULL,
-    [TypModeReglement] TINYINT NULL,
+    [TypModeReglement] INT NULL,
     [EstEnvoiMailBonCde] BIT NOT NULL,
     [CleGenPersonne] INT NULL,
     CONSTRAINT [PK_GenFourn] PRIMARY KEY ([Id]),

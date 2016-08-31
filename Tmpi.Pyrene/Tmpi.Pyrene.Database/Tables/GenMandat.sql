@@ -8,7 +8,7 @@
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NOT NULL,
     [CodExterne] VARCHAR(100) NULL,
-    [TypMandat] SMALLINT NOT NULL,
+    [TypMandat] INT NOT NULL,
     [NivMandat] TINYINT NOT NULL,
     [NbrSignature] TINYINT NOT NULL,
     [TxtMessage] VARCHAR(MAX) NULL,

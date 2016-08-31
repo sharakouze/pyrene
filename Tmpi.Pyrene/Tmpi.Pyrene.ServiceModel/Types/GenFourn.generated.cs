@@ -92,7 +92,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[DecimalLength(5, 2)]
 		public decimal? ValNote { get; set; }
 
-		public byte? TypModeReglement { get; set; }
+		public TypModeReglement? TypModeReglement { get; set; }
 
 		[Required]
 		public bool EstEnvoiMailBonCde { get; set; }

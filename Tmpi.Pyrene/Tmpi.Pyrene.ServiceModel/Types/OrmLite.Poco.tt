@@ -42,6 +42,7 @@
 	tables["GenCompteur"]["TypPeriodicite"].PropertyType = "TypPeriodicite";
 	tables["GenMandat"]["TypMandat"].PropertyType = "TypMandat";
 	tables["GenPersonne"]["TypGenre"].PropertyType = "TypGenre";
+	tables["GenFourn"]["TypModeReglement"].PropertyType = "TypModeReglement";
 	tables["GenFournContact"]["TypGenre"].PropertyType = "TypGenre";
 	// ----- Tweak Schema END -----
 

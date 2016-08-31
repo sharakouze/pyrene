@@ -5,14 +5,11 @@ using ServiceStack.DataAnnotations;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
     /// <summary>
-    /// Spécifie le type d'un mandat.
+    /// Spécifie le mode de règlement.
     /// </summary>
     [EnumAsInt]
-    public enum TypMandat
+    public enum TypModeReglement
     {
-        Undefined = 0,
-
-        Demande = 101,
-        CommandeFournisseur = 102,
+        Undefined = 0
     }
 }

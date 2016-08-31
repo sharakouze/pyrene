@@ -1,11 +1,14 @@
 ﻿#pragma warning disable 1591
 
+using ServiceStack.DataAnnotations;
+
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
     /// <summary>
     /// Spécifie le type d'un compteur.
     /// </summary>
-    public enum TypCompteur : short
+    [EnumAsInt]
+    public enum TypCompteur
     {
         Undefined = 0,
 

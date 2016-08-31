@@ -1,11 +1,14 @@
 ﻿#pragma warning disable 1591
 
+using ServiceStack.DataAnnotations;
+
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
     /// <summary>
     /// Spécifie la périodicité d'un compteur.
     /// </summary>
-    public enum TypPeriodicite : byte
+    [EnumAsInt]
+    public enum TypPeriodicite
     {
         Undefined = 0,
 

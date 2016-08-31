@@ -9,7 +9,7 @@
     [DatModif] DATETIME NOT NULL,
     [CodExterne] VARCHAR(100) NULL,
     [PrePersonne] VARCHAR(100) NULL,
-    [TypGenre] TINYINT NULL,
+    [TypGenre] INT NULL,
     [NumTelep] VARCHAR(25) NULL,
     [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,

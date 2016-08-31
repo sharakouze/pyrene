@@ -1,11 +1,14 @@
 ﻿#pragma warning disable 1591
 
+using ServiceStack.DataAnnotations;
+
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
     /// <summary>
     /// Spécifie le genre d'une personne.
     /// </summary>
-    public enum TypGenre : byte
+    [EnumAsInt]
+    public enum TypGenre
     {
         Undefined = 0,
 

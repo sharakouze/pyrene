@@ -8,7 +8,7 @@
     [NumTelep] VARCHAR(25) NULL,
     [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
-    [TypGenre] TINYINT NULL,
+    [TypGenre] INT NULL,
     [CodFonction] VARCHAR(100) NULL,
     CONSTRAINT [PK_GenFournContact] PRIMARY KEY ([Id]), 
     CONSTRAINT [UN_GenFournContact_CleGenFourn_1] UNIQUE ([CleGenFourn], [NomContact]), 
