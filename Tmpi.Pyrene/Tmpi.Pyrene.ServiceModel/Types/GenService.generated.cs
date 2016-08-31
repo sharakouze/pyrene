@@ -49,7 +49,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[ForeignKey(typeof(GenSecteur), OnDelete = "CASCADE")]
 		[Required]
 		[Index]
-		public int CleGenSecteur { get; set; }
+		public int CleSecteur { get; set; }
 
 		[StringLength(200)]
 		public string AdrRue { get; set; }

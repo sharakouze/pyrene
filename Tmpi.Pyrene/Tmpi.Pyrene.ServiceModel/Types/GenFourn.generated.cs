@@ -76,16 +76,20 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[StringLength(25)]
 		public string NumTVAIntra { get; set; }
 
+		[DecimalLength(15, 2)]
 		public decimal? MntFPort { get; set; }
 
+		[DecimalLength(15, 2)]
 		public decimal? MntFPortGratuit { get; set; }
 
+		[DecimalLength(15, 2)]
 		public decimal? MntCommandeMin { get; set; }
 
 		public byte? DelLivraison { get; set; }
 
 		public byte? DelPaiement { get; set; }
 
+		[DecimalLength(5, 2)]
 		public decimal? ValNote { get; set; }
 
 		public byte? TypModeReglement { get; set; }

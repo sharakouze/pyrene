@@ -5,9 +5,9 @@
 <#
 	// ----- Settings START -----
 	ConnectionStringName = "PyreneModel";			// Uses last connection string in config if not specified
-	Namespace = "";
 	ClassPrefix = "";
 	ClassSuffix = "";
+	string Namespace = "";
 	bool MakeClassesPartial = true;
 	bool SplitIntoMultipleFiles = true;		// if true: Generates one file for every class
 	bool MakeSingular = false;			// if true: Changes the classname to singular if tablename is not singular
@@ -17,7 +17,7 @@
 	bool CreateAutoQueryTypes = false; //if true: Will create <TypeName>Query types with all possible search fields explicitly typed
 	bool AddNamedConnection = false; //if true: Adds NamedConnection attribute so AutoQuery will override default IDbConnection
 	bool IncludeReferences = true; //if true: Addes References(typeof(ReferenceTableType)) to FKs
-	bool IncludeIndices = true; // index
+	bool IncludeIndices = true; // index, unique index, composite index
 	string UseSpecificNamedConnection = ""; //if not null: Will use name provided as NamedConnection and AddNamedConnection = true, else ConnectionStringName is used as default NamedConnection
 	// ----- Settings END -----
 
@@ -182,6 +182,13 @@ namespace <#= fileNamespace #>
 		[StringLength(<#= col.Size #>)]
 <#
 			} // end if
+			
+			if (col.PropertyType == "decimal" && col.Precision > 0)
+            {
+#>
+		[DecimalLength(<#= col.Precision #>, <#= col.Scale #>)]
+<#
+            } // end if
 
 			if (col.IsAutoIncrement)
 			{
@@ -297,22 +304,26 @@ namespace <#= fileNamespace #>
 			
 			if (!col.IsPK)
 			{
-#>		public <#= !isArray && !isString ? nullablePropType : col.ProperPropertyType #> <#= ormName #> { get; set; }
+#>
+		public <#= !isArray && !isString ? nullablePropType : col.ProperPropertyType #> <#= ormName #> { get; set; }
 <#
 			}
 			if (col.IsPK && UseIdAsPK)
 			{
-#>		public <#= isString ? "string" : nullablePropType #> Id { get; set; }
+#>
+		public <#= isString ? "string" : nullablePropType #> Id { get; set; }
 <#
 			}
 			if (col.IsPK && !UseIdAsPK)
 			{
-#>		public <#= isString ? "string" : nullablePropType#> <#= col.PropertyName #> { get; set; }
+#>
+		public <#= isString ? "string" : nullablePropType#> <#= col.PropertyName #> { get; set; }
 <#
 			}
 			if (isString)
 			{
-#>		public <#= col.ProperPropertyType #> <#= ormName #>StartsWith { get; set; }
+#>
+		public <#= col.ProperPropertyType #> <#= ormName #>StartsWith { get; set; }
 		public <#= col.ProperPropertyType #> <#= ormName #>EndsWith { get; set; }
 		public <#= col.ProperPropertyType #> <#= ormName #>Contains { get; set; }
 		public <#= col.ProperPropertyType #> <#= ormName #>Like { get; set; } 
@@ -324,7 +335,8 @@ namespace <#= fileNamespace #>
 			{
 				if (!isGuid)
 				{
-#>		public <#= nullablePropType #> <#= ormName #>GreaterThanOrEqualTo { get; set; }
+#>
+		public <#= nullablePropType #> <#= ormName #>GreaterThanOrEqualTo { get; set; }
 		public <#= nullablePropType #> <#= ormName #>GreaterThan { get; set; }
 		public <#= nullablePropType #> <#= ormName #>LessThan { get; set; }
 		public <#= nullablePropType #> <#= ormName #>LessThanOrEqualTo { get; set; }
@@ -332,7 +344,8 @@ namespace <#= fileNamespace #>
 		public <#= col.ProperPropertyType #>[] <#= ormName #>Between { get; set; }
 <#
 				}
-#>		public <#= col.ProperPropertyType #>[] <#= ormName #>In { get; set; }
+#>
+		public <#= col.ProperPropertyType #>[] <#= ormName #>In { get; set; }
 <#
 			} // end elseif
 #>

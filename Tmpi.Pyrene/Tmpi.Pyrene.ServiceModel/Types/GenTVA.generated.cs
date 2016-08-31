@@ -46,6 +46,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[StringLength(100)]
 		public string CodExterne { get; set; }
 
+		[DecimalLength(5, 2)]
 		[Required]
 		public decimal TauTVA { get; set; }
 

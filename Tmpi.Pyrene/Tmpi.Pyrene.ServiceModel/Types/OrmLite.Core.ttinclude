@@ -80,7 +80,6 @@
 */
 
 string ConnectionStringName = "";
-string Namespace = "";
 string ClassPrefix = "";
 string ClassSuffix = "";
 string SchemaName = null;
@@ -146,6 +145,7 @@ public class Column
 	public bool Ignore;
 	public int Size;
 	public int Precision;
+	public int Scale;
 	public string DefaultValue;
 	public string ProperPropertyType
 	{
@@ -1008,7 +1008,8 @@ class SqlServerSchemaReader : SchemaReader
 					col.PropertyName=CleanUp(col.Name);
 					col.PropertyType=GetPropertyType(rdr["DataType"].ToString());
 					col.Size=rdr["MaxLength"] == DBNull.Value ? -1 : (int)rdr["MaxLength"];
-					col.Precision=GetDatatypePrecision(rdr["DataType"].ToString());
+					col.Precision=rdr["NumericPrecision"] == DBNull.Value ? -1 : (byte)rdr["NumericPrecision"];
+					col.Scale=rdr["NumericScale"] == DBNull.Value ? -1 : (int)rdr["NumericScale"];
 					col.IsNullable=rdr["IsNullable"].ToString()=="YES";
 					col.IsAutoIncrement=((int)rdr["IsIdentity"])==1;
 					col.IsComputed=((int)rdr["IsComputed"])==1;                    
@@ -1318,6 +1319,8 @@ class SqlServerSchemaReader : SchemaReader
 									   T.DataType ,
 									   T.MaxLength ,
 									   T.DatePrecision ,
+									   T.NumericPrecision ,
+									   T.NumericScale ,
 									   T.IsIdentity ,
 									   T.IsComputed FROM (
 								SELECT
@@ -1330,6 +1333,8 @@ class SqlServerSchemaReader : SchemaReader
 											IS_NULLABLE AS IsNullable, DATA_TYPE AS DataType,
 											CHARACTER_MAXIMUM_LENGTH AS MaxLength,
 											DATETIME_PRECISION AS DatePrecision,
+											NUMERIC_PRECISION AS NumericPrecision,
+											NUMERIC_SCALE AS NumericScale,
 											COLUMNPROPERTY(object_id('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'), COLUMN_NAME, 'IsIdentity') AS IsIdentity,
 											COLUMNPROPERTY(object_id('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'), COLUMN_NAME, 'IsComputed') as IsComputed
 										FROM  INFORMATION_SCHEMA.COLUMNS
@@ -1345,6 +1350,8 @@ class SqlServerSchemaReader : SchemaReader
 											IS_NULLABLE AS IsNullable, DATA_TYPE AS DataType,
 											CHARACTER_MAXIMUM_LENGTH AS MaxLength,
 											DATETIME_PRECISION AS DatePrecision,
+											NUMERIC_PRECISION AS NumericPrecision,
+											NUMERIC_SCALE AS NumericScale,
 											COLUMNPROPERTY(object_id('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'), COLUMN_NAME, 'IsIdentity') AS IsIdentity,
 											COLUMNPROPERTY(object_id('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'), COLUMN_NAME, 'IsComputed') as IsComputed  
 								FROM INFORMATION_SCHEMA.ROUTINE_COLUMNS
@@ -1353,12 +1360,14 @@ class SqlServerSchemaReader : SchemaReader
 								ORDER BY T.OrdinalPosition ASC";
 
 	const string INDEX_SQL=@"SELECT DISTINCT
+		t.name AS TableName,
 		ind.name AS IndexName, 
 		ind.is_unique AS IsUnique
 FROM sys.indexes ind 
 INNER JOIN sys.tables t ON ind.object_id = t.object_id 
 WHERE ind.is_primary_key=0 AND t.is_ms_shipped=0 AND t.name='{0}'";
     const string INDEX_INFO_SQL=@"SELECT 
+		ind.name AS IndexName,
 		col.name AS ColumnName
 FROM sys.indexes ind 
 INNER JOIN sys.index_columns ic ON  ind.object_id = ic.object_id and ind.index_id = ic.index_id 
