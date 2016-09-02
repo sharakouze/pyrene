@@ -3,11 +3,16 @@
 <#@ include file="$(SolutionDir)Shared\VisualStudioHelper.ttinclude" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#
+	/***** TODO *****
+	- ApiAttribute + ApiMemberAttribute
+	****************/
+
 	// ----- Settings START -----
 	string Namespace = ""; // vide = DefaultNamespace
 	string SourceNamespace = "Tmpi.Pyrene.ServiceModel.Types";
 	bool MakeClassesPartial = true;
 	bool SplitIntoMultipleFiles = true;
+	bool AddRoutes = true;
 	Regex ClassFilterInclude = new Regex("^Gen", RegexOptions.IgnoreCase);
 	Regex ClassFilterExclude = null;
 	// ----- Settings END -----
@@ -42,6 +47,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using ServiceStack;
 <#
 	if (!string.IsNullOrWhiteSpace(SourceNamespace) && (SourceNamespace != fileNamespace))
 	{
@@ -77,6 +83,7 @@ namespace <#= fileNamespace #>
 		if (allInterfaces.Any(i => i.FullName == "ServiceStack.Model.IHasId<System.Int32>" || i.FullName == "ServiceStack.Model.IHasIntId"))
         {
 			var getByIdClassName = "Get" + codeClass.Name;
+			var getByIdDescription = "Retourne une entité {0} à partir de son Id.";
             manager.StartNewFile(getByIdClassName + ".generated.cs");
 
 			var classDefinitionWords = new List<string>();
@@ -87,8 +94,16 @@ namespace <#= fileNamespace #>
 			}
 #>
 	/// <summary>
-	/// Retourne une entité <see cref="<#= codeClass.Name #>" />.
+	/// <#= string.Format(getByIdDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
+<#
+			if (AddRoutes)
+            {
+#>
+	[Route("/<#= codeClass.Name #>/{Id}", "GET", Summary = "<#= string.Format(getByIdDescription, codeClass.Name) #>")]
+<#
+			} // end if
+#>
 	<#= string.Join(" ", classDefinitionWords) #> class <#= getByIdClassName #> : GetByIdRequestBase<<#= codeClass.Name #>>
 	{
 	}
@@ -96,12 +111,43 @@ namespace <#= fileNamespace #>
 			manager.EndBlock(); // end newfile
 
 			var deleteByIdClassName = "Delete" + codeClass.Name;
+			var deleteByIdDescription = "Supprime une entité {0} à partir de son Id.";
             manager.StartNewFile(deleteByIdClassName + ".generated.cs");
 #>
 	/// <summary>
-	/// Supprime une entité <see cref="<#= codeClass.Name #>" />.
+	/// <#= string.Format(deleteByIdDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
+<#
+			if (AddRoutes)
+            {
+#>
+	[Route("/<#= codeClass.Name #>/{Id}", "DELETE", Summary = "<#= string.Format(deleteByIdDescription, codeClass.Name) #>")]
+<#
+			} // end if
+#>
 	<#= string.Join(" ", classDefinitionWords) #> class <#= deleteByIdClassName #> : DeleteByIdRequestBase
+	{
+	}
+<#
+			manager.EndBlock(); // end newfile
+
+			var upsertClassName = "Save" + codeClass.Name;
+			var upsertDescription = "{0} une entité {1}.";
+            manager.StartNewFile(upsertClassName + ".generated.cs");
+#>
+	/// <summary>
+	/// <#= string.Format(upsertDescription, "Ajoute ou modifie", "<see cref=\"" + codeClass.Name + "\" />") #>
+	/// </summary>
+<#
+			if (AddRoutes)
+            {
+#>
+	[Route("/<#= codeClass.Name #>", "POST", Summary = "<#= string.Format(upsertDescription, "Ajoute", codeClass.Name) #>")]
+	[Route("/<#= codeClass.Name #>/{Id}", "PUT", Summary = "<#= string.Format(upsertDescription, "Modifie", codeClass.Name) #>")]
+<#
+			} // end if
+#>
+	<#= string.Join(" ", classDefinitionWords) #> class <#= upsertClassName #> : SaveRequestBase<<#= codeClass.Name #>>
 	{
 	}
 <#

@@ -7,13 +7,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using ServiceStack;
 using Tmpi.Pyrene.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne une entité <see cref="GenPersonneSignature" />.
+	/// Retourne une entité <see cref="GenPersonneSignature" /> à partir de son Id.
 	/// </summary>
+	[Route("/GenPersonneSignature/{Id}", "GET", Summary = "Retourne une entité GenPersonneSignature à partir de son Id.")]
 	public partial class GetGenPersonneSignature : GetByIdRequestBase<GenPersonneSignature>
 	{
 	}

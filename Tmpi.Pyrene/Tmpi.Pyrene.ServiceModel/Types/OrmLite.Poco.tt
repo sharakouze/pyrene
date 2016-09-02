@@ -3,6 +3,14 @@
 <#@ include file="$(SolutionDir)Shared\VisualStudioHelper.ttinclude" #>
 <#@ include file="OrmLite.Core.ttinclude" #>
 <#
+	/***** TODO *****
+	- Commentaire XML sur PrimaryKey
+	- DefaultAttribute
+	- ApiMemberAttribute(IsRequired) sur les propriétés [Required]
+	- PrimaryKey => Index(true)
+	- Ajout de propriétés pour les tables enfants
+	****************/
+
 	// ----- Settings START -----
 	ConnectionStringName = "PyreneModel";			// Uses last connection string in config if not specified
 	ClassPrefix = "";

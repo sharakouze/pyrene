@@ -13,10 +13,11 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Supprime une entité <see cref="GenFournBanque" /> à partir de son Id.
+	/// Ajoute ou modifie une entité <see cref="GenExercice" />.
 	/// </summary>
-	[Route("/GenFournBanque/{Id}", "DELETE", Summary = "Supprime une entité GenFournBanque à partir de son Id.")]
-	public partial class DeleteGenFournBanque : DeleteByIdRequestBase
+	[Route("/GenExercice", "POST", Summary = "Ajoute une entité GenExercice.")]
+	[Route("/GenExercice/{Id}", "PUT", Summary = "Modifie une entité GenExercice.")]
+	public partial class SaveGenExercice : SaveRequestBase<GenExercice>
 	{
 	}
 }

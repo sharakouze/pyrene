@@ -7,13 +7,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using ServiceStack;
 using Tmpi.Pyrene.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne une entité <see cref="GenTVA" />.
+	/// Retourne une entité <see cref="GenTVA" /> à partir de son Id.
 	/// </summary>
+	[Route("/GenTVA/{Id}", "GET", Summary = "Retourne une entité GenTVA à partir de son Id.")]
 	public partial class GetGenTVA : GetByIdRequestBase<GenTVA>
 	{
 	}

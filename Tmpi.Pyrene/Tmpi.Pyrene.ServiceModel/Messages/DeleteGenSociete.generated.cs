@@ -7,13 +7,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using ServiceStack;
 using Tmpi.Pyrene.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Supprime une entité <see cref="GenSociete" />.
+	/// Supprime une entité <see cref="GenSociete" /> à partir de son Id.
 	/// </summary>
+	[Route("/GenSociete/{Id}", "DELETE", Summary = "Supprime une entité GenSociete à partir de son Id.")]
 	public partial class DeleteGenSociete : DeleteByIdRequestBase
 	{
 	}

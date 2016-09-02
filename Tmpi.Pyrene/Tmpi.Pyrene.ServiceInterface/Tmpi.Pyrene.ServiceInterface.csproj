@@ -75,7 +75,33 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GenBaseServices.tt</DependentUpon>
     </Compile>
-    <Compile Include="GenSocieteService.cs" />
+    <Compile Include="GenCompteurService.generated.cs">
+      <DependentUpon>GenBaseServices.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenExerciceService.generated.cs">
+      <DependentUpon>GenBaseServices.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenFournService.generated.cs">
+      <DependentUpon>GenBaseServices.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenMandatService.generated.cs">
+      <DependentUpon>GenBaseServices.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenPersonneService.generated.cs">
+      <DependentUpon>GenBaseServices.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenSecteurService.generated.cs">
+      <DependentUpon>GenBaseServices.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenServiceService.generated.cs">
+      <DependentUpon>GenBaseServices.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenSocieteService.generated.cs">
+      <DependentUpon>GenBaseServices.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenTVAService.generated.cs">
+      <DependentUpon>GenBaseServices.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
