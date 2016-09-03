@@ -13,11 +13,10 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Ajoute ou modifie une entité <see cref="GenPersonneSignature" />.
+	/// Autocomplete une entité <see cref="GenPersonne" />.
 	/// </summary>
-	[Route("/GenPersonneSignature", "POST", Summary = "Ajoute une entité GenPersonneSignature.")]
-	[Route("/GenPersonneSignature/{Id}", "PUT", Summary = "Modifie une entité GenPersonneSignature.")]
-	public partial class SaveGenPersonneSignature : SaveRequestBase<GenPersonneSignature>
+	[Route("/GenPersonne", "GET", Summary = "Autocomplete une entité GenPersonne.")]
+	public partial class AutocompleteGenPersonne : AutocompleteRequestBase
 	{
 	}
 }

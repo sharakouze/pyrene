@@ -41,6 +41,34 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Messages\AutocompleteGenCompteur.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\AutocompleteGenExercice.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\AutocompleteGenFourn.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\AutocompleteGenMandat.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\AutocompleteGenPersonne.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\AutocompleteGenSecteur.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\AutocompleteGenService.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\AutocompleteGenSociete.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\AutocompleteGenTVA.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\AutocompleteRequestBase.cs" />
     <Compile Include="Messages\BasicMessages.Gen.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -72,9 +100,6 @@
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
     <Compile Include="Messages\DeleteGenPersonneProfil.generated.cs">
-      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Messages\DeleteGenPersonneSignature.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
     <Compile Include="Messages\DeleteGenSecteur.generated.cs">
@@ -117,9 +142,6 @@
     <Compile Include="Messages\GetGenPersonneProfil.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetGenPersonneSignature.generated.cs">
-      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
-    </Compile>
     <Compile Include="Messages\GetGenSecteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
@@ -159,9 +181,6 @@
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
     <Compile Include="Messages\SaveGenPersonneProfil.generated.cs">
-      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Messages\SaveGenPersonneSignature.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
     <Compile Include="Messages\SaveGenSecteur.generated.cs">

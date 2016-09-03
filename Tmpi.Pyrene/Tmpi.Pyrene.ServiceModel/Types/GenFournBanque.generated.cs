@@ -16,6 +16,7 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
+	[CompositeIndex(true, "CleGenFourn", "NumRib")]
 	public partial class GenFournBanque : IHasId<int>
 	{
 		[AutoIncrement]
@@ -25,25 +26,13 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[Required]
 		public int CleGenFourn { get; set; }
 
+		[StringLength(23)]
+		[Required]
+		public string NumRib { get; set; }
+
 		[StringLength(200)]
 		[Required]
-		public string LibBanque { get; set; }
-
-		[StringLength(5)]
-		[Required]
-		public string RibBanque { get; set; }
-
-		[StringLength(5)]
-		[Required]
-		public string RibGuichet { get; set; }
-
-		[StringLength(11)]
-		[Required]
-		public string RibCompte { get; set; }
-
-		[StringLength(2)]
-		[Required]
-		public string RibCle { get; set; }
+		public string LibEtablissement { get; set; }
 
 		[Required]
 		public bool EstDefaut { get; set; }

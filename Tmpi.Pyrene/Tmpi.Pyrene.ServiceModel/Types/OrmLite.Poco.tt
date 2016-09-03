@@ -144,7 +144,7 @@ namespace <#= fileNamespace #>
         }
 		classDefinitionWords.Add("class");
 		classDefinitionWords.Add(tbl.ClassName);
-		if (tbl.HasPK() && UseIdAsPK)
+		if (tbl.HasPK() && UseIdAsPK && tbl.PK.PropertyName == "Id")
         {
 			classDefinitionWords.Add(":");
 			classDefinitionWords.Add("IHasId<" + tbl.PK.PropertyType + ">");
@@ -178,7 +178,7 @@ namespace <#= fileNamespace #>
 				col.PropertyName = "_" + col.PropertyName;
 			}
 			priorProperyNames.Add(col.PropertyName);
-			if ((col.Name != col.PropertyName) || (col.IsPK && UseIdAsPK && col.Name != "Id"))
+			if (col.Name != col.PropertyName)
 			{
 #>
         [Alias("<#= col.Name #>")]
@@ -262,20 +262,23 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 
-			if (col.IsPK && UseIdAsPK)
+			if (col.IsPK)
 			{
+				if (col.PropertyName == "Id")
+				{
 #>
 		public <#= col.ProperPropertyType #> Id { get; set; }
 
 <#
-			} // end if
-			if (col.IsPK && !UseIdAsPK)
-			{
+				}
+				else
+				{
 #>
 		[PrimaryKey]
 		public <#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
 
 <#
+				}
 			} // end if
 		} // end foreach
 #>

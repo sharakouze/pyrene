@@ -17,7 +17,7 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, "CleGenPersonne", "CleGenSociete", "CleGenSecteur", "CleGenService")]
-	[CompositeIndex(true, "CodProfil", "CleGenPersonne")]
+	[CompositeIndex(true, "CodObjet", "CleGenPersonne")]
 	public partial class GenPersonneProfil : IHasId<int>
 	{
 		[AutoIncrement]
@@ -29,7 +29,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 
 		[StringLength(100)]
 		[Required]
-		public string CodProfil { get; set; }
+		public string CodObjet { get; set; }
 
 		[References(typeof(GenSociete))]
 		public int? CleGenSociete { get; set; }

@@ -78,6 +78,13 @@ namespace <#= fileNamespace #>
 			continue;
         }
 
+		var classDefinitionWords = new List<string>();
+		classDefinitionWords.Add("public");
+		if (MakeClassesPartial)
+		{
+			classDefinitionWords.Add("partial");
+		}
+
         // get all interfaces implemented by this class
 		var allInterfaces = VisualStudioHelper.CodeModel.GetImplementedInterfaces(codeClass);
 		if (allInterfaces.Any(i => i.FullName == "ServiceStack.Model.IHasId<System.Int32>" || i.FullName == "ServiceStack.Model.IHasIntId"))
@@ -85,13 +92,6 @@ namespace <#= fileNamespace #>
 			var getByIdClassName = "Get" + codeClass.Name;
 			var getByIdDescription = "Retourne une entité {0} à partir de son Id.";
             manager.StartNewFile(getByIdClassName + ".generated.cs");
-
-			var classDefinitionWords = new List<string>();
-			classDefinitionWords.Add("public");
-			if (MakeClassesPartial)
-			{
-				classDefinitionWords.Add("partial");
-			}
 #>
 	/// <summary>
 	/// <#= string.Format(getByIdDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
@@ -153,6 +153,29 @@ namespace <#= fileNamespace #>
 <#
 			manager.EndBlock(); // end newfile
         } // end if
+		if (allInterfaces.Any(i => i.FullName == "Tmpi.Pyrene.ServiceModel.Types.IHasCodLibTxt"))
+        {
+			var autocompleteClassName = "Autocomplete" + codeClass.Name;
+			var autocompleteDescription = "Autocomplete une entité {0}.";
+            manager.StartNewFile(autocompleteClassName + ".generated.cs");
+#>
+	/// <summary>
+	/// <#= string.Format(autocompleteDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
+	/// </summary>
+<#
+			if (AddRoutes)
+            {
+#>
+	[Route("/<#= codeClass.Name #>", "GET", Summary = "<#= string.Format(autocompleteDescription, codeClass.Name) #>")]
+<#
+			} // end if
+#>
+	<#= string.Join(" ", classDefinitionWords) #> class <#= autocompleteClassName #> : AutocompleteRequestBase
+	{
+	}
+<#
+			manager.EndBlock(); // end newfile
+		} // end if
     } // end foreach
 
 	manager.StartFooter();

@@ -44,6 +44,7 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using ServiceStack;
 using ServiceStack.OrmLite;
@@ -105,6 +106,10 @@ namespace <#= fileNamespace #>
 				case "SaveRequestBase":
 					entityName = codeClass.Name.Substring(4);
 					break;
+
+				case "AutocompleteRequestBase":
+					entityName = codeClass.Name.Substring(12);
+					break;
             }
 
 			if (!string.IsNullOrEmpty(entityName))
@@ -116,7 +121,7 @@ namespace <#= fileNamespace #>
 				}
 				else
 				{
-					dic.Add(entityName, new List<string>(new[]{codeClass.Name}));
+					dic.Add(entityName, new List<string>(new[] { codeClass.Name } ));
 				}
             }
         }
@@ -136,6 +141,7 @@ namespace <#= fileNamespace #>
 		var serviceClassName = kvp.Key + "Service";
 		manager.StartNewFile(serviceClassName + ".generated.cs");
 #>
+    [Authenticate]
 	<#= string.Join(" ", classDefinitionWords) #> class <#= serviceClassName #> : Service
 	{
 <#
@@ -143,11 +149,28 @@ namespace <#= fileNamespace #>
         {
 			if (CPT_MAX >= 10)
 			{
-				continue; // limitation version démo de ServiceStack
+				//continue; // limitation version démo de ServiceStack
 			}
 
-			if (requestName.StartsWith("GetAutocomplete"))
+			if (requestName.StartsWith("Autocomplete"))
             {
+				var entityName = requestName.Substring(12);
+#>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+		public List<string> Get(<#= requestName #> request)
+		{
+            if (string.IsNullOrWhiteSpace(request.Text))
+            {
+                return null;
+            }
+			return null;
+		}
+
+<#
             }
 			else if (requestName.StartsWith("Get"))
             {
@@ -161,6 +184,10 @@ namespace <#= fileNamespace #>
 		public <#= entityName #> Get(<#= requestName #> request)
 		{
             var entity = Db.SingleById<<#= entityName #>>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound("");
+			}
 			return entity;
 		}
 
@@ -176,7 +203,11 @@ namespace <#= fileNamespace #>
         /// <param name="request"></param>
 		public void Delete(<#= requestName #> request)
 		{
-			Db.DeleteById<<#= entityName #>>(request.Id);
+			int count = Db.DeleteById<<#= entityName #>>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound("");
+			}
 		}
 
 <#

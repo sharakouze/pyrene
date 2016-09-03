@@ -2,12 +2,10 @@
 (
     [Id] INT NOT NULL IDENTITY,
     [CleGenFourn] INT NOT NULL,
-    [LibBanque] VARCHAR(200) NOT NULL,
-    [RibBanque] VARCHAR(5) NOT NULL,
-    [RibGuichet] VARCHAR(5) NOT NULL,
-    [RibCompte] VARCHAR(11) NOT NULL,
-    [RibCle] VARCHAR(2) NOT NULL,
+    [NumRib] VARCHAR(23) NOT NULL,
+    [LibEtablissement] VARCHAR(200) NOT NULL,
     [EstDefaut] BIT NOT NULL,
     CONSTRAINT [PK_GenFournBanque] PRIMARY KEY ([Id]),
+    CONSTRAINT [UK_GenFournBanque_CleGenFourn_RibBanque] UNIQUE ([CleGenFourn], [NumRib]), 
     CONSTRAINT [FK_GenFournBanque_CleGenFourn] FOREIGN KEY ([CleGenFourn]) REFERENCES [GenFourn] ([Id]) ON DELETE CASCADE
 );

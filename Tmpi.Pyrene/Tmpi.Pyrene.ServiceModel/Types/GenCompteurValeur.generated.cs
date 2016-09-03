@@ -16,6 +16,7 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
+	[CompositeIndex(true, "CleGenCompteur", "ValPeriode")]
 	public partial class GenCompteurValeur
 	{
 		[ForeignKey(typeof(GenCompteur), OnDelete = "CASCADE")]

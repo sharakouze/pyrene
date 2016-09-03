@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using ServiceStack;
 using ServiceStack.OrmLite;
@@ -16,7 +17,66 @@ using Tmpi.Pyrene.ServiceModel.Messages;
 
 namespace Tmpi.Pyrene.ServiceInterface
 {
+    [Authenticate]
 	public partial class GenSecteurService : Service
 	{
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+		public List<string> Get(AutocompleteGenSecteur request)
+		{
+            if (string.IsNullOrWhiteSpace(request.Text))
+            {
+                return null;
+            }
+			return null;
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+		public void Delete(DeleteGenSecteur request)
+		{
+			int count = Db.DeleteById<GenSecteur>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound("");
+			}
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+		public GenSecteur Get(GetGenSecteur request)
+		{
+            var entity = Db.SingleById<GenSecteur>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound("");
+			}
+			return entity;
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+		public void Any(SaveGenSecteur request)
+		{
+			if (request.Id == 0)
+            {
+                Db.Insert(request.Entity);
+            }
+            else
+            {
+                Db.Update(request.Entity);
+            }
+		}
+
 	}
 }

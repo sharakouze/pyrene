@@ -16,7 +16,7 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-	[CompositeIndex(true, "CleGenFourn", "NomContact")]
+	[CompositeIndex(true, "CleGenFourn", "LibObjet")]
 	public partial class GenFournContact : IHasId<int>
 	{
 		[AutoIncrement]
@@ -28,13 +28,13 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 
 		[StringLength(100)]
 		[Required]
-		public string NomContact { get; set; }
+		public string LibObjet { get; set; }
+
+		[StringLength(500)]
+		public string TxtObjet { get; set; }
 
 		[StringLength(100)]
 		public string PreContact { get; set; }
-
-		[StringLength(500)]
-		public string TxtContact { get; set; }
 
 		[StringLength(25)]
 		public string NumTelep { get; set; }

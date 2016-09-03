@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using ServiceStack;
 using ServiceStack.OrmLite;
@@ -16,7 +17,110 @@ using Tmpi.Pyrene.ServiceModel.Messages;
 
 namespace Tmpi.Pyrene.ServiceInterface
 {
+    [Authenticate]
 	public partial class GenPersonneService : Service
 	{
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+		public List<string> Get(AutocompleteGenPersonne request)
+		{
+            if (string.IsNullOrWhiteSpace(request.Text))
+            {
+                return null;
+            }
+			return null;
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+		public void Delete(DeleteGenPersonne request)
+		{
+			int count = Db.DeleteById<GenPersonne>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound("");
+			}
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+		public void Delete(DeleteGenPersonneProfil request)
+		{
+			int count = Db.DeleteById<GenPersonneProfil>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound("");
+			}
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+		public GenPersonne Get(GetGenPersonne request)
+		{
+            var entity = Db.SingleById<GenPersonne>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound("");
+			}
+			return entity;
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+		public GenPersonneProfil Get(GetGenPersonneProfil request)
+		{
+            var entity = Db.SingleById<GenPersonneProfil>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound("");
+			}
+			return entity;
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+		public void Any(SaveGenPersonne request)
+		{
+			if (request.Id == 0)
+            {
+                Db.Insert(request.Entity);
+            }
+            else
+            {
+                Db.Update(request.Entity);
+            }
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+		public void Any(SaveGenPersonneProfil request)
+		{
+			if (request.Id == 0)
+            {
+                Db.Insert(request.Entity);
+            }
+            else
+            {
+                Db.Update(request.Entity);
+            }
+		}
+
 	}
 }

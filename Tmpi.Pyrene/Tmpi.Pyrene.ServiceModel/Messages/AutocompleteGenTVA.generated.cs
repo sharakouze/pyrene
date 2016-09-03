@@ -13,10 +13,10 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Supprime une entité <see cref="GenPersonneSignature" /> à partir de son Id.
+	/// Autocomplete une entité <see cref="GenTVA" />.
 	/// </summary>
-	[Route("/GenPersonneSignature/{Id}", "DELETE", Summary = "Supprime une entité GenPersonneSignature à partir de son Id.")]
-	public partial class DeleteGenPersonneSignature : DeleteByIdRequestBase
+	[Route("/GenTVA", "GET", Summary = "Autocomplete une entité GenTVA.")]
+	public partial class AutocompleteGenTVA : AutocompleteRequestBase
 	{
 	}
 }

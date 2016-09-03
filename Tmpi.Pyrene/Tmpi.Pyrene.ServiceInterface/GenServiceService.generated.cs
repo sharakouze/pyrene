@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using ServiceStack;
 using ServiceStack.OrmLite;
@@ -16,7 +17,66 @@ using Tmpi.Pyrene.ServiceModel.Messages;
 
 namespace Tmpi.Pyrene.ServiceInterface
 {
+    [Authenticate]
 	public partial class GenServiceService : Service
 	{
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+		public List<string> Get(AutocompleteGenService request)
+		{
+            if (string.IsNullOrWhiteSpace(request.Text))
+            {
+                return null;
+            }
+			return null;
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+		public void Delete(DeleteGenService request)
+		{
+			int count = Db.DeleteById<GenService>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound("");
+			}
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+		public GenService Get(GetGenService request)
+		{
+            var entity = Db.SingleById<GenService>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound("");
+			}
+			return entity;
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+		public void Any(SaveGenService request)
+		{
+			if (request.Id == 0)
+            {
+                Db.Insert(request.Entity);
+            }
+            else
+            {
+                Db.Update(request.Entity);
+            }
+		}
+
 	}
 }

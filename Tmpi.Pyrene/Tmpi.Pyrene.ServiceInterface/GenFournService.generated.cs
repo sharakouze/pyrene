@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using ServiceStack;
 using ServiceStack.OrmLite;
@@ -16,15 +17,34 @@ using Tmpi.Pyrene.ServiceModel.Messages;
 
 namespace Tmpi.Pyrene.ServiceInterface
 {
+    [Authenticate]
 	public partial class GenFournService : Service
 	{
         /// <summary>
         /// 
         /// </summary>
         /// <param name="request"></param>
+        /// <returns></returns>
+		public List<string> Get(AutocompleteGenFourn request)
+		{
+            if (string.IsNullOrWhiteSpace(request.Text))
+            {
+                return null;
+            }
+			return null;
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
 		public void Delete(DeleteGenFourn request)
 		{
-			Db.DeleteById<GenFourn>(request.Id);
+			int count = Db.DeleteById<GenFourn>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound("");
+			}
 		}
 
         /// <summary>
@@ -33,7 +53,11 @@ namespace Tmpi.Pyrene.ServiceInterface
         /// <param name="request"></param>
 		public void Delete(DeleteGenFournBanque request)
 		{
-			Db.DeleteById<GenFournBanque>(request.Id);
+			int count = Db.DeleteById<GenFournBanque>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound("");
+			}
 		}
 
         /// <summary>
@@ -42,7 +66,11 @@ namespace Tmpi.Pyrene.ServiceInterface
         /// <param name="request"></param>
 		public void Delete(DeleteGenFournContact request)
 		{
-			Db.DeleteById<GenFournContact>(request.Id);
+			int count = Db.DeleteById<GenFournContact>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound("");
+			}
 		}
 
         /// <summary>
@@ -53,7 +81,89 @@ namespace Tmpi.Pyrene.ServiceInterface
 		public GenFourn Get(GetGenFourn request)
 		{
             var entity = Db.SingleById<GenFourn>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound("");
+			}
 			return entity;
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+		public GenFournBanque Get(GetGenFournBanque request)
+		{
+            var entity = Db.SingleById<GenFournBanque>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound("");
+			}
+			return entity;
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+		public GenFournContact Get(GetGenFournContact request)
+		{
+            var entity = Db.SingleById<GenFournContact>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound("");
+			}
+			return entity;
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+		public void Any(SaveGenFourn request)
+		{
+			if (request.Id == 0)
+            {
+                Db.Insert(request.Entity);
+            }
+            else
+            {
+                Db.Update(request.Entity);
+            }
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+		public void Any(SaveGenFournBanque request)
+		{
+			if (request.Id == 0)
+            {
+                Db.Insert(request.Entity);
+            }
+            else
+            {
+                Db.Update(request.Entity);
+            }
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+		public void Any(SaveGenFournContact request)
+		{
+			if (request.Id == 0)
+            {
+                Db.Insert(request.Entity);
+            }
+            else
+            {
+                Db.Update(request.Entity);
+            }
 		}
 
 	}

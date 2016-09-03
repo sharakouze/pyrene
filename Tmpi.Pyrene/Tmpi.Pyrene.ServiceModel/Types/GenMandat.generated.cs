@@ -16,7 +16,6 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-	[CompositeIndex(true, "CodObjet", "NivMandat")]
 	[CompositeIndex(true, "TypMandat", "NivMandat")]
 	public partial class GenMandat : IHasId<int>
 	{
@@ -25,6 +24,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 
 		[StringLength(100)]
 		[Required]
+		[Index(true)]
 		public string CodObjet { get; set; }
 
 		[StringLength(200)]
