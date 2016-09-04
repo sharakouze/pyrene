@@ -70,6 +70,7 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ErrorMessages.cs" />
     <Compile Include="GenBaseServices.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

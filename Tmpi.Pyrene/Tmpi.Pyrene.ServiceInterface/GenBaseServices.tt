@@ -167,6 +167,10 @@ namespace <#= fileNamespace #>
             {
                 return null;
             }
+
+            var q1 = Db.From<GenCompteur>().Select(c => c.CodObjet).Where(c => c.CodObjet.Contains(request.Text));
+            var q2 = Db.From<GenCompteur>().Select(c => c.LibObjet).Where(c => c.LibObjet.Contains(request.Text));
+
 			return null;
 		}
 
@@ -186,7 +190,8 @@ namespace <#= fileNamespace #>
             var entity = Db.SingleById<<#= entityName #>>(request.Id);
 			if (entity == null)
 			{
-				throw HttpError.NotFound("");
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(<#= entityName #>), request.Id));
 			}
 			return entity;
 		}
@@ -206,7 +211,8 @@ namespace <#= fileNamespace #>
 			int count = Db.DeleteById<<#= entityName #>>(request.Id);
 			if (count == 0)
 			{
-				throw HttpError.NotFound("");
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(<#= entityName #>), request.Id));
 			}
 		}
 

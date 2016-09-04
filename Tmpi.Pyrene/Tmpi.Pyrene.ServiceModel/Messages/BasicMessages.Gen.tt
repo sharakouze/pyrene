@@ -166,7 +166,7 @@ namespace <#= fileNamespace #>
 			if (AddRoutes)
             {
 #>
-	[Route("/<#= codeClass.Name #>", "GET", Summary = "<#= string.Format(autocompleteDescription, codeClass.Name) #>")]
+	[Route("/<#= codeClass.Name #>/Autocomplete", "GET", Summary = "<#= string.Format(autocompleteDescription, codeClass.Name) #>")]
 <#
 			} // end if
 #>

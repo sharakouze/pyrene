@@ -31,6 +31,10 @@ namespace Tmpi.Pyrene.ServiceInterface
             {
                 return null;
             }
+
+            var q1 = Db.From<GenCompteur>().Select(c => c.CodObjet).Where(c => c.CodObjet.Contains(request.Text));
+            var q2 = Db.From<GenCompteur>().Select(c => c.LibObjet).Where(c => c.LibObjet.Contains(request.Text));
+
 			return null;
 		}
 
@@ -43,7 +47,8 @@ namespace Tmpi.Pyrene.ServiceInterface
 			int count = Db.DeleteById<GenService>(request.Id);
 			if (count == 0)
 			{
-				throw HttpError.NotFound("");
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenService), request.Id));
 			}
 		}
 
@@ -57,7 +62,8 @@ namespace Tmpi.Pyrene.ServiceInterface
             var entity = Db.SingleById<GenService>(request.Id);
 			if (entity == null)
 			{
-				throw HttpError.NotFound("");
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenService), request.Id));
 			}
 			return entity;
 		}

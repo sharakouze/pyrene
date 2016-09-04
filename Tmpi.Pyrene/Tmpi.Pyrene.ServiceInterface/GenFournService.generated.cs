@@ -31,6 +31,10 @@ namespace Tmpi.Pyrene.ServiceInterface
             {
                 return null;
             }
+
+            var q1 = Db.From<GenCompteur>().Select(c => c.CodObjet).Where(c => c.CodObjet.Contains(request.Text));
+            var q2 = Db.From<GenCompteur>().Select(c => c.LibObjet).Where(c => c.LibObjet.Contains(request.Text));
+
 			return null;
 		}
 
@@ -43,7 +47,8 @@ namespace Tmpi.Pyrene.ServiceInterface
 			int count = Db.DeleteById<GenFourn>(request.Id);
 			if (count == 0)
 			{
-				throw HttpError.NotFound("");
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFourn), request.Id));
 			}
 		}
 
@@ -56,7 +61,8 @@ namespace Tmpi.Pyrene.ServiceInterface
 			int count = Db.DeleteById<GenFournBanque>(request.Id);
 			if (count == 0)
 			{
-				throw HttpError.NotFound("");
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournBanque), request.Id));
 			}
 		}
 
@@ -69,7 +75,8 @@ namespace Tmpi.Pyrene.ServiceInterface
 			int count = Db.DeleteById<GenFournContact>(request.Id);
 			if (count == 0)
 			{
-				throw HttpError.NotFound("");
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournContact), request.Id));
 			}
 		}
 
@@ -83,7 +90,8 @@ namespace Tmpi.Pyrene.ServiceInterface
             var entity = Db.SingleById<GenFourn>(request.Id);
 			if (entity == null)
 			{
-				throw HttpError.NotFound("");
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFourn), request.Id));
 			}
 			return entity;
 		}
@@ -98,7 +106,8 @@ namespace Tmpi.Pyrene.ServiceInterface
             var entity = Db.SingleById<GenFournBanque>(request.Id);
 			if (entity == null)
 			{
-				throw HttpError.NotFound("");
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournBanque), request.Id));
 			}
 			return entity;
 		}
@@ -113,7 +122,8 @@ namespace Tmpi.Pyrene.ServiceInterface
             var entity = Db.SingleById<GenFournContact>(request.Id);
 			if (entity == null)
 			{
-				throw HttpError.NotFound("");
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournContact), request.Id));
 			}
 			return entity;
 		}

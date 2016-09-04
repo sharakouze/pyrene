@@ -15,7 +15,7 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Autocomplete une entité <see cref="GenFourn" />.
 	/// </summary>
-	[Route("/GenFourn", "GET", Summary = "Autocomplete une entité GenFourn.")]
+	[Route("/GenFourn/Autocomplete", "GET", Summary = "Autocomplete une entité GenFourn.")]
 	public partial class AutocompleteGenFourn : AutocompleteRequestBase
 	{
 	}

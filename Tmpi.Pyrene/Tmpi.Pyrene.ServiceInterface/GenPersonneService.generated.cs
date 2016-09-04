@@ -31,6 +31,10 @@ namespace Tmpi.Pyrene.ServiceInterface
             {
                 return null;
             }
+
+            var q1 = Db.From<GenCompteur>().Select(c => c.CodObjet).Where(c => c.CodObjet.Contains(request.Text));
+            var q2 = Db.From<GenCompteur>().Select(c => c.LibObjet).Where(c => c.LibObjet.Contains(request.Text));
+
 			return null;
 		}
 
@@ -43,7 +47,8 @@ namespace Tmpi.Pyrene.ServiceInterface
 			int count = Db.DeleteById<GenPersonne>(request.Id);
 			if (count == 0)
 			{
-				throw HttpError.NotFound("");
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenPersonne), request.Id));
 			}
 		}
 
@@ -56,7 +61,8 @@ namespace Tmpi.Pyrene.ServiceInterface
 			int count = Db.DeleteById<GenPersonneProfil>(request.Id);
 			if (count == 0)
 			{
-				throw HttpError.NotFound("");
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenPersonneProfil), request.Id));
 			}
 		}
 
@@ -70,7 +76,8 @@ namespace Tmpi.Pyrene.ServiceInterface
             var entity = Db.SingleById<GenPersonne>(request.Id);
 			if (entity == null)
 			{
-				throw HttpError.NotFound("");
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenPersonne), request.Id));
 			}
 			return entity;
 		}
@@ -85,7 +92,8 @@ namespace Tmpi.Pyrene.ServiceInterface
             var entity = Db.SingleById<GenPersonneProfil>(request.Id);
 			if (entity == null)
 			{
-				throw HttpError.NotFound("");
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenPersonneProfil), request.Id));
 			}
 			return entity;
 		}
