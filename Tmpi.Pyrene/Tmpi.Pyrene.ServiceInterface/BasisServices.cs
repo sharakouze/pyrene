@@ -14,7 +14,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using ServiceStack;
 using ServiceStack.OrmLite;
+using Tmpi.Pyrene.ServiceModel;
 using Tmpi.Pyrene.ServiceModel.Types;
+
 namespace Tmpi.Pyrene.ServiceInterface
 {
 }

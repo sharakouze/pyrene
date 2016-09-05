@@ -17,10 +17,10 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Route("/GenExercice", "POST", Summary = "Ajoute une entité GenExercice.")]
-	[Route("/GenExercice/{Id}", "PUT", Summary = "Remplace une entité GenExercice.")]
+	[Route("/GenExercice/{Id}", "PUT", Summary = "Remplace une entité GenExercice à partir de son Id.")]
 	public partial class GenExercice : IHasId<int>,
 		IAuditable,
-		IHasCodLibTxt
+		IHasStandard
 	{
 		[AutoIncrement]
 		public int Id { get; set; }

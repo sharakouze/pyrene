@@ -86,7 +86,7 @@ namespace <#= fileNamespace #>
 		}
 
         // get all interfaces implemented by this class
-		var allInterfaces = VisualStudioHelper.CodeModel.GetImplementedInterfaces(codeClass);
+		var allInterfaces = VisualStudioHelper.CodeModel.GetAllImplementedInterfaces(codeClass);
 		if (allInterfaces.Any(i => i.FullName == "ServiceStack.Model.IHasId<System.Int32>" || i.FullName == "ServiceStack.Model.IHasIntId"))
         {
 			var getByIdClassName = "Get" + codeClass.Name;
@@ -132,11 +132,11 @@ namespace <#= fileNamespace #>
 			manager.EndBlock(); // end newfile
 
 			var patchClassName = "Patch" + codeClass.Name;
-			var patchDescription = "Modifie une entité {0}.";
+			var patchDescription = "Modifie une entité {0} à partir de son Id.";
             manager.StartNewFile(patchClassName + ".generated.cs");
 #>
 	/// <summary>
-	/// <#= string.Format(patchDescription, "Ajoute ou modifie", "<see cref=\"" + codeClass.Name + "\" />") #>
+	/// <#= string.Format(patchDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
 <#
 			if (AddRoutes)

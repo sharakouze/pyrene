@@ -2,7 +2,9 @@
 using ServiceStack;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
+using System;
 using Tmpi.Pyrene.ServiceInterface;
+using Tmpi.Pyrene.ServiceModel.Types;
 
 namespace ConsoleApplication1
 {
@@ -18,6 +20,25 @@ namespace ConsoleApplication1
                         new OrmLiteConnectionFactory(connstr, SqlServerDialect.Provider));
 
             Plugins.Add(new ServiceStack.Api.Swagger.SwaggerFeature());
+
+            OrmLiteConfig.InsertFilter = (dbCmd, row) =>
+            {
+                var auditRow = row as IAuditable;
+                if (auditRow != null)
+                {
+                    auditRow.DatCreation = auditRow.DatModif = DateTime.UtcNow;
+                }
+            };
+
+            OrmLiteConfig.UpdateFilter = (dbCmd, row) =>
+            {
+                var auditRow = row as IAuditable;
+                if (auditRow != null)
+                {
+                    auditRow.DatModif = DateTime.UtcNow;
+                }
+            };
+
         }
     }
 }

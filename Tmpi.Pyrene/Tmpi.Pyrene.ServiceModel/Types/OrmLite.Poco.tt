@@ -143,7 +143,7 @@ namespace <#= fileNamespace #>
         {
 #>
 	[Route("/<#= tbl.ClassName #>", "POST", Summary = "<#= string.Format("Ajoute une entité {0}.", tbl.ClassName) #>")]
-	[Route("/<#= tbl.ClassName #>/{Id}", "PUT", Summary = "<#= string.Format("Remplace une entité {0}.", tbl.ClassName) #>")]
+	[Route("/<#= tbl.ClassName #>/{Id}", "PUT", Summary = "<#= string.Format("Remplace une entité {0} à partir de son Id.", tbl.ClassName) #>")]
 <#
 		} // end if
 
@@ -164,7 +164,7 @@ namespace <#= fileNamespace #>
 				tbl.Columns.Any(c => c.PropertyName == "LibObjet" && c.ProperPropertyType == "string") &&
 				tbl.Columns.Any(c => c.PropertyName == "TxtObjet" && c.ProperPropertyType == "string"))
             {
-				lstInterfaces.Add("IHasCodLibTxt");
+				lstInterfaces.Add("IHasStandard");
             }
         }
 

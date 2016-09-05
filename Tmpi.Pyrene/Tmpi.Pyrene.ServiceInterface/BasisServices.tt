@@ -6,7 +6,6 @@
 	// ----- Settings START -----
 	string Namespace = ""; // vide = DefaultNamespace
 	string SourceProject = "Tmpi.Pyrene.ServiceModel";
-	string SourceNamespace = "";
 	bool MakeClassesPartial = true;
 	bool SplitIntoMultipleFiles = true;
 	Regex ClassFilterInclude = null;
@@ -48,23 +47,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using ServiceStack;
 using ServiceStack.OrmLite;
+using Tmpi.Pyrene.ServiceModel;
 using Tmpi.Pyrene.ServiceModel.Types;
-<#
-	if (!string.IsNullOrWhiteSpace(SourceNamespace) && (SourceNamespace != fileNamespace))
-	{
-#>
-using <#= SourceNamespace #>;
 
-<#
-	} // end if
-#>
 namespace <#= fileNamespace #>
 {
 <#
 	manager.EndBlock(); // end header
 
 	var srcProject = project;
-	if (!string.IsNullOrWhiteSpace(SourceNamespace))
+	if (!string.IsNullOrWhiteSpace(SourceProject))
     {
 		srcProject = VisualStudioHelper.GetProject(SourceProject);
     }
@@ -73,10 +65,6 @@ namespace <#= fileNamespace #>
 
     // get all class items from the code model
     var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(srcProject.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementClass, false);
-	if (!string.IsNullOrWhiteSpace(SourceNamespace))
-    {
-		allClasses = allClasses.Where(c => c.FullName.StartsWith(SourceNamespace)).ToList();
-    }
 	allClasses = allClasses.OrderBy(c => c.Name).ToList();
 	// iterate all classes
     foreach (EnvDTE.CodeClass codeClass in allClasses)
@@ -87,33 +75,45 @@ namespace <#= fileNamespace #>
         {
 			continue;
         }
-
-		var baseClass = VisualStudioHelper.CodeModel.GetBaseClass(codeClass);
-		if (baseClass != null)
+		
+		IEnumerable<EnvDTE.CodeClass> partialClasses = VisualStudioHelper.CodeModel.GetPartialClasses(codeClass);
+		bool hasRouteAttr = partialClasses.SelectMany(c => c.Attributes.OfType<EnvDTE.CodeElement>()).Any(c => c.FullName == "ServiceStack.RouteAttribute");
+		if (hasRouteAttr)
         {
 			string entityName = null;
 
-			switch (baseClass.Name)
-            {
-				case "GetByIdRequestBase":
-					entityName = codeClass.Name.Substring(3);
-					break;
+			var baseClass = VisualStudioHelper.CodeModel.GetBaseClass(codeClass);
+			if (baseClass != null)
+			{
+				switch (baseClass.Name)
+				{
+					case "GetByIdRequestBase":
+						entityName = codeClass.Name.Substring(3);
+						break;
 				
-				case "DeleteByIdRequestBase":
-					entityName = codeClass.Name.Substring(6);
-					break;
+					case "DeleteByIdRequestBase":
+						entityName = codeClass.Name.Substring(6);
+						break;
 
-				case "AutocompleteRequestBase":
-					entityName = codeClass.Name.Substring(12);
-					break;
+					case "AutocompleteRequestBase":
+						entityName = codeClass.Name.Substring(12);
+						break;
 
-				case "PatchByIdRequestBase":
-					entityName = codeClass.Name.Substring(5);
-					break;
-            }
+					case "PatchByIdRequestBase":
+						entityName = codeClass.Name.Substring(5);
+						break;
+				}
+			}
+
+			// get all interfaces implemented by this class
+			var allInterfaces = VisualStudioHelper.CodeModel.GetAllImplementedInterfaces(codeClass);
+			if (allInterfaces.Any(i => i.FullName == "ServiceStack.Model.IHasId<System.Int32>" || i.FullName == "ServiceStack.Model.IHasIntId"))
+			{
+				entityName = codeClass.Name;
+			}
 
 			if (!string.IsNullOrEmpty(entityName))
-            {
+			{
 				if (dic.Any(d => entityName.StartsWith(d.Key)))
 				{
 					var kvp = dic.Single(d => entityName.StartsWith(d.Key));
@@ -123,14 +123,7 @@ namespace <#= fileNamespace #>
 				{
 					dic.Add(entityName, new List<string>(new[] { codeClass.Name } ));
 				}
-            }
-        }
-		foreach (EnvDTE.CodeElement attr in codeClass.Attributes)
-        {
-#>
-x
-<#= attr.Name #>
-<#
+			}
         }
     } // end foreach
 
@@ -155,7 +148,7 @@ x
         {
 			if (CPT_MAX >= 10)
 			{
-				continue; // limitation version démo de ServiceStack
+			continue; // limitation version démo de ServiceStack
 			}
 
 			if (requestName.StartsWith("Autocomplete"))
@@ -224,27 +217,6 @@ x
 
 <#
             }
-			else if (requestName.StartsWith("Save"))
-            {
-#>
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="request"></param>
-		public void Any(<#= requestName #> request)
-		{
-			if (request.Id == 0)
-            {
-                Db.Insert(request.Entity);
-            }
-            else
-            {
-                Db.Update(request.Entity);
-            }
-		}
-
-<#
-            }
 			else if (requestName.StartsWith("Patch"))
             {
 #>
@@ -258,6 +230,33 @@ x
 
 <#
 			}
+			else if (requestName == kvp.Key)
+            {
+#>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+		public <#= requestName #> Post(<#= requestName #> request)
+		{
+            var id = Db.Insert(request, selectIdentity: true);
+            request.Id = (int)id;
+
+            return request;
+		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+		public void Put(<#= requestName #> request)
+		{
+		}
+
+<#
+            }
+
 			CPT_MAX++;
         } // end foreach
 #>

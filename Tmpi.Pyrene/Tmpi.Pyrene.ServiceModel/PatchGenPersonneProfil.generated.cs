@@ -13,9 +13,9 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel
 {
 	/// <summary>
-	/// Modifie une entité Ajoute ou modifie.
+	/// Modifie une entité <see cref="GenPersonneProfil" /> à partir de son Id.
 	/// </summary>
-	[Route("/GenPersonneProfil/{Id}", "PATCH", Summary = "Modifie une entité GenPersonneProfil.")]
+	[Route("/GenPersonneProfil/{Id}", "PATCH", Summary = "Modifie une entité GenPersonneProfil à partir de son Id.")]
 	public partial class PatchGenPersonneProfil : PatchByIdRequestBase
 	{
 	}

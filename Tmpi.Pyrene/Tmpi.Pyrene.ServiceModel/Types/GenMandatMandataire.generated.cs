@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, "CleGenMandat", "CleGenPersonne", "CleGenSociete", "CleGenSecteur", "CleGenService")]
 	[Route("/GenMandatMandataire", "POST", Summary = "Ajoute une entité GenMandatMandataire.")]
-	[Route("/GenMandatMandataire/{Id}", "PUT", Summary = "Remplace une entité GenMandatMandataire.")]
+	[Route("/GenMandatMandataire/{Id}", "PUT", Summary = "Remplace une entité GenMandatMandataire à partir de son Id.")]
 	public partial class GenMandatMandataire : IHasId<int>
 	{
 		[AutoIncrement]

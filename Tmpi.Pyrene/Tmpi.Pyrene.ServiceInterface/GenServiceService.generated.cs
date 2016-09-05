@@ -7,16 +7,17 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using ServiceStack;
+using ServiceStack.OrmLite;
+using Tmpi.Pyrene.ServiceModel;
 using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace Tmpi.Pyrene.ServiceModel
+namespace Tmpi.Pyrene.ServiceInterface
 {
-	/// <summary>
-	/// Modifie une entité <see cref="GenSecteur" /> à partir de son Id.
-	/// </summary>
-	[Route("/GenSecteur/{Id}", "PATCH", Summary = "Modifie une entité GenSecteur à partir de son Id.")]
-	public partial class PatchGenSecteur : PatchByIdRequestBase
+	public partial class GenServiceService : Service
 	{
 	}
 }

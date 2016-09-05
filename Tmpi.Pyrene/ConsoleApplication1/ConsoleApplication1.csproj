@@ -88,6 +88,10 @@
       <Project>{813f65d3-22f1-41db-84fc-7cfffbead768}</Project>
       <Name>Tmpi.Pyrene.ServiceInterface</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tmpi.Pyrene.ServiceModel\Tmpi.Pyrene.ServiceModel.csproj">
+      <Project>{E515A547-3E09-4F2E-B1F0-09D3E16FB36A}</Project>
+      <Name>Tmpi.Pyrene.ServiceModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
