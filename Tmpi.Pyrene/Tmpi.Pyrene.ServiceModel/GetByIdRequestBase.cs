@@ -3,15 +3,14 @@
 namespace Tmpi.Pyrene.ServiceModel
 {
     /// <summary>
-    /// Retourne une entité spécifiée.
+    /// Retourne une entité spécifiée par son Id.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Type de l'entité à retourner.</typeparam>
     public abstract class GetByIdRequestBase<T> : IReturn<T>, IGetByIdRequest<int>
     {
         /// <summary>
         /// Clé primaire de l'entité à retourner.
         /// </summary>
-        [ApiMember(IsRequired = true, Description = "Clé primaire de l'entité à retourner.")]
         public int Id { get; set; }
     }
 }

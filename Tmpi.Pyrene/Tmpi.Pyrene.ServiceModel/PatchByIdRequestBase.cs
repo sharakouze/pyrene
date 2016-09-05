@@ -6,6 +6,6 @@ namespace Tmpi.Pyrene.ServiceModel
     {
         public int Id { get; set; }
 
-        public List<PatchField> Fields { get; set; }
+        public List<PatchElement> Fields { get; set; }
     }
 }

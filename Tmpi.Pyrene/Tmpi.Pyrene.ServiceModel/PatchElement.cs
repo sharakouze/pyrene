@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Tmpi.Pyrene.ServiceModel
 {
-    public class PatchField
+    public class PatchElement
     {
-        public string FieldName { get; set; }
+        public string Field { get; set; }
         public object Value { get; set; }
     }
 }

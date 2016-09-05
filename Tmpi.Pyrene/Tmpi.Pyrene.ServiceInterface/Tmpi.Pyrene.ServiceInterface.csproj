@@ -70,6 +70,7 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="JsonPatchHelper.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="BasisServices.cs">
       <AutoGen>True</AutoGen>

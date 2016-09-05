@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.ServiceModel;
@@ -17,12 +18,15 @@ using Tmpi.Pyrene.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.ServiceInterface
 {
+    /// <summary>
+    /// Service qui traite les requêtes sur l'entité <see cref="GenCompteur" />.
+    /// </summary>
 	public partial class GenCompteurService : Service
 	{
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Requête à traiter.</param>
         /// <returns></returns>
 		public List<string> Get(AutocompleteGenCompteur request)
 		{
@@ -31,16 +35,17 @@ namespace Tmpi.Pyrene.ServiceInterface
                 return null;
             }
 
-            var q1 = Db.From<GenCompteur>().Select(c => c.CodObjet).Where(c => c.CodObjet.Contains(request.Text));
-            var q2 = Db.From<GenCompteur>().Select(c => c.LibObjet).Where(c => c.LibObjet.Contains(request.Text));
+            //var q1 = Db.From<T>().Select(c => c.CodObjet).Where(c => c.CodObjet.Contains(request.Text));
+            //var q2 = Db.From<T>().Select(c => c.LibObjet).Where(c => c.LibObjet.Contains(request.Text));
 
 			return null;
 		}
 
         /// <summary>
-        /// 
+        /// Supprime l'entité <see cref="GenCompteur" /> spécifiée dans la requête.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Requête à traiter.</param>
+        /// <exception cref="HttpError">L'entité est introuvable.</exception>
 		public void Delete(DeleteGenCompteur request)
 		{
 			int count = Db.DeleteById<GenCompteur>(request.Id);
@@ -52,10 +57,10 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
         /// <summary>
-        /// 
+        /// Ajoute l'entité <see cref="GenCompteur" /> spécifiée dans la requête.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">Requête à traiter.</param>
+        /// <returns>Entité <see cref="GenCompteur" /> ajoutée.</returns>
 		public GenCompteur Post(GenCompteur request)
 		{
             var id = Db.Insert(request, selectIdentity: true);
@@ -65,18 +70,26 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
         /// <summary>
-        /// 
+        /// Remplace l'entité <see cref="GenCompteur" /> spécifiée dans la requête.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Requête à traiter.</param>
+        /// <exception cref="HttpError">L'entité est introuvable.</exception>
 		public void Put(GenCompteur request)
 		{
+            int count = Db.Update(request);
+            if (count == 0)
+            {
+                throw HttpError.NotFound(
+                    string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenCompteur), request.Id));
+            }
 		}
 
         /// <summary>
-        /// 
+        /// Retourne l'entité <see cref="GenCompteur" /> spécifiée dans la requête.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">Requête à traiter.</param>
+        /// <returns>Entité <see cref="GenCompteur" /> trouvée.</returns>
+        /// <exception cref="HttpError">L'entité est introuvable.</exception>
 		public GenCompteur Get(GetGenCompteur request)
 		{
             var entity = Db.SingleById<GenCompteur>(request.Id);
@@ -89,11 +102,28 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
         /// <summary>
-        /// 
+        /// Met à jour l'entité <see cref="GenCompteur" /> spécifiée dans la requête.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Requête à traiter.</param>
+        /// <exception cref="HttpError">L'entité est introuvable.</exception>
 		public void Patch(PatchGenCompteur request)
 		{
+            Debug.Assert(request.Fields != null);
+            if (request.Fields == null)
+            {
+                throw new ArgumentNullException(nameof(request.Fields));
+            }
+
+            var entity = new GenCompteur();
+            JsonPatchHelper.PopulateFromJsonPatch(entity, request.Fields);
+
+            var q = Db.From<GenCompteur>().Update(request.Fields.Select(f => f.Field)).Where(x => x.Id == request.Id);
+            int count = Db.UpdateOnly(entity, q);
+            if (count == 0)
+            {
+                throw HttpError.NotFound(
+                    string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenCompteur), request.Id));
+            }
 		}
 
 	}

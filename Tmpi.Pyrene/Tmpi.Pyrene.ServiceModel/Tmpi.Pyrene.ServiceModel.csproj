@@ -156,7 +156,7 @@
     </Compile>
     <Compile Include="IDeleteByIdRequest.cs" />
     <Compile Include="IGetByIdRequest.cs" />
-    <Compile Include="PatchField.cs" />
+    <Compile Include="PatchElement.cs" />
     <Compile Include="PatchGenCompteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>

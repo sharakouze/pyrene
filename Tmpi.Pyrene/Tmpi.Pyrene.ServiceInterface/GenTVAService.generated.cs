@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.ServiceModel;
@@ -17,6 +18,9 @@ using Tmpi.Pyrene.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.ServiceInterface
 {
+    /// <summary>
+    /// Service qui traite les requêtes sur l'entité <see cref="GenTVA" />.
+    /// </summary>
 	public partial class GenTVAService : Service
 	{
 	}

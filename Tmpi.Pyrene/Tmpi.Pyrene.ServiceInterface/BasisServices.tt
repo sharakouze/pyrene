@@ -45,6 +45,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.ServiceModel;
@@ -141,6 +142,9 @@ namespace <#= fileNamespace #>
 		var serviceClassName = kvp.Key + "Service";
 		manager.StartNewFile(serviceClassName + ".generated.cs");
 #>
+    /// <summary>
+    /// Service qui traite les requêtes sur l'entité <see cref="<#= kvp.Key #>" />.
+    /// </summary>
 	<#= string.Join(" ", classDefinitionWords) #> class <#= serviceClassName #> : Service
 	{
 <#
@@ -158,7 +162,7 @@ namespace <#= fileNamespace #>
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Requête à traiter.</param>
         /// <returns></returns>
 		public List<string> Get(<#= requestName #> request)
 		{
@@ -167,8 +171,8 @@ namespace <#= fileNamespace #>
                 return null;
             }
 
-            var q1 = Db.From<GenCompteur>().Select(c => c.CodObjet).Where(c => c.CodObjet.Contains(request.Text));
-            var q2 = Db.From<GenCompteur>().Select(c => c.LibObjet).Where(c => c.LibObjet.Contains(request.Text));
+            //var q1 = Db.From<T>().Select(c => c.CodObjet).Where(c => c.CodObjet.Contains(request.Text));
+            //var q2 = Db.From<T>().Select(c => c.LibObjet).Where(c => c.LibObjet.Contains(request.Text));
 
 			return null;
 		}
@@ -180,10 +184,11 @@ namespace <#= fileNamespace #>
 				var entityName = requestName.Substring(3);
 #>
         /// <summary>
-        /// 
+        /// Retourne l'entité <see cref="<#= entityName #>" /> spécifiée dans la requête.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">Requête à traiter.</param>
+        /// <returns>Entité <see cref="<#= entityName #>" /> trouvée.</returns>
+        /// <exception cref="HttpError">L'entité est introuvable.</exception>
 		public <#= entityName #> Get(<#= requestName #> request)
 		{
             var entity = Db.SingleById<<#= entityName #>>(request.Id);
@@ -202,9 +207,10 @@ namespace <#= fileNamespace #>
 				var entityName = requestName.Substring(6);
 #>
         /// <summary>
-        /// 
+        /// Supprime l'entité <see cref="<#= entityName #>" /> spécifiée dans la requête.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Requête à traiter.</param>
+        /// <exception cref="HttpError">L'entité est introuvable.</exception>
 		public void Delete(<#= requestName #> request)
 		{
 			int count = Db.DeleteById<<#= entityName #>>(request.Id);
@@ -219,13 +225,31 @@ namespace <#= fileNamespace #>
             }
 			else if (requestName.StartsWith("Patch"))
             {
+				var entityName = requestName.Substring(5);
 #>
         /// <summary>
-        /// 
+        /// Met à jour l'entité <see cref="<#= entityName #>" /> spécifiée dans la requête.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Requête à traiter.</param>
+        /// <exception cref="HttpError">L'entité est introuvable.</exception>
 		public void Patch(<#= requestName #> request)
 		{
+            Debug.Assert(request.Fields != null);
+            if (request.Fields == null)
+            {
+                throw new ArgumentNullException(nameof(request.Fields));
+            }
+
+            var entity = new <#= entityName #>();
+            JsonPatchHelper.PopulateFromJsonPatch(entity, request.Fields);
+
+            var q = Db.From<<#= entityName #>>().Update(request.Fields.Select(f => f.Field)).Where(x => x.Id == request.Id);
+            int count = Db.UpdateOnly(entity, q);
+            if (count == 0)
+            {
+                throw HttpError.NotFound(
+                    string.Format(ErrorMessages.EntityByIdNotFound, nameof(<#= entityName #>), request.Id));
+            }
 		}
 
 <#
@@ -234,10 +258,10 @@ namespace <#= fileNamespace #>
             {
 #>
         /// <summary>
-        /// 
+        /// Ajoute l'entité <see cref="<#= requestName #>" /> spécifiée dans la requête.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">Requête à traiter.</param>
+        /// <returns>Entité <see cref="<#= requestName #>" /> ajoutée.</returns>
 		public <#= requestName #> Post(<#= requestName #> request)
 		{
             var id = Db.Insert(request, selectIdentity: true);
@@ -247,11 +271,18 @@ namespace <#= fileNamespace #>
 		}
 
         /// <summary>
-        /// 
+        /// Remplace l'entité <see cref="<#= requestName #>" /> spécifiée dans la requête.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Requête à traiter.</param>
+        /// <exception cref="HttpError">L'entité est introuvable.</exception>
 		public void Put(<#= requestName #> request)
 		{
+            int count = Db.Update(request);
+            if (count == 0)
+            {
+                throw HttpError.NotFound(
+                    string.Format(ErrorMessages.EntityByIdNotFound, nameof(<#= requestName #>), request.Id));
+            }
 		}
 
 <#
