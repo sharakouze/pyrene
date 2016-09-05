@@ -17,6 +17,8 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, "CleGenFourn", "LibObjet")]
+	[Route("/GenFournContact", "POST", Summary = "Ajoute une entité GenFournContact.")]
+	[Route("/GenFournContact/{Id}", "PUT", Summary = "Remplace une entité GenFournContact.")]
 	public partial class GenFournContact : IHasId<int>
 	{
 		[AutoIncrement]

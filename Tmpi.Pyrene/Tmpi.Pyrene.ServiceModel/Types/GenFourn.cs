@@ -3,7 +3,7 @@
     /// <summary>
     /// Représente un fournisseur.
     /// </summary>
-    partial class GenFourn : IAuditable, IHasCodLibTxt, IHasAddress, IHasContact
+    partial class GenFourn : IHasAddress, IHasContact
     {
     }
 }

@@ -3,7 +3,7 @@
     /// <summary>
     /// Représente un exercice budgétaire.
     /// </summary>
-    partial class GenExercice : IAuditable, IHasCodLibTxt
+    partial class GenExercice
     {
     }
 }

@@ -17,7 +17,11 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, "TypMandat", "NivMandat")]
-	public partial class GenMandat : IHasId<int>
+	[Route("/GenMandat", "POST", Summary = "Ajoute une entité GenMandat.")]
+	[Route("/GenMandat/{Id}", "PUT", Summary = "Remplace une entité GenMandat.")]
+	public partial class GenMandat : IHasId<int>,
+		IAuditable,
+		IHasCodLibTxt
 	{
 		[AutoIncrement]
 		public int Id { get; set; }

@@ -41,204 +41,196 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Messages\AutocompleteGenCompteur.generated.cs">
+    <Compile Include="AutocompleteGenCompteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\AutocompleteGenExercice.generated.cs">
+    <Compile Include="AutocompleteGenExercice.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\AutocompleteGenFourn.generated.cs">
+    <Compile Include="AutocompleteGenFourn.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\AutocompleteGenMandat.generated.cs">
+    <Compile Include="AutocompleteGenMandat.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\AutocompleteGenPersonne.generated.cs">
+    <Compile Include="AutocompleteGenPersonne.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\AutocompleteGenSecteur.generated.cs">
+    <Compile Include="AutocompleteGenSecteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\AutocompleteGenService.generated.cs">
+    <Compile Include="AutocompleteGenService.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\AutocompleteGenSociete.generated.cs">
+    <Compile Include="AutocompleteGenSociete.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\AutocompleteGenTVA.generated.cs">
+    <Compile Include="AutocompleteGenTVA.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\AutocompleteRequestBase.cs" />
-    <Compile Include="Messages\BasicMessages.Gen.cs">
+    <Compile Include="AutocompleteRequestBase.cs" />
+    <Compile Include="BasicMessages.Gen.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\DeleteByIdRequestBase.cs" />
-    <Compile Include="Messages\DeleteGenCompteur.generated.cs">
+    <Compile Include="DeleteByIdRequestBase.cs" />
+    <Compile Include="DeleteGenCompteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\DeleteGenExercice.generated.cs">
+    <Compile Include="DeleteGenExercice.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\DeleteGenFourn.generated.cs">
+    <Compile Include="DeleteGenFourn.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\DeleteGenFournBanque.generated.cs">
+    <Compile Include="DeleteGenFournBanque.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\DeleteGenFournContact.generated.cs">
+    <Compile Include="DeleteGenFournContact.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\DeleteGenMandat.generated.cs">
+    <Compile Include="DeleteGenMandat.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\DeleteGenMandatMandataire.generated.cs">
+    <Compile Include="DeleteGenMandatMandataire.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\DeleteGenPersonne.generated.cs">
+    <Compile Include="DeleteGenPersonne.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\DeleteGenPersonneProfil.generated.cs">
+    <Compile Include="DeleteGenPersonneProfil.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\DeleteGenSecteur.generated.cs">
+    <Compile Include="DeleteGenSecteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\DeleteGenService.generated.cs">
+    <Compile Include="DeleteGenService.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\DeleteGenSociete.generated.cs">
+    <Compile Include="DeleteGenSociete.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\DeleteGenTVA.generated.cs">
+    <Compile Include="DeleteGenTVA.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetByIdRequestBase.cs" />
-    <Compile Include="Messages\GetGenCompteur.generated.cs">
+    <Compile Include="GetByIdRequestBase.cs" />
+    <Compile Include="GetGenCompteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetGenExercice.generated.cs">
+    <Compile Include="GetGenExercice.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetGenFourn.generated.cs">
+    <Compile Include="GetGenFourn.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetGenFournBanque.generated.cs">
+    <Compile Include="GetGenFournBanque.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetGenFournContact.generated.cs">
+    <Compile Include="GetGenFournContact.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetGenMandat.generated.cs">
+    <Compile Include="GetGenMandat.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetGenMandatMandataire.generated.cs">
+    <Compile Include="GetGenMandatMandataire.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetGenPersonne.generated.cs">
+    <Compile Include="GetGenPersonne.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetGenPersonneProfil.generated.cs">
+    <Compile Include="GetGenPersonneProfil.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetGenSecteur.generated.cs">
+    <Compile Include="GetGenSecteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetGenService.generated.cs">
+    <Compile Include="GetGenService.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetGenSociete.generated.cs">
+    <Compile Include="GetGenSociete.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\GetGenTVA.generated.cs">
+    <Compile Include="GetGenTVA.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\IDeleteByIdRequest.cs" />
-    <Compile Include="Messages\IGetByIdRequest.cs" />
-    <Compile Include="Messages\SaveGenCompteur.generated.cs">
+    <Compile Include="IDeleteByIdRequest.cs" />
+    <Compile Include="IGetByIdRequest.cs" />
+    <Compile Include="PatchField.cs" />
+    <Compile Include="PatchGenCompteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\SaveGenExercice.generated.cs">
+    <Compile Include="PatchGenExercice.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\SaveGenFourn.generated.cs">
+    <Compile Include="PatchGenFourn.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\SaveGenFournBanque.generated.cs">
+    <Compile Include="PatchGenFournBanque.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\SaveGenFournContact.generated.cs">
+    <Compile Include="PatchGenFournContact.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\SaveGenMandat.generated.cs">
+    <Compile Include="PatchGenMandat.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\SaveGenMandatMandataire.generated.cs">
+    <Compile Include="PatchGenMandatMandataire.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\SaveGenPersonne.generated.cs">
+    <Compile Include="PatchGenPersonne.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\SaveGenPersonneProfil.generated.cs">
+    <Compile Include="PatchGenPersonneProfil.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\SaveGenSecteur.generated.cs">
+    <Compile Include="PatchGenSecteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\SaveGenService.generated.cs">
+    <Compile Include="PatchGenService.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\SaveGenSociete.generated.cs">
+    <Compile Include="PatchGenSociete.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\SaveGenTVA.generated.cs">
+    <Compile Include="PatchGenTVA.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\SaveRequestBase.cs" />
-    <Compile Include="Types\OrmLite.Poco.Gen.cs" />
-    <Compile Include="Types\GenCompteur.cs">
-      <DependentUpon>OrmLite.Poco.Gen.cs</DependentUpon>
-    </Compile>
+    <Compile Include="PatchByIdRequestBase.cs" />
+    <Compile Include="Types\GenCompteur.cs" />
     <Compile Include="Types\GenCompteur.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenCompteurValeur.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenExercice.cs">
-      <DependentUpon>OrmLite.Poco.Gen.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Types\GenExercice.cs" />
     <Compile Include="Types\GenExercice.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenFourn.cs">
-      <DependentUpon>OrmLite.Poco.Gen.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Types\GenFourn.cs" />
     <Compile Include="Types\GenFourn.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenFournBanque.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenFournContact.cs">
-      <DependentUpon>OrmLite.Poco.Gen.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Types\GenFournContact.cs" />
     <Compile Include="Types\GenFournContact.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenMandat.cs">
-      <DependentUpon>OrmLite.Poco.Gen.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Types\GenMandat.cs" />
     <Compile Include="Types\GenMandat.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenMandatMandataire.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenPersonne.cs">
-      <DependentUpon>OrmLite.Poco.Gen.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Types\GenPersonne.cs" />
+    <Compile Include="Types\GenSecteur.cs" />
+    <Compile Include="Types\GenService.cs" />
+    <Compile Include="Types\GenSociete.cs" />
+    <Compile Include="Types\GenTVA.cs" />
     <Compile Include="Types\GenPersonne.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
@@ -248,26 +240,14 @@
     <Compile Include="Types\GenPersonneSignature.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenSecteur.cs">
-      <DependentUpon>OrmLite.Poco.Gen.cs</DependentUpon>
-    </Compile>
     <Compile Include="Types\GenSecteur.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenService.cs">
-      <DependentUpon>OrmLite.Poco.Gen.cs</DependentUpon>
     </Compile>
     <Compile Include="Types\GenService.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenSociete.cs">
-      <DependentUpon>OrmLite.Poco.Gen.cs</DependentUpon>
-    </Compile>
     <Compile Include="Types\GenSociete.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Types\GenTVA.cs">
-      <DependentUpon>OrmLite.Poco.Gen.cs</DependentUpon>
     </Compile>
     <Compile Include="Types\GenTVA.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
@@ -296,7 +276,7 @@
     <None Include="Types\OrmLite.Core.ttinclude" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Messages\BasicMessages.Gen.tt">
+    <Content Include="BasicMessages.Gen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>BasicMessages.Gen.cs</LastGenOutput>
     </Content>
@@ -308,9 +288,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Messages\Responses\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

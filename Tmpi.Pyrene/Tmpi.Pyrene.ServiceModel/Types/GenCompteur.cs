@@ -1,9 +1,12 @@
-﻿namespace Tmpi.Pyrene.ServiceModel.Types
+﻿using ServiceStack;
+
+namespace Tmpi.Pyrene.ServiceModel.Types
 {
     /// <summary>
     /// Représente un compteur et son modèle de numérotation.
     /// </summary>
-    partial class GenCompteur : IAuditable, IHasCodLibTxt
+    [Api("ceci est un test")]
+    partial class GenCompteur
     {
     }
 }

@@ -8,7 +8,7 @@
 	- DefaultAttribute
 	- ApiMemberAttribute(IsRequired) sur les propriétés [Required]
 	- PrimaryKey => Index(true)
-	- Ajout de propriétés pour les tables enfants
+	- Ajout de propriétés pour gérer les tables enfants
 	****************/
 
 	// ----- Settings START -----
@@ -27,6 +27,8 @@
 	bool IncludeReferences = true; //if true: Addes References(typeof(ReferenceTableType)) to FKs
 	bool IncludeIndices = true; // index, unique index, composite index
 	string UseSpecificNamedConnection = ""; //if not null: Will use name provided as NamedConnection and AddNamedConnection = true, else ConnectionStringName is used as default NamedConnection
+	bool AddRoutes = true;
+	bool AddCustomInterfaces = true;
 	// ----- Settings END -----
 
     // Read schema
@@ -46,6 +48,7 @@
 	}
 	catch {
 	}
+	// enums
 	tables["GenCompteur"]["TypCompteur"].PropertyType = "TypCompteur";
 	tables["GenCompteur"]["TypPeriodicite"].PropertyType = "TypPeriodicite";
 	tables["GenMandat"]["TypMandat"].PropertyType = "TypMandat";
@@ -135,6 +138,35 @@ namespace <#= fileNamespace #>
 <#
 			} // end foreach
 		} // end if
+		
+		if (AddRoutes && tbl.HasPK() && tbl.PK.PropertyName == "Id")
+        {
+#>
+	[Route("/<#= tbl.ClassName #>", "POST", Summary = "<#= string.Format("Ajoute une entité {0}.", tbl.ClassName) #>")]
+	[Route("/<#= tbl.ClassName #>/{Id}", "PUT", Summary = "<#= string.Format("Remplace une entité {0}.", tbl.ClassName) #>")]
+<#
+		} // end if
+
+		var lstInterfaces = new List<string>();
+
+		if (tbl.HasPK() && tbl.PK.PropertyName == "Id")
+        {
+			lstInterfaces.Add("IHasId<" + tbl.PK.PropertyType + ">");
+        }
+		if (AddCustomInterfaces)
+        {
+			if (tbl.Columns.Any(c => c.PropertyName == "DatCreation" && c.ProperPropertyType == "DateTime") &&
+				tbl.Columns.Any(c => c.PropertyName == "DatModif" && c.ProperPropertyType == "DateTime"))
+            {
+				lstInterfaces.Add("IAuditable");
+            }
+			if (tbl.Columns.Any(c => c.PropertyName == "CodObjet" && c.ProperPropertyType == "string") &&
+				tbl.Columns.Any(c => c.PropertyName == "LibObjet" && c.ProperPropertyType == "string") &&
+				tbl.Columns.Any(c => c.PropertyName == "TxtObjet" && c.ProperPropertyType == "string"))
+            {
+				lstInterfaces.Add("IHasCodLibTxt");
+            }
+        }
 
 		var classDefinitionWords = new List<string>();
 		classDefinitionWords.Add("public");
@@ -144,24 +176,20 @@ namespace <#= fileNamespace #>
         }
 		classDefinitionWords.Add("class");
 		classDefinitionWords.Add(tbl.ClassName);
-		if (tbl.HasPK() && UseIdAsPK && tbl.PK.PropertyName == "Id")
-        {
-			classDefinitionWords.Add(":");
-			classDefinitionWords.Add("IHasId<" + tbl.PK.PropertyType + ">");
-        }
 #>
-	<#= string.Join(" ", classDefinitionWords) #>
+	<#= string.Join(" ", classDefinitionWords) #><#= lstInterfaces.Any() ? " : " + string.Join(",\r\n\t\t", lstInterfaces) : "" #>
 	{
 <#
 		if (GenerateEmptyConstructor)
 		{
 #>
         /// <summary>
-        /// Initialise une nouvelle instance de la classe.
+        /// Initialise une nouvelle instance de la classe <see cref="<#= tbl.ClassName #>" />.
         /// </summary>
 		public <#= tbl.ClassName #>()
 		{
 		}
+
 <#
 		} // end if
 
@@ -254,32 +282,16 @@ namespace <#= fileNamespace #>
 				} // end if
 			} // end if
 
-			if (!col.IsPK)
+			if (col.IsPK && (col.PropertyName != "Id"))
 			{
-#>
-		public <#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
-
-<#
-			} // end if
-
-			if (col.IsPK)
-			{
-				if (col.PropertyName == "Id")
-				{
-#>
-		public <#= col.ProperPropertyType #> Id { get; set; }
-
-<#
-				}
-				else
-				{
 #>
 		[PrimaryKey]
+<#
+			} // end if
+#>
 		public <#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
 
 <#
-				}
-			} // end if
 		} // end foreach
 #>
 	}

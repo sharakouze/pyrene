@@ -16,7 +16,11 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-	public partial class GenFourn : IHasId<int>
+	[Route("/GenFourn", "POST", Summary = "Ajoute une entité GenFourn.")]
+	[Route("/GenFourn/{Id}", "PUT", Summary = "Remplace une entité GenFourn.")]
+	public partial class GenFourn : IHasId<int>,
+		IAuditable,
+		IHasCodLibTxt
 	{
 		[AutoIncrement]
 		public int Id { get; set; }
