@@ -9,16 +9,20 @@ using Tmpi.Pyrene.ServiceModel;
 
 namespace Tmpi.Pyrene.ServiceInterface
 {
-    public static class JsonPatchHelper
+    public static class PatchHelper
     {
-        public static void PopulateFromJsonPatch<T>(T updateObject, IEnumerable<PatchElement> patches,
+        public static List<string> PopulateFromPatch<T>(T updateObject, IEnumerable<PatchElement> patches,
             bool convertEmptyStringAsNull = true)
         {
+            var fields = new List<string>();
+
             var paramExpr = Expression.Parameter(typeof(T));
 
             foreach (var patch in patches)
             {
                 var fieldExpr = Expression.Property(paramExpr, patch.Field);
+
+                fields.Add(fieldExpr.Member.Name);
 
                 if (convertEmptyStringAsNull && (object.Equals(patch.Value, string.Empty)))
                 {
@@ -35,6 +39,8 @@ namespace Tmpi.Pyrene.ServiceInterface
                 var setter = Expression.Lambda<Action<T>>(Expression.Assign(fieldExpr, valueExpr), paramExpr).Compile();
                 setter(updateObject);
             }
+
+            return fields;
         }
     }
 }

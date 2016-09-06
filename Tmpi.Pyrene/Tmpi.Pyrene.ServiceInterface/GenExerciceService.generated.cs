@@ -10,7 +10,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.ServiceModel;
@@ -105,6 +104,7 @@ namespace Tmpi.Pyrene.ServiceInterface
         /// Met à jour l'entité <see cref="GenExercice" /> spécifiée dans la requête.
         /// </summary>
         /// <param name="request">Requête à traiter.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="HttpError">L'entité est introuvable.</exception>
 		public void Patch(PatchGenExercice request)
 		{
@@ -115,10 +115,10 @@ namespace Tmpi.Pyrene.ServiceInterface
             }
 
             var entity = new GenExercice();
-            JsonPatchHelper.PopulateFromJsonPatch(entity, request.Fields);
+            var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
 
-            var q = Db.From<GenExercice>().Update(request.Fields.Select(f => f.Field)).Where(x => x.Id == request.Id);
-            int count = Db.UpdateOnly(entity, q);
+            var updateExpr = Db.From<GenExercice>().Update(updateFields).Where(x => x.Id == request.Id);
+            int count = Db.UpdateOnly(entity, updateExpr);
             if (count == 0)
             {
                 throw HttpError.NotFound(

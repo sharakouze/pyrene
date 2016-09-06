@@ -4,6 +4,7 @@ A quoi sert le lien sur Gen_SocSite ? Suppression de CleSite.
 
 - Compteurs :
 Gen_CptCompteur disparait et est fusionné avec Gen_Cpt_MNumero.
+Doublons ????
 
 - Mandats :
 Suppression de CleLogiciel qu'on retrouve par déduction dans TypMandat.

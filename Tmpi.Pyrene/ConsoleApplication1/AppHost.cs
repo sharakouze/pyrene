@@ -39,6 +39,9 @@ namespace ConsoleApplication1
                 }
             };
 
+            ServiceStack.Text.JsConfig.DateHandler = ServiceStack.Text.DateHandler.ISO8601;
+
+            //OrmLiteConfig.IsCaseInsensitive = true;
         }
     }
 }

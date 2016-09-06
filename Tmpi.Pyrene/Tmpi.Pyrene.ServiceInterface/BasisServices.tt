@@ -45,7 +45,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.ServiceModel;
@@ -96,12 +95,12 @@ namespace <#= fileNamespace #>
 						entityName = codeClass.Name.Substring(6);
 						break;
 
-					case "AutocompleteRequestBase":
-						entityName = codeClass.Name.Substring(12);
-						break;
-
 					case "PatchByIdRequestBase":
 						entityName = codeClass.Name.Substring(5);
+						break;
+
+					case "AutocompleteRequestBase":
+						entityName = codeClass.Name.Substring(12);
 						break;
 				}
 			}
@@ -231,6 +230,7 @@ namespace <#= fileNamespace #>
         /// Met à jour l'entité <see cref="<#= entityName #>" /> spécifiée dans la requête.
         /// </summary>
         /// <param name="request">Requête à traiter.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="HttpError">L'entité est introuvable.</exception>
 		public void Patch(<#= requestName #> request)
 		{
@@ -241,10 +241,10 @@ namespace <#= fileNamespace #>
             }
 
             var entity = new <#= entityName #>();
-            JsonPatchHelper.PopulateFromJsonPatch(entity, request.Fields);
+            var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
 
-            var q = Db.From<<#= entityName #>>().Update(request.Fields.Select(f => f.Field)).Where(x => x.Id == request.Id);
-            int count = Db.UpdateOnly(entity, q);
+            var updateExpr = Db.From<<#= entityName #>>().Update(updateFields).Where(x => x.Id == request.Id);
+            int count = Db.UpdateOnly(entity, updateExpr);
             if (count == 0)
             {
                 throw HttpError.NotFound(
