@@ -41,6 +41,33 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AutocompleteGenCompteur.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AutocompleteGenExercice.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AutocompleteGenFourn.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AutocompleteGenMandat.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AutocompleteGenPersonne.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AutocompleteGenSecteur.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AutocompleteGenService.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AutocompleteGenSociete.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AutocompleteGenTVA.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
     <Compile Include="AutocompleteRequestBase.cs" />
     <Compile Include="BasicMessages.Gen.cs">
       <AutoGen>True</AutoGen>

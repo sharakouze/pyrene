@@ -152,7 +152,7 @@ namespace <#= fileNamespace #>
 <#
 			manager.EndBlock(); // end newfile
         } // end if
-		if (allInterfaces.Any(i => i.FullName == "Tmpi.Pyrene.Services.ServiceModel.Types.IHasCodLibTxt"))
+		if (allInterfaces.Any(i => i.FullName == "Tmpi.Pyrene.Services.ServiceModel.Types.IHasStandard"))
         {
 			var autocompleteClassName = "Autocomplete" + codeClass.Name;
 			var autocompleteDescription = "Autocomplete une entité {0}.";
