@@ -3,8 +3,8 @@ using ServiceStack;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
 using System;
-using Tmpi.Pyrene.ServiceInterface;
-using Tmpi.Pyrene.ServiceModel.Types;
+using Tmpi.Pyrene.Services.ServiceInterface;
+using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace ConsoleApplication1
 {
