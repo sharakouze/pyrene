@@ -17,9 +17,9 @@ using Tmpi.Pyrene.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.ServiceInterface
 {
-    /// <summary>
-    /// Service qui traite les requêtes sur l'entité <see cref="GenFourn" />.
-    /// </summary>
+	/// <summary>
+	/// Service qui traite les requêtes sur l'entité <see cref="GenFourn" />.
+	/// </summary>
 	public partial class GenFournService : Service
 	{
 	}
