@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.Services.Servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.Services", "Tmpi.Pyrene.Services\Tmpi.Pyrene.Services.csproj", "{5D4F7102-8811-420E-930C-98CC13182D29}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.UI", "Tmpi.Pyrene.UI\Tmpi.Pyrene.UI.csproj", "{79994653-4E0A-4339-B16E-F44BB5ED37D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{5D4F7102-8811-420E-930C-98CC13182D29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D4F7102-8811-420E-930C-98CC13182D29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D4F7102-8811-420E-930C-98CC13182D29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79994653-4E0A-4339-B16E-F44BB5ED37D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79994653-4E0A-4339-B16E-F44BB5ED37D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79994653-4E0A-4339-B16E-F44BB5ED37D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79994653-4E0A-4339-B16E-F44BB5ED37D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
