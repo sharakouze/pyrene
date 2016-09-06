@@ -6,7 +6,6 @@ using ServiceStack.OrmLite;
 using ServiceStack.Text;
 using System;
 using System.Configuration;
-using Tmpi.Pyrene.Services.ServiceInterface;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services
@@ -14,7 +13,9 @@ namespace Tmpi.Pyrene.Services
     public class AppHost : AppHostBase
     {
         public AppHost()
-            : base("ConsoleApplication1", typeof(GenCompteurService).Assembly) { }
+            : base("Pyrene Services", Licenses.GetAssembliesWithServices())
+        {
+        }
 
         public override void Configure(Container container)
         {
@@ -22,9 +23,9 @@ namespace Tmpi.Pyrene.Services
             container.Register<IDbConnectionFactory>(c =>
                         new OrmLiteConnectionFactory(connectionString, SqlServerDialect.Provider));
 
-            bool pluginSwagger = false;
-            bool.TryParse(ConfigurationManager.AppSettings["PluginSwagger"], out pluginSwagger);
-            if (pluginSwagger)
+            bool pluginSwaggerEnabled = false;
+            bool.TryParse(ConfigurationManager.AppSettings["PluginSwaggerEnabled"], out pluginSwaggerEnabled);
+            if (pluginSwaggerEnabled)
             {
                 Plugins.Add(new SwaggerFeature());
             }
