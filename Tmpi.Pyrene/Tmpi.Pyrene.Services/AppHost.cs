@@ -19,9 +19,16 @@ namespace Tmpi.Pyrene.Services
 
         public override void Configure(Container container)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["PyreneModel"].ConnectionString;
-            container.Register<IDbConnectionFactory>(c =>
-                        new OrmLiteConnectionFactory(connectionString, SqlServerDialect.Provider));
+            var currentFeatures = this.Config.EnableFeatures;
+            SetConfig(new HostConfig()
+            {
+#if DEBUG
+                DebugMode = true,
+#else
+                DebugMode = false,
+#endif
+                EnableFeatures = currentFeatures.Remove(Feature.Soap),
+            });
 
             bool pluginSwaggerEnabled = false;
             bool.TryParse(ConfigurationManager.AppSettings["PluginSwaggerEnabled"], out pluginSwaggerEnabled);
@@ -29,6 +36,12 @@ namespace Tmpi.Pyrene.Services
             {
                 Plugins.Add(new SwaggerFeature());
             }
+
+            string connectionString = ConfigurationManager.ConnectionStrings["PyreneModel"].ConnectionString;
+            container.Register<IDbConnectionFactory>(c =>
+                        new OrmLiteConnectionFactory(connectionString, SqlServerDialect.Provider));
+
+
 
             OrmLiteConfig.InsertFilter = (dbCmd, row) =>
             {
