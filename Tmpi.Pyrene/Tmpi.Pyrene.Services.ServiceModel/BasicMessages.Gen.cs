@@ -10,8 +10,63 @@
 //------------------------------------------------------------------------------
 
 using ServiceStack;
+using Tmpi.Pyrene.Infrastructure;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
+--- GenService
+- GenService
+- GenService
+
+--- GenFournBanque
+- GenFournBanque
+
+--- GenFourn
+- GenFourn
+- GenFourn
+
+--- GenMandat
+- GenMandat
+- GenMandat
+
+--- GenPersonneProfil
+- GenPersonneProfil
+
+--- GenCompteur
+- GenCompteur
+- GenCompteur
+
+--- GenExercice
+- GenExercice
+- GenExercice
+
+--- GenSecteur
+- GenSecteur
+- GenSecteur
+
+--- GenCompteurValeur
+- GenCompteurValeur
+
+--- GenPersonneSignature
+- GenPersonneSignature
+
+--- GenPersonne
+- GenPersonne
+- GenPersonne
+
+--- GenSociete
+- GenSociete
+- GenSociete
+
+--- GenFournContact
+- GenFournContact
+
+--- GenMandatMandataire
+- GenMandatMandataire
+
+--- GenTVA
+- GenTVA
+- GenTVA
+
 }

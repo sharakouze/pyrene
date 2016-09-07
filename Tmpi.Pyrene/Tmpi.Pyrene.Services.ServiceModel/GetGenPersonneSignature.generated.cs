@@ -14,10 +14,10 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Autocomplete une entité <see cref="GenPersonne" />.
+	/// Retourne une entité <see cref="GenPersonneSignature" /> à partir de son Id.
 	/// </summary>
-	[Route("/GenPersonne/Autocomplete", "GET", Summary = "Autocomplete une entité GenPersonne.")]
-	public partial class AutocompleteGenPersonne : AutocompleteRequestBase
+	[Route("/GenPersonneSignature/{Id}", "GET", Summary = "Retourne une entité GenPersonneSignature à partir de son Id.")]
+	public partial class GetGenPersonneSignature : GetByIdRequestBase<GenPersonneSignature>
 	{
 	}
 }

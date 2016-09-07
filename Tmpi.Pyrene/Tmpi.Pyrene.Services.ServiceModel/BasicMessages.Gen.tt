@@ -13,6 +13,7 @@
 	bool MakeClassesPartial = true;
 	bool SplitIntoMultipleFiles = true;
 	bool AddRoutes = true;
+	bool TransformRoutes = true; // transforme la route de l'entité, ex: GenFournContact de '/GenFournContact/' en '/GenFourn/Contact/'
 	Regex ClassFilterInclude = new Regex("^Gen", RegexOptions.IgnoreCase);
 	Regex ClassFilterExclude = null;
 	// ----- Settings END -----
@@ -48,6 +49,7 @@
 //------------------------------------------------------------------------------
 
 using ServiceStack;
+using Tmpi.Pyrene.Infrastructure;
 <#
 	if (!string.IsNullOrWhiteSpace(SourceNamespace) && (SourceNamespace != fileNamespace))
 	{
@@ -68,6 +70,68 @@ namespace <#= fileNamespace #>
     {
 		allClasses = allClasses.Where(c => c.FullName.StartsWith(SourceNamespace)).ToList();
     }
+
+	// transformation Route Path
+    Func<EnvDTE.CodeClass, List<string>> getRouteFromClass = null;
+    getRouteFromClass = codeClass =>
+    {
+        string str = null;
+        var route = new List<string>();
+
+#>
+--- <#= codeClass.Name #>
+<#
+		var allAttributes = new List<EnvDTE.CodeElement>();
+
+		var pClasses = VisualStudioHelper.CodeModel.GetPartialClasses(codeClass);
+		foreach(EnvDTE.CodeClass cls in pClasses)
+        {
+#>
+- <#= cls.Name #>
+<#
+			var attrs = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(cls.Members, EnvDTE.vsCMElement.vsCMElementAttribute, true);
+			allAttributes.AddRange(attrs);
+        }
+
+		//var m = members.Where(m => m.Kind == EnvDTE.vsCMElement.vsCMElementAttribute);
+		//if (members.Children != null)
+        {
+		foreach(EnvDTE.CodeElement obj in allAttributes){
+#>
+ <#= obj.Name #>
+<#
+        }
+        }
+
+		//var lst = mets.SelectMany(m => m.Attributes.Cast<EnvDTE.CodeElement>()).ToList();
+		//var lst = mets.Select(m => m.Attributes).ToList();
+
+      /*  if (codeClass.FKeys != null && codeClass.FKeys.Any())
+        {
+            var fks = codeClass.FKeys.Where(fk => table.Name.StartsWith(fk.ToTable));
+            var key = fks.OrderByDescending(fk => fk.ToTable.Length).FirstOrDefault();
+            if (key != null)
+            {
+                var tbl = allClasses.SingleOrDefault(t => t.Name == key.ToTable);
+				if (tbl != null)
+                {
+					str = table.Name.Replace(tbl.Name, "");
+					route = getRouteFromClass(tbl);
+                }
+            }
+        }*/
+		if (string.IsNullOrEmpty(str))
+        {
+			str = codeClass.Name;
+        }
+		#>
+
+<#
+
+        route.Add(str);
+        return route;
+    };
+
 	// iterate all classes
     foreach (EnvDTE.CodeClass codeClass in allClasses)
     {
@@ -85,6 +149,13 @@ namespace <#= fileNamespace #>
 			classDefinitionWords.Add("partial");
 		}
 
+		string strRoute = codeClass.Name;
+		if (TransformRoutes)
+        {
+			var route = getRouteFromClass(codeClass);
+			strRoute = string.Join("/", route);
+        }
+
         // get all interfaces implemented by this class
 		var allInterfaces = VisualStudioHelper.CodeModel.GetAllImplementedInterfaces(codeClass);
 		if (allInterfaces.Any(i => i.FullName == "ServiceStack.Model.IHasId<System.Int32>" || i.FullName == "ServiceStack.Model.IHasIntId"))
@@ -100,7 +171,7 @@ namespace <#= fileNamespace #>
 			if (AddRoutes)
             {
 #>
-	[Route("/<#= codeClass.Name #>/{Id}", "GET", Summary = "<#= string.Format(getByIdDescription, codeClass.Name) #>")]
+	[Route("/<#= strRoute #>/{Id}", "GET", Summary = "<#= string.Format(getByIdDescription, codeClass.Name) #>")]
 <#
 			} // end if
 #>
@@ -121,7 +192,7 @@ namespace <#= fileNamespace #>
 			if (AddRoutes)
             {
 #>
-	[Route("/<#= codeClass.Name #>/{Id}", "DELETE", Summary = "<#= string.Format(deleteByIdDescription, codeClass.Name) #>")]
+	[Route("/<#= strRoute #>/{Id}", "DELETE", Summary = "<#= string.Format(deleteByIdDescription, codeClass.Name) #>")]
 <#
 			} // end if
 #>
@@ -142,7 +213,7 @@ namespace <#= fileNamespace #>
 			if (AddRoutes)
             {
 #>
-	[Route("/<#= codeClass.Name #>/{Id}", "PATCH", Summary = "<#= string.Format(patchDescription, codeClass.Name) #>")]
+	[Route("/<#= strRoute #>/{Id}", "PATCH", Summary = "<#= string.Format(patchDescription, codeClass.Name) #>")]
 <#
 			} // end if
 #>
@@ -152,7 +223,7 @@ namespace <#= fileNamespace #>
 <#
 			manager.EndBlock(); // end newfile
         } // end if
-		if (allInterfaces.Any(i => i.FullName == "Tmpi.Pyrene.Services.ServiceModel.Types.IHasStandard"))
+		if (allInterfaces.Any(i => i.FullName == "Tmpi.Pyrene.Infrastructure.Types.IHasStandard"))
         {
 			var autocompleteClassName = "Autocomplete" + codeClass.Name;
 			var autocompleteDescription = "Autocomplete une entité {0}.";
@@ -165,7 +236,7 @@ namespace <#= fileNamespace #>
 			if (AddRoutes)
             {
 #>
-	[Route("/<#= codeClass.Name #>/Autocomplete", "GET", Summary = "<#= string.Format(autocompleteDescription, codeClass.Name) #>")]
+	[Route("/<#= strRoute #>/Autocomplete", "GET", Summary = "<#= string.Format(autocompleteDescription, codeClass.Name) #>")]
 <#
 			} // end if
 #>

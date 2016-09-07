@@ -100,6 +100,9 @@
     <Compile Include="DeleteGenPersonneProfil.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
+    <Compile Include="DeleteGenPersonneSignature.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
     <Compile Include="DeleteGenSecteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
@@ -139,6 +142,9 @@
     <Compile Include="GetGenPersonneProfil.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
+    <Compile Include="GetGenPersonneSignature.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
     <Compile Include="GetGenSecteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
@@ -176,6 +182,9 @@
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
     <Compile Include="PatchGenPersonneProfil.generated.cs">
+      <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PatchGenPersonneSignature.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
     <Compile Include="PatchGenSecteur.generated.cs">

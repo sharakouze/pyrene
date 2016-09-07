@@ -1,4 +1,6 @@
-﻿namespace Tmpi.Pyrene.Services.ServiceModel.Types
+﻿using Tmpi.Pyrene.Infrastructure.Types;
+
+namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
     /// <summary>
     /// Représente une société.

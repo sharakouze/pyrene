@@ -9,6 +9,7 @@
 	- ApiMemberAttribute(IsRequired) sur les propriétés [Required]
 	- PrimaryKey => Index(true)
 	- Ajout de propriétés pour gérer les tables enfants
+	- Remplacer la PK par une CompositeIndex pour les PK composite
 	****************/
 
 	// ----- Settings START -----
@@ -28,19 +29,9 @@
 	bool IncludeIndices = true; // index, unique index, composite index
 	string UseSpecificNamedConnection = ""; //if not null: Will use name provided as NamedConnection and AddNamedConnection = true, else ConnectionStringName is used as default NamedConnection
 	bool AddRoutes = true;
-	bool AddCustomInterfaces = true;
+	bool TransformRoutes = true; // transforme la route de l'entité, ex: GenFournContact de '/GenFournContact/' en '/GenFourn/Contact/'
+	bool AddCustomInterfaces = true; // ajoute les interfaces IAuditable etc...
 	// ----- Settings END -----
-
-	// transformation Route Path
-	Func<Table, string> getRoutePathFromTable = t => {
-		if (t.FKeys != null && t.FKeys.Any())
-		if (t.FKeys.Any(fk => t.Name.StartsWith(fk.ToTable)))
-        {
-			var k = t.FKeys.First(fk => t.Name.StartsWith(fk.ToTable));
-			return t.Name.Insert(k.ToTable.Length, "/");
-        }
-		return t.Name;
-	};
 
     // Read schema
 	var tables = LoadTables(MakeSingular);
@@ -60,12 +51,17 @@
 	catch {
 	}
 	// enums
-	tables["GenCompteur"]["TypCompteur"].PropertyType = "TypCompteur";
-	tables["GenCompteur"]["TypPeriodicite"].PropertyType = "TypPeriodicite";
-	tables["GenMandat"]["TypMandat"].PropertyType = "TypMandat";
-	tables["GenPersonne"]["TypGenre"].PropertyType = "TypGenre";
-	tables["GenFourn"]["TypModeReglement"].PropertyType = "TypModeReglement";
-	tables["GenFournContact"]["TypGenre"].PropertyType = "TypGenre";
+	try
+	{
+		tables["GenCompteur"]["TypCompteur"].PropertyType = "TypCompteur";
+		tables["GenCompteur"]["TypPeriodicite"].PropertyType = "TypPeriodicite";
+		tables["GenMandat"]["TypMandat"].PropertyType = "TypMandat";
+		tables["GenPersonne"]["TypGenre"].PropertyType = "TypGenre";
+		tables["GenFourn"]["TypModeReglement"].PropertyType = "TypModeReglement";
+		tables["GenFournContact"]["TypGenre"].PropertyType = "TypGenre";
+	}
+	catch {
+	}
 	// ----- Tweak Schema END -----
 
 	// get a reference to the project of this t4 template
@@ -118,6 +114,36 @@ namespace <#= fileNamespace #>
 <#
 	manager.EndBlock(); // end header
 
+	// transformation route
+    Func<Table, List<string>> getRouteFromTable = null;
+    getRouteFromTable = table =>
+    {
+        string str = null;
+        var route = new List<string>();
+
+        if (table.FKeys != null && table.FKeys.Any())
+        {
+            var fks = table.FKeys.Where(fk => table.Name.StartsWith(fk.ToTable));
+            var key = fks.OrderByDescending(fk => fk.ToTable.Length).FirstOrDefault();
+            if (key != null)
+            {
+                var tbl = tables.SingleOrDefault(t => t.Name == key.ToTable);
+				if (tbl != null)
+                {
+					str = table.Name.Replace(tbl.Name, "");
+					route = getRouteFromTable(tbl);
+                }
+            }
+        }
+		if (string.IsNullOrEmpty(str))
+        {
+			str = table.Name;
+        }
+
+        route.Add(str);
+        return route;
+    };
+
 	foreach (Table tbl in tables)
 	{
 		if (tbl.Ignore)
@@ -160,10 +186,15 @@ namespace <#= fileNamespace #>
 		
 		if (AddRoutes && tbl.HasPK() && (tbl.PK.PropertyName == "Id" || UseIdAsPK))
         {
-			var baseRoutePath = getRoutePathFromTable(tbl);
+			string strRoute = tbl.Name;
+			if (TransformRoutes)
+            {
+				var route = getRouteFromTable(tbl);
+				strRoute = string.Join("/", route);
+            }
 #>
-	[Route("/<#= baseRoutePath #>", "POST", Summary = "<#= string.Format("Ajoute une entité {0}.", tbl.ClassName) #>")]
-	[Route("/<#= baseRoutePath #>/{Id}", "PUT", Summary = "<#= string.Format("Remplace une entité {0} à partir de son Id.", tbl.ClassName) #>")]
+	[Route("/<#= strRoute #>", "POST", Summary = "<#= string.Format("Ajoute une entité {0}.", tbl.ClassName) #>")]
+	[Route("/<#= strRoute #>/{Id}", "PUT", Summary = "<#= string.Format("Remplace une entité {0} à partir de son Id.", tbl.ClassName) #>")]
 <#
 		} // end if
 
