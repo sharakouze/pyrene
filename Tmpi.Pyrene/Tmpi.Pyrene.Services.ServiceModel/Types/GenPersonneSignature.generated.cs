@@ -13,15 +13,17 @@ using System;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
+using Tmpi.Pyrene.Infrastructure.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	public partial class GenPersonneSignature
+	[Route("/GenPersonne/Signature", "POST", Summary = "Ajoute une entité GenPersonneSignature.")]
+	[Route("/GenPersonne/Signature/{Id}", "PUT", Summary = "Remplace une entité GenPersonneSignature à partir de son Id.")]
+	public partial class GenPersonneSignature : IHasId<int>
 	{
-		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
+        [Alias("CleGenPersonne")]
 		[Required]
-		[PrimaryKey]
-		public int CleGenPersonne { get; set; }
+		public int Id { get; set; }
 
 		[Required]
 		public byte[] ImgSignature { get; set; }

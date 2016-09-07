@@ -22,35 +22,5 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	/// </summary>
 	public partial class GenFournService : Service
 	{
-		/// <summary>
-		/// Supprime l'entité <see cref="GenFourn" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">L'entité est introuvable.</exception>
-		public void Delete(DeleteGenFourn request)
-		{
-			int count = Db.DeleteById<GenFourn>(request.Id);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFourn), request.Id));
-			}
-		}
-
-		/// <summary>
-		/// Supprime l'entité <see cref="GenFournBanque" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">L'entité est introuvable.</exception>
-		public void Delete(DeleteGenFournBanque request)
-		{
-			int count = Db.DeleteById<GenFournBanque>(request.Id);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournBanque), request.Id));
-			}
-		}
-
 	}
 }

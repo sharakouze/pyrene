@@ -1,4 +1,4 @@
-﻿namespace Tmpi.Pyrene.Services.ServiceModel.Types
+﻿namespace Tmpi.Pyrene.Infrastructure.Types
 {
     /// <summary>
     /// Représente une entité qui possède une adresse postale.

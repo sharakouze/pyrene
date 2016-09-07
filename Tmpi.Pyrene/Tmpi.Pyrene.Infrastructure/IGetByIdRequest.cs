@@ -1,4 +1,4 @@
-﻿namespace Tmpi.Pyrene.Services.ServiceModel
+﻿namespace Tmpi.Pyrene.Infrastructure
 {
     public interface IGetByIdRequest<T>
     {

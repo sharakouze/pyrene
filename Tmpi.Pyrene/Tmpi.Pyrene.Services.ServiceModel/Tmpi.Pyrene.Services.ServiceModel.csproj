@@ -68,13 +68,11 @@
     <Compile Include="AutocompleteGenTVA.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="AutocompleteRequestBase.cs" />
     <Compile Include="BasicMessages.Gen.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="DeleteByIdRequestBase.cs" />
     <Compile Include="DeleteGenCompteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
@@ -114,7 +112,6 @@
     <Compile Include="DeleteGenTVA.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="GetByIdRequestBase.cs" />
     <Compile Include="GetGenCompteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
@@ -154,9 +151,6 @@
     <Compile Include="GetGenTVA.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="IDeleteByIdRequest.cs" />
-    <Compile Include="IGetByIdRequest.cs" />
-    <Compile Include="PatchElement.cs" />
     <Compile Include="PatchGenCompteur.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
@@ -196,7 +190,6 @@
     <Compile Include="PatchGenTVA.generated.cs">
       <DependentUpon>BasicMessages.Gen.tt</DependentUpon>
     </Compile>
-    <Compile Include="PatchByIdRequestBase.cs" />
     <Compile Include="Types\GenCompteur.cs" />
     <Compile Include="Types\GenCompteur.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
@@ -251,15 +244,11 @@
     <Compile Include="Types\GenTVA.generated.cs">
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\IHasStandard.cs" />
     <Compile Include="Types\OrmLite.Poco.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>OrmLite.Poco.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\IHasAddress.cs" />
-    <Compile Include="Types\IAuditable.cs" />
-    <Compile Include="Types\IHasContact.cs" />
     <Compile Include="Types\TypMandat.cs" />
     <Compile Include="Types\TypGenre.cs" />
     <Compile Include="Types\TypModeReglement.cs" />
@@ -287,7 +276,12 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Tmpi.Pyrene.Infrastructure\Tmpi.Pyrene.Infrastructure.csproj">
+      <Project>{e10042b4-7da4-48d8-ae04-4d87a0317d0a}</Project>
+      <Name>Tmpi.Pyrene.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

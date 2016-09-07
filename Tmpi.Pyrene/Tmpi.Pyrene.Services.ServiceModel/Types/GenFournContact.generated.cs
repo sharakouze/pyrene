@@ -13,12 +13,13 @@ using System;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
+using Tmpi.Pyrene.Infrastructure.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, "CleGenFourn", "LibObjet")]
-	[Route("/GenFournContact", "POST", Summary = "Ajoute une entité GenFournContact.")]
-	[Route("/GenFournContact/{Id}", "PUT", Summary = "Remplace une entité GenFournContact à partir de son Id.")]
+	[Route("/GenFourn/Contact", "POST", Summary = "Ajoute une entité GenFournContact.")]
+	[Route("/GenFourn/Contact/{Id}", "PUT", Summary = "Remplace une entité GenFournContact à partir de son Id.")]
 	public partial class GenFournContact : IHasId<int>
 	{
 		[AutoIncrement]
