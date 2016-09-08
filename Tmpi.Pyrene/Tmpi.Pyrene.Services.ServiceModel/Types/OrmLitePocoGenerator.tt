@@ -8,8 +8,8 @@
 	- DefaultAttribute
 	- ApiMemberAttribute(IsRequired) sur les propriétés [Required]
 	- PrimaryKey => Index(true)
-	- Ajout de propriétés pour gérer les tables enfants
 	- Remplacer la PK par une CompositeIndex pour les PK composite
+	- Description des propriétés depuis la bdd
 	****************/
 
 	/*********************/
