@@ -133,15 +133,24 @@ public class AutomationHelper
     }
 
 	/// <summary>
-	/// Obtient le namespace
+	/// Retourne le namespace par défaut pour un projet.
+	/// </summary>
+	public string GetDefaultNamespace(EnvDTE.Project project)
+    {
+		var defaultNamespace = project.Properties.Item("DefaultNamespace").Value.ToString();
+		return defaultNamespace;
+    }
+
+	/// <summary>
+	/// Obtient le namespace du repertoire courant.
 	/// </summary>
 	public string CurrentFileNamespace
     {
 		get
         {
 			var project = CurrentProject;
+			var defaultNamespace = GetDefaultNamespace(project);
 
-			var defaultNamespace = project.Properties.Item("DefaultNamespace").Value.ToString();
 			var fullPath = project.Properties.Item("FullPath").Value.ToString();
 			if (fullPath.EndsWith("\\"))
 			{
