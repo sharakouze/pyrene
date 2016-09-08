@@ -95,9 +95,6 @@
     <Compile Include="GenPersonneProfil.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="GenPersonneSignature.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="GenSecteur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
@@ -142,9 +139,6 @@
     <Compile Include="DeleteGenPersonneProfil.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="DeleteGenPersonneSignature.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="DeleteGenSecteur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
@@ -184,9 +178,6 @@
     <Compile Include="GetGenPersonneProfil.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="GetGenPersonneSignature.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="GetGenSecteur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
@@ -224,9 +215,6 @@
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="PatchGenPersonneProfil.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PatchGenPersonneSignature.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="PatchGenSecteur.generated.cs">
@@ -270,10 +258,6 @@
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenPersonne.cs" />
-    <Compile Include="Types\GenSecteur.cs" />
-    <Compile Include="Types\GenService.cs" />
-    <Compile Include="Types\GenSociete.cs" />
-    <Compile Include="Types\GenTVA.cs" />
     <Compile Include="Types\GenPersonne.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
@@ -283,6 +267,10 @@
     <Compile Include="Types\GenPersonneSignature.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="Types\GenSecteur.cs" />
+    <Compile Include="Types\GenService.cs" />
+    <Compile Include="Types\GenSociete.cs" />
+    <Compile Include="Types\GenTVA.cs" />
     <Compile Include="Types\GenSecteur.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>

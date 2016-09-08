@@ -7,7 +7,9 @@
 	- ApiAttribute + ApiMemberAttribute
 	****************/
 
-	/*** CUSTOM SETTINGS ***/
+	/*********************/
+	/** CUSTOM SETTINGS **/
+	/*********************/
 
 	// Namespace des fichiers générés. Si vide DefaultNamespace du projet/répertoire courant.
 	string Namespace = "";

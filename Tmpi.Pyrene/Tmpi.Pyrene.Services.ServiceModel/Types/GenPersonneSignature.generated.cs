@@ -17,12 +17,12 @@ using Tmpi.Pyrene.Infrastructure.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	public partial class GenPersonneSignature : IHasId<int>
+	public partial class GenPersonneSignature
 	{
-        [Alias("CleGenPersonne")]
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
-		public int Id { get; set; }
+		[PrimaryKey]
+		public int CleGenPersonne { get; set; }
 
 		[Required]
 		public byte[] ImgSignature { get; set; }

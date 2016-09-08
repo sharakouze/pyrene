@@ -13,7 +13,7 @@ namespace Tmpi.Pyrene.Services
     public class AppHost : AppHostBase
     {
         public AppHost()
-            : base("Pyrene Services", Licenses.GetAssembliesWithServices())
+            : base("Tmpi.Pyrene.Services", Licenses.GetAssembliesWithServices())
         {
         }
 

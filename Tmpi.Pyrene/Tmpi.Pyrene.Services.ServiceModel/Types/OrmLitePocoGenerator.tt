@@ -12,58 +12,90 @@
 	- Remplacer la PK par une CompositeIndex pour les PK composite
 	****************/
 
-	// ----- Settings START -----
+	/*********************/
+	/** CUSTOM SETTINGS **/
+	/*********************/
+
 	ConnectionStringName = "PyreneModel";			// Uses last connection string in config if not specified
 	ClassPrefix = "";
 	ClassSuffix = "";
+
+	// Namespace des fichiers générés. Si vide DefaultNamespace du projet/répertoire courant.
 	string Namespace = "";
+
+	// true pour générer des classes partial.
 	bool MakeClassesPartial = true;
-	bool SplitIntoMultipleFiles = true;		// if true: Generates one file for every class
-	bool MakeSingular = false;			// if true: Changes the classname to singular if tablename is not singular
-	bool UseIdAsPK = true;				// if true: Changes the primary key property name to Id
-	bool GenerateEmptyConstructor = false;		// if true: Generates the default empty constructor
-	bool UseSchemaAttribute = true;		// if true: Adds explicit '[Schema]' attribute
+
+	// true pour générer chaque classe dans un fichier séparé.
+	bool SplitIntoMultipleFiles = true;
+
+	// if true: Changes the primary key property name to Id.
+	bool UseIdAsPK = false;
+
+	// if true: Generates the default empty constructor.
+	bool GenerateEmptyConstructor = false;
+
+	// if true: Adds explicit '[Schema]' attribute.
+	bool UseSchemaAttribute = true;
+
+	// if true: Addes References(typeof(ReferenceTableType)) to FKs.
+	bool IncludeReferences = true;
+
+	// true: Ajoute [Index] et [CompositeIndex].
+	bool IncludeIndices = true;
+
+	// Ajoute les interfaces IAuditable, etc...
+	bool AddCustomInterfaces = true;
+
+	// if true: Changes the classname to singular if tablename is not singular.
+	bool MakeSingular = false;
 	bool CreateAutoQueryTypes = false; //if true: Will create <TypeName>Query types with all possible search fields explicitly typed
 	bool AddNamedConnection = false; //if true: Adds NamedConnection attribute so AutoQuery will override default IDbConnection
-	bool IncludeReferences = true; //if true: Addes References(typeof(ReferenceTableType)) to FKs
-	bool IncludeIndices = true; // index, unique index, composite index
 	string UseSpecificNamedConnection = ""; //if not null: Will use name provided as NamedConnection and AddNamedConnection = true, else ConnectionStringName is used as default NamedConnection
-	bool AddCustomInterfaces = true; // ajoute les interfaces IAuditable etc...
-	// ----- Settings END -----
 
-    // Read schema
-	var tables = LoadTables(MakeSingular);
-/*
-	// Tweak Schema
-	tables["tablename"].Ignore = true;							// To ignore a table
-	tables["tablename"].ClassName = "newname";					// To change the class name of a table
-	tables["tablename"]["columnname"].Ignore = true;			// To ignore a column
-	tables["tablename"]["columnname"].PropertyName="newname";	// To change the property name of a column
-	tables["tablename"]["columnname"].PropertyType="bool";		// To change the property type of a column
-*/
-	// ----- Tweak Schema START -----
-	try
-	{
-		tables["__RefactorLog"].Ignore = true;
-	}
-	catch {
-	}
-	// enums
-	try
-	{
-		tables["GenCompteur"]["TypCompteur"].PropertyType = "TypCompteur";
-		tables["GenCompteur"]["TypPeriodicite"].PropertyType = "TypPeriodicite";
-		tables["GenMandat"]["TypMandat"].PropertyType = "TypMandat";
-		tables["GenPersonne"]["TypGenre"].PropertyType = "TypGenre";
-		tables["GenFourn"]["TypModeReglement"].PropertyType = "TypModeReglement";
-		tables["GenFournContact"]["TypGenre"].PropertyType = "TypGenre";
-	}
-	catch {
-	}
-	// ----- Tweak Schema END -----
+	// Si non null, méthode appliquée sur la colection des tables
+	Action<Tables> tweakSchema = null;
+	tweakSchema = tables =>
+    {	
+		/* Tweak Schema
+		tables["tablename"].Ignore = true;							// To ignore a table
+		tables["tablename"].ClassName = "newname";					// To change the class name of a table
+		tables["tablename"]["columnname"].Ignore = true;			// To ignore a column
+		tables["tablename"]["columnname"].PropertyName="newname";	// To change the property name of a column
+		tables["tablename"]["columnname"].PropertyType="bool";		// To change the property type of a column
+		*/
+
+		try
+		{
+			tables["__RefactorLog"].Ignore = true;
+		}
+		catch {
+		}
+		
+		try
+		{
+			// enums
+			tables["GenCompteur"]["TypCompteur"].PropertyType = "TypCompteur";
+			tables["GenCompteur"]["TypPeriodicite"].PropertyType = "TypPeriodicite";
+			tables["GenMandat"]["TypMandat"].PropertyType = "TypMandat";
+			tables["GenPersonne"]["TypGenre"].PropertyType = "TypGenre";
+			tables["GenFourn"]["TypModeReglement"].PropertyType = "TypModeReglement";
+			tables["GenFournContact"]["TypGenre"].PropertyType = "TypGenre";
+		}
+		catch {
+		}
+    };
 
 #>
 <#
+    // Read schema
+	var allTables = LoadTables(MakeSingular);
+
+	if (tweakSchema != null)
+    {
+		tweakSchema(allTables);
+    }
+
 	// namespace
 	var fileNamespace = Namespace;
 	if (string.IsNullOrWhiteSpace(fileNamespace))
@@ -103,7 +135,7 @@ namespace <#= fileNamespace #>
 <#
 	manager.EndBlock(); // end header
 
-	foreach (Table table in tables)
+	foreach (Table table in allTables)
 	{
 		if (table.Ignore)
 		{
@@ -242,25 +274,31 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 
-			if (IncludeReferences && table.FKeys != null && table.FKeys.Any(x => x.FromColumn ==  col.Name))
+			if (IncludeReferences && table.FKeys != null)
 			{
-				var fKey = table.FKeys.First(x => x.FromColumn == col.Name);
- 				var toTable = MakeSingular ? fKey.ToTableSingular : fKey.ToTable;
-				if (fKey.IsDeleteCascade)
-				{
+				var fKey = table.FKeys.FirstOrDefault(x => x.FromColumn == col.Name);
+				if (fKey != null)
+                {
+					var tbl = allTables.SingleOrDefault(t => t.Name == fKey.ToTable);
+					if (tbl != null)
+                    {
+						if (fKey.IsDeleteCascade)
+						{
 #>
-		[ForeignKey(typeof(<#= toTable #>), OnDelete = "CASCADE")]
+		[ForeignKey(typeof(<#= tbl.ClassName #>), OnDelete = "CASCADE")]
 <#
-				} // end if
-				else
-				{
+						} // end if
+						else
+						{
 #>
-		[References(typeof(<#= toTable #>))]
+		[References(typeof(<#= tbl.ClassName #>))]
 <#
-				} // end else
-			}
+						} // end else
+                    } // end if
+                } // end if
+			} // end if
 
-			if (col.IsNullable != true && col.IsAutoIncrement != true)
+			if (col.IsNullable == false && col.IsAutoIncrement == false)
 			{
 #>
 		[Required]
