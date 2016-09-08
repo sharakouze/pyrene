@@ -20,6 +20,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenPersonneSignature : IHasId<int>
 	{
         [Alias("CleGenPersonne")]
+		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
 		public int Id { get; set; }
 

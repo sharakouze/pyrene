@@ -6,7 +6,7 @@ using ServiceStack.OrmLite;
 using ServiceStack.Text;
 using System;
 using System.Configuration;
-using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.Infrastructure.Types;
 
 namespace Tmpi.Pyrene.Services
 {

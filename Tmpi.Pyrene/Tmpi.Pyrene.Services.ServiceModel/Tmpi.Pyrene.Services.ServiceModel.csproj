@@ -243,31 +243,31 @@
     </Compile>
     <Compile Include="Types\GenCompteur.cs" />
     <Compile Include="Types\GenCompteur.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenCompteurValeur.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenExercice.cs" />
     <Compile Include="Types\GenExercice.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenFourn.cs" />
     <Compile Include="Types\GenFourn.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenFournBanque.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenFournContact.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenMandat.cs" />
     <Compile Include="Types\GenMandat.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenMandatMandataire.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenPersonne.cs" />
     <Compile Include="Types\GenSecteur.cs" />
@@ -275,30 +275,30 @@
     <Compile Include="Types\GenSociete.cs" />
     <Compile Include="Types\GenTVA.cs" />
     <Compile Include="Types\GenPersonne.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenPersonneProfil.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenPersonneSignature.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenSecteur.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenService.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenSociete.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenTVA.generated.cs">
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\OrmLite.Poco.cs">
+    <Compile Include="Types\OrmLitePocoGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>OrmLite.Poco.tt</DependentUpon>
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\TypMandat.cs" />
     <Compile Include="Types\TypGenre.cs" />
@@ -312,16 +312,15 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <None Include="Types\OrmLite.Core.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="MessageGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MessageGenerator.cs</LastGenOutput>
     </Content>
-    <Content Include="Types\OrmLite.Poco.tt">
+    <Content Include="Types\OrmLitePocoGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>OrmLite.Poco.cs</LastGenOutput>
+      <LastGenOutput>OrmLitePocoGenerator.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>

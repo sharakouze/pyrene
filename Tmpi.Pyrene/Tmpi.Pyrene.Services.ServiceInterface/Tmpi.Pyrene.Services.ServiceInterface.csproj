@@ -70,39 +70,39 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="PatchHelper.cs" />
-    <Compile Include="ErrorMessages.cs" />
-    <Compile Include="BasisServices.cs">
+    <Compile Include="ServiceGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>BasisServices.tt</DependentUpon>
+      <DependentUpon>ServiceGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="PatchHelper.cs" />
+    <Compile Include="ErrorMessages.cs" />
     <Compile Include="GenCompteurService.generated.cs">
-      <DependentUpon>BasisServices.tt</DependentUpon>
+      <DependentUpon>ServiceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GenExerciceService.generated.cs">
-      <DependentUpon>BasisServices.tt</DependentUpon>
+      <DependentUpon>ServiceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GenFournService.generated.cs">
-      <DependentUpon>BasisServices.tt</DependentUpon>
+      <DependentUpon>ServiceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GenMandatService.generated.cs">
-      <DependentUpon>BasisServices.tt</DependentUpon>
+      <DependentUpon>ServiceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GenPersonneService.generated.cs">
-      <DependentUpon>BasisServices.tt</DependentUpon>
+      <DependentUpon>ServiceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GenSecteurService.generated.cs">
-      <DependentUpon>BasisServices.tt</DependentUpon>
+      <DependentUpon>ServiceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GenServiceService.generated.cs">
-      <DependentUpon>BasisServices.tt</DependentUpon>
+      <DependentUpon>ServiceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GenSocieteService.generated.cs">
-      <DependentUpon>BasisServices.tt</DependentUpon>
+      <DependentUpon>ServiceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GenTVAService.generated.cs">
-      <DependentUpon>BasisServices.tt</DependentUpon>
+      <DependentUpon>ServiceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -113,12 +113,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BasisServices.tt">
+    <Content Include="ServiceGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>BasisServices.cs</LastGenOutput>
+      <LastGenOutput>ServiceGenerator.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Tmpi.Pyrene.Infrastructure\Tmpi.Pyrene.Infrastructure.csproj">
+      <Project>{e10042b4-7da4-48d8-ae04-4d87a0317d0a}</Project>
+      <Name>Tmpi.Pyrene.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tmpi.Pyrene.Services.ServiceModel\Tmpi.Pyrene.Services.ServiceModel.csproj">
       <Project>{e515a547-3e09-4f2e-b1f0-09d3e16fb36a}</Project>
       <Name>Tmpi.Pyrene.Services.ServiceModel</Name>

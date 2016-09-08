@@ -1,7 +1,7 @@
 ﻿<#@ template language="C#" hostspecific="true" #>
 <#@ include file="$(SolutionDir)Shared\MultipleOutputHelper.ttinclude" #>
 <#@ include file="$(SolutionDir)Shared\VisualStudioHelper.ttinclude" #>
-<#@ include file="OrmLite.Core.ttinclude" #>
+<#@ include file="$(SolutionDir)Shared\OrmLite.Core.ttinclude" #>
 <#
 	/***** TODO *****
 	- Commentaire XML sur PrimaryKey
@@ -62,6 +62,8 @@
 	}
 	// ----- Tweak Schema END -----
 
+#>
+<#
 	// namespace
 	var fileNamespace = Namespace;
 	if (string.IsNullOrWhiteSpace(fileNamespace))
@@ -101,14 +103,14 @@ namespace <#= fileNamespace #>
 <#
 	manager.EndBlock(); // end header
 
-	foreach (Table tbl in tables)
+	foreach (Table table in tables)
 	{
-		if (tbl.Ignore)
+		if (table.Ignore)
 		{
 			continue;
 		}
 
-		manager.StartNewFile(tbl.ClassName + ".generated.cs");
+		manager.StartNewFile(table.ClassName + ".generated.cs");
 
 		if (CreateAutoQueryTypes && AddNamedConnection)
 		{
@@ -117,23 +119,23 @@ namespace <#= fileNamespace #>
 <#
 		} // end if
 
-		if (tbl.ClassName != tbl.Name)
+		if (table.ClassName != table.Name)
 		{
 #>
-	[Alias("<#= tbl.Name #>")]
+	[Alias("<#= table.Name #>")]
 <#
 		} // end if
 		
-		if (UseSchemaAttribute && !string.IsNullOrEmpty(tbl.Schema) && tbl.Schema != "dbo")
+		if (UseSchemaAttribute && !string.IsNullOrEmpty(table.Schema) && table.Schema != "dbo")
 		{
 #>
-	[Schema("<#= tbl.Schema #>")]
+	[Schema("<#= table.Schema #>")]
 <#
 		} // end if
 		
-		if (IncludeIndices && tbl.Indices != null)
+		if (IncludeIndices && table.Indices != null)
 		{
-			foreach (var indx in tbl.Indices.Where(i => i.IndexColumns.Count > 1))
+			foreach (var indx in table.Indices.Where(i => i.IndexColumns.Count > 1))
 			{
 #>
 	[CompositeIndex(<#= indx.IsUnique ? "true, " : "" #>"<#= string.Join("\", \"", indx.IndexColumns.Select(i => i.Name)) #>")]
@@ -143,27 +145,27 @@ namespace <#= fileNamespace #>
 		
 		var lstInterfaces = new List<string>();
 
-		if (tbl.HasPK())
+		if (table.HasPK())
         {
 			if (UseIdAsPK)
 			{
-				tbl.PK.PropertyName = "Id";
+				table.PK.PropertyName = "Id";
 			}
-			if (tbl.PK.PropertyName == "Id")
+			if (table.PK.PropertyName == "Id")
 			{
-				lstInterfaces.Add("IHasId<" + tbl.PK.PropertyType + ">");
+				lstInterfaces.Add("IHasId<" + table.PK.PropertyType + ">");
 			}
         }
 		if (AddCustomInterfaces)
         {
-			if (tbl.Columns.Any(c => c.PropertyName == "DatCreation" && c.ProperPropertyType == "DateTime") &&
-				tbl.Columns.Any(c => c.PropertyName == "DatModif" && c.ProperPropertyType == "DateTime"))
+			if (table.Columns.Any(c => c.PropertyName == "DatCreation" && c.ProperPropertyType == "DateTime") &&
+				table.Columns.Any(c => c.PropertyName == "DatModif" && c.ProperPropertyType == "DateTime"))
             {
 				lstInterfaces.Add("IAuditable");
             }
-			if (tbl.Columns.Any(c => c.PropertyName == "CodObjet" && c.ProperPropertyType == "string") &&
-				tbl.Columns.Any(c => c.PropertyName == "LibObjet" && c.ProperPropertyType == "string") &&
-				tbl.Columns.Any(c => c.PropertyName == "TxtObjet" && c.ProperPropertyType == "string"))
+			if (table.Columns.Any(c => c.PropertyName == "CodObjet" && c.ProperPropertyType == "string") &&
+				table.Columns.Any(c => c.PropertyName == "LibObjet" && c.ProperPropertyType == "string") &&
+				table.Columns.Any(c => c.PropertyName == "TxtObjet" && c.ProperPropertyType == "string"))
             {
 				lstInterfaces.Add("IHasStandard");
             }
@@ -175,19 +177,17 @@ namespace <#= fileNamespace #>
         {
 			classDefinitionWords.Add("partial");
         }
-		classDefinitionWords.Add("class");
-		classDefinitionWords.Add(tbl.ClassName);
 #>
-	<#= string.Join(" ", classDefinitionWords) #><#= lstInterfaces.Any() ? " : " + string.Join(",\r\n\t\t", lstInterfaces) : "" #>
+	<#= string.Join(" ", classDefinitionWords) #> class <#= table.ClassName #><#= lstInterfaces.Any() ? " : " + string.Join(",\r\n\t\t", lstInterfaces) : "" #>
 	{
 <#
 		if (GenerateEmptyConstructor)
 		{
 #>
         /// <summary>
-        /// Initialise une nouvelle instance de la classe <see cref="<#= tbl.ClassName #>" />.
+        /// Initialise une nouvelle instance de la classe <see cref="<#= table.ClassName #>" />.
         /// </summary>
-		public <#= tbl.ClassName #>()
+		public <#= table.ClassName #>()
 		{
 		}
 
@@ -195,7 +195,7 @@ namespace <#= fileNamespace #>
 		} // end if
 
 		var priorProperyNames = new List<string>();
-		foreach(Column col in tbl.Columns)
+		foreach(Column col in table.Columns)
 		{
 			if (col.Ignore)
 			{
@@ -242,9 +242,9 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 
-			if (IncludeReferences && tbl.FKeys != null && tbl.FKeys.Any(x => x.FromColumn ==  col.PropertyName))
+			if (IncludeReferences && table.FKeys != null && table.FKeys.Any(x => x.FromColumn ==  col.Name))
 			{
-				var fKey = tbl.FKeys.First(x => x.FromColumn == col.PropertyName);
+				var fKey = table.FKeys.First(x => x.FromColumn == col.Name);
  				var toTable = MakeSingular ? fKey.ToTableSingular : fKey.ToTable;
 				if (fKey.IsDeleteCascade)
 				{
@@ -267,9 +267,9 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 
-			if (IncludeIndices && tbl.Indices != null)
+			if (IncludeIndices && table.Indices != null)
 			{
-				var q = from idx in tbl.Indices
+				var q = from idx in table.Indices
 						from idxcol in idx.IndexColumns
 						where idx.IndexColumns.Count == 1
 						where string.Equals(idxcol.Name, col.PropertyName, StringComparison.InvariantCultureIgnoreCase)
@@ -301,7 +301,7 @@ namespace <#= fileNamespace #>
 
 		if (CreateAutoQueryTypes)
 		{
-			manager.StartNewFile(tbl.ClassName + "Query.generated.cs");
+			manager.StartNewFile(table.ClassName + "Query.generated.cs");
 			
 			var queryClassDefinitionWords = new List<string>();
 			queryClassDefinitionWords.Add("public");
@@ -310,10 +310,10 @@ namespace <#= fileNamespace #>
 				queryClassDefinitionWords.Add("partial");
 			}
 #>
-	<#= string.Join(" ", queryClassDefinitionWords) #> class <#= tbl.ClassName #>Query : QueryDb<<#= tbl.ClassName #>>
+	<#= string.Join(" ", queryClassDefinitionWords) #> class <#= table.ClassName #>Query : QueryDb<<#= table.ClassName #>>
 	{
 <#
-		foreach (Column col in tbl.Columns)
+		foreach (Column col in table.Columns)
 		{
 			if (col.Ignore)
 			{
