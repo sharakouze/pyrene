@@ -23,37 +23,47 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		IHasStandard
 	{
 		[AutoIncrement]
+		[ApiMember(Description = "")]
 		public int Id { get; set; }
 
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
+		[ApiMember(Description = "")]
 		public string CodObjet { get; set; }
 
 		[StringLength(200)]
 		[Required]
 		[Index]
+		[ApiMember(Description = "")]
 		public string LibObjet { get; set; }
 
 		[StringLength(500)]
+		[ApiMember(Description = "")]
 		public string TxtObjet { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public bool EstActif { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public DateTime DatCreation { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public DateTime DatModif { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string CodExterne { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public DateTime DatDebut { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public DateTime DatFin { get; set; }
 
 	}

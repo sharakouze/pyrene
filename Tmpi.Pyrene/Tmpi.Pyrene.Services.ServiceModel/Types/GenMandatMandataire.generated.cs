@@ -22,26 +22,33 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenMandatMandataire : IHasId<int>
 	{
 		[AutoIncrement]
+		[ApiMember(Description = "")]
 		public int Id { get; set; }
 
 		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
 		[Required]
+		[ApiMember(Description = "")]
 		public int CleGenMandat { get; set; }
 
 		[References(typeof(GenPersonne))]
 		[Required]
+		[ApiMember(Description = "")]
 		public int CleGenPersonne { get; set; }
 
 		[References(typeof(GenSociete))]
+		[ApiMember(Description = "")]
 		public int? CleGenSociete { get; set; }
 
 		[References(typeof(GenSecteur))]
+		[ApiMember(Description = "")]
 		public int? CleGenSecteur { get; set; }
 
 		[References(typeof(GenService))]
+		[ApiMember(Description = "")]
 		public int? CleGenService { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public bool EstSuspendu { get; set; }
 
 	}

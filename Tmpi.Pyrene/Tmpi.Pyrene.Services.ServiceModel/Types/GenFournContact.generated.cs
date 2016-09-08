@@ -22,34 +22,44 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenFournContact : IHasId<int>
 	{
 		[AutoIncrement]
+		[ApiMember(Description = "")]
 		public int Id { get; set; }
 
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
+		[ApiMember(Description = "")]
 		public int CleGenFourn { get; set; }
 
 		[StringLength(100)]
 		[Required]
+		[ApiMember(Description = "")]
 		public string LibObjet { get; set; }
 
 		[StringLength(500)]
+		[ApiMember(Description = "")]
 		public string TxtObjet { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string PreContact { get; set; }
 
 		[StringLength(25)]
+		[ApiMember(Description = "")]
 		public string NumTelep { get; set; }
 
 		[StringLength(25)]
+		[ApiMember(Description = "")]
 		public string NumFax { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string NumEmail { get; set; }
 
+		[ApiMember(Description = "")]
 		public TypGenre? TypGenre { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string CodFonction { get; set; }
 
 	}

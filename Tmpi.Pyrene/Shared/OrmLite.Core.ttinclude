@@ -135,6 +135,7 @@ public class Table
 
 public class Column
 {
+    public string Description;
     public string Name;
     public string PropertyName;
     public string PropertyType;
@@ -1013,6 +1014,7 @@ class SqlServerSchemaReader : SchemaReader
 					col.IsNullable=rdr["IsNullable"].ToString()=="YES";
 					col.IsAutoIncrement=((int)rdr["IsIdentity"])==1;
 					col.IsComputed=((int)rdr["IsComputed"])==1;                    
+					col.Description=rdr["Description"].ToString();
 					result.Add(col);
 				}
 			}
@@ -1322,7 +1324,8 @@ class SqlServerSchemaReader : SchemaReader
 									   T.NumericPrecision ,
 									   T.NumericScale ,
 									   T.IsIdentity ,
-									   T.IsComputed FROM (
+									   T.IsComputed,
+									   T.Description FROM (
 								SELECT
 											TABLE_CATALOG AS [Database],
 											TABLE_SCHEMA AS Owner,
@@ -1336,8 +1339,10 @@ class SqlServerSchemaReader : SchemaReader
 											NUMERIC_PRECISION AS NumericPrecision,
 											NUMERIC_SCALE AS NumericScale,
 											COLUMNPROPERTY(object_id('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'), COLUMN_NAME, 'IsIdentity') AS IsIdentity,
-											COLUMNPROPERTY(object_id('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'), COLUMN_NAME, 'IsComputed') as IsComputed
+											COLUMNPROPERTY(object_id('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'), COLUMN_NAME, 'IsComputed') as IsComputed,
+											PROP.value AS Description
 										FROM  INFORMATION_SCHEMA.COLUMNS
+										LEFT JOIN SYS.EXTENDED_PROPERTIES PROP ON PROP.major_id=OBJECT_ID(TABLE_NAME) AND PROP.name='MS_Description' AND PROP.minor_id=ORDINAL_POSITION
 										WHERE TABLE_NAME=@tableName AND TABLE_SCHEMA=@schemaName
 										--ORDER BY OrdinalPosition ASC
 								UNION
@@ -1353,8 +1358,10 @@ class SqlServerSchemaReader : SchemaReader
 											NUMERIC_PRECISION AS NumericPrecision,
 											NUMERIC_SCALE AS NumericScale,
 											COLUMNPROPERTY(object_id('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'), COLUMN_NAME, 'IsIdentity') AS IsIdentity,
-											COLUMNPROPERTY(object_id('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'), COLUMN_NAME, 'IsComputed') as IsComputed  
+											COLUMNPROPERTY(object_id('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'), COLUMN_NAME, 'IsComputed') as IsComputed,
+											PROP.value AS Description
 								FROM INFORMATION_SCHEMA.ROUTINE_COLUMNS
+								LEFT JOIN SYS.EXTENDED_PROPERTIES PROP ON PROP.major_id=OBJECT_ID(TABLE_NAME) AND PROP.name='MS_Description' AND PROP.minor_id=ORDINAL_POSITION
 								WHERE TABLE_NAME=@tableName AND TABLE_SCHEMA=@schemaName
 								) T
 								ORDER BY T.OrdinalPosition ASC";

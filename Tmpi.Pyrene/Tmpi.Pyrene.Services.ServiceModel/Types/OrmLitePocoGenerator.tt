@@ -50,6 +50,9 @@
 	// Ajoute des propriétés avec l'attribut [Reference] pour les tables enfants
 	bool AddChildReferences = true;
 
+	// Ajoute [ApiMember]
+	bool AddApiMember = true;
+
 	// if true: Changes the classname to singular if tablename is not singular.
 	bool MakeSingular = false;
 
@@ -336,6 +339,17 @@ namespace <#= fileNamespace #>
 			{
 #>
 		[PrimaryKey]
+<#
+			} // end if
+
+			if (AddApiMember)
+			{
+				string apiDesc = null;
+				if (!string.IsNullOrEmpty(col.Description))
+				{
+				}	
+#>
+		[ApiMember(Description = "<#= col.Description #>")]
 <#
 			} // end if
 #>

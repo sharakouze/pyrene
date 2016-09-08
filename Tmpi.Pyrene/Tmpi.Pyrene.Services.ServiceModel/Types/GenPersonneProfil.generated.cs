@@ -23,23 +23,29 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenPersonneProfil : IHasId<int>
 	{
 		[AutoIncrement]
+		[ApiMember(Description = "")]
 		public int Id { get; set; }
 
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
+		[ApiMember(Description = "")]
 		public int CleGenPersonne { get; set; }
 
 		[StringLength(100)]
 		[Required]
+		[ApiMember(Description = "")]
 		public string CodObjet { get; set; }
 
 		[References(typeof(GenSociete))]
+		[ApiMember(Description = "")]
 		public int? CleGenSociete { get; set; }
 
 		[References(typeof(GenSecteur))]
+		[ApiMember(Description = "")]
 		public int? CleGenSecteur { get; set; }
 
 		[References(typeof(GenService))]
+		[ApiMember(Description = "")]
 		public int? CleGenService { get; set; }
 
 	}

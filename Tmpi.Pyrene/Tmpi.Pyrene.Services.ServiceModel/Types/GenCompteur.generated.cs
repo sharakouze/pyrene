@@ -24,70 +24,91 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		IHasStandard
 	{
 		[AutoIncrement]
+		[ApiMember(Description = "")]
 		public int Id { get; set; }
 
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
+		[ApiMember(Description = "test de commentaire")]
 		public string CodObjet { get; set; }
 
 		[StringLength(200)]
 		[Required]
 		[Index]
+		[ApiMember(Description = "")]
 		public string LibObjet { get; set; }
 
 		[StringLength(500)]
+		[ApiMember(Description = "")]
 		public string TxtObjet { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public bool EstActif { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public DateTime DatCreation { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public DateTime DatModif { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string CodExterne { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public TypCompteur TypCompteur { get; set; }
 
 		[References(typeof(GenSociete))]
+		[ApiMember(Description = "")]
 		public int? CleGenSociete { get; set; }
 
 		[References(typeof(GenSecteur))]
+		[ApiMember(Description = "")]
 		public int? CleGenSecteur { get; set; }
 
 		[References(typeof(GenService))]
+		[ApiMember(Description = "")]
 		public int? CleGenService { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public TypPeriodicite TypPeriodicite { get; set; }
 
 		[StringLength(25)]
+		[ApiMember(Description = "")]
 		public string ValPrefixe1 { get; set; }
 
 		[StringLength(25)]
+		[ApiMember(Description = "")]
 		public string ValFormatDate1 { get; set; }
 
 		[StringLength(25)]
+		[ApiMember(Description = "")]
 		public string ValPrefixe2 { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public byte NbrDigit { get; set; }
 
 		[StringLength(25)]
+		[ApiMember(Description = "")]
 		public string ValSuffixe1 { get; set; }
 
 		[StringLength(25)]
+		[ApiMember(Description = "")]
 		public string ValFormatDate2 { get; set; }
 
 		[StringLength(25)]
+		[ApiMember(Description = "")]
 		public string ValSuffixe2 { get; set; }
 
 		[StringLength(500)]
+		[ApiMember(Description = "")]
 		public string LstFormatMois { get; set; }
 
 		[Reference]

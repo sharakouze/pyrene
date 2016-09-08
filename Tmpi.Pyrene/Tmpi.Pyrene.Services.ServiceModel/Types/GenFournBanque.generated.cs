@@ -22,21 +22,26 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenFournBanque : IHasId<int>
 	{
 		[AutoIncrement]
+		[ApiMember(Description = "")]
 		public int Id { get; set; }
 
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
+		[ApiMember(Description = "")]
 		public int CleGenFourn { get; set; }
 
 		[StringLength(23)]
 		[Required]
+		[ApiMember(Description = "")]
 		public string NumRib { get; set; }
 
 		[StringLength(200)]
 		[Required]
+		[ApiMember(Description = "")]
 		public string LibEtablissement { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public bool EstDefaut { get; set; }
 
 	}

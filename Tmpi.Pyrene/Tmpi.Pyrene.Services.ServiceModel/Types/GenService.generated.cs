@@ -23,57 +23,73 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		IHasStandard
 	{
 		[AutoIncrement]
+		[ApiMember(Description = "")]
 		public int Id { get; set; }
 
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
+		[ApiMember(Description = "")]
 		public string CodObjet { get; set; }
 
 		[StringLength(200)]
 		[Required]
 		[Index]
+		[ApiMember(Description = "")]
 		public string LibObjet { get; set; }
 
 		[StringLength(500)]
+		[ApiMember(Description = "")]
 		public string TxtObjet { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public bool EstActif { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public DateTime DatCreation { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public DateTime DatModif { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string CodExterne { get; set; }
 
 		[ForeignKey(typeof(GenSecteur), OnDelete = "CASCADE")]
 		[Required]
 		[Index]
+		[ApiMember(Description = "")]
 		public int CleGenSecteur { get; set; }
 
 		[StringLength(200)]
+		[ApiMember(Description = "")]
 		public string AdrRue { get; set; }
 
 		[StringLength(10)]
+		[ApiMember(Description = "")]
 		public string AdrCode { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string AdrVille { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string AdrPays { get; set; }
 
 		[StringLength(25)]
+		[ApiMember(Description = "")]
 		public string NumTelep { get; set; }
 
 		[StringLength(25)]
+		[ApiMember(Description = "")]
 		public string NumFax { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string NumEmail { get; set; }
 
 	}

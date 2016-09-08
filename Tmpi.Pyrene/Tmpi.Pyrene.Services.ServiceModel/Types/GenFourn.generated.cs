@@ -23,85 +23,112 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		IHasStandard
 	{
 		[AutoIncrement]
+		[ApiMember(Description = "")]
 		public int Id { get; set; }
 
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
+		[ApiMember(Description = "")]
 		public string CodObjet { get; set; }
 
 		[StringLength(200)]
 		[Required]
 		[Index]
+		[ApiMember(Description = "")]
 		public string LibObjet { get; set; }
 
 		[StringLength(500)]
+		[ApiMember(Description = "")]
 		public string TxtObjet { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public bool EstActif { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public DateTime DatCreation { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public DateTime DatModif { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string CodExterne { get; set; }
 
 		[StringLength(200)]
+		[ApiMember(Description = "")]
 		public string AdrRue { get; set; }
 
 		[StringLength(10)]
+		[ApiMember(Description = "")]
 		public string AdrCode { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string AdrVille { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string AdrPays { get; set; }
 
 		[StringLength(25)]
+		[ApiMember(Description = "")]
 		public string NumTelep { get; set; }
 
 		[StringLength(25)]
+		[ApiMember(Description = "")]
 		public string NumFax { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string NumEmail { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string CodCompta { get; set; }
 
 		[StringLength(100)]
+		[ApiMember(Description = "")]
 		public string NumClient { get; set; }
 
 		[StringLength(25)]
+		[ApiMember(Description = "")]
 		public string NumTVAIntra { get; set; }
 
 		[DecimalLength(15, 2)]
+		[ApiMember(Description = "")]
 		public decimal? MntFPort { get; set; }
 
 		[DecimalLength(15, 2)]
+		[ApiMember(Description = "")]
 		public decimal? MntFPortGratuit { get; set; }
 
 		[DecimalLength(15, 2)]
+		[ApiMember(Description = "")]
 		public decimal? MntCommandeMin { get; set; }
 
+		[ApiMember(Description = "")]
 		public byte? DelLivraison { get; set; }
 
+		[ApiMember(Description = "")]
 		public byte? DelPaiement { get; set; }
 
 		[DecimalLength(5, 2)]
+		[ApiMember(Description = "")]
 		public decimal? ValNote { get; set; }
 
+		[ApiMember(Description = "")]
 		public TypModeReglement? TypModeReglement { get; set; }
 
 		[Required]
+		[ApiMember(Description = "")]
 		public bool EstEnvoiMailBonCde { get; set; }
 
 		[References(typeof(GenPersonne))]
+		[ApiMember(Description = "")]
 		public int? CleGenPersonne { get; set; }
 
 		[Reference]
