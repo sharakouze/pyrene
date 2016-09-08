@@ -10,6 +10,7 @@
 #pragma warning disable 1591
 
 using System;
+using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
@@ -88,6 +89,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 
 		[StringLength(500)]
 		public string LstFormatMois { get; set; }
+
+		[Reference]
+		public List<GenCompteurValeur> Valeur { get; set; }
 
 	}
 }

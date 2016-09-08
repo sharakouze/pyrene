@@ -47,6 +47,8 @@
 	// Ajoute les interfaces IAuditable, etc...
 	bool AddCustomInterfaces = true;
 
+	bool AddChildReferences = true;
+
 	// if true: Changes the classname to singular if tablename is not singular.
 	bool MakeSingular = false;
 	bool CreateAutoQueryTypes = false; //if true: Will create <TypeName>Query types with all possible search fields explicitly typed
@@ -118,6 +120,7 @@
 #pragma warning disable 1591
 
 using System;
+using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
@@ -332,6 +335,37 @@ namespace <#= fileNamespace #>
 
 <#
 		} // end foreach
+
+		if (AddChildReferences)
+        {
+			var q = from tbl in allTables
+					where tbl.FKeys != null
+					where tbl.Name.StartsWith(table.Name)
+					from fk in tbl.FKeys
+					where fk.ToTable == table.Name
+					let fkIsPK = tbl.HasPK() && tbl.PK.Name == fk.FromColumn
+					let fkIsUnique = tbl.Indices != null &&
+						tbl.Indices.Any(idx => idx.IsUnique && idx.IndexColumns.Count == 1 && idx.IndexColumns[0].Name == fk.FromColumn)
+					select new
+					{
+						Table = tbl,
+						IsUnique = fkIsPK || fkIsUnique
+					};
+			foreach (var obj in q)
+            {
+				string propType = obj.Table.ClassName;
+				if (!obj.IsUnique)
+                {
+						propType = "List<"+propType+">";
+                }
+				string propName = obj.Table.ClassName.Replace(table.Name, "");
+#>
+		[Reference]
+		public <#= propType #> <#= propName #> { get; set; }
+
+<#
+            }
+        }
 #>
 	}
 <#

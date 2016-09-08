@@ -10,6 +10,7 @@
 #pragma warning disable 1591
 
 using System;
+using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
@@ -62,6 +63,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 
 		[StringLength(100)]
 		public string NumEmail { get; set; }
+
+		[Reference]
+		public List<GenPersonneProfil> Profil { get; set; }
+
+		[Reference]
+		public GenPersonneSignature Signature { get; set; }
 
 	}
 }

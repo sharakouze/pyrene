@@ -10,6 +10,7 @@
 #pragma warning disable 1591
 
 using System;
+using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
@@ -60,6 +61,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public byte NbrSignature { get; set; }
 
 		public string TxtMessage { get; set; }
+
+		[Reference]
+		public List<GenMandatMandataire> Mandataire { get; set; }
 
 	}
 }

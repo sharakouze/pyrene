@@ -10,6 +10,7 @@
 #pragma warning disable 1591
 
 using System;
+using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
@@ -102,6 +103,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 
 		[References(typeof(GenPersonne))]
 		public int? CleGenPersonne { get; set; }
+
+		[Reference]
+		public List<GenFournBanque> Banque { get; set; }
+
+		[Reference]
+		public List<GenFournContact> Contact { get; set; }
 
 	}
 }
