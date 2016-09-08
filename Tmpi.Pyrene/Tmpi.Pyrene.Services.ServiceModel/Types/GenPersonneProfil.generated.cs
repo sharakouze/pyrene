@@ -10,16 +10,16 @@
 #pragma warning disable 1591
 
 using System;
+using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
+using Tmpi.Pyrene.Infrastructure.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, "CleGenPersonne", "CleGenSociete", "CleGenSecteur", "CleGenService")]
 	[CompositeIndex(true, "CodObjet", "CleGenPersonne")]
-	[Route("/GenPersonneProfil", "POST", Summary = "Ajoute une entité GenPersonneProfil.")]
-	[Route("/GenPersonneProfil/{Id}", "PUT", Summary = "Remplace une entité GenPersonneProfil à partir de son Id.")]
 	public partial class GenPersonneProfil : IHasId<int>
 	{
 		[AutoIncrement]

@@ -10,14 +10,14 @@
 #pragma warning disable 1591
 
 using System;
+using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
+using Tmpi.Pyrene.Infrastructure.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[Route("/GenSociete", "POST", Summary = "Ajoute une entité GenSociete.")]
-	[Route("/GenSociete/{Id}", "PUT", Summary = "Remplace une entité GenSociete à partir de son Id.")]
 	public partial class GenSociete : IHasId<int>,
 		IAuditable,
 		IHasStandard

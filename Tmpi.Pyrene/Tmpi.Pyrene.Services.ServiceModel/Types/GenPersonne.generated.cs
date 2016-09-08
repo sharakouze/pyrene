@@ -10,14 +10,14 @@
 #pragma warning disable 1591
 
 using System;
+using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
+using Tmpi.Pyrene.Infrastructure.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[Route("/GenPersonne", "POST", Summary = "Ajoute une entité GenPersonne.")]
-	[Route("/GenPersonne/{Id}", "PUT", Summary = "Remplace une entité GenPersonne à partir de son Id.")]
 	public partial class GenPersonne : IHasId<int>,
 		IAuditable,
 		IHasStandard
@@ -63,6 +63,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 
 		[StringLength(100)]
 		public string NumEmail { get; set; }
+
+		[Reference]
+		public List<GenPersonneProfil> Profil { get; set; }
+
+		[Reference]
+		public GenPersonneSignature Signature { get; set; }
 
 	}
 }

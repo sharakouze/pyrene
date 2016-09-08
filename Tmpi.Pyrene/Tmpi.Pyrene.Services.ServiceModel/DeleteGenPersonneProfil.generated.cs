@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 
 using ServiceStack;
+using Tmpi.Pyrene.Infrastructure;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
@@ -15,7 +16,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Supprime une entité <see cref="GenPersonneProfil" /> à partir de son Id.
 	/// </summary>
-	[Route("/GenPersonneProfil/{Id}", "DELETE", Summary = "Supprime une entité GenPersonneProfil à partir de son Id.")]
+	[Route("/GenPersonne/Profil/{Id}", "DELETE", Summary = "Supprime une entité GenPersonneProfil à partir de son Id.")]
 	public partial class DeleteGenPersonneProfil : DeleteByIdRequestBase
 	{
 	}

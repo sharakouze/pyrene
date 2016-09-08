@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Tmpi.Pyrene.Services.ServiceModel
+namespace Tmpi.Pyrene.Infrastructure
 {
     public abstract class PatchByIdRequestBase
     {

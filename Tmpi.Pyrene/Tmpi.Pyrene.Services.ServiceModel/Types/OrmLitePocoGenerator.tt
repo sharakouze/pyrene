@@ -1,78 +1,108 @@
-<#@ template language="C#" hostspecific="true" #>
+Ôªø<#@ template language="C#" hostspecific="true" #>
 <#@ include file="$(SolutionDir)Shared\MultipleOutputHelper.ttinclude" #>
 <#@ include file="$(SolutionDir)Shared\VisualStudioHelper.ttinclude" #>
-<#@ include file="OrmLite.Core.ttinclude" #>
+<#@ include file="$(SolutionDir)Shared\OrmLite.Core.ttinclude" #>
 <#
 	/***** TODO *****
 	- Commentaire XML sur PrimaryKey
 	- DefaultAttribute
-	- ApiMemberAttribute(IsRequired) sur les propriÈtÈs [Required]
+	- ApiMemberAttribute(IsRequired) sur les propri√©t√©s [Required]
 	- PrimaryKey => Index(true)
-	- Ajout de propriÈtÈs pour gÈrer les tables enfants
+	- Ajout de propri√©t√©s pour g√©rer les tables enfants
+	- Remplacer la PK par une CompositeIndex pour les PK composite
 	****************/
 
-	// ----- Settings START -----
+	/*********************/
+	/** CUSTOM SETTINGS **/
+	/*********************/
+
 	ConnectionStringName = "PyreneModel";			// Uses last connection string in config if not specified
 	ClassPrefix = "";
 	ClassSuffix = "";
+
+	// Namespace des fichiers g√©n√©r√©s. Si vide DefaultNamespace du projet/r√©pertoire courant.
 	string Namespace = "";
+
+	// true pour g√©n√©rer des classes partial.
 	bool MakeClassesPartial = true;
-	bool SplitIntoMultipleFiles = true;		// if true: Generates one file for every class
-	bool MakeSingular = false;			// if true: Changes the classname to singular if tablename is not singular
-	bool UseIdAsPK = true;				// if true: Changes the primary key property name to Id
-	bool GenerateEmptyConstructor = false;		// if true: Generates the default empty constructor
-	bool UseSchemaAttribute = true;		// if true: Adds explicit '[Schema]' attribute
+
+	// true pour g√©n√©rer chaque classe dans un fichier s√©par√©.
+	bool SplitIntoMultipleFiles = true;
+
+	// if true: Changes the primary key property name to Id.
+	bool UseIdAsPK = false;
+
+	// if true: Generates the default empty constructor.
+	bool GenerateEmptyConstructor = false;
+
+	// if true: Adds explicit '[Schema]' attribute.
+	bool UseSchemaAttribute = true;
+
+	// if true: Addes References(typeof(ReferenceTableType)) to FKs.
+	bool IncludeReferences = true;
+
+	// true: Ajoute [Index] et [CompositeIndex].
+	bool IncludeIndices = true;
+
+	// Ajoute les interfaces IAuditable, etc...
+	bool AddCustomInterfaces = true;
+
+	bool AddChildReferences = true;
+
+	// if true: Changes the classname to singular if tablename is not singular.
+	bool MakeSingular = false;
 	bool CreateAutoQueryTypes = false; //if true: Will create <TypeName>Query types with all possible search fields explicitly typed
 	bool AddNamedConnection = false; //if true: Adds NamedConnection attribute so AutoQuery will override default IDbConnection
-	bool IncludeReferences = true; //if true: Addes References(typeof(ReferenceTableType)) to FKs
-	bool IncludeIndices = true; // index, unique index, composite index
 	string UseSpecificNamedConnection = ""; //if not null: Will use name provided as NamedConnection and AddNamedConnection = true, else ConnectionStringName is used as default NamedConnection
-	bool AddRoutes = true;
-	bool AddCustomInterfaces = true;
-	// ----- Settings END -----
 
+	// Si non null, m√©thode appliqu√©e sur la colection des tables
+	Action<Tables> tweakSchema = null;
+	tweakSchema = tables =>
+    {	
+		/* Tweak Schema
+		tables["tablename"].Ignore = true;							// To ignore a table
+		tables["tablename"].ClassName = "newname";					// To change the class name of a table
+		tables["tablename"]["columnname"].Ignore = true;			// To ignore a column
+		tables["tablename"]["columnname"].PropertyName="newname";	// To change the property name of a column
+		tables["tablename"]["columnname"].PropertyType="bool";		// To change the property type of a column
+		*/
+
+		try
+		{
+			tables["__RefactorLog"].Ignore = true;
+		}
+		catch {
+		}
+		
+		try
+		{
+			// enums
+			tables["GenCompteur"]["TypCompteur"].PropertyType = "TypCompteur";
+			tables["GenCompteur"]["TypPeriodicite"].PropertyType = "TypPeriodicite";
+			tables["GenMandat"]["TypMandat"].PropertyType = "TypMandat";
+			tables["GenPersonne"]["TypGenre"].PropertyType = "TypGenre";
+			tables["GenFourn"]["TypModeReglement"].PropertyType = "TypModeReglement";
+			tables["GenFournContact"]["TypGenre"].PropertyType = "TypGenre";
+		}
+		catch {
+		}
+    };
+
+#>
+<#
     // Read schema
-	var tables = LoadTables(MakeSingular);
-/*
-	// Tweak Schema
-	tables["tablename"].Ignore = true;							// To ignore a table
-	tables["tablename"].ClassName = "newname";					// To change the class name of a table
-	tables["tablename"]["columnname"].Ignore = true;			// To ignore a column
-	tables["tablename"]["columnname"].PropertyName="newname";	// To change the property name of a column
-	tables["tablename"]["columnname"].PropertyType="bool";		// To change the property type of a column
-*/
-	// ----- Tweak Schema START -----
-	try
-	{
-		tables["__RefactorLog"].Ignore = true;
-	}
-	catch {
-	}
-	// enums
-	tables["GenCompteur"]["TypCompteur"].PropertyType = "TypCompteur";
-	tables["GenCompteur"]["TypPeriodicite"].PropertyType = "TypPeriodicite";
-	tables["GenMandat"]["TypMandat"].PropertyType = "TypMandat";
-	tables["GenPersonne"]["TypGenre"].PropertyType = "TypGenre";
-	tables["GenFourn"]["TypModeReglement"].PropertyType = "TypModeReglement";
-	tables["GenFournContact"]["TypGenre"].PropertyType = "TypGenre";
-	// ----- Tweak Schema END -----
+	var allTables = LoadTables(MakeSingular);
 
-	// get a reference to the project of this t4 template
-	var project = VisualStudioHelper.CurrentProject;
+	if (tweakSchema != null)
+    {
+		tweakSchema(allTables);
+    }
 
 	// namespace
 	var fileNamespace = Namespace;
 	if (string.IsNullOrWhiteSpace(fileNamespace))
 	{
-		var defaultNamespace = project.Properties.Item("DefaultNamespace").Value.ToString();
-		var fullPath = project.Properties.Item("FullPath").Value.ToString();
-		if (fullPath.EndsWith("\\"))
-		{
-			fullPath = fullPath.Substring(0, fullPath.Length - 1);
-		}
-		var templateDir = Path.GetDirectoryName(Host.TemplateFile);
-		var subNamespace = templateDir.Replace(fullPath, string.Empty).Replace("\\", ".");
-		fileNamespace = string.Concat(defaultNamespace, subNamespace);
+		fileNamespace = VisualStudioHelper.CurrentFileNamespace;
 	}
 
 	var manager = Manager.Create(Host, GenerationEnvironment);
@@ -80,33 +110,42 @@
 #>
 //------------------------------------------------------------------------------
 // <auto-generated>
-//     Ce code a ÈtÈ gÈnÈrÈ par un outil.
+//     Ce code a √©t√© g√©n√©r√© par un outil.
 //
-//     Les modifications apportÈes ‡ ce fichier peuvent provoquer un comportement incorrect et seront perdues si
-//     le code est rÈgÈnÈrÈ.
+//     Les modifications apport√©es √† ce fichier peuvent provoquer un comportement incorrect et seront perdues si
+//     le code est r√©g√©n√©r√©.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
 #pragma warning disable 1591
 
 using System;
+using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
+<#
+	if (AddCustomInterfaces)
+    {
+#>
+using Tmpi.Pyrene.Infrastructure.Types;
+<#
+	} // end if
+#>
 
 namespace <#= fileNamespace #>
 {
 <#
 	manager.EndBlock(); // end header
 
-	foreach (Table tbl in tables)
+	foreach (Table table in allTables)
 	{
-		if (tbl.Ignore)
+		if (table.Ignore)
 		{
 			continue;
 		}
 
-		manager.StartNewFile(tbl.ClassName + ".generated.cs");
+		manager.StartNewFile(table.ClassName + ".generated.cs");
 
 		if (CreateAutoQueryTypes && AddNamedConnection)
 		{
@@ -115,23 +154,23 @@ namespace <#= fileNamespace #>
 <#
 		} // end if
 
-		if (MakeSingular)
+		if (table.ClassName != table.Name)
 		{
 #>
-	[Alias("<#= tbl.Name #>")]
+	[Alias("<#= table.Name #>")]
 <#
 		} // end if
 		
-		if (UseSchemaAttribute && !string.IsNullOrEmpty(tbl.Schema) && tbl.Schema != "dbo")
+		if (UseSchemaAttribute && !string.IsNullOrEmpty(table.Schema) && table.Schema != "dbo")
 		{
 #>
-	[Schema("<#= tbl.Schema #>")]
+	[Schema("<#= table.Schema #>")]
 <#
 		} // end if
 		
-		if (IncludeIndices && tbl.Indices != null)
+		if (IncludeIndices && table.Indices != null)
 		{
-			foreach (var indx in tbl.Indices.Where(i => i.IndexColumns.Count > 1))
+			foreach (var indx in table.Indices.Where(i => i.IndexColumns.Count > 1))
 			{
 #>
 	[CompositeIndex(<#= indx.IsUnique ? "true, " : "" #>"<#= string.Join("\", \"", indx.IndexColumns.Select(i => i.Name)) #>")]
@@ -139,30 +178,29 @@ namespace <#= fileNamespace #>
 			} // end foreach
 		} // end if
 		
-		if (AddRoutes && tbl.HasPK() && tbl.PK.PropertyName == "Id")
-        {
-#>
-	[Route("/<#= tbl.ClassName #>", "POST", Summary = "<#= string.Format("Ajoute une entitÈ {0}.", tbl.ClassName) #>")]
-	[Route("/<#= tbl.ClassName #>/{Id}", "PUT", Summary = "<#= string.Format("Remplace une entitÈ {0} ‡ partir de son Id.", tbl.ClassName) #>")]
-<#
-		} // end if
-
 		var lstInterfaces = new List<string>();
 
-		if (tbl.HasPK() && tbl.PK.PropertyName == "Id")
+		if (table.HasPK())
         {
-			lstInterfaces.Add("IHasId<" + tbl.PK.PropertyType + ">");
+			if (UseIdAsPK)
+			{
+				table.PK.PropertyName = "Id";
+			}
+			if (table.PK.PropertyName == "Id")
+			{
+				lstInterfaces.Add("IHasId<" + table.PK.PropertyType + ">");
+			}
         }
 		if (AddCustomInterfaces)
         {
-			if (tbl.Columns.Any(c => c.PropertyName == "DatCreation" && c.ProperPropertyType == "DateTime") &&
-				tbl.Columns.Any(c => c.PropertyName == "DatModif" && c.ProperPropertyType == "DateTime"))
+			if (table.Columns.Any(c => c.PropertyName == "DatCreation" && c.ProperPropertyType == "DateTime") &&
+				table.Columns.Any(c => c.PropertyName == "DatModif" && c.ProperPropertyType == "DateTime"))
             {
 				lstInterfaces.Add("IAuditable");
             }
-			if (tbl.Columns.Any(c => c.PropertyName == "CodObjet" && c.ProperPropertyType == "string") &&
-				tbl.Columns.Any(c => c.PropertyName == "LibObjet" && c.ProperPropertyType == "string") &&
-				tbl.Columns.Any(c => c.PropertyName == "TxtObjet" && c.ProperPropertyType == "string"))
+			if (table.Columns.Any(c => c.PropertyName == "CodObjet" && c.ProperPropertyType == "string") &&
+				table.Columns.Any(c => c.PropertyName == "LibObjet" && c.ProperPropertyType == "string") &&
+				table.Columns.Any(c => c.PropertyName == "TxtObjet" && c.ProperPropertyType == "string"))
             {
 				lstInterfaces.Add("IHasStandard");
             }
@@ -174,19 +212,17 @@ namespace <#= fileNamespace #>
         {
 			classDefinitionWords.Add("partial");
         }
-		classDefinitionWords.Add("class");
-		classDefinitionWords.Add(tbl.ClassName);
 #>
-	<#= string.Join(" ", classDefinitionWords) #><#= lstInterfaces.Any() ? " : " + string.Join(",\r\n\t\t", lstInterfaces) : "" #>
+	<#= string.Join(" ", classDefinitionWords) #> class <#= table.ClassName #><#= lstInterfaces.Any() ? " : " + string.Join(",\r\n\t\t", lstInterfaces) : "" #>
 	{
 <#
 		if (GenerateEmptyConstructor)
 		{
 #>
         /// <summary>
-        /// Initialise une nouvelle instance de la classe <see cref="<#= tbl.ClassName #>" />.
+        /// Initialise une nouvelle instance de la classe <see cref="<#= table.ClassName #>" />.
         /// </summary>
-		public <#= tbl.ClassName #>()
+		public <#= table.ClassName #>()
 		{
 		}
 
@@ -194,7 +230,7 @@ namespace <#= fileNamespace #>
 		} // end if
 
 		var priorProperyNames = new List<string>();
-		foreach(Column col in tbl.Columns)
+		foreach(Column col in table.Columns)
 		{
 			if (col.Ignore)
 			{
@@ -241,34 +277,40 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 
-			if (IncludeReferences && tbl.FKeys != null && tbl.FKeys.Any(x => x.FromColumn ==  col.PropertyName))
+			if (IncludeReferences && table.FKeys != null)
 			{
-				var fKey = tbl.FKeys.First(x => x.FromColumn == col.PropertyName);
- 				var toTable = MakeSingular ? fKey.ToTableSingular : fKey.ToTable;
-				if (fKey.IsDeleteCascade)
-				{
+				var fKey = table.FKeys.FirstOrDefault(x => x.FromColumn == col.Name);
+				if (fKey != null)
+                {
+					var tbl = allTables.SingleOrDefault(t => t.Name == fKey.ToTable);
+					if (tbl != null)
+                    {
+						if (fKey.IsDeleteCascade)
+						{
 #>
-		[ForeignKey(typeof(<#= toTable #>), OnDelete = "CASCADE")]
+		[ForeignKey(typeof(<#= tbl.ClassName #>), OnDelete = "CASCADE")]
 <#
-				} // end if
-				else
-				{
+						} // end if
+						else
+						{
 #>
-		[References(typeof(<#= toTable #>))]
+		[References(typeof(<#= tbl.ClassName #>))]
 <#
-				} // end else
-			}
+						} // end else
+                    } // end if
+                } // end if
+			} // end if
 
-			if (col.IsNullable != true && col.IsAutoIncrement != true)
+			if (col.IsNullable == false && col.IsAutoIncrement == false)
 			{
 #>
 		[Required]
 <#
 			} // end if
 
-			if (IncludeIndices && tbl.Indices != null)
+			if (IncludeIndices && table.Indices != null)
 			{
-				var q = from idx in tbl.Indices
+				var q = from idx in table.Indices
 						from idxcol in idx.IndexColumns
 						where idx.IndexColumns.Count == 1
 						where string.Equals(idxcol.Name, col.PropertyName, StringComparison.InvariantCultureIgnoreCase)
@@ -293,6 +335,37 @@ namespace <#= fileNamespace #>
 
 <#
 		} // end foreach
+
+		if (AddChildReferences)
+        {
+			var q = from tbl in allTables
+					where tbl.FKeys != null
+					where tbl.Name.StartsWith(table.Name)
+					from fk in tbl.FKeys
+					where fk.ToTable == table.Name
+					let fkIsPK = tbl.HasPK() && tbl.PK.Name == fk.FromColumn
+					let fkIsUnique = tbl.Indices != null &&
+						tbl.Indices.Any(idx => idx.IsUnique && idx.IndexColumns.Count == 1 && idx.IndexColumns[0].Name == fk.FromColumn)
+					select new
+					{
+						Table = tbl,
+						IsUnique = fkIsPK || fkIsUnique
+					};
+			foreach (var obj in q)
+            {
+				string propType = obj.Table.ClassName;
+				if (!obj.IsUnique)
+                {
+						propType = "List<"+propType+">";
+                }
+				string propName = obj.Table.ClassName.Replace(table.Name, "");
+#>
+		[Reference]
+		public <#= propType #> <#= propName #> { get; set; }
+
+<#
+            }
+        }
 #>
 	}
 <#
@@ -300,7 +373,7 @@ namespace <#= fileNamespace #>
 
 		if (CreateAutoQueryTypes)
 		{
-			manager.StartNewFile(tbl.ClassName + "Query.generated.cs");
+			manager.StartNewFile(table.ClassName + "Query.generated.cs");
 			
 			var queryClassDefinitionWords = new List<string>();
 			queryClassDefinitionWords.Add("public");
@@ -309,10 +382,10 @@ namespace <#= fileNamespace #>
 				queryClassDefinitionWords.Add("partial");
 			}
 #>
-	<#= string.Join(" ", queryClassDefinitionWords) #> class <#= tbl.ClassName #>Query : QueryDb<<#= tbl.ClassName #>>
+	<#= string.Join(" ", queryClassDefinitionWords) #> class <#= table.ClassName #>Query : QueryDb<<#= table.ClassName #>>
 	{
 <#
-		foreach (Column col in tbl.Columns)
+		foreach (Column col in table.Columns)
 		{
 			if (col.Ignore)
 			{

@@ -1,4 +1,4 @@
-<#@ assembly name="System.Core" #>
+﻿<#@ assembly name="System.Core" #>
 <#@ assembly name="EnvDTE"#>
 <#@ assembly name="EnvDTE80" #>
 <#@ import namespace="System" #>
@@ -129,6 +129,37 @@ public class AutomationHelper
 		get
         {
 			return this.FindProjectItem(this.Host.TemplateFile).ContainingProject;
+        }
+    }
+
+	/// <summary>
+	/// Retourne le namespace par défaut pour un projet.
+	/// </summary>
+	public string GetDefaultNamespace(EnvDTE.Project project)
+    {
+		var defaultNamespace = project.Properties.Item("DefaultNamespace").Value.ToString();
+		return defaultNamespace;
+    }
+
+	/// <summary>
+	/// Obtient le namespace du repertoire courant.
+	/// </summary>
+	public string CurrentFileNamespace
+    {
+		get
+        {
+			var project = CurrentProject;
+			var defaultNamespace = GetDefaultNamespace(project);
+
+			var fullPath = project.Properties.Item("FullPath").Value.ToString();
+			if (fullPath.EndsWith("\\"))
+			{
+				fullPath = fullPath.Substring(0, fullPath.Length - 1);
+			}
+			var templateDir = Path.GetDirectoryName(Host.TemplateFile);
+			var subNamespace = templateDir.Replace(fullPath, string.Empty).Replace("\\", ".");
+		
+			return string.Concat(defaultNamespace, subNamespace);
         }
     }
 	#endregion
@@ -395,6 +426,27 @@ public class VsCodeModel
 			classParts.Add(codeClass);
 
 		return classParts;
+    }
+
+	/// <summary>
+	/// Retourne tous les attributs de chaque propriétés de la CodeClass spécifiée.
+	/// </summary>
+	/// <returns></returns>
+	public IEnumerable<EnvDTE.CodeAttribute> GetAllPropertiesAttributes(EnvDTE.CodeClass codeClass)
+    {
+		var ret = new List<EnvDTE.CodeAttribute>();
+	
+		foreach(EnvDTE.CodeClass partialClass in GetPartialClasses(codeClass))
+        {
+			var allProperties = GetAllCodeElementsOfType(partialClass.Members, EnvDTE.vsCMElement.vsCMElementProperty, false);
+			foreach(EnvDTE.CodeProperty property in allProperties)
+            {
+				var allAttributes = GetAllCodeElementsOfType(property.Attributes, EnvDTE.vsCMElement.vsCMElementAttribute, false);
+				ret.AddRange(allAttributes.OfType<EnvDTE.CodeAttribute>());
+            }
+        }
+
+		return ret;
     }
 
 	#region private classes

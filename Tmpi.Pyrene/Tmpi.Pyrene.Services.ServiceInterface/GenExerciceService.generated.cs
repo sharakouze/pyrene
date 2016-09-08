@@ -23,6 +23,24 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenExerciceService : Service
 	{
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns></returns>
+		public List<string> Get(AutocompleteGenExercice request)
+		{
+			if (string.IsNullOrWhiteSpace(request.Text))
+			{
+				return null;
+			}
+
+			//var q1 = Db.From<T>().Select(c => c.CodObjet).Where(c => c.CodObjet.Contains(request.Text));
+			//var q2 = Db.From<T>().Select(c => c.LibObjet).Where(c => c.LibObjet.Contains(request.Text));
+
+			return null;
+		}
+
+		/// <summary>
 		/// Supprime l'entité <see cref="GenExercice" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>

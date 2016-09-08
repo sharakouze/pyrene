@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 
 using ServiceStack;
+using Tmpi.Pyrene.Infrastructure;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
@@ -15,7 +16,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une entité <see cref="GenPersonneProfil" /> à partir de son Id.
 	/// </summary>
-	[Route("/GenPersonneProfil/{Id}", "GET", Summary = "Retourne une entité GenPersonneProfil à partir de son Id.")]
+	[Route("/GenPersonne/Profil/{Id}", "GET", Summary = "Retourne une entité GenPersonneProfil à partir de son Id.")]
 	public partial class GetGenPersonneProfil : GetByIdRequestBase<GenPersonneProfil>
 	{
 	}

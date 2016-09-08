@@ -10,15 +10,15 @@
 #pragma warning disable 1591
 
 using System;
+using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
+using Tmpi.Pyrene.Infrastructure.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, "TypCompteur", "CleGenSociete", "CleGenSecteur", "CleGenService")]
-	[Route("/GenCompteur", "POST", Summary = "Ajoute une entité GenCompteur.")]
-	[Route("/GenCompteur/{Id}", "PUT", Summary = "Remplace une entité GenCompteur à partir de son Id.")]
 	public partial class GenCompteur : IHasId<int>,
 		IAuditable,
 		IHasStandard
@@ -89,6 +89,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 
 		[StringLength(500)]
 		public string LstFormatMois { get; set; }
+
+		[Reference]
+		public List<GenCompteurValeur> Valeur { get; set; }
 
 	}
 }

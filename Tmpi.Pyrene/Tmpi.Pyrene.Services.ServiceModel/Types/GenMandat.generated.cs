@@ -10,15 +10,15 @@
 #pragma warning disable 1591
 
 using System;
+using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
+using Tmpi.Pyrene.Infrastructure.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, "TypMandat", "NivMandat")]
-	[Route("/GenMandat", "POST", Summary = "Ajoute une entité GenMandat.")]
-	[Route("/GenMandat/{Id}", "PUT", Summary = "Remplace une entité GenMandat à partir de son Id.")]
 	public partial class GenMandat : IHasId<int>,
 		IAuditable,
 		IHasStandard
@@ -61,6 +61,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public byte NbrSignature { get; set; }
 
 		public string TxtMessage { get; set; }
+
+		[Reference]
+		public List<GenMandatMandataire> Mandataire { get; set; }
 
 	}
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tmpi.Pyrene.Services.ServiceModel
+namespace Tmpi.Pyrene.Infrastructure
 {
     public class PatchElement
     {

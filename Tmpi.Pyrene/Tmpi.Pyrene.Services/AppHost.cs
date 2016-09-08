@@ -6,14 +6,14 @@ using ServiceStack.OrmLite;
 using ServiceStack.Text;
 using System;
 using System.Configuration;
-using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.Infrastructure.Types;
 
 namespace Tmpi.Pyrene.Services
 {
     public class AppHost : AppHostBase
     {
         public AppHost()
-            : base("Pyrene Services", Licenses.GetAssembliesWithServices())
+            : base("Tmpi.Pyrene.Services", Licenses.GetAssembliesWithServices())
         {
         }
 

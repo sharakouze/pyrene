@@ -3,32 +3,43 @@
 <#@ include file="$(SolutionDir)Shared\VisualStudioHelper.ttinclude" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#
-	// ----- Settings START -----
-	string Namespace = ""; // vide = DefaultNamespace
+	/*********************/
+	/** CUSTOM SETTINGS **/
+	/*********************/
+
+	// Namespace des fichiers générés. Si vide DefaultNamespace du projet/répertoire courant.
+	string Namespace = "";
+
+	// Limite le traitement aux classes dans ce projet.
 	string SourceProject = "Tmpi.Pyrene.Services.ServiceModel";
+	
+	// true pour générer des classes partial.
 	bool MakeClassesPartial = true;
+
+	// true pour générer chaque classe dans un fichier séparé.
 	bool SplitIntoMultipleFiles = true;
+
+	// RegExp pour filtrer globalement les classes traitées, null pour tout inclure et/ou ne rien exclure.
 	Regex ClassFilterInclude = null;
 	Regex ClassFilterExclude = null;
-	// ----- Settings END -----
 
-	// get a reference to the project of this t4 template
-	var project = VisualStudioHelper.CurrentProject;
-
+#>
+<#
 	// namespace
 	var fileNamespace = Namespace;
 	if (string.IsNullOrWhiteSpace(fileNamespace))
     {
-		var defaultNamespace = project.Properties.Item("DefaultNamespace").Value.ToString();
-		var fullPath = project.Properties.Item("FullPath").Value.ToString();
-		if (fullPath.EndsWith("\\"))
-        {
-			fullPath = fullPath.Substring(0, fullPath.Length - 1);
-        }
-		var templateDir = Path.GetDirectoryName(Host.TemplateFile);
-		var subNamespace = templateDir.Replace(fullPath, string.Empty).Replace("\\", ".");
-		fileNamespace = string.Concat(defaultNamespace, subNamespace);
+		fileNamespace = VisualStudioHelper.CurrentFileNamespace;
 	}
+
+	// get a reference to the project of this t4 template
+	var srcProject = VisualStudioHelper.CurrentProject;
+	if (!string.IsNullOrWhiteSpace(SourceProject))
+    {
+		srcProject = VisualStudioHelper.GetProject(SourceProject);
+    }
+
+	string sourceNamespace = VisualStudioHelper.GetDefaultNamespace(srcProject);
 
 	var manager = Manager.Create(Host, GenerationEnvironment);
 	manager.StartHeader();
@@ -47,20 +58,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using ServiceStack;
 using ServiceStack.OrmLite;
-using Tmpi.Pyrene.Services.ServiceModel;
-using Tmpi.Pyrene.Services.ServiceModel.Types;
+using <#= sourceNamespace #>;
+using <#= sourceNamespace #>.Types;
 
 namespace <#= fileNamespace #>
 {
 <#
 	manager.EndBlock(); // end header
 
-	var srcProject = project;
-	if (!string.IsNullOrWhiteSpace(SourceProject))
-    {
-		srcProject = VisualStudioHelper.GetProject(SourceProject);
-    }
-    
 	var dic = new Dictionary<string, List<string>>();
 
     // get all class items from the code model
@@ -69,8 +74,8 @@ namespace <#= fileNamespace #>
 	// iterate all classes
     foreach (EnvDTE.CodeClass codeClass in allClasses)
     {
-		var included = ClassFilterInclude == null || ClassFilterInclude.IsMatch(codeClass.Name);
-		var excluded = ClassFilterExclude != null && ClassFilterExclude.IsMatch(codeClass.Name);
+		bool included = ClassFilterInclude == null || ClassFilterInclude.IsMatch(codeClass.Name);
+		bool excluded = ClassFilterExclude != null && ClassFilterExclude.IsMatch(codeClass.Name);
 		if (!included || excluded)
         {
 			continue;
