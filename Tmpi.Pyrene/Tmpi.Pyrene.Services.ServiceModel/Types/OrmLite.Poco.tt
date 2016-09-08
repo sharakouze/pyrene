@@ -28,8 +28,6 @@
 	bool IncludeReferences = true; //if true: Addes References(typeof(ReferenceTableType)) to FKs
 	bool IncludeIndices = true; // index, unique index, composite index
 	string UseSpecificNamedConnection = ""; //if not null: Will use name provided as NamedConnection and AddNamedConnection = true, else ConnectionStringName is used as default NamedConnection
-	bool AddRoutes = true;
-	bool TransformRoutes = true; // transforme la route de l'entité, ex: GenFournContact de '/GenFournContact/' en '/GenFourn/Contact/'
 	bool AddCustomInterfaces = true; // ajoute les interfaces IAuditable etc...
 	// ----- Settings END -----
 
@@ -64,22 +62,11 @@
 	}
 	// ----- Tweak Schema END -----
 
-	// get a reference to the project of this t4 template
-	var project = VisualStudioHelper.CurrentProject;
-
 	// namespace
 	var fileNamespace = Namespace;
 	if (string.IsNullOrWhiteSpace(fileNamespace))
 	{
-		var defaultNamespace = project.Properties.Item("DefaultNamespace").Value.ToString();
-		var fullPath = project.Properties.Item("FullPath").Value.ToString();
-		if (fullPath.EndsWith("\\"))
-		{
-			fullPath = fullPath.Substring(0, fullPath.Length - 1);
-		}
-		var templateDir = Path.GetDirectoryName(Host.TemplateFile);
-		var subNamespace = templateDir.Replace(fullPath, string.Empty).Replace("\\", ".");
-		fileNamespace = string.Concat(defaultNamespace, subNamespace);
+		fileNamespace = VisualStudioHelper.CurrentFileNamespace;
 	}
 
 	var manager = Manager.Create(Host, GenerationEnvironment);
@@ -113,36 +100,6 @@ namespace <#= fileNamespace #>
 {
 <#
 	manager.EndBlock(); // end header
-
-	// transformation route
-    Func<Table, List<string>> getRouteFromTable = null;
-    getRouteFromTable = table =>
-    {
-        string str = null;
-        var route = new List<string>();
-
-        if (table.FKeys != null && table.FKeys.Any())
-        {
-            var fks = table.FKeys.Where(fk => table.Name.StartsWith(fk.ToTable));
-            var key = fks.OrderByDescending(fk => fk.ToTable.Length).FirstOrDefault();
-            if (key != null)
-            {
-                var tbl = tables.SingleOrDefault(t => t.Name == key.ToTable);
-				if (tbl != null)
-                {
-					str = table.Name.Replace(tbl.Name, "");
-					route = getRouteFromTable(tbl);
-                }
-            }
-        }
-		if (string.IsNullOrEmpty(str))
-        {
-			str = table.Name;
-        }
-
-        route.Add(str);
-        return route;
-    };
 
 	foreach (Table tbl in tables)
 	{
@@ -184,20 +141,6 @@ namespace <#= fileNamespace #>
 			} // end foreach
 		} // end if
 		
-		if (AddRoutes && tbl.HasPK() && (tbl.PK.PropertyName == "Id" || UseIdAsPK))
-        {
-			string strRoute = tbl.Name;
-			if (TransformRoutes)
-            {
-				var route = getRouteFromTable(tbl);
-				strRoute = string.Join("/", route);
-            }
-#>
-	[Route("/<#= strRoute #>", "POST", Summary = "<#= string.Format("Ajoute une entité {0}.", tbl.ClassName) #>")]
-	[Route("/<#= strRoute #>/{Id}", "PUT", Summary = "<#= string.Format("Remplace une entité {0} à partir de son Id.", tbl.ClassName) #>")]
-<#
-		} // end if
-
 		var lstInterfaces = new List<string>();
 
 		if (tbl.HasPK())

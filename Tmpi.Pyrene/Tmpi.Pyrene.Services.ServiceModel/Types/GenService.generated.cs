@@ -17,8 +17,6 @@ using Tmpi.Pyrene.Infrastructure.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[Route("/GenService", "POST", Summary = "Ajoute une entité GenService.")]
-	[Route("/GenService/{Id}", "PUT", Summary = "Remplace une entité GenService à partir de son Id.")]
 	public partial class GenService : IHasId<int>,
 		IAuditable,
 		IHasStandard

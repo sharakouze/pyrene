@@ -18,8 +18,6 @@ using Tmpi.Pyrene.Infrastructure.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, "CleGenFourn", "NumRib")]
-	[Route("/GenFourn/Banque", "POST", Summary = "Ajoute une entité GenFournBanque.")]
-	[Route("/GenFourn/Banque/{Id}", "PUT", Summary = "Remplace une entité GenFournBanque à partir de son Id.")]
 	public partial class GenFournBanque : IHasId<int>
 	{
 		[AutoIncrement]

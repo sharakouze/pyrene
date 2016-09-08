@@ -19,8 +19,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, "CleGenPersonne", "CleGenSociete", "CleGenSecteur", "CleGenService")]
 	[CompositeIndex(true, "CodObjet", "CleGenPersonne")]
-	[Route("/GenPersonne/Profil", "POST", Summary = "Ajoute une entité GenPersonneProfil.")]
-	[Route("/GenPersonne/Profil/{Id}", "PUT", Summary = "Remplace une entité GenPersonneProfil à partir de son Id.")]
 	public partial class GenPersonneProfil : IHasId<int>
 	{
 		[AutoIncrement]

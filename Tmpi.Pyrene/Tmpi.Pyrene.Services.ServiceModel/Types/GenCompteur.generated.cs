@@ -18,8 +18,6 @@ using Tmpi.Pyrene.Infrastructure.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, "TypCompteur", "CleGenSociete", "CleGenSecteur", "CleGenService")]
-	[Route("/GenCompteur", "POST", Summary = "Ajoute une entité GenCompteur.")]
-	[Route("/GenCompteur/{Id}", "PUT", Summary = "Remplace une entité GenCompteur à partir de son Id.")]
 	public partial class GenCompteur : IHasId<int>,
 		IAuditable,
 		IHasStandard
