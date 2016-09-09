@@ -253,6 +253,54 @@ namespace <#= fileNamespace #>
 			}
 			priorProperyNames.Add(col.PropertyName);
 
+			if (string.IsNullOrWhiteSpace(col.Description))
+            {
+				if (col.IsPK)
+                {
+					col.Description = "Clé primaire.";
+                }
+				else
+                {
+					switch (col.PropertyName)
+                    {
+						case "CodObjet":
+							col.Description = "Code unique.";
+							break;
+						case "LibObjet":
+							col.Description = "Désignation.";
+							break;
+						case "TxtObjet":
+							col.Description = "Commentaire ou description.";
+							break;
+						case "EstActif":
+							col.Description = "Actif ou inactif.";
+							break;
+						case "DatCreation":
+							col.Description = "Date de création.";
+							break;
+						case "DatModif":
+							col.Description = "Date de dernière modification.";
+							break;
+						case "CodExterne":
+							col.Description = "Identifiant de synchronisation externe.";
+							break;
+                    }
+                }
+            }
+			else if (!col.Description.EndsWith("."))
+			{
+				col.Description += ".";
+			}
+
+			if (!string.IsNullOrWhiteSpace(col.Description))
+            {
+#>
+		/// <summary>
+		/// <#= col.Description #>
+		/// </summary>
+<#
+            }
+
 			if (col.Name != col.PropertyName)
 			{
 #>
@@ -344,12 +392,14 @@ namespace <#= fileNamespace #>
 
 			if (AddApiMember)
 			{
-				string apiDesc = null;
+				var lstApiMemberProps = new List<string>();
+
 				if (!string.IsNullOrEmpty(col.Description))
-				{
-				}	
+                {
+					lstApiMemberProps.Add("Description = \"" + col.Description + "\"");
+                }
 #>
-		[ApiMember(Description = "<#= col.Description #>")]
+		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
 <#
 			} // end if
 #>

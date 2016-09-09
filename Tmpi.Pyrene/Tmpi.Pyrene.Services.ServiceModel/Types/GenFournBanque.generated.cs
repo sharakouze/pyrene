@@ -21,27 +21,30 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	[CompositeIndex(true, "CleGenFourn", "NumRib")]
 	public partial class GenFournBanque : IHasId<int>
 	{
+		/// <summary>
+		/// Clé primaire.
+		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "")]
+		[ApiMember(Description = "Clé primaire.")]
 		public int Id { get; set; }
 
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public int CleGenFourn { get; set; }
 
 		[StringLength(23)]
 		[Required]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public string NumRib { get; set; }
 
 		[StringLength(200)]
 		[Required]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public string LibEtablissement { get; set; }
 
 		[Required]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public bool EstDefaut { get; set; }
 
 	}

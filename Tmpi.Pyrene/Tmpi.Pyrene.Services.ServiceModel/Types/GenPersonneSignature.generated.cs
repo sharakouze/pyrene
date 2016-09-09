@@ -20,19 +20,22 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	public partial class GenPersonneSignature
 	{
+		/// <summary>
+		/// Clé primaire.
+		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
 		[PrimaryKey]
-		[ApiMember(Description = "")]
+		[ApiMember(Description = "Clé primaire.")]
 		public int CleGenPersonne { get; set; }
 
 		[Required]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public byte[] ImgSignature { get; set; }
 
 		[StringLength(255)]
 		[Required]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public string TypMime { get; set; }
 
 	}

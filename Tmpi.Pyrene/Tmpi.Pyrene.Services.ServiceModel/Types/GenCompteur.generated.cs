@@ -23,92 +23,116 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		IAuditable,
 		IHasStandard
 	{
+		/// <summary>
+		/// Clé primaire.
+		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "")]
+		[ApiMember(Description = "Clé primaire.")]
 		public int Id { get; set; }
 
+		/// <summary>
+		/// Code unique.
+		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "test de commentaire")]
+		[ApiMember(Description = "Code unique.")]
 		public string CodObjet { get; set; }
 
+		/// <summary>
+		/// Désignation.
+		/// </summary>
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "")]
+		[ApiMember(Description = "Désignation.")]
 		public string LibObjet { get; set; }
 
+		/// <summary>
+		/// Commentaire ou description.
+		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "")]
+		[ApiMember(Description = "Commentaire ou description.")]
 		public string TxtObjet { get; set; }
 
+		/// <summary>
+		/// Actif ou inactif.
+		/// </summary>
 		[Required]
-		[ApiMember(Description = "")]
+		[ApiMember(Description = "Actif ou inactif.")]
 		public bool EstActif { get; set; }
 
+		/// <summary>
+		/// Date de création.
+		/// </summary>
 		[Required]
-		[ApiMember(Description = "")]
+		[ApiMember(Description = "Date de création.")]
 		public DateTime DatCreation { get; set; }
 
+		/// <summary>
+		/// Date de dernière modification.
+		/// </summary>
 		[Required]
-		[ApiMember(Description = "")]
+		[ApiMember(Description = "Date de dernière modification.")]
 		public DateTime DatModif { get; set; }
 
+		/// <summary>
+		/// Identifiant de synchronisation externe.
+		/// </summary>
 		[StringLength(100)]
-		[ApiMember(Description = "")]
+		[ApiMember(Description = "Identifiant de synchronisation externe.")]
 		public string CodExterne { get; set; }
 
 		[Required]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public TypCompteur TypCompteur { get; set; }
 
 		[References(typeof(GenSociete))]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public int? CleGenSociete { get; set; }
 
 		[References(typeof(GenSecteur))]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public int? CleGenSecteur { get; set; }
 
 		[References(typeof(GenService))]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public int? CleGenService { get; set; }
 
 		[Required]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public TypPeriodicite TypPeriodicite { get; set; }
 
 		[StringLength(25)]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public string ValPrefixe1 { get; set; }
 
 		[StringLength(25)]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public string ValFormatDate1 { get; set; }
 
 		[StringLength(25)]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public string ValPrefixe2 { get; set; }
 
 		[Required]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public byte NbrDigit { get; set; }
 
 		[StringLength(25)]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public string ValSuffixe1 { get; set; }
 
 		[StringLength(25)]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public string ValFormatDate2 { get; set; }
 
 		[StringLength(25)]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public string ValSuffixe2 { get; set; }
 
 		[StringLength(500)]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public string LstFormatMois { get; set; }
 
 		[Reference]

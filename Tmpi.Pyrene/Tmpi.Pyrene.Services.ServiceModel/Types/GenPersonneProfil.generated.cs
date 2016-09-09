@@ -22,30 +22,36 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	[CompositeIndex(true, "CodObjet", "CleGenPersonne")]
 	public partial class GenPersonneProfil : IHasId<int>
 	{
+		/// <summary>
+		/// Clé primaire.
+		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "")]
+		[ApiMember(Description = "Clé primaire.")]
 		public int Id { get; set; }
 
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public int CleGenPersonne { get; set; }
 
+		/// <summary>
+		/// Code unique.
+		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[ApiMember(Description = "")]
+		[ApiMember(Description = "Code unique.")]
 		public string CodObjet { get; set; }
 
 		[References(typeof(GenSociete))]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public int? CleGenSociete { get; set; }
 
 		[References(typeof(GenSecteur))]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public int? CleGenSecteur { get; set; }
 
 		[References(typeof(GenService))]
-		[ApiMember(Description = "")]
+		[ApiMember()]
 		public int? CleGenService { get; set; }
 
 	}
