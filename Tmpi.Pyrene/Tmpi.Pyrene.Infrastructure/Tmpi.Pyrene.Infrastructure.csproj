@@ -28,6 +28,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Tmpi.Pyrene.Infrastructure.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -42,8 +43,6 @@
     <Compile Include="DeleteByIdRequestBase.cs" />
     <Compile Include="GetByIdRequestBase.cs" />
     <Compile Include="Types\IAuditable.cs" />
-    <Compile Include="IDeleteByIdRequest.cs" />
-    <Compile Include="IGetByIdRequest.cs" />
     <Compile Include="Types\IHasAddress.cs" />
     <Compile Include="Types\IHasContact.cs" />
     <Compile Include="Types\IHasStandard.cs" />

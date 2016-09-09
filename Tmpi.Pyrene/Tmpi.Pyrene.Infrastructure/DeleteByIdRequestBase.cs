@@ -1,10 +1,9 @@
-﻿
-
-namespace Tmpi.Pyrene.Infrastructure
+﻿namespace Tmpi.Pyrene.Infrastructure
 {
     /// <summary>
     /// Supprime une entité spécifiée par son Id.
     /// </summary>
+    /// <typeparam name="TKey">Type de Id.</typeparam>
     public abstract class DeleteByIdRequestBase<TKey> //: IReturnVoid
     {
         /// <summary>
