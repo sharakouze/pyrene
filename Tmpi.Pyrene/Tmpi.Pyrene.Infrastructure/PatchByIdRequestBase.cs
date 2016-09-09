@@ -2,9 +2,9 @@
 
 namespace Tmpi.Pyrene.Infrastructure
 {
-    public abstract class PatchByIdRequestBase
+    public abstract class PatchByIdRequestBase<TKey>
     {
-        public int Id { get; set; }
+        public TKey Id { get; set; }
 
         public List<PatchElement> Fields { get; set; }
     }
