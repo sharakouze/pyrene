@@ -4,12 +4,10 @@
 <#@ include file="$(SolutionDir)Shared\OrmLite.Core.ttinclude" #>
 <#
 	/***** TODO *****
-	- Commentaire XML sur PrimaryKey
 	- DefaultAttribute
 	- ApiMemberAttribute(IsRequired) sur les propriétés [Required]
 	- PrimaryKey => Index(true)
 	- Remplacer la PK par une CompositeIndex pour les PK composite
-	- Description des propriétés depuis la bdd
 	****************/
 
 	/*********************/
@@ -180,10 +178,11 @@ namespace <#= fileNamespace #>
 		
 		if (IncludeIndices && table.Indices != null)
 		{
-			foreach (var indx in table.Indices.Where(i => i.IndexColumns.Count > 1))
+			foreach (var idx in table.Indices.Where(i => i.IndexColumns.Count > 1))
 			{
+				var idxColumns = idx.IndexColumns.Select(i => i.Name);
 #>
-	[CompositeIndex(<#= indx.IsUnique ? "true, " : "" #>"<#= string.Join("\", \"", indx.IndexColumns.Select(i => i.Name)) #>")]
+	[CompositeIndex(<#= idx.IsUnique ? "true, " : "" #>"<#= string.Join("\", \"", idxColumns) #>")]
 <#
 			} // end foreach
 		} // end if
@@ -370,9 +369,9 @@ namespace <#= fileNamespace #>
 			if (IncludeIndices && table.Indices != null)
 			{
 				var q = from idx in table.Indices
-						from idxcol in idx.IndexColumns
 						where idx.IndexColumns.Count == 1
-						where string.Equals(idxcol.Name, col.PropertyName, StringComparison.InvariantCultureIgnoreCase)
+						from idxcol in idx.IndexColumns
+						where idxcol.Name == col.Name
 						select idx;
 				if (q.Any())
 				{
@@ -430,7 +429,7 @@ namespace <#= fileNamespace #>
                 {
 						propType = "List<" + propType + ">";
                 }
-				string propName = obj.Table.ClassName.Replace(table.Name, "");
+				string propName = obj.Table.ClassName.Replace(table.ClassName, "");
 #>
 		[Reference]
 		public <#= propType #> <#= propName #> { get; set; }

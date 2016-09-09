@@ -68,50 +68,6 @@
     <Compile Include="AutocompleteGenTVA.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="GenCompteur.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenExercice.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenFourn.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenFournBanque.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenFournContact.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenMandat.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenMandatMandataire.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenPersonne.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenPersonneProfil.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenSecteur.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenService.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenSociete.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenTVA.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MessageGenerator.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="DeleteGenCompteur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
@@ -149,6 +105,45 @@
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="DeleteGenTVA.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenCompteur.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenExercice.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenFourn.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenFournBanque.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenFournContact.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenMandat.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenMandatMandataire.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenPersonne.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenPersonneProfil.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenSecteur.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenService.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenSociete.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenTVA.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GetGenCompteur.generated.cs">
@@ -190,6 +185,11 @@
     <Compile Include="GetGenTVA.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="MessageGenerator.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="PatchGenCompteur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
@@ -229,18 +229,15 @@
     <Compile Include="PatchGenTVA.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenCompteur.cs" />
     <Compile Include="Types\GenCompteur.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenCompteurValeur.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenExercice.cs" />
     <Compile Include="Types\GenExercice.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenFourn.cs" />
     <Compile Include="Types\GenFourn.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
@@ -250,14 +247,12 @@
     <Compile Include="Types\GenFournContact.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenMandat.cs" />
     <Compile Include="Types\GenMandat.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\GenMandatMandataire.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenPersonne.cs" />
     <Compile Include="Types\GenPersonne.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
@@ -267,10 +262,6 @@
     <Compile Include="Types\GenPersonneSignature.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\GenSecteur.cs" />
-    <Compile Include="Types\GenService.cs" />
-    <Compile Include="Types\GenSociete.cs" />
-    <Compile Include="Types\GenTVA.cs" />
     <Compile Include="Types\GenSecteur.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
