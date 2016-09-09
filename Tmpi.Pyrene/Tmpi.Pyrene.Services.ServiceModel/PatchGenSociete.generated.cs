@@ -17,7 +17,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// Modifie une entité <see cref="GenSociete" /> à partir de son Id.
 	/// </summary>
 	[Route("/GenSociete/{Id}", "PATCH", Summary = "Modifie une entité GenSociete à partir de son Id.")]
-	public partial class PatchGenSociete : PatchByIdRequestBase
+	public partial class PatchGenSociete : PatchByIdRequestBase<int>
 	{
 	}
 }

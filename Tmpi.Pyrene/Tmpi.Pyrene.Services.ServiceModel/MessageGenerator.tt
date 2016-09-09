@@ -148,9 +148,34 @@ using <#= SourceNamespace #>;
 
 		// get all interfaces implemented by this class
 		var allInterfaces = VisualStudioHelper.CodeModel.GetAllImplementedInterfaces(codeClass);
-		if (allInterfaces.Any(i => i.FullName == "ServiceStack.Model.IHasId<System.Int32>" ||
-			i.FullName == "ServiceStack.Model.IHasIntId"))
+		var iHasIdInterface = allInterfaces.FirstOrDefault(i => i.FullName.StartsWith("ServiceStack.Model.IHasId<") ||
+			i.FullName == "ServiceStack.Model.IHasIntId");
+		if (iHasIdInterface != null)
 		{
+			string tkey = null;
+			if (iHasIdInterface.FullName == "ServiceStack.Model.IHasIntId")
+            {
+				tkey = "int";
+            }
+			else
+			{
+				string str = iHasIdInterface.FullName.Replace("ServiceStack.Model.IHasId<", "");
+				str = str.Remove(str.Length - 1, 1);
+
+				switch (str)
+                {
+					case "System.Int32":
+						tkey = "int";
+						break;
+					case "System.Int16":
+						tkey = "short";
+						break;
+					default:
+						tkey = str;
+						break;
+                }
+			}
+
 			bool getByIdExcluded = GetByIdClassFilterExclude != null && GetByIdClassFilterExclude.IsMatch(codeClass.Name);
 			if (!getByIdExcluded)
 			{
@@ -172,7 +197,7 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 #>
-	<#= string.Join(" ", classDefinitionWords) #> class <#= getByIdClassName #> : GetByIdRequestBase<<#= codeClass.Name #>>
+	<#= string.Join(" ", classDefinitionWords) #> class <#= getByIdClassName #> : GetByIdRequestBase<<#= tkey #>, <#= codeClass.Name #>>
 	{
 	}
 }
@@ -201,7 +226,7 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 #>
-	<#= string.Join(" ", classDefinitionWords) #> class <#= deleteByIdClassName #> : DeleteByIdRequestBase
+	<#= string.Join(" ", classDefinitionWords) #> class <#= deleteByIdClassName #> : DeleteByIdRequestBase<<#= tkey #>>
 	{
 	}
 }
@@ -230,7 +255,7 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 #>
-	<#= string.Join(" ", classDefinitionWords) #> class <#= patchClassName #> : PatchByIdRequestBase
+	<#= string.Join(" ", classDefinitionWords) #> class <#= patchClassName #> : PatchByIdRequestBase<<#= tkey #>>
 	{
 	}
 }

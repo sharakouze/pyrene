@@ -17,7 +17,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// Supprime une entité <see cref="GenCompteur" /> à partir de son Id.
 	/// </summary>
 	[Route("/GenCompteur/{Id}", "DELETE", Summary = "Supprime une entité GenCompteur à partir de son Id.")]
-	public partial class DeleteGenCompteur : DeleteByIdRequestBase
+	public partial class DeleteGenCompteur : DeleteByIdRequestBase<int>
 	{
 	}
 }

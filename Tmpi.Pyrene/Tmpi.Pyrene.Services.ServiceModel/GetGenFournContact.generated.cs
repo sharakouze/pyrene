@@ -17,7 +17,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// Retourne une entité <see cref="GenFournContact" /> à partir de son Id.
 	/// </summary>
 	[Route("/GenFourn/Contact/{Id}", "GET", Summary = "Retourne une entité GenFournContact à partir de son Id.")]
-	public partial class GetGenFournContact : GetByIdRequestBase<GenFournContact>
+	public partial class GetGenFournContact : GetByIdRequestBase<int, GenFournContact>
 	{
 	}
 }
