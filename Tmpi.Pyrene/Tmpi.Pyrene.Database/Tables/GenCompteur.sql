@@ -8,17 +8,11 @@
     [DatModif] DATETIME NOT NULL,
     [CodExterne] VARCHAR(100) NULL,
     [TypCompteur] INT NOT NULL,
+    [TypPeriodicite] INT NOT NULL,
     [CleGenSociete] INT NULL,
     [CleGenSecteur] INT NULL,
     [CleGenService] INT NULL,
-    [TypPeriodicite] INT NOT NULL,
-    [ValPrefixe1] VARCHAR (25) NULL,
-    [ValFormatDate1] VARCHAR (25) NULL,
-    [ValPrefixe2] VARCHAR(25) NULL,
-    [NbrDigit] TINYINT NOT NULL,
-    [ValSuffixe1] VARCHAR(25) NULL,
-    [ValFormatDate2] VARCHAR(25) NULL,
-    [ValSuffixe2] VARCHAR(25) NULL,
+	[ValFormatNumero] VARCHAR(100) NOT NULL,
     [LstFormatMois] VARCHAR(500) NULL,
     CONSTRAINT [PK_GenCompteur] PRIMARY KEY ([Id]),
     CONSTRAINT [UK_GenCompteur_CodObjet] UNIQUE ([CodObjet]),
@@ -32,3 +26,59 @@
 GO
 
 CREATE INDEX [IX_GenCompteur_LibObjet] ON [GenCompteur] ([LibObjet]);
+
+GO
+
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Périodicité (annuelle...)',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenCompteur',
+    @level2type = N'COLUMN',
+    @level2name = N'TypPeriodicite'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Type de compteur (facture, commande, demande...)',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenCompteur',
+    @level2type = N'COLUMN',
+    @level2name = N'TypCompteur'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Format du modèle de numérotation',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenCompteur',
+    @level2type = N'COLUMN',
+    @level2name = N'ValFormatNumero'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Id de la société associée',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenCompteur',
+    @level2type = N'COLUMN',
+    @level2name = N'CleGenSociete'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Id du secteur associé',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenCompteur',
+    @level2type = N'COLUMN',
+    @level2name = N'CleGenSecteur'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Id du service associé',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenCompteur',
+    @level2type = N'COLUMN',
+    @level2name = N'CleGenService'

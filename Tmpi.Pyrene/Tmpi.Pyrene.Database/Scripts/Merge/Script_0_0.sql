@@ -306,13 +306,7 @@ BEGIN TRY
 			coalesce(N.CleSecteur,C.CleSecteur) as CleGenSecteur, 
 			coalesce(N.CleService,C.CleService) as CleGenService, 
 			C.TypPeriodicite, 
-			N.ValPrefixe1, 
-			N.ValDate1 as ValFormatDate1, 
-			N.ValPrefixe2, 
-			N.NbrCaractere as NbrDigit, 
-			N.ValSuffixe1, 
-			N.ValDate2 as ValFormatDate2,  
-			N.ValSuffixe2, 
+			isnull(N.ValPrefixe1,'')+isnull('{date:'+N.ValDate1+'}','')+isnull(N.ValPrefixe2,'')+'{num:'+N.NbrCaractere+'}'+isnull(N.ValSuffixe1,'')+isnull('{date:'+N.ValDate2+'}','')+isnull(N.ValSuffixe2,'') as ValFormatNumero, 
 			N.TxtSubstitution as LstFormatMois
 		from $(SourceSchemaName).[Gen_CptCompteur] C inner join $(SourceSchemaName).[Gen_Cpt_MNumero] N on C.CleCompteur=N.CleCompteur
 		where C.CleCompteur>0 and N.CleMNumero>0

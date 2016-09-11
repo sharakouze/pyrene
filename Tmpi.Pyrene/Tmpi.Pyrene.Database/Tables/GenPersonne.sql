@@ -20,3 +20,32 @@
 GO
 
 CREATE INDEX [IX_GenPersonne_LibObjet] ON [GenPersonne] ([LibObjet]);
+
+GO
+
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Nom',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenPersonne',
+    @level2type = N'COLUMN',
+    @level2name = N'LibObjet'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Prénom',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenPersonne',
+    @level2type = N'COLUMN',
+    @level2name = N'PrePersonne'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Civilité',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenPersonne',
+    @level2type = N'COLUMN',
+    @level2name = N'TypGenre'
