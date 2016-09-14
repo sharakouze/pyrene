@@ -136,7 +136,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public virtual string LstFormatMois { get; set; }
 
 		[Reference]
-		public List<GenCompteurValeur> Valeur { get; set; }
+		public virtual List<GenCompteurValeur> Valeur { get; set; }
 
 	}
 }

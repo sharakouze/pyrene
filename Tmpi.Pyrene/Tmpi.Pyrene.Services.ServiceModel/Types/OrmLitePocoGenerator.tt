@@ -435,7 +435,7 @@ namespace <#= fileNamespace #>
 				string propName = obj.Table.ClassName.Replace(table.ClassName, "");
 #>
 		[Reference]
-		public <#= propType #> <#= propName #> { get; set; }
+		public <#= MakePropertiesVirtual ? "virtual " : " " #><#= propType #> <#= propName #> { get; set; }
 
 <#
             }

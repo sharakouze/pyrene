@@ -99,7 +99,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public virtual string TxtMessage { get; set; }
 
 		[Reference]
-		public List<GenMandatMandataire> Mandataire { get; set; }
+		public virtual List<GenMandatMandataire> Mandataire { get; set; }
 
 	}
 }

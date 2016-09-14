@@ -102,10 +102,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public virtual string NumEmail { get; set; }
 
 		[Reference]
-		public List<GenPersonneProfil> Profil { get; set; }
+		public virtual List<GenPersonneProfil> Profil { get; set; }
 
 		[Reference]
-		public GenPersonneSignature Signature { get; set; }
+		public virtual GenPersonneSignature Signature { get; set; }
 
 	}
 }

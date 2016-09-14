@@ -156,10 +156,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public virtual int? CleGenPersonne { get; set; }
 
 		[Reference]
-		public List<GenFournBanque> Banque { get; set; }
+		public virtual List<GenFournBanque> Banque { get; set; }
 
 		[Reference]
-		public List<GenFournContact> Contact { get; set; }
+		public virtual List<GenFournContact> Contact { get; set; }
 
 	}
 }
