@@ -27,7 +27,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[ApiMember(Description = "Clé primaire.")]
-		public int Id { get; set; }
+		public virtual int Id { get; set; }
 
 		/// <summary>
 		/// Code unique.
@@ -36,7 +36,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[Index(true)]
 		[ApiMember(Description = "Code unique.")]
-		public string CodObjet { get; set; }
+		public virtual string CodObjet { get; set; }
 
 		/// <summary>
 		/// Désignation.
@@ -45,115 +45,115 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[Index]
 		[ApiMember(Description = "Désignation.")]
-		public string LibObjet { get; set; }
+		public virtual string LibObjet { get; set; }
 
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(500)]
 		[ApiMember(Description = "Commentaire ou description.")]
-		public string TxtObjet { get; set; }
+		public virtual string TxtObjet { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Actif ou inactif.")]
-		public bool EstActif { get; set; }
+		public virtual bool EstActif { get; set; }
 
 		/// <summary>
 		/// Date de création.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Date de création.")]
-		public DateTime DatCreation { get; set; }
+		public virtual DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Date de dernière modification.")]
-		public DateTime DatModif { get; set; }
+		public virtual DateTime DatModif { get; set; }
 
 		/// <summary>
 		/// Identifiant de synchronisation externe.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Identifiant de synchronisation externe.")]
-		public string CodExterne { get; set; }
+		public virtual string CodExterne { get; set; }
 
 		[StringLength(200)]
 		[ApiMember()]
-		public string AdrRue { get; set; }
+		public virtual string AdrRue { get; set; }
 
 		[StringLength(10)]
 		[ApiMember()]
-		public string AdrCode { get; set; }
+		public virtual string AdrCode { get; set; }
 
 		[StringLength(100)]
 		[ApiMember()]
-		public string AdrVille { get; set; }
+		public virtual string AdrVille { get; set; }
 
 		[StringLength(100)]
 		[ApiMember()]
-		public string AdrPays { get; set; }
+		public virtual string AdrPays { get; set; }
 
 		[StringLength(25)]
 		[ApiMember()]
-		public string NumTelep { get; set; }
+		public virtual string NumTelep { get; set; }
 
 		[StringLength(25)]
 		[ApiMember()]
-		public string NumFax { get; set; }
+		public virtual string NumFax { get; set; }
 
 		[StringLength(100)]
 		[ApiMember()]
-		public string NumEmail { get; set; }
+		public virtual string NumEmail { get; set; }
 
 		[StringLength(100)]
 		[ApiMember()]
-		public string CodCompta { get; set; }
+		public virtual string CodCompta { get; set; }
 
 		[StringLength(100)]
 		[ApiMember()]
-		public string NumClient { get; set; }
+		public virtual string NumClient { get; set; }
 
 		[StringLength(25)]
 		[ApiMember()]
-		public string NumTVAIntra { get; set; }
+		public virtual string NumTVAIntra { get; set; }
 
 		[DecimalLength(15, 2)]
 		[ApiMember()]
-		public decimal? MntFPort { get; set; }
+		public virtual decimal? MntFPort { get; set; }
 
 		[DecimalLength(15, 2)]
 		[ApiMember()]
-		public decimal? MntFPortGratuit { get; set; }
+		public virtual decimal? MntFPortGratuit { get; set; }
 
 		[DecimalLength(15, 2)]
 		[ApiMember()]
-		public decimal? MntCommandeMin { get; set; }
+		public virtual decimal? MntCommandeMin { get; set; }
 
 		[ApiMember()]
-		public byte? DelLivraison { get; set; }
+		public virtual byte? DelLivraison { get; set; }
 
 		[ApiMember()]
-		public byte? DelPaiement { get; set; }
+		public virtual byte? DelPaiement { get; set; }
 
 		[DecimalLength(5, 2)]
 		[ApiMember()]
-		public decimal? ValNote { get; set; }
+		public virtual decimal? ValNote { get; set; }
 
 		[ApiMember()]
-		public TypModeReglement? TypModeReglement { get; set; }
+		public virtual TypModeReglement? TypModeReglement { get; set; }
 
 		[Required]
 		[ApiMember()]
-		public bool EstEnvoiMailBonCde { get; set; }
+		public virtual bool EstEnvoiMailBonCde { get; set; }
 
 		[References(typeof(GenPersonne))]
 		[ApiMember()]
-		public int? CleGenPersonne { get; set; }
+		public virtual int? CleGenPersonne { get; set; }
 
 		[Reference]
 		public List<GenFournBanque> Banque { get; set; }

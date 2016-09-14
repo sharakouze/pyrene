@@ -24,6 +24,9 @@
 	// true pour générer des classes partial.
 	bool MakeClassesPartial = true;
 
+    // true pour générer des propriétés virtual.
+    bool MakePropertiesVirtual = true;
+
 	// true pour générer chaque classe dans un fichier séparé.
 	bool SplitIntoMultipleFiles = true;
 
@@ -402,7 +405,7 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 #>
-		public <#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
+		public <#= MakePropertiesVirtual ? "virtual " : " " #><#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
 
 <#
 		} // end foreach

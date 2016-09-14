@@ -27,12 +27,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[ApiMember(Description = "Clé primaire.")]
-		public int Id { get; set; }
+		public virtual int Id { get; set; }
 
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
 		[ApiMember()]
-		public int CleGenPersonne { get; set; }
+		public virtual int CleGenPersonne { get; set; }
 
 		/// <summary>
 		/// Code unique.
@@ -40,19 +40,19 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[Required]
 		[ApiMember(Description = "Code unique.")]
-		public string CodObjet { get; set; }
+		public virtual string CodObjet { get; set; }
 
 		[References(typeof(GenSociete))]
 		[ApiMember()]
-		public int? CleGenSociete { get; set; }
+		public virtual int? CleGenSociete { get; set; }
 
 		[References(typeof(GenSecteur))]
 		[ApiMember()]
-		public int? CleGenSecteur { get; set; }
+		public virtual int? CleGenSecteur { get; set; }
 
 		[References(typeof(GenService))]
 		[ApiMember()]
-		public int? CleGenService { get; set; }
+		public virtual int? CleGenService { get; set; }
 
 	}
 }

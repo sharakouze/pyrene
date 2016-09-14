@@ -24,15 +24,15 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ForeignKey(typeof(GenCompteur), OnDelete = "CASCADE")]
 		[Required]
 		[ApiMember()]
-		public int CleGenCompteur { get; set; }
+		public virtual int CleGenCompteur { get; set; }
 
 		[Required]
 		[ApiMember()]
-		public int ValPeriode { get; set; }
+		public virtual int ValPeriode { get; set; }
 
 		[Required]
 		[ApiMember()]
-		public int ValCompteur { get; set; }
+		public virtual int ValCompteur { get; set; }
 
 	}
 }

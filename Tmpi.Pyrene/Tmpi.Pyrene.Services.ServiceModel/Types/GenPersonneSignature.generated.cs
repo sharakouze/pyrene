@@ -27,16 +27,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[PrimaryKey]
 		[ApiMember(Description = "Clé primaire.")]
-		public int CleGenPersonne { get; set; }
+		public virtual int CleGenPersonne { get; set; }
 
 		[Required]
 		[ApiMember()]
-		public byte[] ImgSignature { get; set; }
+		public virtual byte[] ImgSignature { get; set; }
 
 		[StringLength(255)]
 		[Required]
 		[ApiMember()]
-		public string TypMime { get; set; }
+		public virtual string TypMime { get; set; }
 
 	}
 }

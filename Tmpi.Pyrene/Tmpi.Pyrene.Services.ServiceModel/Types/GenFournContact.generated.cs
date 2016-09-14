@@ -26,12 +26,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[ApiMember(Description = "Clé primaire.")]
-		public int Id { get; set; }
+		public virtual int Id { get; set; }
 
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
 		[ApiMember()]
-		public int CleGenFourn { get; set; }
+		public virtual int CleGenFourn { get; set; }
 
 		/// <summary>
 		/// Désignation.
@@ -39,37 +39,37 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[Required]
 		[ApiMember(Description = "Désignation.")]
-		public string LibObjet { get; set; }
+		public virtual string LibObjet { get; set; }
 
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(500)]
 		[ApiMember(Description = "Commentaire ou description.")]
-		public string TxtObjet { get; set; }
+		public virtual string TxtObjet { get; set; }
 
 		[StringLength(100)]
 		[ApiMember()]
-		public string PreContact { get; set; }
+		public virtual string PreContact { get; set; }
 
 		[StringLength(25)]
 		[ApiMember()]
-		public string NumTelep { get; set; }
+		public virtual string NumTelep { get; set; }
 
 		[StringLength(25)]
 		[ApiMember()]
-		public string NumFax { get; set; }
+		public virtual string NumFax { get; set; }
 
 		[StringLength(100)]
 		[ApiMember()]
-		public string NumEmail { get; set; }
+		public virtual string NumEmail { get; set; }
 
 		[ApiMember()]
-		public TypGenre? TypGenre { get; set; }
+		public virtual TypGenre? TypGenre { get; set; }
 
 		[StringLength(100)]
 		[ApiMember()]
-		public string CodFonction { get; set; }
+		public virtual string CodFonction { get; set; }
 
 	}
 }

@@ -26,26 +26,26 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[ApiMember(Description = "Clé primaire.")]
-		public int Id { get; set; }
+		public virtual int Id { get; set; }
 
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
 		[ApiMember()]
-		public int CleGenFourn { get; set; }
+		public virtual int CleGenFourn { get; set; }
 
 		[StringLength(23)]
 		[Required]
 		[ApiMember()]
-		public string NumRib { get; set; }
+		public virtual string NumRib { get; set; }
 
 		[StringLength(200)]
 		[Required]
 		[ApiMember()]
-		public string LibEtablissement { get; set; }
+		public virtual string LibEtablissement { get; set; }
 
 		[Required]
 		[ApiMember()]
-		public bool EstDefaut { get; set; }
+		public virtual bool EstDefaut { get; set; }
 
 	}
 }
