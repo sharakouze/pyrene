@@ -193,7 +193,7 @@ namespace <#= fileNamespace #>
 			if (AddRouteAttributes)
             {
 #>
-	[Route("/<#= strRoute #>/{Id}", "GET", Summary = "<#= string.Format(getByIdDescription, codeClass.Name) #>")]
+	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Get, Summary = "<#= string.Format(getByIdDescription, codeClass.Name) #>")]
 <#
 			} // end if
 #>
@@ -222,7 +222,7 @@ namespace <#= fileNamespace #>
 			if (AddRouteAttributes)
             {
 #>
-	[Route("/<#= strRoute #>/{Id}", "DELETE", Summary = "<#= string.Format(deleteByIdDescription, codeClass.Name) #>")]
+	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Delete, Summary = "<#= string.Format(deleteByIdDescription, codeClass.Name) #>")]
 <#
 			} // end if
 #>
@@ -251,7 +251,7 @@ namespace <#= fileNamespace #>
 			if (AddRouteAttributes)
             {
 #>
-	[Route("/<#= strRoute #>/{Id}", "PATCH", Summary = "<#= string.Format(patchDescription, codeClass.Name) #>")]
+	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Patch, Summary = "<#= string.Format(patchDescription, codeClass.Name) #>")]
 <#
 			} // end if
 #>
@@ -272,8 +272,8 @@ namespace <#= fileNamespace #>
 #>
 namespace <#= codeClass.Namespace == null ? fileNamespace : codeClass.Namespace.Name #>
 {
-	[Route("/<#= strRoute #>", "POST", Summary = "<#= string.Format("Ajoute une entité {0}.", codeClass.Name) #>")]
-	[Route("/<#= strRoute #>/{Id}", "PUT", Summary = "<#= string.Format("Remplace une entité {0} à partir de son Id.", codeClass.Name) #>")]
+	[Route("/<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une entité {0}.", codeClass.Name) #>")]
+	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une entité {0} à partir de son Id.", codeClass.Name) #>")]
 	partial class <#= codeClass.Name #>
 	{
 	}
@@ -303,7 +303,7 @@ namespace <#= fileNamespace #>
 			if (AddRouteAttributes)
             {
 #>
-	[Route("/<#= strRoute #>/Autocomplete", "GET", Summary = "<#= string.Format(autocompleteDescription, codeClass.Name) #>")]
+	[Route("/<#= strRoute #>/Autocomplete", HttpVerbs.Get, Summary = "<#= string.Format(autocompleteDescription, codeClass.Name) #>")]
 <#
 			} // end if
 #>

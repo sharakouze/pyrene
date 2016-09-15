@@ -13,8 +13,8 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[Route("/GenFourn/Banque", "POST", Summary = "Ajoute une entité GenFournBanque.")]
-	[Route("/GenFourn/Banque/{Id}", "PUT", Summary = "Remplace une entité GenFournBanque à partir de son Id.")]
+	[Route("/GenFourn/Banque", HttpVerbs.Post, Summary = "Ajoute une entité GenFournBanque.")]
+	[Route("/GenFourn/Banque/{Id}", HttpVerbs.Put, Summary = "Remplace une entité GenFournBanque à partir de son Id.")]
 	partial class GenFournBanque
 	{
 	}

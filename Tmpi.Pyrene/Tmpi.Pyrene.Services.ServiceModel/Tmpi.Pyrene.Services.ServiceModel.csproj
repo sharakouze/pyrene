@@ -185,6 +185,7 @@
     <Compile Include="GetGenTVA.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="HttpVerbs.cs" />
     <Compile Include="MessageGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
