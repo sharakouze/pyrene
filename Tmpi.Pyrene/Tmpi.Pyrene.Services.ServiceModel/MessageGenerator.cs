@@ -10,6 +10,5 @@
 //------------------------------------------------------------------------------
 
 using ServiceStack;
-using Tmpi.Pyrene.Infrastructure;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 

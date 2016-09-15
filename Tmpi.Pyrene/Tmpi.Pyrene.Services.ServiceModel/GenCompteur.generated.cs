@@ -8,7 +8,6 @@
 //------------------------------------------------------------------------------
 
 using ServiceStack;
-using Tmpi.Pyrene.Infrastructure;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types

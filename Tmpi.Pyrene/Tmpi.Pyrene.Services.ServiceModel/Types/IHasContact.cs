@@ -1,4 +1,4 @@
-﻿namespace Tmpi.Pyrene.Infrastructure.Types
+﻿namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
     /// <summary>
     /// Représente une entité que l'ont peut contacter.

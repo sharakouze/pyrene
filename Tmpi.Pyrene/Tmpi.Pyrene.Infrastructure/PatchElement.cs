@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tmpi.Pyrene.Infrastructure
+﻿namespace Tmpi.Pyrene.Infrastructure
 {
     public class PatchElement
     {

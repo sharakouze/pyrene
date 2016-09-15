@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Tmpi.Pyrene.Infrastructure;
-using Tmpi.Pyrene.Services.ServiceModel;
 
-namespace Tmpi.Pyrene.Services.ServiceInterface
+namespace Tmpi.Pyrene.Infrastructure
 {
     public static class PatchHelper
     {

@@ -102,7 +102,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ServiceGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="PatchHelper.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
-using Tmpi.Pyrene.Infrastructure.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {

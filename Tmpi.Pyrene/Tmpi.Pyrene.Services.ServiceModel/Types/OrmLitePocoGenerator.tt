@@ -135,14 +135,6 @@ using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
-<#
-	if (AddCustomInterfaces)
-    {
-#>
-using Tmpi.Pyrene.Infrastructure.Types;
-<#
-	} // end if
-#>
 
 namespace <#= fileNamespace #>
 {

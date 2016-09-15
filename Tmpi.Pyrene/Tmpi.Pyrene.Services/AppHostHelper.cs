@@ -7,7 +7,7 @@ using ServiceStack.Text;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using Tmpi.Pyrene.Infrastructure.Types;
+using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services
 {

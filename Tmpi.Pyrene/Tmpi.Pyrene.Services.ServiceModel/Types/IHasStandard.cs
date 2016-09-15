@@ -1,4 +1,4 @@
-﻿namespace Tmpi.Pyrene.Infrastructure.Types
+﻿namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
     /// <summary>
     /// Représente une entité ayant les champs d'identification standard.
