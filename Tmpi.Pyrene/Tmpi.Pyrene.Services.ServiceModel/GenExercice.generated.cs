@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenExercice spécifiée est introuvable.")]
 	[Route("/GenExercice", HttpVerbs.Post, Summary = "Ajoute une entité GenExercice.")]
 	[Route("/GenExercice/{Id}", HttpVerbs.Put, Summary = "Remplace une entité GenExercice à partir de son Id.")]
 	partial class GenExercice

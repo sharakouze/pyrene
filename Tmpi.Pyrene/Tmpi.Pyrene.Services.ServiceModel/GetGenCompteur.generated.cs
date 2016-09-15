@@ -7,6 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
@@ -15,6 +16,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une entité <see cref="GenCompteur" /> à partir de son Id.
 	/// </summary>
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenCompteur spécifiée est introuvable.")]
 	[Route("/GenCompteur/{Id}", HttpVerbs.Get, Summary = "Retourne une entité GenCompteur à partir de son Id.")]
 	public partial class GetGenCompteur : GetByIdRequestBase<int, GenCompteur>
 	{

@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenSecteur spécifiée est introuvable.")]
 	[Route("/GenSecteur", HttpVerbs.Post, Summary = "Ajoute une entité GenSecteur.")]
 	[Route("/GenSecteur/{Id}", HttpVerbs.Put, Summary = "Remplace une entité GenSecteur à partir de son Id.")]
 	partial class GenSecteur

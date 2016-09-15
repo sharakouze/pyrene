@@ -25,7 +25,7 @@
 	bool MakeClassesPartial = true;
 
     // true pour générer des propriétés virtual.
-    bool MakePropertiesVirtual = true;
+    bool MakePropertiesVirtual = false;
 
 	// true pour générer chaque classe dans un fichier séparé.
 	bool SplitIntoMultipleFiles = true;
@@ -397,7 +397,7 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 #>
-		public <#= MakePropertiesVirtual ? "virtual " : " " #><#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
+		public <#= MakePropertiesVirtual ? "virtual " : "" #><#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
 
 <#
 		} // end foreach
@@ -420,14 +420,15 @@ namespace <#= fileNamespace #>
 			foreach (var obj in q)
             {
 				string propType = obj.Table.ClassName;
+				string propName = obj.Table.ClassName.Replace(table.ClassName, "");
 				if (!obj.IsUnique)
                 {
 						propType = "List<" + propType + ">";
+                        propName = "Lst" + propName;
                 }
-				string propName = obj.Table.ClassName.Replace(table.ClassName, "");
 #>
 		[Reference]
-		public <#= MakePropertiesVirtual ? "virtual " : " " #><#= propType #> <#= propName #> { get; set; }
+		public <#= MakePropertiesVirtual ? "virtual " : "" #><#= propType #> <#= propName #> { get; set; }
 
 <#
             }

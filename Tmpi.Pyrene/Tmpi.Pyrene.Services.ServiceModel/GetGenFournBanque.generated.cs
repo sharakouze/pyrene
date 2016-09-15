@@ -7,6 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
@@ -15,6 +16,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une entité <see cref="GenFournBanque" /> à partir de son Id.
 	/// </summary>
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenFournBanque spécifiée est introuvable.")]
 	[Route("/GenFourn/Banque/{Id}", HttpVerbs.Get, Summary = "Retourne une entité GenFournBanque à partir de son Id.")]
 	public partial class GetGenFournBanque : GetByIdRequestBase<int, GenFournBanque>
 	{

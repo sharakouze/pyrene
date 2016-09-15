@@ -27,7 +27,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[ApiMember(Description = "Clé primaire.")]
-		public virtual int Id { get; set; }
+		public int Id { get; set; }
 
 		/// <summary>
 		/// test de commentaire.
@@ -36,7 +36,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[Index(true)]
 		[ApiMember(Description = "test de commentaire.")]
-		public virtual string CodObjet { get; set; }
+		public string CodObjet { get; set; }
 
 		/// <summary>
 		/// Désignation.
@@ -45,97 +45,97 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[Index]
 		[ApiMember(Description = "Désignation.")]
-		public virtual string LibObjet { get; set; }
+		public string LibObjet { get; set; }
 
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(500)]
 		[ApiMember(Description = "Commentaire ou description.")]
-		public virtual string TxtObjet { get; set; }
+		public string TxtObjet { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Actif ou inactif.")]
-		public virtual bool EstActif { get; set; }
+		public bool EstActif { get; set; }
 
 		/// <summary>
 		/// Date de création.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Date de création.")]
-		public virtual DateTime DatCreation { get; set; }
+		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Date de dernière modification.")]
-		public virtual DateTime DatModif { get; set; }
+		public DateTime DatModif { get; set; }
 
 		/// <summary>
 		/// Identifiant de synchronisation externe.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Identifiant de synchronisation externe.")]
-		public virtual string CodExterne { get; set; }
+		public string CodExterne { get; set; }
 
 		[Required]
 		[ApiMember()]
-		public virtual TypCompteur TypCompteur { get; set; }
+		public TypCompteur TypCompteur { get; set; }
 
 		[References(typeof(GenSociete))]
 		[ApiMember()]
-		public virtual int? CleGenSociete { get; set; }
+		public int? CleGenSociete { get; set; }
 
 		[References(typeof(GenSecteur))]
 		[ApiMember()]
-		public virtual int? CleGenSecteur { get; set; }
+		public int? CleGenSecteur { get; set; }
 
 		[References(typeof(GenService))]
 		[ApiMember()]
-		public virtual int? CleGenService { get; set; }
+		public int? CleGenService { get; set; }
 
 		[Required]
 		[ApiMember()]
-		public virtual TypPeriodicite TypPeriodicite { get; set; }
+		public TypPeriodicite TypPeriodicite { get; set; }
 
 		[StringLength(25)]
 		[ApiMember()]
-		public virtual string ValPrefixe1 { get; set; }
+		public string ValPrefixe1 { get; set; }
 
 		[StringLength(25)]
 		[ApiMember()]
-		public virtual string ValFormatDate1 { get; set; }
+		public string ValFormatDate1 { get; set; }
 
 		[StringLength(25)]
 		[ApiMember()]
-		public virtual string ValPrefixe2 { get; set; }
+		public string ValPrefixe2 { get; set; }
 
 		[Required]
 		[ApiMember()]
-		public virtual byte NbrDigit { get; set; }
+		public byte NbrDigit { get; set; }
 
 		[StringLength(25)]
 		[ApiMember()]
-		public virtual string ValSuffixe1 { get; set; }
+		public string ValSuffixe1 { get; set; }
 
 		[StringLength(25)]
 		[ApiMember()]
-		public virtual string ValFormatDate2 { get; set; }
+		public string ValFormatDate2 { get; set; }
 
 		[StringLength(25)]
 		[ApiMember()]
-		public virtual string ValSuffixe2 { get; set; }
+		public string ValSuffixe2 { get; set; }
 
 		[StringLength(500)]
 		[ApiMember()]
-		public virtual string LstFormatMois { get; set; }
+		public string LstFormatMois { get; set; }
 
 		[Reference]
-		public virtual List<GenCompteurValeur> Valeur { get; set; }
+		public List<GenCompteurValeur> LstValeur { get; set; }
 
 	}
 }

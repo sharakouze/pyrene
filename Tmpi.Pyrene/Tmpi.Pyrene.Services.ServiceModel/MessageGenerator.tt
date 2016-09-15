@@ -61,6 +61,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Net;
 using ServiceStack;
 <#
 	if (!string.IsNullOrWhiteSpace(SourceNamespace) && (SourceNamespace != fileNamespace))
@@ -188,6 +189,7 @@ namespace <#= fileNamespace #>
 	/// <summary>
 	/// <#= string.Format(getByIdDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité <#= codeClass.Name #> spécifiée est introuvable.")]
 <#
 			if (AddRouteAttributes)
             {
@@ -217,6 +219,7 @@ namespace <#= fileNamespace #>
 	/// <summary>
 	/// <#= string.Format(deleteByIdDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité <#= codeClass.Name #> spécifiée est introuvable.")]
 <#
 			if (AddRouteAttributes)
             {
@@ -246,6 +249,7 @@ namespace <#= fileNamespace #>
 	/// <summary>
 	/// <#= string.Format(patchDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité <#= codeClass.Name #> spécifiée est introuvable.")]
 <#
 			if (AddRouteAttributes)
             {
@@ -271,6 +275,7 @@ namespace <#= fileNamespace #>
 #>
 namespace <#= codeClass.Namespace == null ? fileNamespace : codeClass.Namespace.Name #>
 {
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité <#= codeClass.Name #> spécifiée est introuvable.")]
 	[Route("/<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une entité {0}.", codeClass.Name) #>")]
 	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une entité {0} à partir de son Id.", codeClass.Name) #>")]
 	partial class <#= codeClass.Name #>

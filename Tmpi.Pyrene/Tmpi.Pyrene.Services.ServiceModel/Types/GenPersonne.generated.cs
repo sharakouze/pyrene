@@ -26,7 +26,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[ApiMember(Description = "Clé primaire.")]
-		public virtual int Id { get; set; }
+		public int Id { get; set; }
 
 		/// <summary>
 		/// Code unique.
@@ -35,7 +35,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[Index(true)]
 		[ApiMember(Description = "Code unique.")]
-		public virtual string CodObjet { get; set; }
+		public string CodObjet { get; set; }
 
 		/// <summary>
 		/// Désignation.
@@ -44,67 +44,67 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[Index]
 		[ApiMember(Description = "Désignation.")]
-		public virtual string LibObjet { get; set; }
+		public string LibObjet { get; set; }
 
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(500)]
 		[ApiMember(Description = "Commentaire ou description.")]
-		public virtual string TxtObjet { get; set; }
+		public string TxtObjet { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Actif ou inactif.")]
-		public virtual bool EstActif { get; set; }
+		public bool EstActif { get; set; }
 
 		/// <summary>
 		/// Date de création.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Date de création.")]
-		public virtual DateTime DatCreation { get; set; }
+		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Date de dernière modification.")]
-		public virtual DateTime DatModif { get; set; }
+		public DateTime DatModif { get; set; }
 
 		/// <summary>
 		/// Identifiant de synchronisation externe.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Identifiant de synchronisation externe.")]
-		public virtual string CodExterne { get; set; }
+		public string CodExterne { get; set; }
 
 		[StringLength(100)]
 		[ApiMember()]
-		public virtual string PrePersonne { get; set; }
+		public string PrePersonne { get; set; }
 
 		[ApiMember()]
-		public virtual TypGenre? TypGenre { get; set; }
-
-		[StringLength(25)]
-		[ApiMember()]
-		public virtual string NumTelep { get; set; }
+		public TypGenre? TypGenre { get; set; }
 
 		[StringLength(25)]
 		[ApiMember()]
-		public virtual string NumFax { get; set; }
+		public string NumTelep { get; set; }
+
+		[StringLength(25)]
+		[ApiMember()]
+		public string NumFax { get; set; }
 
 		[StringLength(100)]
 		[ApiMember()]
-		public virtual string NumEmail { get; set; }
+		public string NumEmail { get; set; }
 
 		[Reference]
-		public virtual List<GenPersonneProfil> Profil { get; set; }
+		public List<GenPersonneProfil> LstProfil { get; set; }
 
 		[Reference]
-		public virtual GenPersonneSignature Signature { get; set; }
+		public GenPersonneSignature Signature { get; set; }
 
 	}
 }

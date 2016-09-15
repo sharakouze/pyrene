@@ -7,6 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
@@ -15,6 +16,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Supprime une entité <see cref="GenPersonne" /> à partir de son Id.
 	/// </summary>
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenPersonne spécifiée est introuvable.")]
 	[Route("/GenPersonne/{Id}", HttpVerbs.Delete, Summary = "Supprime une entité GenPersonne à partir de son Id.")]
 	public partial class DeleteGenPersonne : DeleteByIdRequestBase<int>
 	{

@@ -1,6 +1,6 @@
 ﻿namespace Tmpi.Pyrene.Services.ServiceModel
 {
-    public static class HttpVerbs
+    internal static class HttpVerbs
     {
         public const string Get = "GET";
 

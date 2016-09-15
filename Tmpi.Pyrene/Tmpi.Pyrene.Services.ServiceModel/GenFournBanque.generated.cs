@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenFournBanque spécifiée est introuvable.")]
 	[Route("/GenFourn/Banque", HttpVerbs.Post, Summary = "Ajoute une entité GenFournBanque.")]
 	[Route("/GenFourn/Banque/{Id}", HttpVerbs.Put, Summary = "Remplace une entité GenFournBanque à partir de son Id.")]
 	partial class GenFournBanque

@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenMandat spécifiée est introuvable.")]
 	[Route("/GenMandat", HttpVerbs.Post, Summary = "Ajoute une entité GenMandat.")]
 	[Route("/GenMandat/{Id}", HttpVerbs.Put, Summary = "Remplace une entité GenMandat à partir de son Id.")]
 	partial class GenMandat

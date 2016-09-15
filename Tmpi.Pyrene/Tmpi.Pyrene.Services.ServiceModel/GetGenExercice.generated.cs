@@ -7,6 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
@@ -15,6 +16,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une entité <see cref="GenExercice" /> à partir de son Id.
 	/// </summary>
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenExercice spécifiée est introuvable.")]
 	[Route("/GenExercice/{Id}", HttpVerbs.Get, Summary = "Retourne une entité GenExercice à partir de son Id.")]
 	public partial class GetGenExercice : GetByIdRequestBase<int, GenExercice>
 	{

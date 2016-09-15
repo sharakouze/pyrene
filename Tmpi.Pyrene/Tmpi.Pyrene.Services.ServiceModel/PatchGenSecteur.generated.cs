@@ -7,6 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
@@ -15,6 +16,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Modifie une entité <see cref="GenSecteur" /> à partir de son Id.
 	/// </summary>
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenSecteur spécifiée est introuvable.")]
 	[Route("/GenSecteur/{Id}", HttpVerbs.Patch, Summary = "Modifie une entité GenSecteur à partir de son Id.")]
 	public partial class PatchGenSecteur : PatchByIdRequestBase<int>
 	{

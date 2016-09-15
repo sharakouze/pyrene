@@ -35,17 +35,27 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 				return null;
 			}
 
-			//var q1 = Db.From<T>().Select(c => c.CodObjet).Where(c => c.CodObjet.Contains(request.Text));
-			//var q2 = Db.From<T>().Select(c => c.LibObjet).Where(c => c.LibObjet.Contains(request.Text));
+            var q = Db.From<GenCompteur>();
+            if (request.Max > 0)
+            {
+                q = q.Limit(request.Max);
+            }
 
-			return null;
+            var lstCodObjet = Db.Column<string>(
+                q.Where(x => x.CodObjet.Contains(request.Text)).Select(x => x.CodObjet)
+                );
+            var lstLibObjet = Db.Column<string>(
+                q.Where(x => x.LibObjet.Contains(request.Text)).Select(x => x.LibObjet)
+                );
+
+            return lstCodObjet.Union(lstLibObjet).ToList();
 		}
 
 		/// <summary>
 		/// Supprime l'entité <see cref="GenCompteur" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">L'entité est introuvable.</exception>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeleteGenCompteur request)
 		{
 			int count = Db.DeleteById<GenCompteur>(request.Id);
@@ -73,7 +83,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// Remplace l'entité <see cref="GenCompteur" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">L'entité est introuvable.</exception>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public void Put(GenCompteur request)
 		{
 			int count = Db.Update(request);
@@ -89,7 +99,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Entité <see cref="GenCompteur" /> trouvée.</returns>
-		/// <exception cref="HttpError">L'entité est introuvable.</exception>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public GenCompteur Get(GetGenCompteur request)
 		{
 			var entity = Db.SingleById<GenCompteur>(request.Id);
@@ -106,7 +116,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="HttpError">L'entité est introuvable.</exception>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public void Patch(PatchGenCompteur request)
 		{
 			Debug.Assert(request.Fields != null);

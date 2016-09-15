@@ -25,33 +25,33 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[ApiMember(Description = "Clé primaire.")]
-		public virtual int Id { get; set; }
+		public int Id { get; set; }
 
 		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
 		[Required]
 		[ApiMember()]
-		public virtual int CleGenMandat { get; set; }
+		public int CleGenMandat { get; set; }
 
 		[References(typeof(GenPersonne))]
 		[Required]
 		[ApiMember()]
-		public virtual int CleGenPersonne { get; set; }
+		public int CleGenPersonne { get; set; }
 
 		[References(typeof(GenSociete))]
 		[ApiMember()]
-		public virtual int? CleGenSociete { get; set; }
+		public int? CleGenSociete { get; set; }
 
 		[References(typeof(GenSecteur))]
 		[ApiMember()]
-		public virtual int? CleGenSecteur { get; set; }
+		public int? CleGenSecteur { get; set; }
 
 		[References(typeof(GenService))]
 		[ApiMember()]
-		public virtual int? CleGenService { get; set; }
+		public int? CleGenService { get; set; }
 
 		[Required]
 		[ApiMember()]
-		public virtual bool EstSuspendu { get; set; }
+		public bool EstSuspendu { get; set; }
 
 	}
 }
