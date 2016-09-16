@@ -26,7 +26,7 @@
 	// true pour ajouter l'attribut [Route(...)] sur les classes générées.
 	bool AddRouteAttributes = true;
 
-	// true pour transformer la route de l'entité, ex: GenFournContact de '/GenFournContact/' en '/GenFourn/Contact/'.
+	// true pour transformer la route de la ressource, ex: GenFournContact de '/GenFournContact/' en '/GenFourn/Contact/'.
 	bool TransformRoutePath = true;
 
 	// RegExp pour filtrer globalement les classes traitées, null pour tout inclure et/ou ne rien exclure.
@@ -180,7 +180,7 @@ using <#= SourceNamespace #>;
 			if (!getByIdExcluded)
 			{
 				var getByIdClassName = "Get" + codeClass.Name;
-				var getByIdDescription = "Retourne une entité {0} à partir de son Id.";
+				var getByIdDescription = "Retourne une ressource {0} à partir de son Id.";
 
 				manager.StartNewFile(getByIdClassName + ".generated.cs");
 #>
@@ -189,7 +189,7 @@ namespace <#= fileNamespace #>
 	/// <summary>
 	/// <#= string.Format(getByIdDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité <#= codeClass.Name #> spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
 <#
 			if (AddRouteAttributes)
             {
@@ -210,7 +210,7 @@ namespace <#= fileNamespace #>
 			if (!deleteByIdExcluded)
 			{
 				var deleteByIdClassName = "Delete" + codeClass.Name;
-				var deleteByIdDescription = "Supprime une entité {0} à partir de son Id.";
+				var deleteByIdDescription = "Supprime une ressource {0} à partir de son Id.";
 
 				manager.StartNewFile(deleteByIdClassName + ".generated.cs");
 #>
@@ -219,7 +219,7 @@ namespace <#= fileNamespace #>
 	/// <summary>
 	/// <#= string.Format(deleteByIdDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité <#= codeClass.Name #> spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
 <#
 			if (AddRouteAttributes)
             {
@@ -240,7 +240,7 @@ namespace <#= fileNamespace #>
 			if (!patchByIdExcluded)
             {
 				var patchClassName = "Patch" + codeClass.Name;
-				var patchDescription = "Modifie une entité {0} à partir de son Id.";
+				var patchDescription = "Modifie une ressource {0} à partir de son Id.";
 				
 				manager.StartNewFile(patchClassName + ".generated.cs");
 #>
@@ -249,7 +249,7 @@ namespace <#= fileNamespace #>
 	/// <summary>
 	/// <#= string.Format(patchDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité <#= codeClass.Name #> spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
 <#
 			if (AddRouteAttributes)
             {
@@ -275,9 +275,9 @@ namespace <#= fileNamespace #>
 #>
 namespace <#= codeClass.Namespace == null ? fileNamespace : codeClass.Namespace.Name #>
 {
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité <#= codeClass.Name #> spécifiée est introuvable.")]
-	[Route("/<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une entité {0}.", codeClass.Name) #>")]
-	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une entité {0} à partir de son Id.", codeClass.Name) #>")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
+	[Route("/<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une ressource {0}.", codeClass.Name) #>")]
+	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une ressource {0} à partir de son Id.", codeClass.Name) #>")]
 	partial class <#= codeClass.Name #>
 	{
 	}
@@ -294,7 +294,7 @@ namespace <#= codeClass.Namespace == null ? fileNamespace : codeClass.Namespace.
 			if (!autocompleteExcluded)
             {
 				var autocompleteClassName = "Autocomplete" + codeClass.Name;
-				var autocompleteDescription = "Autocomplete une entité {0}.";
+				var autocompleteDescription = "Autocomplete une ressource {0}.";
 
 				manager.StartNewFile(autocompleteClassName + ".generated.cs");
 #>

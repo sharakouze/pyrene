@@ -14,10 +14,10 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Retourne une entité <see cref="GenMandat" /> à partir de son Id.
+	/// Retourne une ressource <see cref="GenMandat" /> à partir de son Id.
 	/// </summary>
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenMandat spécifiée est introuvable.")]
-	[Route("/GenMandat/{Id}", HttpVerbs.Get, Summary = "Retourne une entité GenMandat à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandat spécifiée est introuvable.")]
+	[Route("/GenMandat/{Id}", HttpVerbs.Get, Summary = "Retourne une ressource GenMandat à partir de son Id.")]
 	public partial class GetGenMandat : GetByIdRequestBase<int, GenMandat>
 	{
 	}

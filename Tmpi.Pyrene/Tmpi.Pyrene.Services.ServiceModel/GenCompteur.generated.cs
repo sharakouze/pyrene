@@ -13,9 +13,9 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenCompteur spécifiée est introuvable.")]
-	[Route("/GenCompteur", HttpVerbs.Post, Summary = "Ajoute une entité GenCompteur.")]
-	[Route("/GenCompteur/{Id}", HttpVerbs.Put, Summary = "Remplace une entité GenCompteur à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteur spécifiée est introuvable.")]
+	[Route("/GenCompteur", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteur.")]
+	[Route("/GenCompteur/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteur à partir de son Id.")]
 	partial class GenCompteur
 	{
 	}

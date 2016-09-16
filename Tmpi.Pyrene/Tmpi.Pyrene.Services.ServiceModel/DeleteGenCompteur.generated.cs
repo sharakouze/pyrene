@@ -14,10 +14,10 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Supprime une entité <see cref="GenCompteur" /> à partir de son Id.
+	/// Supprime une ressource <see cref="GenCompteur" /> à partir de son Id.
 	/// </summary>
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenCompteur spécifiée est introuvable.")]
-	[Route("/GenCompteur/{Id}", HttpVerbs.Delete, Summary = "Supprime une entité GenCompteur à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteur spécifiée est introuvable.")]
+	[Route("/GenCompteur/{Id}", HttpVerbs.Delete, Summary = "Supprime une ressource GenCompteur à partir de son Id.")]
 	public partial class DeleteGenCompteur : DeleteByIdRequestBase<int>
 	{
 	}

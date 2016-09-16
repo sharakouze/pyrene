@@ -14,10 +14,10 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Retourne une entité <see cref="GenTVA" /> à partir de son Id.
+	/// Retourne une ressource <see cref="GenTVA" /> à partir de son Id.
 	/// </summary>
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenTVA spécifiée est introuvable.")]
-	[Route("/GenTVA/{Id}", HttpVerbs.Get, Summary = "Retourne une entité GenTVA à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenTVA spécifiée est introuvable.")]
+	[Route("/GenTVA/{Id}", HttpVerbs.Get, Summary = "Retourne une ressource GenTVA à partir de son Id.")]
 	public partial class GetGenTVA : GetByIdRequestBase<int, GenTVA>
 	{
 	}

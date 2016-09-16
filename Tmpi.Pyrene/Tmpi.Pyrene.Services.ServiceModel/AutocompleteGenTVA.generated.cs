@@ -14,9 +14,9 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Autocomplete une entité <see cref="GenTVA" />.
+	/// Autocomplete une ressource <see cref="GenTVA" />.
 	/// </summary>
-	[Route("/GenTVA/Autocomplete", HttpVerbs.Get, Summary = "Autocomplete une entité GenTVA.")]
+	[Route("/GenTVA/Autocomplete", HttpVerbs.Get, Summary = "Autocomplete une ressource GenTVA.")]
 	public partial class AutocompleteGenTVA : AutocompleteRequestBase
 	{
 	}

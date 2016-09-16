@@ -14,10 +14,10 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Modifie une entité <see cref="GenSociete" /> à partir de son Id.
+	/// Modifie une ressource <see cref="GenSociete" /> à partir de son Id.
 	/// </summary>
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenSociete spécifiée est introuvable.")]
-	[Route("/GenSociete/{Id}", HttpVerbs.Patch, Summary = "Modifie une entité GenSociete à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenSociete spécifiée est introuvable.")]
+	[Route("/GenSociete/{Id}", HttpVerbs.Patch, Summary = "Modifie une ressource GenSociete à partir de son Id.")]
 	public partial class PatchGenSociete : PatchByIdRequestBase<int>
 	{
 	}

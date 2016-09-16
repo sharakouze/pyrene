@@ -14,10 +14,10 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Retourne une entité <see cref="GenFournContact" /> à partir de son Id.
+	/// Retourne une ressource <see cref="GenFournContact" /> à partir de son Id.
 	/// </summary>
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité GenFournContact spécifiée est introuvable.")]
-	[Route("/GenFourn/Contact/{Id}", HttpVerbs.Get, Summary = "Retourne une entité GenFournContact à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournContact spécifiée est introuvable.")]
+	[Route("/GenFourn/Contact/{Id}", HttpVerbs.Get, Summary = "Retourne une ressource GenFournContact à partir de son Id.")]
 	public partial class GetGenFournContact : GetByIdRequestBase<int, GenFournContact>
 	{
 	}
