@@ -25,7 +25,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.")]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerType.Int)]
 		public int Id { get; set; }
 
 		/// <summary>
@@ -34,7 +34,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.")]
+		[ApiMember(Description = "Code unique.", IsRequired = true, DataType = SwaggerType.String)]
 		public string CodObjet { get; set; }
 
 		/// <summary>
@@ -43,115 +43,115 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "Désignation.")]
+		[ApiMember(Description = "Désignation.", IsRequired = true, DataType = SwaggerType.String)]
 		public string LibObjet { get; set; }
 
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "Commentaire ou description.")]
+		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerType.String)]
 		public string TxtObjet { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Actif ou inactif.")]
+		[ApiMember(Description = "Actif ou inactif.", IsRequired = true, DataType = SwaggerType.Boolean)]
 		public bool EstActif { get; set; }
 
 		/// <summary>
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.")]
+		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.")]
+		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
 		public DateTime DatModif { get; set; }
 
 		/// <summary>
 		/// Identifiant de synchronisation externe.
 		/// </summary>
 		[StringLength(100)]
-		[ApiMember(Description = "Identifiant de synchronisation externe.")]
+		[ApiMember(Description = "Identifiant de synchronisation externe.", DataType = SwaggerType.String)]
 		public string CodExterne { get; set; }
 
 		[StringLength(200)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string AdrRue { get; set; }
 
 		[StringLength(10)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string AdrCode { get; set; }
 
 		[StringLength(100)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string AdrVille { get; set; }
 
 		[StringLength(100)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string AdrPays { get; set; }
 
 		[StringLength(25)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string NumTelep { get; set; }
 
 		[StringLength(25)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string NumFax { get; set; }
 
 		[StringLength(100)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string NumEmail { get; set; }
 
 		[StringLength(100)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string CodCompta { get; set; }
 
 		[StringLength(100)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string NumClient { get; set; }
 
 		[StringLength(25)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string NumTVAIntra { get; set; }
 
 		[DecimalLength(15, 2)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Double)]
 		public decimal? MntFPort { get; set; }
 
 		[DecimalLength(15, 2)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Double)]
 		public decimal? MntFPortGratuit { get; set; }
 
 		[DecimalLength(15, 2)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Double)]
 		public decimal? MntCommandeMin { get; set; }
 
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Byte)]
 		public byte? DelLivraison { get; set; }
 
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Byte)]
 		public byte? DelPaiement { get; set; }
 
 		[DecimalLength(5, 2)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Double)]
 		public decimal? ValNote { get; set; }
 
-		[ApiMember()]
+		[ApiAllowableValues("TypModeReglement", typeof(TypModeReglement))]
 		public TypModeReglement? TypModeReglement { get; set; }
 
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = SwaggerType.Boolean)]
 		public bool EstEnvoiMailBonCde { get; set; }
 
 		[References(typeof(GenPersonne))]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Int)]
 		public int? CleGenPersonne { get; set; }
 
 		[Reference]

@@ -24,33 +24,33 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.")]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerType.Int)]
 		public int Id { get; set; }
 
 		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = SwaggerType.Int)]
 		public int CleGenMandat { get; set; }
 
 		[References(typeof(GenPersonne))]
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = SwaggerType.Int)]
 		public int CleGenPersonne { get; set; }
 
 		[References(typeof(GenSociete))]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Int)]
 		public int? CleGenSociete { get; set; }
 
 		[References(typeof(GenSecteur))]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Int)]
 		public int? CleGenSecteur { get; set; }
 
 		[References(typeof(GenService))]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Int)]
 		public int? CleGenService { get; set; }
 
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = SwaggerType.Boolean)]
 		public bool EstSuspendu { get; set; }
 
 	}

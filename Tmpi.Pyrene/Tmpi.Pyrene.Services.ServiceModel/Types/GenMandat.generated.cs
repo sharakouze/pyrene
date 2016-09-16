@@ -26,7 +26,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.")]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerType.Int)]
 		public int Id { get; set; }
 
 		/// <summary>
@@ -35,7 +35,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.")]
+		[ApiMember(Description = "Code unique.", IsRequired = true, DataType = SwaggerType.String)]
 		public string CodObjet { get; set; }
 
 		/// <summary>
@@ -44,57 +44,58 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "Désignation.")]
+		[ApiMember(Description = "Désignation.", IsRequired = true, DataType = SwaggerType.String)]
 		public string LibObjet { get; set; }
 
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "Commentaire ou description.")]
+		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerType.String)]
 		public string TxtObjet { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Actif ou inactif.")]
+		[ApiMember(Description = "Actif ou inactif.", IsRequired = true, DataType = SwaggerType.Boolean)]
 		public bool EstActif { get; set; }
 
 		/// <summary>
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.")]
+		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.")]
+		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
 		public DateTime DatModif { get; set; }
 
 		/// <summary>
 		/// Identifiant de synchronisation externe.
 		/// </summary>
 		[StringLength(100)]
-		[ApiMember(Description = "Identifiant de synchronisation externe.")]
+		[ApiMember(Description = "Identifiant de synchronisation externe.", DataType = SwaggerType.String)]
 		public string CodExterne { get; set; }
 
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true)]
+		[ApiAllowableValues("TypMandat", typeof(TypMandat))]
 		public TypMandat TypMandat { get; set; }
 
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = SwaggerType.Byte)]
 		public byte NivMandat { get; set; }
 
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = SwaggerType.Byte)]
 		public byte NbrSignature { get; set; }
 
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string TxtMessage { get; set; }
 
 		[Reference]

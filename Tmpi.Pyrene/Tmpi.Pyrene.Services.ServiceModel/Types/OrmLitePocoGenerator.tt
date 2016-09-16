@@ -5,8 +5,6 @@
 <#
 	/***** TODO *****
 	- DefaultAttribute
-	- ApiMemberAttribute(IsRequired) sur les propriétés [Required]
-	- PrimaryKey => Index(true)
 	- Remplacer la PK par une CompositeIndex pour les PK composite
 	****************/
 
@@ -51,8 +49,8 @@
 	// Ajoute des propriétés avec l'attribut [Reference] pour les tables enfants
 	bool AddChildReferences = true;
 
-	// Ajoute [ApiMember]
-	bool AddApiMember = true;
+	// Ajoute [ApiMember], [ApiAllowableValues]...
+	bool AddApiAttributes = true;
 
 	// if true: Changes the classname to singular if tablename is not singular.
 	bool MakeSingular = false;
@@ -70,13 +68,12 @@
 	Action<Tables> tweakSchema = null;
 	tweakSchema = tables =>
     {	
-		/* Tweak Schema
-		tables["tablename"].Ignore = true;							// To ignore a table
-		tables["tablename"].ClassName = "newname";					// To change the class name of a table
-		tables["tablename"]["columnname"].Ignore = true;			// To ignore a column
-		tables["tablename"]["columnname"].PropertyName="newname";	// To change the property name of a column
-		tables["tablename"]["columnname"].PropertyType="bool";		// To change the property type of a column
-		*/
+		// Tweak Schema
+		// tables["tablename"].Ignore = true;							// To ignore a table
+		// tables["tablename"].ClassName = "newname";					// To change the class name of a table
+		// tables["tablename"]["columnname"].Ignore = true;			// To ignore a column
+		// tables["tablename"]["columnname"].PropertyName="newname";	// To change the property name of a column
+		// tables["tablename"]["columnname"].PropertyType="bool";		// To change the property type of a column
 
 		try
 		{
@@ -140,6 +137,12 @@ namespace <#= fileNamespace #>
 {
 <#
 	manager.EndBlock(); // end header
+    
+	// get a reference to the project of this t4 template
+	var project = VisualStudioHelper.CurrentProject;
+
+    var allEnums = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementEnum, false)
+        .OfType<EnvDTE.CodeEnum>().Select(x => x.Name);
 
 	foreach (Table table in allTables)
 	{
@@ -384,7 +387,7 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 
-			if (AddApiMember)
+			if (AddApiAttributes)
 			{
 				var lstApiMemberProps = new List<string>();
 
@@ -392,9 +395,69 @@ namespace <#= fileNamespace #>
                 {
 					lstApiMemberProps.Add("Description = \"" + col.Description + "\"");
                 }
+
+                if (col.IsNullable == false && col.IsAutoIncrement == false)
+                {
+					lstApiMemberProps.Add("IsRequired = true");
+                }
+                
+                string swaggerType = "";
+                switch (col.PropertyType)
+                {
+                    case "byte":
+                    case "sbyte":
+                        swaggerType = "SwaggerType.Byte";
+                        break;
+                    case "bool":
+                        swaggerType = "SwaggerType.Boolean";
+                        break;
+                    case "short":
+                    case "ushort":
+                    case "int":
+                    case "uint":
+                        swaggerType = "SwaggerType.Int";
+                        break;
+                    case "long":
+                    case "ulong":
+                        swaggerType = "SwaggerType.Long";
+                        break;
+                    case "float":
+                        swaggerType = "SwaggerType.Float";
+                        break;
+                    case "double":
+                    case "decimal":
+                        swaggerType = "SwaggerType.Double";
+                        break;
+                    case "string":
+                        swaggerType = "SwaggerType.String";
+                        break;
+                    case "DateTime":
+                        swaggerType = "SwaggerType.Date";
+                        break;
+                    case "byte[]":
+                        swaggerType = "\"file\"";
+                        break;
+                }
+
+                if (!string.IsNullOrEmpty(swaggerType))
+                {
+                    lstApiMemberProps.Add("DataType = " + swaggerType);
+                }
+
+                if (lstApiMemberProps.Any())
+                {
 #>
 		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
 <#
+			    } // end if
+
+                if (allEnums.Contains(col.PropertyType))
+                {
+#>
+		[ApiAllowableValues("<#= col.PropertyName #>", typeof(<#= col.PropertyType #>))]
+<#
+                }
+
 			} // end if
 #>
 		public <#= MakePropertiesVirtual ? "virtual " : "" #><#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }

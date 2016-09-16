@@ -24,26 +24,26 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.")]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerType.Int)]
 		public int Id { get; set; }
 
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = SwaggerType.Int)]
 		public int CleGenFourn { get; set; }
 
 		[StringLength(23)]
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = SwaggerType.String)]
 		public string NumRib { get; set; }
 
 		[StringLength(200)]
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = SwaggerType.String)]
 		public string LibEtablissement { get; set; }
 
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = SwaggerType.Boolean)]
 		public bool EstDefaut { get; set; }
 
 	}

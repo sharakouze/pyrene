@@ -25,12 +25,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.")]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerType.Int)]
 		public int Id { get; set; }
 
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = SwaggerType.Int)]
 		public int CleGenPersonne { get; set; }
 
 		/// <summary>
@@ -38,19 +38,19 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[ApiMember(Description = "Code unique.")]
+		[ApiMember(Description = "Code unique.", IsRequired = true, DataType = SwaggerType.String)]
 		public string CodObjet { get; set; }
 
 		[References(typeof(GenSociete))]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Int)]
 		public int? CleGenSociete { get; set; }
 
 		[References(typeof(GenSecteur))]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Int)]
 		public int? CleGenSecteur { get; set; }
 
 		[References(typeof(GenService))]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Int)]
 		public int? CleGenService { get; set; }
 
 	}

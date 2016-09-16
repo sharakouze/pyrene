@@ -26,7 +26,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.")]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerType.Int)]
 		public int Id { get; set; }
 
 		/// <summary>
@@ -35,7 +35,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "test de commentaire.")]
+		[ApiMember(Description = "test de commentaire.", IsRequired = true, DataType = SwaggerType.String)]
 		public string CodObjet { get; set; }
 
 		/// <summary>
@@ -44,94 +44,96 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "Désignation.")]
+		[ApiMember(Description = "Désignation.", IsRequired = true, DataType = SwaggerType.String)]
 		public string LibObjet { get; set; }
 
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "Commentaire ou description.")]
+		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerType.String)]
 		public string TxtObjet { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Actif ou inactif.")]
+		[ApiMember(Description = "Actif ou inactif.", IsRequired = true, DataType = SwaggerType.Boolean)]
 		public bool EstActif { get; set; }
 
 		/// <summary>
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.")]
+		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.")]
+		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
 		public DateTime DatModif { get; set; }
 
 		/// <summary>
 		/// Identifiant de synchronisation externe.
 		/// </summary>
 		[StringLength(100)]
-		[ApiMember(Description = "Identifiant de synchronisation externe.")]
+		[ApiMember(Description = "Identifiant de synchronisation externe.", DataType = SwaggerType.String)]
 		public string CodExterne { get; set; }
 
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true)]
+		[ApiAllowableValues("TypCompteur", typeof(TypCompteur))]
 		public TypCompteur TypCompteur { get; set; }
 
 		[References(typeof(GenSociete))]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Int)]
 		public int? CleGenSociete { get; set; }
 
 		[References(typeof(GenSecteur))]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Int)]
 		public int? CleGenSecteur { get; set; }
 
 		[References(typeof(GenService))]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.Int)]
 		public int? CleGenService { get; set; }
 
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true)]
+		[ApiAllowableValues("TypPeriodicite", typeof(TypPeriodicite))]
 		public TypPeriodicite TypPeriodicite { get; set; }
 
 		[StringLength(25)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string ValPrefixe1 { get; set; }
 
 		[StringLength(25)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string ValFormatDate1 { get; set; }
 
 		[StringLength(25)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string ValPrefixe2 { get; set; }
 
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = SwaggerType.Byte)]
 		public byte NbrDigit { get; set; }
 
 		[StringLength(25)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string ValSuffixe1 { get; set; }
 
 		[StringLength(25)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string ValFormatDate2 { get; set; }
 
 		[StringLength(25)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string ValSuffixe2 { get; set; }
 
 		[StringLength(500)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string LstFormatMois { get; set; }
 
 		[Reference]

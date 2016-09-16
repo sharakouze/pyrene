@@ -24,12 +24,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.")]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerType.Int)]
 		public int Id { get; set; }
 
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = SwaggerType.Int)]
 		public int CleGenFourn { get; set; }
 
 		/// <summary>
@@ -37,37 +37,37 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[ApiMember(Description = "Désignation.")]
+		[ApiMember(Description = "Désignation.", IsRequired = true, DataType = SwaggerType.String)]
 		public string LibObjet { get; set; }
 
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "Commentaire ou description.")]
+		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerType.String)]
 		public string TxtObjet { get; set; }
 
 		[StringLength(100)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string PreContact { get; set; }
 
 		[StringLength(25)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string NumTelep { get; set; }
 
 		[StringLength(25)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string NumFax { get; set; }
 
 		[StringLength(100)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string NumEmail { get; set; }
 
-		[ApiMember()]
+		[ApiAllowableValues("TypGenre", typeof(TypGenre))]
 		public TypGenre? TypGenre { get; set; }
 
 		[StringLength(100)]
-		[ApiMember()]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string CodFonction { get; set; }
 
 	}

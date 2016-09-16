@@ -48,7 +48,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 q.Where(x => x.LibObjet.Contains(request.Text)).Select(x => x.LibObjet)
                 );
 
-            return lstCodObjet.Union(lstLibObjet).ToList();
+            return lstCodObjet;//.Union(lstLibObjet).ToList();
 		}
 
 		/// <summary>

@@ -25,16 +25,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
 		[PrimaryKey]
-		[ApiMember(Description = "Clé primaire.")]
+		[ApiMember(Description = "Clé primaire.", IsRequired = true, DataType = SwaggerType.Int)]
 		public int CleGenPersonne { get; set; }
 
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = "file")]
 		public byte[] ImgSignature { get; set; }
 
 		[StringLength(255)]
 		[Required]
-		[ApiMember()]
+		[ApiMember(IsRequired = true, DataType = SwaggerType.String)]
 		public string TypMime { get; set; }
 
 	}
