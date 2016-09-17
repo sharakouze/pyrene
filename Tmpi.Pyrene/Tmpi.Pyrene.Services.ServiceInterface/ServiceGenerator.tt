@@ -18,6 +18,9 @@
 
 	// true pour générer chaque classe dans un fichier séparé.
 	bool SplitIntoMultipleFiles = true;
+    
+    // true pour créer les validors de la ValidationFeature
+    bool CreateValidators= true;
 
 	// RegExp pour filtrer globalement les classes traitées, null pour tout inclure et/ou ne rien exclure.
 	Regex ClassFilterInclude = null;
@@ -53,21 +56,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using ServiceStack;
-using ServiceStack.OrmLite;
-using Tmpi.Pyrene.Infrastructure;
-using <#= sourceNamespace #>;
-using <#= sourceNamespace #>.Types;
-
-namespace <#= fileNamespace #>
-{
 <#
 	manager.EndBlock(); // end header
 
-	var dic = new Dictionary<string, List<string>>();
+	var dic = new Dictionary<string, List<EnvDTE.CodeClass>>();
 
     // get all class items from the code model
     var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(srcProject.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementClass, false);
@@ -123,11 +115,11 @@ namespace <#= fileNamespace #>
 				if (dic.Any(d => entityName.StartsWith(d.Key)))
 				{
 					var kvp = dic.Single(d => entityName.StartsWith(d.Key));
-					kvp.Value.Add(codeClass.Name);
+					kvp.Value.Add(codeClass);
 				}
 				else
 				{
-					dic.Add(entityName, new List<string>(new[] { codeClass.Name } ));
+					dic.Add(entityName, new List<EnvDTE.CodeClass>(new[] { codeClass } ));
 				}
 			}
         }
@@ -147,18 +139,31 @@ namespace <#= fileNamespace #>
 		var serviceClassName = kvp.Key + "Service";
 		manager.StartNewFile(serviceClassName + ".generated.cs");
 #>
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using ServiceStack;
+using ServiceStack.OrmLite;
+using Tmpi.Pyrene.Infrastructure;
+using <#= sourceNamespace #>;
+using <#= sourceNamespace #>.Types;
+
+namespace <#= fileNamespace #>
+{
 	/// <summary>
 	/// Service qui traite les requêtes sur l'entité <see cref="<#= kvp.Key #>" />.
 	/// </summary>
 	<#= string.Join(" ", classDefinitionWords) #> class <#= serviceClassName #> : Service
 	{
 <#
-		foreach (string requestName in kvp.Value)
+		foreach (EnvDTE.CodeClass requestClass in kvp.Value)
         {
 			if (CPT_MAX >= 10)
 			{
 			continue; // limitation version démo de ServiceStack
 			}
+
+            string requestName = requestClass.Name;
 
 			if (requestName.StartsWith("Autocomplete"))
             {
@@ -189,7 +194,7 @@ namespace <#= fileNamespace #>
                 q.Where(x => x.LibObjet.Contains(request.Text)).Select(x => x.LibObjet)
                 );
 
-            return lstCodObjet.Union(lstLibObjet).ToList();
+            return null;//lstCodObjet.Union(lstLibObjet).ToList();
 		}
 
 <#
@@ -308,15 +313,88 @@ namespace <#= fileNamespace #>
         } // end foreach
 #>
 	}
-<#
-		manager.EndBlock();
-    }
-
-	manager.StartFooter();
-#>
 }
 <#
-	manager.EndBlock(); // end footer
+		manager.EndBlock(); // end newfile
+
+        if (CreateValidators)
+        {
+            foreach (EnvDTE.CodeClass requestClass in kvp.Value)
+            {
+                string requestName = requestClass.Name;
+
+                if (requestName == kvp.Key)
+                {
+                    manager.StartNewFile(requestName + "Validator.generated.cs");
+#>
+using ServiceStack.FluentValidation;
+using <#= sourceNamespace #>;
+using <#= sourceNamespace #>.Types;
+
+namespace <#= fileNamespace #>
+{
+    /// <summary>
+    /// Validation pour la requête <see cref="<#= requestName #>"/>.
+    /// </summary>
+    <#= string.Join(" ", classDefinitionWords) #> class <#= requestName #>Validator : AbstractValidator<<#= requestName #>>
+    {
+        /// <summary>
+        /// Initialise une nouvelle instance de la classe <see cref="<#= requestName #>Validator" />.
+        /// </summary>
+        public <#= requestName #>Validator()
+        {
+<#
+                    var allPropsAttributes = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(requestClass);
+                    foreach (var prop in allPropsAttributes)
+                    {
+                        var lstValidation = new List<string>();
+
+                        if (prop.Value.Any(attr => attr.FullName == "ServiceStack.DataAnnotations.RequiredAttribute"))
+                        {
+                            if (prop.Key.Type.AsFullName == "System.String")
+                            {
+                                lstValidation.Add(".NotEmpty()");
+                            }
+                        }
+                        var strLengthAttr = prop.Value.FirstOrDefault(attr => attr.FullName == "ServiceStack.DataAnnotations.StringLengthAttribute");
+                        if (strLengthAttr != null)
+                        {
+                            lstValidation.Add(".Length(0, "+strLengthAttr.Value +")");
+                        }
+
+                        if (prop.Key.Name == "NumEmail")
+                        {
+                            lstValidation.Add(".EmailAddress()");
+                        }
+
+                        foreach (var v in lstValidation)
+                        {
+#>
+            RuleFor(x => x.<#= prop.Key.Name #>)<#= v #>;
+<#
+                        } // end foreach
+
+                        if (lstValidation.Any())
+                        {
+
+#>
+
+<#
+                        } // end if
+                    } // end foreach
+#>
+            SetRules();
+        }
+        
+        partial void SetRules();
+    }
+}
+<#
+                    manager.EndBlock(); // end newfile
+                }
+            } // end foreach
+        } // end if
+    } // end forach
 
 	manager.Process(SplitIntoMultipleFiles);
 #>

@@ -81,32 +81,53 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Identifiant de synchronisation externe.", DataType = SwaggerType.String)]
 		public string CodExterne { get; set; }
 
+		/// <summary>
+		/// Rue.
+		/// </summary>
 		[StringLength(200)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Rue.", DataType = SwaggerType.String)]
 		public string AdrRue { get; set; }
 
+		/// <summary>
+		/// Code postal.
+		/// </summary>
 		[StringLength(10)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Code postal.", DataType = SwaggerType.String)]
 		public string AdrCode { get; set; }
 
+		/// <summary>
+		/// Ville ou commune.
+		/// </summary>
 		[StringLength(100)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Ville ou commune.", DataType = SwaggerType.String)]
 		public string AdrVille { get; set; }
 
+		/// <summary>
+		/// Pays.
+		/// </summary>
 		[StringLength(100)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Pays.", DataType = SwaggerType.String)]
 		public string AdrPays { get; set; }
 
+		/// <summary>
+		/// Numéro de téléphone.
+		/// </summary>
 		[StringLength(25)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Numéro de téléphone.", DataType = SwaggerType.String)]
 		public string NumTelep { get; set; }
 
+		/// <summary>
+		/// Numéro de fax.
+		/// </summary>
 		[StringLength(25)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Numéro de fax.", DataType = SwaggerType.String)]
 		public string NumFax { get; set; }
 
+		/// <summary>
+		/// Adresse email.
+		/// </summary>
 		[StringLength(100)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Adresse email.", DataType = SwaggerType.String)]
 		public string NumEmail { get; set; }
 
 		[StringLength(100)]

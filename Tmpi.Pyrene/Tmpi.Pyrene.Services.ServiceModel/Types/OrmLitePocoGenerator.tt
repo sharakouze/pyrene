@@ -261,36 +261,59 @@ namespace <#= fileNamespace #>
 					switch (col.PropertyName)
                     {
 						case "CodObjet":
-							col.Description = "Code unique.";
+							col.Description = "Code unique";
 							break;
 						case "LibObjet":
-							col.Description = "Désignation.";
+							col.Description = "Désignation";
 							break;
 						case "TxtObjet":
-							col.Description = "Commentaire ou description.";
+							col.Description = "Commentaire ou description";
 							break;
 						case "EstActif":
-							col.Description = "Actif ou inactif.";
+							col.Description = "Actif ou inactif";
 							break;
 						case "DatCreation":
-							col.Description = "Date de création.";
+							col.Description = "Date de création";
 							break;
 						case "DatModif":
-							col.Description = "Date de dernière modification.";
+							col.Description = "Date de dernière modification";
 							break;
 						case "CodExterne":
-							col.Description = "Identifiant de synchronisation externe.";
+							col.Description = "Identifiant de synchronisation externe";
+							break;
+
+						case "NumTelep":
+							col.Description = "Numéro de téléphone";
+							break;
+						case "NumFax":
+							col.Description = "Numéro de fax";
+							break;
+						case "NumEmail":
+							col.Description = "Adresse email";
+							break;
+
+						case "AdrRue":
+							col.Description = "Rue";
+							break;
+						case "AdrCode":
+							col.Description = "Code postal";
+							break;
+						case "AdrVille":
+							col.Description = "Ville ou commune";
+							break;
+						case "AdrPays":
+							col.Description = "Pays";
 							break;
                     }
                 }
             }
-			else if (!col.Description.EndsWith("."))
-			{
-				col.Description += ".";
-			}
 
 			if (!string.IsNullOrWhiteSpace(col.Description))
             {
+                if (!col.Description.EndsWith("."))
+			    {
+				    col.Description += ".";
+			    }
 #>
 		/// <summary>
 		/// <#= col.Description #>

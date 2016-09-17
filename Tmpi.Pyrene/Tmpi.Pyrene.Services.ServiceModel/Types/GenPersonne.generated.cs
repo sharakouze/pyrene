@@ -88,16 +88,25 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiAllowableValues("TypGenre", typeof(TypGenre))]
 		public TypGenre? TypGenre { get; set; }
 
+		/// <summary>
+		/// Numéro de téléphone.
+		/// </summary>
 		[StringLength(25)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Numéro de téléphone.", DataType = SwaggerType.String)]
 		public string NumTelep { get; set; }
 
+		/// <summary>
+		/// Numéro de fax.
+		/// </summary>
 		[StringLength(25)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Numéro de fax.", DataType = SwaggerType.String)]
 		public string NumFax { get; set; }
 
+		/// <summary>
+		/// Adresse email.
+		/// </summary>
 		[StringLength(100)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Adresse email.", DataType = SwaggerType.String)]
 		public string NumEmail { get; set; }
 
 		[Reference]

@@ -429,12 +429,12 @@ public class VsCodeModel
     }
 
 	/// <summary>
-	/// Retourne tous les attributs de chaque propriétés de la CodeClass spécifiée.
+	/// Retourne tous les attributs par propriétés de la CodeClass spécifiée.
 	/// </summary>
 	/// <returns></returns>
-	public IEnumerable<EnvDTE.CodeAttribute> GetAllPropertiesAttributes(EnvDTE.CodeClass codeClass)
+	public Dictionary<EnvDTE.CodeProperty, List<EnvDTE.CodeAttribute>> GetAllPropertiesAttributes(EnvDTE.CodeClass codeClass)
     {
-		var ret = new List<EnvDTE.CodeAttribute>();
+		var ret = new Dictionary<EnvDTE.CodeProperty, List<EnvDTE.CodeAttribute>>();
 	
 		foreach(EnvDTE.CodeClass partialClass in GetPartialClasses(codeClass))
         {
@@ -442,7 +442,7 @@ public class VsCodeModel
 			foreach(EnvDTE.CodeProperty property in allProperties)
             {
 				var allAttributes = GetAllCodeElementsOfType(property.Attributes, EnvDTE.vsCMElement.vsCMElementAttribute, false);
-				ret.AddRange(allAttributes.OfType<EnvDTE.CodeAttribute>());
+                ret.Add(property, allAttributes.OfType<EnvDTE.CodeAttribute>().ToList());
             }
         }
 

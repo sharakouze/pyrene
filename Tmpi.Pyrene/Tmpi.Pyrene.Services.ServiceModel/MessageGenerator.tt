@@ -92,7 +92,7 @@ using <#= SourceNamespace #>;
 		var lstRoute = new List<string>();
 		string str = null;
 
-		var allAttributes = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(codeClass);
+		var allAttributes = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(codeClass).SelectMany(x => x.Value);
 		var fkAttributes = allAttributes.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.ReferencesAttribute" || 
 			attr.FullName == "ServiceStack.DataAnnotations.ForeignKeyAttribute").ToList();
 		if (fkAttributes.Any())
