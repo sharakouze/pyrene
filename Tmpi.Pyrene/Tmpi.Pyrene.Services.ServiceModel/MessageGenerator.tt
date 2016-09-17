@@ -26,6 +26,9 @@
 	// true pour ajouter l'attribut [Route(...)] sur les classes générées.
 	bool AddRouteAttributes = true;
 
+	// Ajoute [ApiResponse]...
+	bool AddApiAttributes = true;
+
 	// true pour transformer la route de la ressource, ex: GenFournContact de '/GenFournContact/' en '/GenFourn/Contact/'.
 	bool TransformRoutePath = true;
 
@@ -189,9 +192,14 @@ namespace <#= fileNamespace #>
 	/// <summary>
 	/// <#= string.Format(getByIdDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
+<#
+			if (AddApiAttributes)
+            {
+#>
     [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
 <#
-			if (AddRouteAttributes)
+            }
+            if (AddRouteAttributes)
             {
 #>
 	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Get, Summary = "<#= string.Format(getByIdDescription, codeClass.Name) #>")]
@@ -219,9 +227,14 @@ namespace <#= fileNamespace #>
 	/// <summary>
 	/// <#= string.Format(deleteByIdDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
+<#
+			if (AddApiAttributes)
+            {
+#>
     [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
 <#
-			if (AddRouteAttributes)
+            }
+            if (AddRouteAttributes)
             {
 #>
 	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Delete, Summary = "<#= string.Format(deleteByIdDescription, codeClass.Name) #>")]
@@ -249,9 +262,14 @@ namespace <#= fileNamespace #>
 	/// <summary>
 	/// <#= string.Format(patchDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
+<#
+			if (AddApiAttributes)
+            {
+#>
     [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
 <#
-			if (AddRouteAttributes)
+            }
+            if (AddRouteAttributes)     
             {
 #>
 	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Patch, Summary = "<#= string.Format(patchDescription, codeClass.Name) #>")]
@@ -275,7 +293,14 @@ namespace <#= fileNamespace #>
 #>
 namespace <#= codeClass.Namespace == null ? fileNamespace : codeClass.Namespace.Name #>
 {
+<#
+			    if (AddApiAttributes)
+                {
+#>
     [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
+<#
+                }
+#>
 	[Route("/<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une ressource {0}.", codeClass.Name) #>")]
 	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une ressource {0} à partir de son Id.", codeClass.Name) #>")]
 	partial class <#= codeClass.Name #>
