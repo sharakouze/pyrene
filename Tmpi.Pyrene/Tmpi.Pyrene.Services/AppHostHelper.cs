@@ -4,6 +4,7 @@ using ServiceStack.Api.Swagger;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
 using ServiceStack.Text;
+using ServiceStack.Validation;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -24,28 +25,6 @@ namespace Tmpi.Pyrene.Services
             }
         }
 
-        /// <summary>
-        /// Configure la sérialisation CSV.
-        /// </summary>
-        public static void ConfigCsv()
-        {
-            string itemDelimiterString = ConfigurationManager.AppSettings["CsvConfig.ItemDelimiterString"];
-            CsvConfig.ItemDelimiterString = itemDelimiterString ?? string.Empty;
-
-            string itemSeparatorString = ConfigurationManager.AppSettings["CsvConfig.ItemSeparatorString"];
-            if (!string.IsNullOrEmpty(itemSeparatorString))
-            {
-                CsvConfig.ItemSeperatorString = itemSeparatorString;
-            }
-        }
-
-        /// <summary>
-        /// Configure la sérialisation JSON.
-        /// </summary>
-        public static void ConfigJson()
-        {
-            JsConfig.DateHandler = DateHandler.ISO8601;
-        }
 
         public static void ConfigDbConnection(Container container, string connectionStringName)
         {
@@ -73,16 +52,6 @@ namespace Tmpi.Pyrene.Services
             container.Register<IDbConnectionFactory>(
                 c => new OrmLiteConnectionFactory(connectionString, SqlServerDialect.Provider)
                 );
-        }
-
-        public static void ConfigPlugins(List<IPlugin> plugins)
-        {
-            bool swaggerEnabled = false;
-            bool.TryParse(ConfigurationManager.AppSettings["Plugins.SwaggerEnabled"], out swaggerEnabled);
-            if (swaggerEnabled)
-            {
-                plugins.Add(new SwaggerFeature());
-            }
         }
     }
 }
