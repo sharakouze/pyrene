@@ -3,7 +3,7 @@
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
     /// <summary>
-    /// Représente une entité auditable.
+    /// Représente une ressource auditable.
     /// </summary>
     public interface IAuditable
     {

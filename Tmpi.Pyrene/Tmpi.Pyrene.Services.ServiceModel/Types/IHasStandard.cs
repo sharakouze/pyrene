@@ -1,7 +1,7 @@
 ﻿namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
     /// <summary>
-    /// Représente une entité ayant les champs d'identification standard.
+    /// Représente une ressource ayant les champs d'identification standard.
     /// </summary>
     public interface IHasStandard
     {

@@ -28,27 +28,21 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns></returns>
-		public List<string> Get(AutocompleteGenCompteur request)
+		public List<RessourceItem> Get(AutocompleteGenCompteur request)
 		{
 			if (string.IsNullOrWhiteSpace(request.Text))
 			{
 				return null;
 			}
 
-            var q = Db.From<GenCompteur>();
+            var q = Db.From<GenCompteur>().Where(x => x.LibObjet.Contains(request.Text));
             if (request.Max > 0)
             {
                 q = q.Limit(request.Max);
             }
 
-            var lstCodObjet = Db.Column<string>(
-                q.Where(x => x.CodObjet.Contains(request.Text)).Select(x => x.CodObjet)
-                );
-            var lstLibObjet = Db.Column<string>(
-                q.Where(x => x.LibObjet.Contains(request.Text)).Select(x => x.LibObjet)
-                );
-
-            return null;//lstCodObjet.Union(lstLibObjet).ToList();
+            var items = Db.Select<RessourceItem>(q);
+            return items;
 		}
 
 		/// <summary>

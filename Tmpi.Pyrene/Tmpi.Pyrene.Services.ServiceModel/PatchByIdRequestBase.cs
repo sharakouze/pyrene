@@ -5,13 +5,13 @@ using Tmpi.Pyrene.Infrastructure;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
     /// <summary>
-    /// Modifie une entité spécifiée par son Id.
+    /// Modifie une ressource spécifiée par son Id.
     /// </summary>
     /// <typeparam name="TKey">Type de Id.</typeparam>
     public abstract class PatchByIdRequestBase<TKey> : IReturnVoid
     {
         /// <summary>
-        /// Clé primaire de l'entité à modifier.
+        /// Clé primaire de la ressource à modifier.
         /// </summary>
         public TKey Id { get; set; }
 
