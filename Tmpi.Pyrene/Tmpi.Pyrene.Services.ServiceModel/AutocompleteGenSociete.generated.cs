@@ -16,7 +16,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Autocomplete une ressource <see cref="GenSociete" />.
 	/// </summary>
-	[Route("/GenSociete/Autocomplete", HttpVerbs.Get, Summary = "Autocomplete une ressource GenSociete.")]
+	[Route("/GenSociete/Autocomplete/{Text}", HttpVerbs.Get, Summary = "Autocomplete une ressource GenSociete.")]
 	public partial class AutocompleteGenSociete : AutocompleteRequestBase
 	{
 	}

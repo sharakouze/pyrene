@@ -23,5 +23,229 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	/// </summary>
 	public partial class GenFournService : Service
 	{
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns></returns>
+		public List<RessourceItem> Get(AutocompleteGenFourn request)
+		{
+			if (string.IsNullOrWhiteSpace(request.Text))
+			{
+				return null;
+			}
+
+            var q = Db.From<GenFourn>().Where(x => x.LibObjet.Contains(request.Text));
+            if (request.Max > 0)
+            {
+                q = q.Limit(request.Max);
+            }
+
+            var items = Db.Select<RessourceItem>(q);
+            return items;
+		}
+
+		/// <summary>
+		/// Supprime l'entité <see cref="GenFourn" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeleteGenFourn request)
+		{
+			int count = Db.DeleteById<GenFourn>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFourn), request.Id));
+			}
+		}
+
+		/// <summary>
+		/// Supprime l'entité <see cref="GenFournBanque" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeleteGenFournBanque request)
+		{
+			int count = Db.DeleteById<GenFournBanque>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournBanque), request.Id));
+			}
+		}
+
+		/// <summary>
+		/// Supprime l'entité <see cref="GenFournContact" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeleteGenFournContact request)
+		{
+			int count = Db.DeleteById<GenFournContact>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournContact), request.Id));
+			}
+		}
+
+		/// <summary>
+		/// Ajoute l'entité <see cref="GenFourn" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="GenFourn" /> ajoutée.</returns>
+		public GenFourn Post(GenFourn request)
+		{
+			var id = Db.Insert(request, selectIdentity: true);
+			request.Id = (int)id;
+
+			return request;
+		}
+
+		/// <summary>
+		/// Remplace l'entité <see cref="GenFourn" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Put(GenFourn request)
+		{
+			int count = Db.Update(request);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFourn), request.Id));
+			}
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="GenFourn" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="GenFourn" /> trouvée.</returns>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public GenFourn Get(GetGenFourn request)
+		{
+			var entity = Db.SingleById<GenFourn>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFourn), request.Id));
+			}
+			return entity;
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="GenFournBanque" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="GenFournBanque" /> trouvée.</returns>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public GenFournBanque Get(GetGenFournBanque request)
+		{
+			var entity = Db.SingleById<GenFournBanque>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournBanque), request.Id));
+			}
+			return entity;
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="GenFournContact" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="GenFournContact" /> trouvée.</returns>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public GenFournContact Get(GetGenFournContact request)
+		{
+			var entity = Db.SingleById<GenFournContact>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournContact), request.Id));
+			}
+			return entity;
+		}
+
+		/// <summary>
+		/// Met à jour l'entité <see cref="GenFourn" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Patch(PatchGenFourn request)
+		{
+			Debug.Assert(request.Fields != null);
+			if (request.Fields == null)
+			{
+				throw new ArgumentNullException(nameof(request.Fields));
+			}
+
+			var entity = new GenFourn();
+			var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
+
+			var updateExpr = Db.From<GenFourn>().Update(updateFields).Where(x => x.Id == request.Id);
+			int count = Db.UpdateOnly(entity, updateExpr);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFourn), request.Id));
+			}
+		}
+
+		/// <summary>
+		/// Met à jour l'entité <see cref="GenFournBanque" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Patch(PatchGenFournBanque request)
+		{
+			Debug.Assert(request.Fields != null);
+			if (request.Fields == null)
+			{
+				throw new ArgumentNullException(nameof(request.Fields));
+			}
+
+			var entity = new GenFournBanque();
+			var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
+
+			var updateExpr = Db.From<GenFournBanque>().Update(updateFields).Where(x => x.Id == request.Id);
+			int count = Db.UpdateOnly(entity, updateExpr);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournBanque), request.Id));
+			}
+		}
+
+		/// <summary>
+		/// Met à jour l'entité <see cref="GenFournContact" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Patch(PatchGenFournContact request)
+		{
+			Debug.Assert(request.Fields != null);
+			if (request.Fields == null)
+			{
+				throw new ArgumentNullException(nameof(request.Fields));
+			}
+
+			var entity = new GenFournContact();
+			var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
+
+			var updateExpr = Db.From<GenFournContact>().Update(updateFields).Where(x => x.Id == request.Id);
+			int count = Db.UpdateOnly(entity, updateExpr);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournContact), request.Id));
+			}
+		}
+
 	}
 }

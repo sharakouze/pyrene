@@ -23,5 +23,171 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	/// </summary>
 	public partial class GenMandatService : Service
 	{
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns></returns>
+		public List<RessourceItem> Get(AutocompleteGenMandat request)
+		{
+			if (string.IsNullOrWhiteSpace(request.Text))
+			{
+				return null;
+			}
+
+            var q = Db.From<GenMandat>().Where(x => x.LibObjet.Contains(request.Text));
+            if (request.Max > 0)
+            {
+                q = q.Limit(request.Max);
+            }
+
+            var items = Db.Select<RessourceItem>(q);
+            return items;
+		}
+
+		/// <summary>
+		/// Supprime l'entité <see cref="GenMandat" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeleteGenMandat request)
+		{
+			int count = Db.DeleteById<GenMandat>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenMandat), request.Id));
+			}
+		}
+
+		/// <summary>
+		/// Supprime l'entité <see cref="GenMandatMandataire" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeleteGenMandatMandataire request)
+		{
+			int count = Db.DeleteById<GenMandatMandataire>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenMandatMandataire), request.Id));
+			}
+		}
+
+		/// <summary>
+		/// Ajoute l'entité <see cref="GenMandat" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="GenMandat" /> ajoutée.</returns>
+		public GenMandat Post(GenMandat request)
+		{
+			var id = Db.Insert(request, selectIdentity: true);
+			request.Id = (int)id;
+
+			return request;
+		}
+
+		/// <summary>
+		/// Remplace l'entité <see cref="GenMandat" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Put(GenMandat request)
+		{
+			int count = Db.Update(request);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenMandat), request.Id));
+			}
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="GenMandat" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="GenMandat" /> trouvée.</returns>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public GenMandat Get(GetGenMandat request)
+		{
+			var entity = Db.SingleById<GenMandat>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenMandat), request.Id));
+			}
+			return entity;
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="GenMandatMandataire" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="GenMandatMandataire" /> trouvée.</returns>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public GenMandatMandataire Get(GetGenMandatMandataire request)
+		{
+			var entity = Db.SingleById<GenMandatMandataire>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenMandatMandataire), request.Id));
+			}
+			return entity;
+		}
+
+		/// <summary>
+		/// Met à jour l'entité <see cref="GenMandat" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Patch(PatchGenMandat request)
+		{
+			Debug.Assert(request.Fields != null);
+			if (request.Fields == null)
+			{
+				throw new ArgumentNullException(nameof(request.Fields));
+			}
+
+			var entity = new GenMandat();
+			var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
+
+			var updateExpr = Db.From<GenMandat>().Update(updateFields).Where(x => x.Id == request.Id);
+			int count = Db.UpdateOnly(entity, updateExpr);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenMandat), request.Id));
+			}
+		}
+
+		/// <summary>
+		/// Met à jour l'entité <see cref="GenMandatMandataire" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Patch(PatchGenMandatMandataire request)
+		{
+			Debug.Assert(request.Fields != null);
+			if (request.Fields == null)
+			{
+				throw new ArgumentNullException(nameof(request.Fields));
+			}
+
+			var entity = new GenMandatMandataire();
+			var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
+
+			var updateExpr = Db.From<GenMandatMandataire>().Update(updateFields).Where(x => x.Id == request.Id);
+			int count = Db.UpdateOnly(entity, updateExpr);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenMandatMandataire), request.Id));
+			}
+		}
+
 	}
 }

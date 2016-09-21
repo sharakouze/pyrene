@@ -23,5 +23,113 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	/// </summary>
 	public partial class GenSocieteService : Service
 	{
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns></returns>
+		public List<RessourceItem> Get(AutocompleteGenSociete request)
+		{
+			if (string.IsNullOrWhiteSpace(request.Text))
+			{
+				return null;
+			}
+
+            var q = Db.From<GenSociete>().Where(x => x.LibObjet.Contains(request.Text));
+            if (request.Max > 0)
+            {
+                q = q.Limit(request.Max);
+            }
+
+            var items = Db.Select<RessourceItem>(q);
+            return items;
+		}
+
+		/// <summary>
+		/// Supprime l'entité <see cref="GenSociete" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeleteGenSociete request)
+		{
+			int count = Db.DeleteById<GenSociete>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenSociete), request.Id));
+			}
+		}
+
+		/// <summary>
+		/// Ajoute l'entité <see cref="GenSociete" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="GenSociete" /> ajoutée.</returns>
+		public GenSociete Post(GenSociete request)
+		{
+			var id = Db.Insert(request, selectIdentity: true);
+			request.Id = (int)id;
+
+			return request;
+		}
+
+		/// <summary>
+		/// Remplace l'entité <see cref="GenSociete" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Put(GenSociete request)
+		{
+			int count = Db.Update(request);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenSociete), request.Id));
+			}
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="GenSociete" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="GenSociete" /> trouvée.</returns>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public GenSociete Get(GetGenSociete request)
+		{
+			var entity = Db.SingleById<GenSociete>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenSociete), request.Id));
+			}
+			return entity;
+		}
+
+		/// <summary>
+		/// Met à jour l'entité <see cref="GenSociete" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Patch(PatchGenSociete request)
+		{
+			Debug.Assert(request.Fields != null);
+			if (request.Fields == null)
+			{
+				throw new ArgumentNullException(nameof(request.Fields));
+			}
+
+			var entity = new GenSociete();
+			var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
+
+			var updateExpr = Db.From<GenSociete>().Update(updateFields).Where(x => x.Id == request.Id);
+			int count = Db.UpdateOnly(entity, updateExpr);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenSociete), request.Id));
+			}
+		}
+
 	}
 }
