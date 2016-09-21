@@ -72,8 +72,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Adresse email.", DataType = SwaggerType.String)]
 		public string NumEmail { get; set; }
 
-		[ApiAllowableValues("TypGenre", typeof(TypGenre))]
-		public TypGenre? TypGenre { get; set; }
+		[ApiMember(DataType = SwaggerType.Int)]
+		public int? TypGenre { get; set; }
 
 		[StringLength(100)]
 		[ApiMember(DataType = SwaggerType.String)]

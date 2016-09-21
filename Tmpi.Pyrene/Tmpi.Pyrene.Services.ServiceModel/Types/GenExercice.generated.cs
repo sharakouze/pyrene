@@ -81,12 +81,18 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Identifiant de synchronisation externe.", DataType = SwaggerType.String)]
 		public string CodExterne { get; set; }
 
+		/// <summary>
+		/// Date de début.
+		/// </summary>
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de début.", IsRequired = true, DataType = SwaggerType.Date)]
 		public DateTime DatDebut { get; set; }
 
+		/// <summary>
+		/// Date de fin.
+		/// </summary>
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de fin.", IsRequired = true, DataType = SwaggerType.Date)]
 		public DateTime DatFin { get; set; }
 
 	}

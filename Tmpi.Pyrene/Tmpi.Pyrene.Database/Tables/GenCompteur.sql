@@ -13,7 +13,6 @@
     [CleGenSecteur] INT NULL,
     [CleGenService] INT NULL,
 	[ValFormatNumero] VARCHAR(100) NOT NULL,
-    [LstFormatMois] VARCHAR(500) NULL,
     CONSTRAINT [PK_GenCompteur] PRIMARY KEY ([Id]),
     CONSTRAINT [UK_GenCompteur_CodObjet] UNIQUE ([CodObjet]),
     CONSTRAINT [UK_GenCompteur_TypCompteur_CleGenSociete_CleGenSecteur_CleGenService] UNIQUE ([TypCompteur], [CleGenSociete], [CleGenSecteur], [CleGenService]),

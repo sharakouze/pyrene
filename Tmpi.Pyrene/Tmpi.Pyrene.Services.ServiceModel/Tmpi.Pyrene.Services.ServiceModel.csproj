@@ -289,7 +289,7 @@
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\TypMandat.cs" />
-    <Compile Include="Types\TypGenre.cs" />
+    <Compile Include="Types\TypCivilite.cs" />
     <Compile Include="Types\TypModeReglement.cs" />
     <Compile Include="Types\TypPeriodicite.cs" />
     <Compile Include="Types\TypCompteur.cs" />

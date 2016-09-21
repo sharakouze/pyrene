@@ -5,10 +5,10 @@ using ServiceStack.DataAnnotations;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
     /// <summary>
-    /// Spécifie le genre d'une personne.
+    /// Spécifie le titre de civilité d'une personne.
     /// </summary>
     [EnumAsInt]
-    public enum TypGenre
+    public enum TypCivilite
     {
         Undefined = 0,
 

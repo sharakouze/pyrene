@@ -2,14 +2,14 @@
 (
     [Id] INT NOT NULL IDENTITY,
     [CodObjet] VARCHAR(100) NOT NULL,
-    [LibObjet] VARCHAR(100) NOT NULL,
+    [NomPersonne] VARCHAR(100) NOT NULL,
+    [PrePersonne] VARCHAR(100) NULL,
     [TxtObjet] VARCHAR(500) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NOT NULL,
     [CodExterne] VARCHAR(100) NULL,
-    [PrePersonne] VARCHAR(100) NULL,
-    [TypGenre] INT NULL,
+    [TypCivilite] INT NULL,
     [NumTelep] VARCHAR(25) NULL,
     [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
@@ -19,7 +19,7 @@
 
 GO
 
-CREATE INDEX [IX_GenPersonne_LibObjet] ON [GenPersonne] ([LibObjet]);
+CREATE INDEX [IX_GenPersonne_LibObjet] ON [GenPersonne] ([NomPersonne]);
 
 GO
 
@@ -30,7 +30,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1type = N'TABLE',
     @level1name = N'GenPersonne',
     @level2type = N'COLUMN',
-    @level2name = N'LibObjet'
+    @level2name = N'NomPersonne'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Prénom',
@@ -48,4 +48,4 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1type = N'TABLE',
     @level1name = N'GenPersonne',
     @level2type = N'COLUMN',
-    @level2name = N'TypGenre'
+    @level2name = 'TypCivilite'

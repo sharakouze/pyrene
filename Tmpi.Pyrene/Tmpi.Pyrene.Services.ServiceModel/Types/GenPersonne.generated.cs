@@ -38,12 +38,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public string CodObjet { get; set; }
 
 		/// <summary>
-		/// Désignation.
+		/// Nom.
 		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "Désignation.", IsRequired = true, DataType = SwaggerType.String)]
+		[ApiMember(Description = "Nom.", IsRequired = true, DataType = SwaggerType.String)]
 		public string LibObjet { get; set; }
 
 		/// <summary>
@@ -81,12 +81,18 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Identifiant de synchronisation externe.", DataType = SwaggerType.String)]
 		public string CodExterne { get; set; }
 
+		/// <summary>
+		/// Prénom.
+		/// </summary>
 		[StringLength(100)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Prénom.", DataType = SwaggerType.String)]
 		public string PrePersonne { get; set; }
 
-		[ApiAllowableValues("TypGenre", typeof(TypGenre))]
-		public TypGenre? TypGenre { get; set; }
+		/// <summary>
+		/// Civilité.
+		/// </summary>
+		[ApiMember(Description = "Civilité.", DataType = SwaggerType.Int)]
+		public int? TypGenre { get; set; }
 
 		/// <summary>
 		/// Numéro de téléphone.

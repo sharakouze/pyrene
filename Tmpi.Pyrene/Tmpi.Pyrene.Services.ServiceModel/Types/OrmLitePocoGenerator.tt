@@ -88,9 +88,9 @@
 			tables["GenCompteur"]["TypCompteur"].PropertyType = "TypCompteur";
 			tables["GenCompteur"]["TypPeriodicite"].PropertyType = "TypPeriodicite";
 			tables["GenMandat"]["TypMandat"].PropertyType = "TypMandat";
-			tables["GenPersonne"]["TypGenre"].PropertyType = "TypGenre";
+			tables["GenPersonne"]["TypCivilite"].PropertyType = "TypCivilite";
 			tables["GenFourn"]["TypModeReglement"].PropertyType = "TypModeReglement";
-			tables["GenFournContact"]["TypGenre"].PropertyType = "TypGenre";
+			tables["GenFournContact"]["TypCivilite"].PropertyType = "TypCivilite";
 		}
 		catch {
 		}
@@ -298,7 +298,7 @@ namespace <#= fileNamespace #>
 						case "AdrCode":
 							col.Description = "Code postal";
 							break;
-						case "AdrVille":
+						case "AdrCommune":
 							col.Description = "Ville ou commune";
 							break;
 						case "AdrPays":

@@ -95,11 +95,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Code postal.", DataType = SwaggerType.String)]
 		public string AdrCode { get; set; }
 
-		/// <summary>
-		/// Ville ou commune.
-		/// </summary>
 		[StringLength(100)]
-		[ApiMember(Description = "Ville ou commune.", DataType = SwaggerType.String)]
+		[ApiMember(DataType = SwaggerType.String)]
 		public string AdrVille { get; set; }
 
 		/// <summary>
@@ -164,8 +161,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(DataType = SwaggerType.Double)]
 		public decimal? ValNote { get; set; }
 
-		[ApiAllowableValues("TypModeReglement", typeof(TypModeReglement))]
-		public TypModeReglement? TypModeReglement { get; set; }
+		[ApiMember(DataType = SwaggerType.Int)]
+		public int? TypModeReglement { get; set; }
 
 		[Required]
 		[ApiMember(IsRequired = true, DataType = SwaggerType.Boolean)]

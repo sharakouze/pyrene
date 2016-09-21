@@ -81,9 +81,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Identifiant de synchronisation externe.", DataType = SwaggerType.String)]
 		public string CodExterne { get; set; }
 
+		/// <summary>
+		/// Taux de TVA.
+		/// </summary>
 		[DecimalLength(5, 2)]
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Double)]
+		[ApiMember(Description = "Taux de TVA.", IsRequired = true, DataType = SwaggerType.Double)]
 		public decimal TauTVA { get; set; }
 
 	}

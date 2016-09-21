@@ -30,12 +30,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int Id { get; set; }
 
 		/// <summary>
-		/// test de commentaire.
+		/// Code unique.
 		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "test de commentaire.", IsRequired = true, DataType = SwaggerType.String)]
+		[ApiMember(Description = "Code unique.", IsRequired = true, DataType = SwaggerType.String)]
 		public string CodObjet { get; set; }
 
 		/// <summary>
@@ -82,55 +82,50 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Identifiant de synchronisation externe.", DataType = SwaggerType.String)]
 		public string CodExterne { get; set; }
 
+		/// <summary>
+		/// Type de compteur.
+		/// </summary>
 		[Required]
-		[ApiMember(IsRequired = true)]
+		[ApiMember(Description = "Type de compteur.", IsRequired = true)]
 		[ApiAllowableValues("TypCompteur", typeof(TypCompteur))]
 		public TypCompteur TypCompteur { get; set; }
 
-		[References(typeof(GenSociete))]
-		[ApiMember(DataType = SwaggerType.Int)]
-		public int? CleGenSociete { get; set; }
-
-		[References(typeof(GenSecteur))]
-		[ApiMember(DataType = SwaggerType.Int)]
-		public int? CleGenSecteur { get; set; }
-
-		[References(typeof(GenService))]
-		[ApiMember(DataType = SwaggerType.Int)]
-		public int? CleGenService { get; set; }
-
+		/// <summary>
+		/// Périodicité.
+		/// </summary>
 		[Required]
-		[ApiMember(IsRequired = true)]
+		[ApiMember(Description = "Périodicité.", IsRequired = true)]
 		[ApiAllowableValues("TypPeriodicite", typeof(TypPeriodicite))]
 		public TypPeriodicite TypPeriodicite { get; set; }
 
-		[StringLength(25)]
-		[ApiMember(DataType = SwaggerType.String)]
-		public string ValPrefixe1 { get; set; }
+		/// <summary>
+		/// Id de la société associée.
+		/// </summary>
+		[References(typeof(GenSociete))]
+		[ApiMember(Description = "Id de la société associée.", DataType = SwaggerType.Int)]
+		public int? CleGenSociete { get; set; }
 
-		[StringLength(25)]
-		[ApiMember(DataType = SwaggerType.String)]
-		public string ValFormatDate1 { get; set; }
+		/// <summary>
+		/// Id du secteur associé.
+		/// </summary>
+		[References(typeof(GenSecteur))]
+		[ApiMember(Description = "Id du secteur associé.", DataType = SwaggerType.Int)]
+		public int? CleGenSecteur { get; set; }
 
-		[StringLength(25)]
-		[ApiMember(DataType = SwaggerType.String)]
-		public string ValPrefixe2 { get; set; }
+		/// <summary>
+		/// Id du service associé.
+		/// </summary>
+		[References(typeof(GenService))]
+		[ApiMember(Description = "Id du service associé.", DataType = SwaggerType.Int)]
+		public int? CleGenService { get; set; }
 
+		/// <summary>
+		/// Format du modèle de numérotation.
+		/// </summary>
+		[StringLength(100)]
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Byte)]
-		public byte NbrDigit { get; set; }
-
-		[StringLength(25)]
-		[ApiMember(DataType = SwaggerType.String)]
-		public string ValSuffixe1 { get; set; }
-
-		[StringLength(25)]
-		[ApiMember(DataType = SwaggerType.String)]
-		public string ValFormatDate2 { get; set; }
-
-		[StringLength(25)]
-		[ApiMember(DataType = SwaggerType.String)]
-		public string ValSuffixe2 { get; set; }
+		[ApiMember(Description = "Format du modèle de numérotation.", IsRequired = true, DataType = SwaggerType.String)]
+		public string ValFormatNumero { get; set; }
 
 		[StringLength(500)]
 		[ApiMember(DataType = SwaggerType.String)]

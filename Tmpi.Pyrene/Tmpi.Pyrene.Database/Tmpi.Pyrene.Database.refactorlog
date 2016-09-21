@@ -665,4 +665,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="CodObjetfff" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="12e1993c-25d1-414e-a9c0-04e1384cca98" ChangeDateTime="09/21/2016 18:31:33">
+    <Property Name="ElementName" Value="[dbo].[GenPersonne].[TypGenre]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenPersonne]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="TypCivilite" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ebe72fba-f0d6-42bc-b658-1d91c272971b" ChangeDateTime="09/21/2016 18:32:13">
+    <Property Name="ElementName" Value="[dbo].[GenFournContact].[TypGenre]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenFournContact]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="TypCivilite" />
+  </Operation>
 </Operations>
