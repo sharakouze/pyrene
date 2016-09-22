@@ -33,17 +33,8 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
             RuleFor(x => x.CodExterne).Length(0, 100);
 
-            RuleFor(x => x.ValPrefixe1).Length(0, 25);
-
-            RuleFor(x => x.ValFormatDate1).Length(0, 25);
-
-            RuleFor(x => x.ValPrefixe2).Length(0, 25);
-
-            RuleFor(x => x.ValSuffixe1).Length(0, 25);
-
-            RuleFor(x => x.ValFormatDate2).Length(0, 25);
-
-            RuleFor(x => x.ValSuffixe2).Length(0, 25);
+            RuleFor(x => x.ValFormatNumero).NotEmpty();
+            RuleFor(x => x.ValFormatNumero).Length(0, 100);
 
             RuleFor(x => x.LstFormatMois).Length(0, 500);
 
