@@ -548,54 +548,73 @@ END CATCH;
 BEGIN TRY
 	BEGIN TRANSACTION;
 
-	/*
-	declare @civilite as table ( typcivilite int, codcivilite varchar(50) );
-insert into @civilite
-values (1,'Monsieur'),(1,'M'),(1,'Mr'),(1,'M.'),(1,'Mr.'),
-(2,'Madame'),(2,'Mme'),(2,'Mme.'),
-(2,'Mademoiselle'),(2,'Melle'),(2,'Melle.');
+	declare @GenFournContact as table (
+		CleFourn int not null,
+		NomContact varchar(100) not null,
+		TypCivilite int null,
+		NomContact_Clean varchar(100)
+	);
+	
+	insert into @GenFournContact ( CleFourn, NomContact )
+	select CleFourn,
+		ltrim(rtrim(NomContact)) as NomContact
+	from $(SourceSchemaName).[t_Fourn]
+	where CleFourn>0
+		and NomContact is not null and NomContact<>''; -- and NomContact<>'INACTIF'
 
-		select CleFourn as CleGenFourn,
-		nomcontact,
-			replace(nomcontact,c.codcivilite+' ',''),
-			LeftNomContact,
-			c.typcivilite,
-			null as PreContact,
-			null as TxtObjet, 
-			null as NumTelep, 
-			null as NumFax, 
-			null as NumEmail, 
-			null as TypCivilite, 
-			null as CodFonction
-		from (
-			select CleFourn,
-				NomContact,
-				left(NomContact,charindex(' ',NomContact)) as LeftNomContact
-			from (
-				select CleFourn,
-					ltrim(rtrim(NomContact)) as NomContact
-				from $(SourceSchemaName).[t_Fourn]
-				where CleFourn>0
-					and NomContact is not null and NomContact<>''
-			) f
-		) F left join @civilite C on F.LeftNomContact=C.codcivilite
+	declare TEMP_CURSOR cursor fast_forward for
+	select CleFourn, NomContact
+	from @GenFournContact;
 
+	declare @CleFourn int;
+	declare @NomContact varchar(100);
+	
+	open TEMP_CURSOR;
+ 
+    fetch next from TEMP_CURSOR into @CleFourn, @NomContact;
+    while @@FETCH_STATUS=0
+	begin
+		declare @index int;
+		declare @str varchar(100);
+		declare @TypCivilite int = null;
 
-		*/
+		set @index=CHARINDEX(' ',@NomContact);
+		set @str=left(@NomContact,@index);
+
+		if (@str='Monsieur' or @str='M' or @str='Mr' or @str='M.' or @str='Mr.') begin
+			set @TypCivilite=1;
+		end;
+		else if (@str='Madame' or @str='Mme' or @str='Mme.') begin
+			set @TypCivilite=2;
+		end;
+		else if (@str='Mademoiselle' or @str='Melle' or @str='Melle.') begin
+			set @TypCivilite=3;
+		end;
+		if (@TypCivilite is not null) begin
+			update @GenFournContact
+			set TypCivilite=@TypCivilite,
+				NomContact_Clean=SUBSTRING(NomContact,@index+1,100) 
+			where CleFourn=@CleFourn;
+		end;
+			
+		fetch next from TEMP_CURSOR into @CleFourn, @NomContact;
+    end;
+ 
+    close TEMP_CURSOR;
+    deallocate TEMP_CURSOR;
+
 	merge into [GenFournContact] as target
 	using (
 		select CleFourn as CleGenFourn,
-			ltrim(rtrim(NomContact)) as NomContact,
+			isnull(NomContact_Clean,NomContact)) as NomContact,
 			null as PreContact,
 			null as TxtObjet, 
 			null as NumTelep, 
 			null as NumFax, 
 			null as NumEmail, 
-			null as TypCivilite, 
+			TypCivilite, 
 			null as CodFonction
-		from $(SourceSchemaName).[t_Fourn]
-		where CleFourn>0
-			and NomContact is not null and NomContact<>''
+		from @GenFournContact
 	) as source
 	on (target.CleGenFourn=source.CleGenFourn and target.NomContact=source.NomContact)
 	when not matched by target
