@@ -548,11 +548,12 @@ END CATCH;
 BEGIN TRY
 	BEGIN TRANSACTION;
 
-	declare @GenFournContact as table (
+	declare @GenFournContact table (
 		CleFourn int not null,
 		NomContact varchar(100) not null,
+		NomContact_Clean varchar(100),
 		TypCivilite int null,
-		NomContact_Clean varchar(100)
+		NumEmail varchar(100)
 	);
 	
 	insert into @GenFournContact ( CleFourn, NomContact )
@@ -560,7 +561,7 @@ BEGIN TRY
 		ltrim(rtrim(NomContact)) as NomContact
 	from $(SourceSchemaName).[t_Fourn]
 	where CleFourn>0
-		and NomContact is not null and NomContact<>''; -- and NomContact<>'INACTIF'
+		and NomContact is not null and NomContact<>'' and NomContact<>'INACTIF';
 
 	declare TEMP_CURSOR cursor fast_forward for
 	select CleFourn, NomContact
@@ -568,35 +569,58 @@ BEGIN TRY
 
 	declare @CleFourn int;
 	declare @NomContact varchar(100);
+
+	declare @strings table ( id int, txt varchar(100) );
 	
 	open TEMP_CURSOR;
  
     fetch next from TEMP_CURSOR into @CleFourn, @NomContact;
     while @@FETCH_STATUS=0
 	begin
-		declare @index int;
-		declare @str varchar(100);
+		delete @strings;
+		insert into @strings
+		select * from [fn_Split](@NomContact, ' ');
+
 		declare @TypCivilite int = null;
+		select top 1 @TypCivilite=case
+			when txt='Monsieur' then 1
+			when txt='M' then 1
+			when txt='Mr' then 1
+			when txt='M.' then 1
+			when txt='Mr.' then 1
+			when txt='Madame' then 2
+			when txt='Mme' then 2
+			when txt='Mme.' then 2
+			when txt='Mademoiselle' then 3
+			when txt='Melle' then 3
+			when txt='Melle.' then 3
+			else null end
+		from @strings;
+		if (@TypCivilite is not null)
+		begin
+			update @GenFournContact set TypCivilite=@TypCivilite
+			where CleFourn=@CleFourn;
+			delete @strings where id=1;
+		end;
 
-		set @index=CHARINDEX(' ',@NomContact);
-		set @str=left(@NomContact,@index);
+		declare @id int = null;
 
-		if (@str='Monsieur' or @str='M' or @str='Mr' or @str='M.' or @str='Mr.') begin
-			set @TypCivilite=1;
+		select @id=id
+		from @strings
+		where txt like '%@%' and txt like '%.%';
+		if (@id is not null)
+		begin
+			update @GenFournContact set NumEmail=(select txt from @strings where id=@id)
+			where CleFourn=@CleFourn;
+			delete @strings where id=@id;
 		end;
-		else if (@str='Madame' or @str='Mme' or @str='Mme.') begin
-			set @TypCivilite=2;
-		end;
-		else if (@str='Mademoiselle' or @str='Melle' or @str='Melle.') begin
-			set @TypCivilite=3;
-		end;
-		if (@TypCivilite is not null) begin
-			update @GenFournContact
-			set TypCivilite=@TypCivilite,
-				NomContact_Clean=SUBSTRING(NomContact,@index+1,100) 
+
+		if ((select count(*) from @string)>0)
+		begin
+			update @GenFournContact set NomContact_Clean=stuff((select ' '+txt from @strings for XML PATH('')),1,1,'')
 			where CleFourn=@CleFourn;
 		end;
-			
+
 		fetch next from TEMP_CURSOR into @CleFourn, @NomContact;
     end;
  
@@ -611,7 +635,7 @@ BEGIN TRY
 			null as TxtObjet, 
 			null as NumTelep, 
 			null as NumFax, 
-			null as NumEmail, 
+			NumEmail, 
 			TypCivilite, 
 			null as CodFonction
 		from @GenFournContact
