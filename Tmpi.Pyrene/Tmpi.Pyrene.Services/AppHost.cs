@@ -4,6 +4,7 @@ using ServiceStack.Api.Swagger;
 using ServiceStack.Text;
 using ServiceStack.Validation;
 using System;
+using System.Linq;
 using System.Configuration;
 
 namespace Tmpi.Pyrene.Services
@@ -60,13 +61,23 @@ namespace Tmpi.Pyrene.Services
             bool.TryParse(ConfigurationManager.AppSettings["Plugins.CorsFeature"], out corsFeatureEnabled);
             if (corsFeatureEnabled)
             {
-                var corsFeature = new CorsFeature();
+                var allowOriginWhitelist = new[] { CorsFeature.DefaultOrigin };
 
-                string allowOriginWhitelist = ConfigurationManager.AppSettings["Plugins.CorsFeature.AllowOriginWhitelist"];
-                if (!string.IsNullOrEmpty(allowOriginWhitelist))
+                string text = ConfigurationManager.AppSettings["Plugins.CorsFeature.AllowOriginWhitelist"];
+                if (!string.IsNullOrWhiteSpace(text))
                 {
-                    var list = allowOriginWhitelist.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    corsFeature = new CorsFeature(list);
+                    allowOriginWhitelist = text.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+                }
+
+                CorsFeature corsFeature = null;
+
+                if (allowOriginWhitelist.Length == 1)
+                {
+                    corsFeature = new CorsFeature(allowOriginWhitelist[0]);
+                }
+                else
+                {
+                    corsFeature = new CorsFeature(allowOriginWhitelist);
                 }
 
                 Plugins.Add(corsFeature);
