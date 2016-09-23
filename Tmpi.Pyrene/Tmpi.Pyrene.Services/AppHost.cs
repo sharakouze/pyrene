@@ -3,6 +3,7 @@ using ServiceStack;
 using ServiceStack.Api.Swagger;
 using ServiceStack.Text;
 using ServiceStack.Validation;
+using System;
 using System.Configuration;
 
 namespace Tmpi.Pyrene.Services
@@ -55,24 +56,33 @@ namespace Tmpi.Pyrene.Services
 
             AppHostHelper.ConfigDbConnection(container, "PyreneModel");
 
-            bool corsFeature = false;
-            bool.TryParse(ConfigurationManager.AppSettings["Plugins.CorsFeature"], out corsFeature);
-            if (corsFeature)
+            bool corsFeatureEnabled = false;
+            bool.TryParse(ConfigurationManager.AppSettings["Plugins.CorsFeature"], out corsFeatureEnabled);
+            if (corsFeatureEnabled)
             {
-                Plugins.Add(new CorsFeature());
+                var corsFeature = new CorsFeature();
+
+                string allowOriginWhitelist = ConfigurationManager.AppSettings["Plugins.CorsFeature.AllowOriginWhitelist"];
+                if (!string.IsNullOrEmpty(allowOriginWhitelist))
+                {
+                    var list = allowOriginWhitelist.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    corsFeature = new CorsFeature(list);
+                }
+
+                Plugins.Add(corsFeature);
             }
 
-            bool validationFeature = true;
-            bool.TryParse(ConfigurationManager.AppSettings["Plugins.ValidationFeature"], out validationFeature);
-            if (validationFeature)
+            bool validationFeatureEnabled = true;
+            bool.TryParse(ConfigurationManager.AppSettings["Plugins.ValidationFeature"], out validationFeatureEnabled);
+            if (validationFeatureEnabled)
             {
                 Plugins.Add(new ValidationFeature());
                 container.RegisterValidators(ServiceAssemblies);
             }
 
-            bool swaggerFeature = false;
-            bool.TryParse(ConfigurationManager.AppSettings["Plugins.SwaggerFeature"], out swaggerFeature);
-            if (swaggerFeature)
+            bool swaggerFeatureEnabled = false;
+            bool.TryParse(ConfigurationManager.AppSettings["Plugins.SwaggerFeature"], out swaggerFeatureEnabled);
+            if (swaggerFeatureEnabled)
             {
                 Plugins.Add(new SwaggerFeature());
             }
