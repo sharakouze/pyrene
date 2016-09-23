@@ -615,7 +615,7 @@ BEGIN TRY
 			delete @strings where id=@id;
 		end;
 
-		if ((select count(*) from @string)>0)
+		if ((select count(*) from @strings)>0)
 		begin
 			update @GenFournContact set NomContact_Clean=stuff((select ' '+txt from @strings for XML PATH('')),1,1,'')
 			where CleFourn=@CleFourn;
