@@ -55,17 +55,24 @@ namespace Tmpi.Pyrene.Services
 
             AppHostHelper.ConfigDbConnection(container, "PyreneModel");
 
-            bool validationEnabled = true;
-            bool.TryParse(ConfigurationManager.AppSettings["Plugins.ValidationEnabled"], out validationEnabled);
-            if (validationEnabled)
+            bool corsFeature = false;
+            bool.TryParse(ConfigurationManager.AppSettings["Plugins.CorsFeature"], out corsFeature);
+            if (corsFeature)
+            {
+                Plugins.Add(new CorsFeature());
+            }
+
+            bool validationFeature = true;
+            bool.TryParse(ConfigurationManager.AppSettings["Plugins.ValidationFeature"], out validationFeature);
+            if (validationFeature)
             {
                 Plugins.Add(new ValidationFeature());
                 container.RegisterValidators(ServiceAssemblies);
             }
 
-            bool swaggerEnabled = false;
-            bool.TryParse(ConfigurationManager.AppSettings["Plugins.SwaggerEnabled"], out swaggerEnabled);
-            if (swaggerEnabled)
+            bool swaggerFeature = false;
+            bool.TryParse(ConfigurationManager.AppSettings["Plugins.SwaggerFeature"], out swaggerFeature);
+            if (swaggerFeature)
             {
                 Plugins.Add(new SwaggerFeature());
             }
