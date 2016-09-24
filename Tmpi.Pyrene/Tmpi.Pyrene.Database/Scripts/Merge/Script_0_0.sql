@@ -551,9 +551,10 @@ BEGIN TRY
 	declare @GenFournContact table (
 		CleFourn int not null,
 		NomContact varchar(100) not null,
-		NomContact_Clean varchar(100),
+		NomContact_Clean varchar(100) null,
 		TypCivilite int null,
-		NumEmail varchar(100)
+		NumEmail varchar(100) null,
+		NumTelep varchar(25) null
 	);
 	
 	insert into @GenFournContact ( CleFourn, NomContact )
@@ -581,6 +582,7 @@ BEGIN TRY
 		insert into @strings
 		select * from [fn_Split](@NomContact, ' ');
 
+		-- extraction civilité
 		declare @TypCivilite int = null;
 		select top 1 @TypCivilite=case
 			when txt='Monsieur' then 1
@@ -600,24 +602,41 @@ BEGIN TRY
 		begin
 			update @GenFournContact set TypCivilite=@TypCivilite
 			where CleFourn=@CleFourn;
+
 			delete @strings where id=1;
 		end;
 
-		declare @id int = null;
+		declare @id int;
 
-		select @id=id
-		from @strings
-		where txt like '%@%' and txt like '%.%';
+		-- extraction email
+		set @id = null;
+		select @id=id from @strings where txt like '%@%' and txt like '%.%';
 		if (@id is not null)
 		begin
 			update @GenFournContact set NumEmail=(select txt from @strings where id=@id)
 			where CleFourn=@CleFourn;
+			update @GenFournContact set NumEmail=right(NumEmail,len(NumEmail)-1)
+			where CleFourn=@CleFourn and left(NumEmail,1) not like '[a-zA-Z]';
+			update @GenFournContact set NumEmail=left(NumEmail,len(NumEmail)-1)
+			where CleFourn=@CleFourn and right(NumEmail,1) not like '[a-zA-Z]';
+
+			delete @strings where id=@id;
+		end;
+
+		-- extraction téléphone
+		set @id = null;
+		select @id=id from @strings where isnumeric(replace(txt,'.',''))=1;
+		if (@id is not null)
+		begin
+			update @GenFournContact set NumTelep=(select txt from @strings where id=@id)
+			where CleFourn=@CleFourn;
+
 			delete @strings where id=@id;
 		end;
 
 		if ((select count(*) from @strings)>0)
 		begin
-			update @GenFournContact set NomContact_Clean=stuff((select ' '+txt from @strings for XML PATH('')),1,1,'')
+			update @GenFournContact set NomContact_Clean=stuff((select ' '+txt from @strings for xml path('')),1,1,'')
 			where CleFourn=@CleFourn;
 		end;
 
@@ -633,7 +652,7 @@ BEGIN TRY
 			isnull(NomContact_Clean,NomContact)) as NomContact,
 			null as PreContact,
 			null as TxtObjet, 
-			null as NumTelep, 
+			NumTelep, 
 			null as NumFax, 
 			NumEmail, 
 			TypCivilite, 
@@ -697,9 +716,9 @@ BEGIN TRY
 	merge into [GenExercice] as target
 	using (
 		select CleExercice as Id,
-			CodExercice as CodObjet,
-			LibExercice as LibObjet,
-			TxtExercice as TxtObjet,
+			ltrim(rtrim(CodExercice)) as CodObjet,
+			ltrim(rtrim(LibExercice)) as LibObjet,
+			ltrim(rtrim(TxtExercice)) as TxtObjet,
 			case NivExercice
 				when 9 then 1 -- Actif
 				when 1 then 0 -- Inactif

@@ -167,7 +167,7 @@ namespace <#= fileNamespace #>
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns></returns>
-		public List<RessourceItem> Get(<#= requestName #> request)
+		public List<BasicEntity> Get(<#= requestName #> request)
 		{
 			if (string.IsNullOrWhiteSpace(request.Text))
 			{
@@ -180,7 +180,7 @@ namespace <#= fileNamespace #>
                 q = q.Limit(request.Max);
             }
 
-            var items = Db.Select<RessourceItem>(q);
+            var items = Db.Select<BasicEntity>(q);
             return items;
 		}
 

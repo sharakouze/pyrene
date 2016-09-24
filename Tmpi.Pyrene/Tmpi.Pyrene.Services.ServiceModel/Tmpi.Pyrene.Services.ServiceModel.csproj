@@ -70,7 +70,7 @@
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="AutocompleteRequestBase.cs" />
-    <Compile Include="RessourceItem.cs" />
+    <Compile Include="BasicEntity.cs" />
     <Compile Include="DeleteByIdRequestBase.cs" />
     <Compile Include="DeleteGenCompteur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
@@ -282,7 +282,7 @@
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\IAuditable.cs" />
-    <Compile Include="Types\IHasStandard.cs" />
+    <Compile Include="Types\IEntity.cs" />
     <Compile Include="Types\OrmLitePocoGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

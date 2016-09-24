@@ -1,9 +1,11 @@
-﻿namespace Tmpi.Pyrene.Services.ServiceModel.Types
+﻿using ServiceStack.Model;
+
+namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
     /// <summary>
-    /// Représente une ressource ayant les champs d'identification standard.
+    /// Représente une entité identifiée par un code, une désignation et un état actif ou inactif.
     /// </summary>
-    public interface IHasStandard
+    public interface IEntity
     {
         /// <summary>
         /// Obtient ou définit le code.
@@ -16,8 +18,8 @@
         string LibObjet { get; set; }
 
         /// <summary>
-        /// Obtient ou définit le commentaire.
+        /// Obtient ou définit le commentaire ou la description.
         /// </summary>
-        string TxtObjet { get; set; }
+        bool EstActif { get; set; }
     }
 }

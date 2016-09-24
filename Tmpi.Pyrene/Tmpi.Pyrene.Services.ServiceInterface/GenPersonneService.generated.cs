@@ -28,7 +28,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns></returns>
-		public List<RessourceItem> Get(AutocompleteGenPersonne request)
+		public List<BasicEntity> Get(AutocompleteGenPersonne request)
 		{
 			if (string.IsNullOrWhiteSpace(request.Text))
 			{
@@ -41,7 +41,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 q = q.Limit(request.Max);
             }
 
-            var items = Db.Select<RessourceItem>(q);
+            var items = Db.Select<BasicEntity>(q);
             return items;
 		}
 

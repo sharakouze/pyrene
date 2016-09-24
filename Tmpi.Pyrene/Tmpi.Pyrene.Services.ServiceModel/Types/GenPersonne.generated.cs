@@ -18,8 +18,8 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	public partial class GenPersonne : IHasId<int>,
-		IAuditable,
-		IHasStandard
+		IEntity,
+		IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.

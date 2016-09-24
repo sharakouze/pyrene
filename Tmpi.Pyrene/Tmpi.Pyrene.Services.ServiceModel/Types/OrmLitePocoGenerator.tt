@@ -188,28 +188,28 @@ namespace <#= fileNamespace #>
 		var lstInterfaces = new List<string>();
 
 		if (table.HasPK())
-        {
-			if (UseIdAsPK)
-			{
-				table.PK.PropertyName = "Id";
-			}
-			if (table.PK.PropertyName == "Id")
-			{
-				lstInterfaces.Add("IHasId<" + table.PK.PropertyType + ">");
-			}
-        }
+		{
+            if (UseIdAsPK)
+            {
+                table.PK.PropertyName = "Id";
+            }
+		    if (table.PK.PropertyName == "Id")
+		    {
+			    lstInterfaces.Add("IHasId<" + table.PK.PropertyType + ">");
+		    }
+		}
 		if (AddCustomInterfaces)
         {
+			if (table.Columns.Any(c => c.PropertyName == "CodObjet" && c.ProperPropertyType == "string") &&
+				table.Columns.Any(c => c.PropertyName == "LibObjet" && c.ProperPropertyType == "string") &&
+				table.Columns.Any(c => c.PropertyName == "EstActif" && c.ProperPropertyType == "bool"))
+            {
+				lstInterfaces.Add("IEntity");
+            }
 			if (table.Columns.Any(c => c.PropertyName == "DatCreation" && c.ProperPropertyType == "DateTime") &&
 				table.Columns.Any(c => c.PropertyName == "DatModif" && c.ProperPropertyType == "DateTime"))
             {
 				lstInterfaces.Add("IAuditable");
-            }
-			if (table.Columns.Any(c => c.PropertyName == "CodObjet" && c.ProperPropertyType == "string") &&
-				table.Columns.Any(c => c.PropertyName == "LibObjet" && c.ProperPropertyType == "string") &&
-				table.Columns.Any(c => c.PropertyName == "TxtObjet" && c.ProperPropertyType == "string"))
-            {
-				lstInterfaces.Add("IHasStandard");
             }
         }
 

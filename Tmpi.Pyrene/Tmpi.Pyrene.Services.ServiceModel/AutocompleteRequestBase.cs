@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
-    public abstract class AutocompleteRequestBase : IReturn<List<RessourceItem>>
+    public abstract class AutocompleteRequestBase : IReturn<List<BasicEntity>>
     {
         public string Text { get; set; }
 

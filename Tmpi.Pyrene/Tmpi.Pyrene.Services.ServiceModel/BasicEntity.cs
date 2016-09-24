@@ -1,6 +1,9 @@
-﻿namespace Tmpi.Pyrene.Services.ServiceModel
+﻿using ServiceStack.Model;
+using Tmpi.Pyrene.Services.ServiceModel.Types;
+
+namespace Tmpi.Pyrene.Services.ServiceModel
 {
-    public class RessourceItem
+    public class BasicEntity : IHasId<int>, IEntity
     {
         public int Id { get; set; }
 

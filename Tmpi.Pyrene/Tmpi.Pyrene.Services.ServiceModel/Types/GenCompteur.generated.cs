@@ -19,8 +19,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, "TypCompteur", "CleGenSociete", "CleGenSecteur", "CleGenService")]
 	public partial class GenCompteur : IHasId<int>,
-		IAuditable,
-		IHasStandard
+		IEntity,
+		IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.

@@ -19,8 +19,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, "TypMandat", "NivMandat")]
 	public partial class GenMandat : IHasId<int>,
-		IAuditable,
-		IHasStandard
+		IEntity,
+		IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.

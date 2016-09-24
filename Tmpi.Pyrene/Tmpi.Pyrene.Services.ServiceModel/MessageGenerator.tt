@@ -313,7 +313,7 @@ namespace <#= codeClass.Namespace == null ? fileNamespace : codeClass.Namespace.
             } // end if
         } // end if
 
-		if (allInterfaces.Any(i => i.FullName == "Tmpi.Pyrene.Services.ServiceModel.Types.IHasStandard"))
+		if (allInterfaces.Any(i => i.FullName == "Tmpi.Pyrene.Services.ServiceModel.Types.IEntity"))
         {
 			bool autocompleteExcluded = AutocompleteClassFilterExclude != null && AutocompleteClassFilterExclude.IsMatch(codeClass.Name);
 			if (!autocompleteExcluded)
