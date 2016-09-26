@@ -17,8 +17,9 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, "CleGenFourn", "LibObjet")]
-	public partial class GenFournContact : IHasId<int>
+	[CompositeIndex(true, "CleGenFourn", "NomContact")]
+	public partial class GenFournContact : IHasId<int>,
+		IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.
@@ -27,18 +28,28 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Clé primaire.", DataType = SwaggerType.Int)]
 		public int Id { get; set; }
 
+		/// <summary>
+		/// Id du fournisseur associé.
+		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id du fournisseur associé.", IsRequired = true, DataType = SwaggerType.Int)]
 		public int CleGenFourn { get; set; }
 
 		/// <summary>
-		/// Désignation.
+		/// Nom de famille.
 		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[ApiMember(Description = "Désignation.", IsRequired = true, DataType = SwaggerType.String)]
-		public string LibObjet { get; set; }
+		[ApiMember(Description = "Nom de famille.", IsRequired = true, DataType = SwaggerType.String)]
+		public string NomContact { get; set; }
+
+		/// <summary>
+		/// Prénom.
+		/// </summary>
+		[StringLength(100)]
+		[ApiMember(Description = "Prénom.", DataType = SwaggerType.String)]
+		public string PreContact { get; set; }
 
 		/// <summary>
 		/// Commentaire ou description.
@@ -47,9 +58,19 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerType.String)]
 		public string TxtObjet { get; set; }
 
-		[StringLength(100)]
-		[ApiMember(DataType = SwaggerType.String)]
-		public string PreContact { get; set; }
+		/// <summary>
+		/// Date de création.
+		/// </summary>
+		[Required]
+		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
+		public DateTime DatCreation { get; set; }
+
+		/// <summary>
+		/// Date de dernière modification.
+		/// </summary>
+		[Required]
+		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
+		public DateTime DatModif { get; set; }
 
 		/// <summary>
 		/// Numéro de téléphone.
@@ -72,11 +93,18 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Adresse email.", DataType = SwaggerType.String)]
 		public string NumEmail { get; set; }
 
-		[ApiMember(DataType = SwaggerType.Int)]
-		public int? TypGenre { get; set; }
+		/// <summary>
+		/// Titre de civilité.
+		/// </summary>
+		[ApiMember(Description = "Titre de civilité.")]
+		[ApiAllowableValues("TypCivilite", typeof(TypCivilite))]
+		public TypCivilite? TypCivilite { get; set; }
 
+		/// <summary>
+		/// Fonction du contact.
+		/// </summary>
 		[StringLength(100)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Fonction du contact.", DataType = SwaggerType.String)]
 		public string CodFonction { get; set; }
 
 	}

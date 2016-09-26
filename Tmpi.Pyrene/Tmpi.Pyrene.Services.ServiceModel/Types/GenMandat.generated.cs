@@ -82,20 +82,32 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Identifiant de synchronisation externe.", DataType = SwaggerType.String)]
 		public string CodExterne { get; set; }
 
+		/// <summary>
+		/// Type de mandat.
+		/// </summary>
 		[Required]
-		[ApiMember(IsRequired = true)]
+		[ApiMember(Description = "Type de mandat.", IsRequired = true)]
 		[ApiAllowableValues("TypMandat", typeof(TypMandat))]
 		public TypMandat TypMandat { get; set; }
 
+		/// <summary>
+		/// Niveau du mandat.
+		/// </summary>
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Byte)]
+		[ApiMember(Description = "Niveau du mandat.", IsRequired = true, DataType = SwaggerType.Byte)]
 		public byte NivMandat { get; set; }
 
+		/// <summary>
+		/// Nombre de signatures requises.
+		/// </summary>
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Byte)]
+		[ApiMember(Description = "Nombre de signatures requises.", IsRequired = true, DataType = SwaggerType.Byte)]
 		public byte NbrSignature { get; set; }
 
-		[ApiMember(DataType = SwaggerType.String)]
+		/// <summary>
+		/// Corps du message.
+		/// </summary>
+		[ApiMember(Description = "Corps du message.", DataType = SwaggerType.String)]
 		public string TxtMessage { get; set; }
 
 		[Reference]

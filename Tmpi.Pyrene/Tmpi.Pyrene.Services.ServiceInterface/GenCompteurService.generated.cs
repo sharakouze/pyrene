@@ -61,6 +61,21 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
+		/// Supprime l'entité <see cref="GenCompteurValeur" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeleteGenCompteurValeur request)
+		{
+			int count = Db.DeleteById<GenCompteurValeur>(request.Id);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenCompteurValeur), request.Id));
+			}
+		}
+
+		/// <summary>
 		/// Ajoute l'entité <see cref="GenCompteur" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
@@ -106,6 +121,23 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
+		/// Retourne l'entité <see cref="GenCompteurValeur" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="GenCompteurValeur" /> trouvée.</returns>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public GenCompteurValeur Get(GetGenCompteurValeur request)
+		{
+			var entity = Db.SingleById<GenCompteurValeur>(request.Id);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenCompteurValeur), request.Id));
+			}
+			return entity;
+		}
+
+		/// <summary>
 		/// Met à jour l'entité <see cref="GenCompteur" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
@@ -128,6 +160,32 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			{
 				throw HttpError.NotFound(
 					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenCompteur), request.Id));
+			}
+		}
+
+		/// <summary>
+		/// Met à jour l'entité <see cref="GenCompteurValeur" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public void Patch(PatchGenCompteurValeur request)
+		{
+			Debug.Assert(request.Fields != null);
+			if (request.Fields == null)
+			{
+				throw new ArgumentNullException(nameof(request.Fields));
+			}
+
+			var entity = new GenCompteurValeur();
+			var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
+
+			var updateExpr = Db.From<GenCompteurValeur>().Update(updateFields).Where(x => x.Id == request.Id);
+			int count = Db.UpdateOnly(entity, updateExpr);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenCompteurValeur), request.Id));
 			}
 		}
 

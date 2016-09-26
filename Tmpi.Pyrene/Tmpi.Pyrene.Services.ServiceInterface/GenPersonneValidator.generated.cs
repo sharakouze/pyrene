@@ -26,14 +26,14 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
             RuleFor(x => x.CodObjet).NotEmpty();
             RuleFor(x => x.CodObjet).Length(0, 100);
 
-            RuleFor(x => x.LibObjet).NotEmpty();
-            RuleFor(x => x.LibObjet).Length(0, 100);
+            RuleFor(x => x.NomPersonne).NotEmpty();
+            RuleFor(x => x.NomPersonne).Length(0, 100);
+
+            RuleFor(x => x.PrePersonne).Length(0, 100);
 
             RuleFor(x => x.TxtObjet).Length(0, 500);
 
             RuleFor(x => x.CodExterne).Length(0, 100);
-
-            RuleFor(x => x.PrePersonne).Length(0, 100);
 
             RuleFor(x => x.NumTelep).Length(0, 25);
 

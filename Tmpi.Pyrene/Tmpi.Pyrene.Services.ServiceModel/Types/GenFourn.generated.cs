@@ -127,49 +127,83 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Adresse email.", DataType = SwaggerType.String)]
 		public string NumEmail { get; set; }
 
+		/// <summary>
+		/// Code comptabilité.
+		/// </summary>
 		[StringLength(100)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Code comptabilité.", DataType = SwaggerType.String)]
 		public string CodCompta { get; set; }
 
+		/// <summary>
+		/// Numéro de client.
+		/// </summary>
 		[StringLength(100)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Numéro de client.", DataType = SwaggerType.String)]
 		public string NumClient { get; set; }
 
+		/// <summary>
+		/// Numéro de TVA intracommunautaire.
+		/// </summary>
 		[StringLength(25)]
-		[ApiMember(DataType = SwaggerType.String)]
+		[ApiMember(Description = "Numéro de TVA intracommunautaire.", DataType = SwaggerType.String)]
 		public string NumTVAIntra { get; set; }
 
+		/// <summary>
+		/// Frais de port.
+		/// </summary>
 		[DecimalLength(15, 2)]
-		[ApiMember(DataType = SwaggerType.Double)]
+		[ApiMember(Description = "Frais de port.", DataType = SwaggerType.Double)]
 		public decimal? MntFPort { get; set; }
 
+		/// <summary>
+		/// Montant minimum pour frais de port gratuits.
+		/// </summary>
 		[DecimalLength(15, 2)]
-		[ApiMember(DataType = SwaggerType.Double)]
+		[ApiMember(Description = "Montant minimum pour frais de port gratuits.", DataType = SwaggerType.Double)]
 		public decimal? MntFPortGratuit { get; set; }
 
+		/// <summary>
+		/// Montant minimum à commander.
+		/// </summary>
 		[DecimalLength(15, 2)]
-		[ApiMember(DataType = SwaggerType.Double)]
+		[ApiMember(Description = "Montant minimum à commander.", DataType = SwaggerType.Double)]
 		public decimal? MntCommandeMin { get; set; }
 
-		[ApiMember(DataType = SwaggerType.Byte)]
+		/// <summary>
+		/// Délais de livraison en jours.
+		/// </summary>
+		[ApiMember(Description = "Délais de livraison en jours.", DataType = SwaggerType.Byte)]
 		public byte? DelLivraison { get; set; }
 
-		[ApiMember(DataType = SwaggerType.Byte)]
+		/// <summary>
+		/// Délais de paiement en jours.
+		/// </summary>
+		[ApiMember(Description = "Délais de paiement en jours.", DataType = SwaggerType.Byte)]
 		public byte? DelPaiement { get; set; }
 
+		/// <summary>
+		/// Note globale.
+		/// </summary>
 		[DecimalLength(5, 2)]
-		[ApiMember(DataType = SwaggerType.Double)]
+		[ApiMember(Description = "Note globale.", DataType = SwaggerType.Double)]
 		public decimal? ValNote { get; set; }
 
-		[ApiMember(DataType = SwaggerType.Int)]
-		public int? TypModeReglement { get; set; }
+		/// <summary>
+		/// Mode de règlement.
+		/// </summary>
+		[ApiMember(Description = "Mode de règlement.")]
+		[ApiAllowableValues("TypModeReglement", typeof(TypModeReglement))]
+		public TypModeReglement? TypModeReglement { get; set; }
 
 		[Required]
 		[ApiMember(IsRequired = true, DataType = SwaggerType.Boolean)]
 		public bool EstEnvoiMailBonCde { get; set; }
 
+		/// <summary>
+		/// Id de l'utilisateur propriétaire.
+		/// </summary>
 		[References(typeof(GenPersonne))]
-		[ApiMember(DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id de l'utilisateur propriétaire.", DataType = SwaggerType.Int)]
 		public int? CleGenPersonne { get; set; }
 
 		[Reference]

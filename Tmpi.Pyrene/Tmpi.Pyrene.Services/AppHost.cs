@@ -95,7 +95,21 @@ namespace Tmpi.Pyrene.Services
             bool.TryParse(ConfigurationManager.AppSettings["Plugins.SwaggerFeature"], out swaggerFeatureEnabled);
             if (swaggerFeatureEnabled)
             {
-                Plugins.Add(new SwaggerFeature());
+                Plugins.Add(new SwaggerFeature()
+                {
+                    RouteSummary =
+                    {
+                        { "/GenCompteur", "Compteurs de numérotation" },
+                        { "/GenExtercice", "Exercices budgétaires" },
+                        { "/GenFourn", "Fournisseurs" },
+                        { "/GenMandat", "Mandats" },
+                        { "/GenPersonne", "Utilisateurs" },
+                        { "/GenSecteur", "Secteurs" },
+                        { "/GenService", "Services" },
+                        { "/GenSociete", "Sociétés" },
+                        { "/GenTVA", "TVA" },
+                    }
+                });
             }
         }
     }

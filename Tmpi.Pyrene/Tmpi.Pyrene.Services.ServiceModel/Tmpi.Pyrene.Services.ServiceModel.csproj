@@ -54,9 +54,6 @@
     <Compile Include="AutocompleteGenMandat.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="AutocompleteGenPersonne.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="AutocompleteGenSecteur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
@@ -73,6 +70,9 @@
     <Compile Include="BasicEntity.cs" />
     <Compile Include="DeleteByIdRequestBase.cs" />
     <Compile Include="DeleteGenCompteur.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DeleteGenCompteurValeur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="DeleteGenExercice.generated.cs">
@@ -114,6 +114,9 @@
     <Compile Include="GenCompteur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="GenCompteurValeur.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="GenExercice.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
@@ -152,6 +155,9 @@
     </Compile>
     <Compile Include="GetByIdRequestBase.cs" />
     <Compile Include="GetGenCompteur.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetGenCompteurValeur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GetGenExercice.generated.cs">
@@ -198,6 +204,9 @@
     </Compile>
     <Compile Include="PatchByIdRequestBase.cs" />
     <Compile Include="PatchGenCompteur.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PatchGenCompteurValeur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="PatchGenExercice.generated.cs">

@@ -83,14 +83,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public string CodExterne { get; set; }
 
 		/// <summary>
-		/// Type de compteur.
-		/// </summary>
-		[Required]
-		[ApiMember(Description = "Type de compteur.", IsRequired = true)]
-		[ApiAllowableValues("TypCompteur", typeof(TypCompteur))]
-		public TypCompteur TypCompteur { get; set; }
-
-		/// <summary>
 		/// Périodicité.
 		/// </summary>
 		[Required]
@@ -99,24 +91,32 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public TypPeriodicite TypPeriodicite { get; set; }
 
 		/// <summary>
-		/// Id de la société associée.
+		/// Type de compteur.
+		/// </summary>
+		[Required]
+		[ApiMember(Description = "Type de compteur.", IsRequired = true)]
+		[ApiAllowableValues("TypCompteur", typeof(TypCompteur))]
+		public TypCompteur TypCompteur { get; set; }
+
+		/// <summary>
+		/// Id de la société ayant accès au compteur, ou null pour toutes les sociétés.
 		/// </summary>
 		[References(typeof(GenSociete))]
-		[ApiMember(Description = "Id de la société associée.", DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id de la société ayant accès au compteur, ou null pour toutes les sociétés.", DataType = SwaggerType.Int)]
 		public int? CleGenSociete { get; set; }
 
 		/// <summary>
-		/// Id du secteur associé.
+		/// Id du secteur ayant accès au compteur, ou null pour tous les secteurs.
 		/// </summary>
 		[References(typeof(GenSecteur))]
-		[ApiMember(Description = "Id du secteur associé.", DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id du secteur ayant accès au compteur, ou null pour tous les secteurs.", DataType = SwaggerType.Int)]
 		public int? CleGenSecteur { get; set; }
 
 		/// <summary>
-		/// Id du service associé.
+		/// Id du service ayant accès au compteur, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
-		[ApiMember(Description = "Id du service associé.", DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id du service ayant accès au compteur, ou null pour tous les services.", DataType = SwaggerType.Int)]
 		public int? CleGenService { get; set; }
 
 		/// <summary>
@@ -126,10 +126,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[ApiMember(Description = "Format du modèle de numérotation.", IsRequired = true, DataType = SwaggerType.String)]
 		public string ValFormatNumero { get; set; }
-
-		[StringLength(500)]
-		[ApiMember(DataType = SwaggerType.String)]
-		public string LstFormatMois { get; set; }
 
 		[Reference]
 		public List<GenCompteurValeur> LstValeur { get; set; }

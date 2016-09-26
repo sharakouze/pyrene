@@ -18,7 +18,6 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	public partial class GenPersonne : IHasId<int>,
-		IEntity,
 		IAuditable
 	{
 		/// <summary>
@@ -38,13 +37,20 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public string CodObjet { get; set; }
 
 		/// <summary>
-		/// Nom.
+		/// Nom de famille.
 		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "Nom.", IsRequired = true, DataType = SwaggerType.String)]
-		public string LibObjet { get; set; }
+		[ApiMember(Description = "Nom de famille.", IsRequired = true, DataType = SwaggerType.String)]
+		public string NomPersonne { get; set; }
+
+		/// <summary>
+		/// Prénom.
+		/// </summary>
+		[StringLength(100)]
+		[ApiMember(Description = "Prénom.", DataType = SwaggerType.String)]
+		public string PrePersonne { get; set; }
 
 		/// <summary>
 		/// Commentaire ou description.
@@ -82,17 +88,11 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public string CodExterne { get; set; }
 
 		/// <summary>
-		/// Prénom.
+		/// Titre de civilité.
 		/// </summary>
-		[StringLength(100)]
-		[ApiMember(Description = "Prénom.", DataType = SwaggerType.String)]
-		public string PrePersonne { get; set; }
-
-		/// <summary>
-		/// Civilité.
-		/// </summary>
-		[ApiMember(Description = "Civilité.", DataType = SwaggerType.Int)]
-		public int? TypGenre { get; set; }
+		[ApiMember(Description = "Titre de civilité.")]
+		[ApiAllowableValues("TypCivilite", typeof(TypCivilite))]
+		public TypCivilite? TypCivilite { get; set; }
 
 		/// <summary>
 		/// Numéro de téléphone.

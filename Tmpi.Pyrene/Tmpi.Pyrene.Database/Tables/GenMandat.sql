@@ -20,3 +20,40 @@
 GO
 
 CREATE INDEX [IX_GenMandat_LibObjet] ON [GenMandat] ([LibObjet]);
+
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Type de mandat',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenMandat',
+    @level2type = N'COLUMN',
+    @level2name = N'TypMandat'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Nombre de signatures requises',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenMandat',
+    @level2type = N'COLUMN',
+    @level2name = N'NbrSignature'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Corps du message',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenMandat',
+    @level2type = N'COLUMN',
+    @level2name = N'TxtMessage'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Niveau du mandat',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenMandat',
+    @level2type = N'COLUMN',
+    @level2name = N'NivMandat'

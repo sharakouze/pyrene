@@ -24,28 +24,6 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenPersonneService : Service
 	{
 		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns></returns>
-		public List<BasicEntity> Get(AutocompleteGenPersonne request)
-		{
-			if (string.IsNullOrWhiteSpace(request.Text))
-			{
-				return null;
-			}
-
-            var q = Db.From<GenPersonne>().Where(x => x.LibObjet.Contains(request.Text));
-            if (request.Max > 0)
-            {
-                q = q.Limit(request.Max);
-            }
-
-            var items = Db.Select<BasicEntity>(q);
-            return items;
-		}
-
-		/// <summary>
 		/// Supprime l'entité <see cref="GenPersonne" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>

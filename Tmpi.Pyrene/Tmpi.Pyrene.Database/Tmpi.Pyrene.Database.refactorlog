@@ -679,4 +679,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="TypCivilite" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="44810d7c-dc9d-467d-ac98-d4de14fb579b" ChangeDateTime="09/26/2016 21:45:23">
+    <Property Name="ElementName" Value="[dbo].[GenFournBanque].[NumRib]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenFournBanque]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NumRIB" />
+  </Operation>
 </Operations>

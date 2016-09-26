@@ -14,10 +14,11 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Autocomplete une ressource <see cref="GenPersonne" />.
+	/// Retourne une ressource <see cref="GenCompteurValeur" /> à partir de son Id.
 	/// </summary>
-	[Route("/GenPersonne/Autocomplete/{Text}", HttpVerbs.Get, Summary = "Autocomplete une ressource GenPersonne.")]
-	public partial class AutocompleteGenPersonne : AutocompleteRequestBase
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeur spécifiée est introuvable.")]
+	[Route("/GenCompteur/Valeur/{Id}", HttpVerbs.Get, Summary = "Retourne une ressource GenCompteurValeur à partir de son Id.")]
+	public partial class GetGenCompteurValeur : GetByIdRequestBase<int, GenCompteurValeur>
 	{
 	}
 }

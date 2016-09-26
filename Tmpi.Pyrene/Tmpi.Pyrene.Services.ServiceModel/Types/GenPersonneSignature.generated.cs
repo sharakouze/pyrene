@@ -28,13 +28,19 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Clé primaire.", IsRequired = true, DataType = SwaggerType.Int)]
 		public int CleGenPersonne { get; set; }
 
+		/// <summary>
+		/// Image de la signature.
+		/// </summary>
 		[Required]
-		[ApiMember(IsRequired = true, DataType = "file")]
+		[ApiMember(Description = "Image de la signature.", IsRequired = true, DataType = "file")]
 		public byte[] ImgSignature { get; set; }
 
+		/// <summary>
+		/// Type MIME de l'image.
+		/// </summary>
 		[StringLength(255)]
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.String)]
+		[ApiMember(Description = "Type MIME de l'image.", IsRequired = true, DataType = SwaggerType.String)]
 		public string TypMime { get; set; }
 
 	}

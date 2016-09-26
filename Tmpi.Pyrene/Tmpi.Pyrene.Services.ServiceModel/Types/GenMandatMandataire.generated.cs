@@ -18,7 +18,8 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, "CleGenMandat", "CleGenPersonne", "CleGenSociete", "CleGenSecteur", "CleGenService")]
-	public partial class GenMandatMandataire : IHasId<int>
+	public partial class GenMandatMandataire : IHasId<int>,
+		IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.
@@ -26,6 +27,20 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[AutoIncrement]
 		[ApiMember(Description = "Clé primaire.", DataType = SwaggerType.Int)]
 		public int Id { get; set; }
+
+		/// <summary>
+		/// Date de création.
+		/// </summary>
+		[Required]
+		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
+		public DateTime DatCreation { get; set; }
+
+		/// <summary>
+		/// Date de dernière modification.
+		/// </summary>
+		[Required]
+		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
+		public DateTime DatModif { get; set; }
 
 		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
 		[Required]

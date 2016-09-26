@@ -18,19 +18,35 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, "CleGenCompteur", "ValPeriode")]
-	public partial class GenCompteurValeur
+	public partial class GenCompteurValeur : IHasId<int>
 	{
+		/// <summary>
+		/// Clé primaire.
+		/// </summary>
+		[AutoIncrement]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerType.Int)]
+		public int Id { get; set; }
+
+		/// <summary>
+		/// Id du compteur parent.
+		/// </summary>
 		[ForeignKey(typeof(GenCompteur), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id du compteur parent.", IsRequired = true, DataType = SwaggerType.Int)]
 		public int CleGenCompteur { get; set; }
 
+		/// <summary>
+		/// Valeur de la période.
+		/// </summary>
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Valeur de la période.", IsRequired = true, DataType = SwaggerType.Int)]
 		public int ValPeriode { get; set; }
 
+		/// <summary>
+		/// Valeur du compteur.
+		/// </summary>
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Valeur du compteur.", IsRequired = true, DataType = SwaggerType.Int)]
 		public int ValCompteur { get; set; }
 
 	}

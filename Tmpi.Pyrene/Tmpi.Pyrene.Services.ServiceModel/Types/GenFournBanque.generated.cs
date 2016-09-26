@@ -18,7 +18,8 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, "CleGenFourn", "NumRib")]
-	public partial class GenFournBanque : IHasId<int>
+	public partial class GenFournBanque : IHasId<int>,
+		IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.
@@ -27,23 +28,49 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Clé primaire.", DataType = SwaggerType.Int)]
 		public int Id { get; set; }
 
+		/// <summary>
+		/// Id du fournisseur parent.
+		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id du fournisseur parent.", IsRequired = true, DataType = SwaggerType.Int)]
 		public int CleGenFourn { get; set; }
 
+		/// <summary>
+		/// Identifiant RIB.
+		/// </summary>
 		[StringLength(23)]
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.String)]
+		[ApiMember(Description = "Identifiant RIB.", IsRequired = true, DataType = SwaggerType.String)]
 		public string NumRib { get; set; }
 
+		/// <summary>
+		/// Date de création.
+		/// </summary>
+		[Required]
+		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
+		public DateTime DatCreation { get; set; }
+
+		/// <summary>
+		/// Date de dernière modification.
+		/// </summary>
+		[Required]
+		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
+		public DateTime DatModif { get; set; }
+
+		/// <summary>
+		/// Nom de l'établissement bancaire.
+		/// </summary>
 		[StringLength(200)]
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.String)]
+		[ApiMember(Description = "Nom de l'établissement bancaire.", IsRequired = true, DataType = SwaggerType.String)]
 		public string LibEtablissement { get; set; }
 
+		/// <summary>
+		/// Si true,.
+		/// </summary>
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Boolean)]
+		[ApiMember(Description = "Si true,.", IsRequired = true, DataType = SwaggerType.Boolean)]
 		public bool EstDefaut { get; set; }
 
 	}

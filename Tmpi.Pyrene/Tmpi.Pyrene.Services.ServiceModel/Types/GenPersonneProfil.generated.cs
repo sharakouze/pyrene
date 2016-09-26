@@ -19,7 +19,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, "CleGenPersonne", "CleGenSociete", "CleGenSecteur", "CleGenService")]
 	[CompositeIndex(true, "CodObjet", "CleGenPersonne")]
-	public partial class GenPersonneProfil : IHasId<int>
+	public partial class GenPersonneProfil : IHasId<int>,
+		IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.
@@ -28,9 +29,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Clé primaire.", DataType = SwaggerType.Int)]
 		public int Id { get; set; }
 
+		/// <summary>
+		/// Id de la personne associée.
+		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id de la personne associée.", IsRequired = true, DataType = SwaggerType.Int)]
 		public int CleGenPersonne { get; set; }
 
 		/// <summary>
@@ -40,6 +44,20 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[ApiMember(Description = "Code unique.", IsRequired = true, DataType = SwaggerType.String)]
 		public string CodObjet { get; set; }
+
+		/// <summary>
+		/// Date de création.
+		/// </summary>
+		[Required]
+		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
+		public DateTime DatCreation { get; set; }
+
+		/// <summary>
+		/// Date de dernière modification.
+		/// </summary>
+		[Required]
+		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
+		public DateTime DatModif { get; set; }
 
 		[References(typeof(GenSociete))]
 		[ApiMember(DataType = SwaggerType.Int)]

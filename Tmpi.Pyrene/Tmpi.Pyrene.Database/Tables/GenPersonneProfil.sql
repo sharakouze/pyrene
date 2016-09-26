@@ -3,6 +3,8 @@
     [Id] INT NOT NULL IDENTITY,
     [CleGenPersonne] INT NOT NULL,
     [CodObjet] VARCHAR(100) NOT NULL,
+    [DatCreation] DATETIME NOT NULL,
+    [DatModif] DATETIME NOT NULL,
     [CleGenSociete] INT NULL,
     [CleGenSecteur] INT NULL,
     [CleGenService] INT NULL,
@@ -14,3 +16,13 @@
     CONSTRAINT [FK_GenPersonneProfil_CleGenSecteur] FOREIGN KEY ([CleGenSecteur]) REFERENCES [GenSecteur] ([Id]),
     CONSTRAINT [FK_GenPersonneProfil_CleGenService] FOREIGN KEY ([CleGenService]) REFERENCES [GenService] ([Id]),
 );
+
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Id de la personne associée',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenPersonneProfil',
+    @level2type = N'COLUMN',
+    @level2name = N'CleGenPersonne'

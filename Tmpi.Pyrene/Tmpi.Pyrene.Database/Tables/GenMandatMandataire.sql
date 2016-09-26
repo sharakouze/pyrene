@@ -1,6 +1,8 @@
 ﻿CREATE TABLE [GenMandatMandataire]
 (
     [Id] INT IDENTITY NOT NULL,
+    [DatCreation] DATETIME NOT NULL,
+    [DatModif] DATETIME NOT NULL,
     [CleGenMandat] INT NOT NULL,
     [CleGenPersonne] INT NOT NULL,
     [CleGenSociete] INT NULL,

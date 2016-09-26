@@ -5,6 +5,8 @@
     [NomContact] VARCHAR(100) NOT NULL,
     [PreContact] VARCHAR(100) NULL,
     [TxtObjet] VARCHAR(500) NULL,
+    [DatCreation] DATETIME NOT NULL,
+    [DatModif] DATETIME NOT NULL,
     [NumTelep] VARCHAR(25) NULL,
     [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
@@ -24,3 +26,39 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1name = N'GenFournContact',
     @level2type = N'COLUMN',
     @level2name = N'TypCivilite'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Id du fournisseur associé',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenFournContact',
+    @level2type = N'COLUMN',
+    @level2name = N'CleGenFourn'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Nom de famille',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenFournContact',
+    @level2type = N'COLUMN',
+    @level2name = N'NomContact'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Prénom',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenFournContact',
+    @level2type = N'COLUMN',
+    @level2name = N'PreContact'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Fonction du contact',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenFournContact',
+    @level2type = N'COLUMN',
+    @level2name = N'CodFonction'
