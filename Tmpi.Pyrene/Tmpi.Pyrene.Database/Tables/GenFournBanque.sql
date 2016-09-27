@@ -3,6 +3,8 @@
     [Id] INT NOT NULL IDENTITY,
     [CleGenFourn] INT NOT NULL,
     [NumRIB] VARCHAR(23) NOT NULL,
+    [CodIBAN] VARCHAR(27) NOT NULL,
+    [CodBIC] VARCHAR(11) NOT NULL,
     [LibEtablissement] VARCHAR(200) NOT NULL,
     [EstDefaut] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
@@ -48,3 +50,21 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1name = N'GenFournBanque',
     @level2type = N'COLUMN',
     @level2name = N'EstDefaut'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Code IBAN.',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenFournBanque',
+    @level2type = N'COLUMN',
+    @level2name = N'CodIBAN'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Code BIC.',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenFournBanque',
+    @level2type = N'COLUMN',
+    @level2name = N'CodBIC'

@@ -4,7 +4,8 @@ A quoi sert le lien sur Gen_SocSite ? Suppression de CleSite.
 
 - Compteurs :
 Gen_CptCompteur disparait et est fusionné avec Gen_Cpt_MNumero.
-Doublons ????
+Doublons ?
+Le modele de numérotation est fusionné en 1 seul champ
 
 - Mandats :
 Suppression de CleLogiciel qu'on retrouve par déduction dans TypMandat.
