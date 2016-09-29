@@ -686,4 +686,39 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="NumRIB" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="8f1572bb-02cf-4a50-9d5c-db206f380cd9" ChangeDateTime="09/29/2016 12:44:01">
+    <Property Name="ElementName" Value="[dbo].[GenSociete].[AdrVille]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenSociete]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="AdrCommune" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5b9a9425-f898-45e3-82eb-5afb5d4c618f" ChangeDateTime="09/29/2016 12:44:11">
+    <Property Name="ElementName" Value="[dbo].[GenService].[AdrVille]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenService]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="AdrCommune" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="cf0f02b9-36c8-4c55-8166-380ced2aa42d" ChangeDateTime="09/29/2016 12:44:21">
+    <Property Name="ElementName" Value="[dbo].[GenSecteur].[AdrVille]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenSecteur]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="AdrCommune" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e579f0ca-dfb5-4fe2-9416-497975f4c9d2" ChangeDateTime="09/29/2016 12:49:16">
+    <Property Name="ElementName" Value="[dbo].[GenFourn].[AdrVille]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenFourn]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="AdrCommune" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="49ec19ba-88a0-4bb9-8b79-53dadd952491" ChangeDateTime="09/29/2016 13:28:14">
+    <Property Name="ElementName" Value="[dbo].[GenFournContact].[CodFonction]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenFournContact]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="LibFonction" />
+  </Operation>
 </Operations>

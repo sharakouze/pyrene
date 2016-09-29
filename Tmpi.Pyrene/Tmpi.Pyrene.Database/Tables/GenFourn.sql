@@ -10,7 +10,7 @@
     [CodExterne] VARCHAR(100) NULL,
     [AdrRue] VARCHAR(200) NULL,
     [AdrCode] VARCHAR(10) NULL,
-    [AdrVille] VARCHAR(100) NULL,
+    [AdrCommune] VARCHAR(100) NULL,
     [AdrPays] VARCHAR(100) NULL,
     [NumTelep] VARCHAR(25) NULL,
     [NumFax] VARCHAR(25) NULL,
@@ -26,10 +26,8 @@
     [ValNote] DECIMAL(5,2) NULL,
     [TypModeReglement] INT NULL,
     [EstEnvoiMailBonCde] BIT NOT NULL,
-    [CleGenPersonne] INT NULL,
     CONSTRAINT [PK_GenFourn] PRIMARY KEY ([Id]),
     CONSTRAINT [UK_GenFourn_CodObjet] UNIQUE ([CodObjet]), 
-    CONSTRAINT [FK_GenFourn_CleGenPersonne] FOREIGN KEY ([CleGenPersonne]) REFERENCES [GenPersonne] ([Id])
 );
 
 GO
@@ -127,11 +125,3 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2type = N'COLUMN',
     @level2name = N'TypModeReglement'
 GO
-EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Id de l''utilisateur propriétaire.',
-    @level0type = N'SCHEMA',
-    @level0name = N'dbo',
-    @level1type = N'TABLE',
-    @level1name = N'GenFourn',
-    @level2type = N'COLUMN',
-    @level2name = N'CleGenPersonne'

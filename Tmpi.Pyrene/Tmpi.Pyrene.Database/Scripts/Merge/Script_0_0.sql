@@ -12,18 +12,102 @@ Suppression de CleLogiciel qu'on retrouve par déduction dans TypMandat.
 
 - Fourn :
 Plusieurs contacts possibles.
+On passe d'un RIB en IBAN pour les coordonées banquaires
+Suppression de CleProprietaire
 
 - Exercice :
 NivExercice devient EstActif.
 */
 
 SET XACT_ABORT ON;
+SET NOCOUNT ON;
 
 GO
 
-:setvar SourceSchemaName "[SA_TMPI]"
+:setvar SourceSchemaName "[LASAT_PYRENE2].[SA_TMPI]"
 
 GO
+
+--
+-- FONCTIONS TEMP
+--
+
+if (OBJECT_ID('[dbo].[TEMP_BBAN_TO_IBAN]')) is not null
+	drop function [dbo].[TEMP_BBAN_TO_IBAN];
+GO
+create function [dbo].[TEMP_BBAN_TO_IBAN] ( @bban varchar(30), @country char(2) )
+returns varchar(40)
+as
+-- Creates an IBAN (International Bank Account Number) from a BBAN (Basic Bank Account Number) and BIC (Bank Identifier Code)
+BEGIN 
+	declare @bbanwk varchar(60), @bbannbp int, @bbanp varchar(9), @pos smallint, @mod int, @i smallint, @keyiban char(2), @iban varchar(40)
+	-- Place it at the end of BBAN
+	set @bbanwk = @bban + @country + '00'
+	-- Replace any letters with their numeric value (code ASCII - 55)
+	while isnumeric(@bbanwk+'e0') = 0
+		BEGIN
+			set @pos = (select patindex('%[^0-9]%',@bbanwk))
+			set @bbanwk = (select replace(@bbanwk,substring(@bbanwk,@pos,1),ascii(substring(@bbanwk,@pos,1))-55))
+		END
+	-- Split the BBAN into parts of 9 numbers max (because too long for SQL data type INT) and calculate MOD 97 of each part
+	-- suppose to add 1 iteration each 4 iteration, so init @i = 0 and not 1 for some case.
+	set @bbannbp = ceiling(len(@bbanwk) / 9.0) 
+	set @pos = 10
+	set @i = 0
+	set @bbanp = left(@bbanwk, 9)
+	while @i <= @bbannbp
+		BEGIN
+			set @mod = cast(@bbanp as int) % 97
+			-- Put the result at the beginning of the next group			
+			set @bbanp = cast(@mod as varchar) + substring(@bbanwk, @pos, 7)
+			set @i = @i + 1
+			set @pos = @pos + 7
+		END
+	-- IBAN key 2 characters
+	set @keyiban = right('00' + cast((98 - @mod) as varchar), 2)
+	set @iban = @country + @keyiban + @bban
+RETURN @iban
+END;
+
+GO
+
+if (OBJECT_ID('[dbo].[TEMP_SPLIT]')) is not null
+	drop function [dbo].[TEMP_SPLIT];
+GO
+create function [dbo].[TEMP_SPLIT] ( @text varchar(8000), @separator varchar(20) = ',' )
+returns @strings table
+(
+	rownum int identity primary key,
+	column_value varchar(8000)
+)
+as
+	-- retourne une table contenant les sous-chaînes de "@text" qui sont délimitées par "@separator"
+	--
+BEGIN
+	declare @index int
+	set @index = -1
+
+	while (len(@text) > 0)
+	begin
+		set @index = charindex(@separator , @text)
+		if (@index = 0) and (len(@text) > 0)
+		begin
+			insert into @strings values (@text)
+			break
+		end
+		if (@index > 1)
+		begin
+			insert into @strings values (left(@text, @index - 1))
+			set @text = right(@text, (len(@text) - @index))
+		end
+		else
+			set @text = right(@text, (len(@text) - @index))
+	end
+	return
+END;
+
+GO
+
 
 --
 -- SOCIETES, SECTEURS et SERVICES
@@ -259,20 +343,22 @@ BEGIN TRY
 
 	merge into [GenPersonneProfil] as target
 	using (
-		select ClePersonneProfil as Id,
-			ClePersonne as CleGenPersonne,
-			CodProfil as CodObjet,
-			CleSociete as CleGenSociete,
-			CleSecteur as CleGenSecteur,
-			CleService as CleGenService
-		from $(SourceSchemaName).[Gen_SocPersonneProfil]
-		where ClePersonne>0
+		select PRF.ClePersonneProfil as Id,
+			PRF.ClePersonne as CleGenPersonne,
+			PRF.CodProfil as CodObjet,
+			PRF.CleSociete as CleGenSociete,
+			PRF.CleSecteur as CleGenSecteur,
+			PRF.CleService as CleGenService,
+			P.DatCreation,
+			coalesce(P.DatModif,P.DatCreation) as DatModif
+		from $(SourceSchemaName).[Gen_SocPersonneProfil] PRF inner join $(SourceSchemaName).[Gen_SocPersonne] P on PRF.ClePersonne=P.ClePersonne
+		where PRF.ClePersonne>0
 	) as source
 	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CleGenPersonne, CodObjet, CleGenSociete, CleGenSecteur, CleGenService)
-		values (Id, CleGenPersonne, CodObjet, CleGenSociete, CleGenSecteur, CleGenService);
+		insert (Id, CleGenPersonne, CodObjet, CleGenSociete, CleGenSecteur, CleGenService, DatCreation, DatModif)
+		values (Id, CleGenPersonne, CodObjet, CleGenSociete, CleGenSecteur, CleGenService, DatCreation, DatModif);
 	
 	SET IDENTITY_INSERT [GenPersonneProfil] OFF;
 
@@ -520,8 +606,7 @@ BEGIN TRY
 			nullif(ValDelaiP,0) as DelPaiement,
 			ValNote,
 			nullif(CleModeReglement,0) as TypModeReglement,
-			EstEnvoiMailBonCde,
-			CleProprietaire as CleGenPersonne
+			EstEnvoiMailBonCde
 		from $(SourceSchemaName).[t_Fourn]
 		where CleFourn>0
 	) as source
@@ -531,11 +616,11 @@ BEGIN TRY
 		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail, CodCompta, NumClient, 
 			NumTVAIntra, MntFPort, MntFPortGratuit, MntCommandeMin, DelLivraison, DelPaiement, ValNote,
-			TypModeReglement, EstEnvoiMailBonCde, CleGenPersonne)
+			TypModeReglement, EstEnvoiMailBonCde)
 		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail, CodCompta, NumClient, 
 			NumTVAIntra, MntFPort, MntFPortGratuit, MntCommandeMin, DelLivraison, DelPaiement, ValNote,
-			TypModeReglement, EstEnvoiMailBonCde, CleGenPersonne);
+			TypModeReglement, EstEnvoiMailBonCde);
 	
 	SET IDENTITY_INSERT [GenFourn] OFF;
 
@@ -581,7 +666,7 @@ BEGIN TRY
 	begin
 		delete @strings;
 		insert into @strings
-		select * from [fn_Split](@NomContact, ' ');
+		select * from [dbo].[TEMP_SPLIT](@NomContact, ' ');
 
 		-- extraction civilité
 		declare @TypCivilite int = null;
@@ -626,7 +711,7 @@ BEGIN TRY
 
 		-- extraction téléphone
 		set @id = null;
-		select @id=id from @strings where isnumeric(replace(txt,'.',''))=1;
+		select @id=id from @strings where len(txt)>=10 and isnumeric(replace(txt,'.',''))=1;
 		if (@id is not null)
 		begin
 			update @GenFournContact set NumTelep=(select txt from @strings where id=@id)
@@ -649,22 +734,26 @@ BEGIN TRY
 
 	merge into [GenFournContact] as target
 	using (
-		select CleFourn as CleGenFourn,
-			isnull(NomContact_Clean,NomContact)) as NomContact,
+		select FC.CleFourn as CleGenFourn,
+			isnull(FC.NomContact_Clean,FC.NomContact) as NomContact,
 			null as PreContact,
 			null as TxtObjet, 
-			NumTelep, 
+			coalesce(F.DatSaisie,getdate()) as DatCreation,
+			coalesce(F.DatSaisie,getdate()) as DatModif,
+			FC.NumTelep, 
 			null as NumFax, 
-			NumEmail, 
-			TypCivilite, 
-			null as CodFonction
-		from @GenFournContact
+			FC.NumEmail, 
+			FC.TypCivilite, 
+			null as LibFonction
+		from @GenFournContact FC inner join $(SourceSchemaName).[t_Fourn] F on FC.CleFourn=F.CleFourn
 	) as source
 	on (target.CleGenFourn=source.CleGenFourn and target.NomContact=source.NomContact)
 	when not matched by target
 	then -- insert new rows
-		insert (CleGenFourn, NomContact, PreContact, TxtObjet, NumTelep, NumFax, NumEmail, TypCivilite, CodFonction)
-		values (CleGenFourn, NomContact, PreContact, TxtObjet, NumTelep, NumFax, NumEmail, TypCivilite, CodFonction);
+		insert (CleGenFourn, NomContact, PreContact, TxtObjet, DatCreation, DatModif,
+			NumTelep, NumFax, NumEmail, TypCivilite, LibFonction)
+		values (CleGenFourn, NomContact, PreContact, TxtObjet, DatCreation, DatModif,
+			NumTelep, NumFax, NumEmail, TypCivilite, LibFonction);
 
 	COMMIT;
 END TRY
@@ -675,24 +764,32 @@ END CATCH;
 BEGIN TRY
 	BEGIN TRANSACTION;
 
+	declare @CodePaysIBAN char(2) = 'FR';
+
 	SET IDENTITY_INSERT [GenFournBanque] ON;
 
 	merge into [GenFournBanque] as target
 	using (
-		select CleRib as Id,
-			CleFourn as CleGenFourn,
-			isnull(RibBanque,'XXXXX')+isnull(RibGuichet,'XXXXX')+isnull(RibCompte,'XXXXXXXXXXX')+isnull(RibCle,'XX') as NumRib,
-			LibBanque as LibEtablissement,
-			EstDefaut
-		from $(SourceSchemaName).[Gen_FouRib]
-		where CleFourn>0
-			and RibBanque is not null
+		select FR.CleRib as Id,
+			FR.CleFourn as CleGenFourn,
+			[dbo].[TEMP_BBAN_TO_IBAN](FR.RibBanque+FR.RibGuichet+FR.RibCompte+FR.RibCle, @CodePaysIBAN) as CodIBAN,
+			@CodePaysIBAN as CodBIC,
+			FR.LibBanque as LibEtablissement,
+			FR.EstDefaut,
+			coalesce(F.DatSaisie,getdate()) as DatCreation,
+			coalesce(F.DatSaisie,getdate()) as DatModif
+		from $(SourceSchemaName).[Gen_FouRib] FR inner join $(SourceSchemaName).[t_Fourn] F on FR.CleFourn=F.CleFourn
+		where FR.CleFourn>0
+			and FR.RibBanque is not null 
+			and FR.RibGuichet is not null 
+			and FR.RibCompte is not null 
+			and FR.RibCle is not null 
 	) as source
 	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CleGenFourn, NumRib, LibEtablissement, EstDefaut)
-		values (Id, CleGenFourn, NumRib, LibEtablissement, EstDefaut);
+		insert (Id, CleGenFourn, CodIBAN, CodBIC, LibEtablissement, EstDefaut, DatCreation, DatModif)
+		values (Id, CleGenFourn, CodIBAN, CodBIC, LibEtablissement, EstDefaut, DatCreation, DatModif);
 	
 	SET IDENTITY_INSERT [GenFournBanque] OFF;
 
@@ -752,3 +849,10 @@ BEGIN CATCH
 END CATCH;
 
 GO
+
+
+
+-- NETTOYAGE
+
+DROP FUNCTION [dbo].[TEMP_BBAN_TO_IBAN];
+DROP FUNCTION [dbo].[TEMP_SPLIT];

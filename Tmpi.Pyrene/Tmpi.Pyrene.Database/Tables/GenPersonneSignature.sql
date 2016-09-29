@@ -9,7 +9,7 @@
 
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Image de la signature',
+    @value = N'Image de la signature.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -18,7 +18,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'ImgSignature'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Type MIME de l''image',
+    @value = N'Type MIME de l''image.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',

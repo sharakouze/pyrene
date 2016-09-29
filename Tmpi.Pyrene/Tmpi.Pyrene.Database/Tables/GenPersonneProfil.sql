@@ -19,10 +19,37 @@
 
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Id de la personne associée',
+    @value = N'Id de l''utilisateur parent.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
     @level1name = N'GenPersonneProfil',
     @level2type = N'COLUMN',
     @level2name = N'CleGenPersonne'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Id de la société à laquelle a accès le profil, ou null pour toutes les sociétés.',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenPersonneProfil',
+    @level2type = N'COLUMN',
+    @level2name = N'CleGenSociete'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Id du secteur auquel a accès le profil, ou null pour tous les secteurs.',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenPersonneProfil',
+    @level2type = N'COLUMN',
+    @level2name = N'CleGenSecteur'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Id du service auquel a accès le profil, ou null pour tous les services.',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenPersonneProfil',
+    @level2type = N'COLUMN',
+    @level2name = N'CleGenService'

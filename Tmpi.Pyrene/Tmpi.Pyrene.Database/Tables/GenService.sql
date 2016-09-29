@@ -11,7 +11,7 @@
     [CleGenSecteur] INT NOT NULL,
     [AdrRue] VARCHAR(200) NULL,
     [AdrCode] VARCHAR(10) NULL,
-    [AdrVille] VARCHAR(100) NULL,
+    [AdrCommune] VARCHAR(100) NULL,
     [AdrPays] VARCHAR(100) NULL,
     [NumTelep] VARCHAR(25) NULL,
     [NumFax] VARCHAR(25) NULL,
@@ -28,3 +28,13 @@ CREATE INDEX [IX_GenService_LibObjet] ON [GenService] ([LibObjet]);
 GO
 
 CREATE INDEX [IX_GenService_CleGenSecteur] ON [GenService] ([CleGenSecteur]);
+
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Id du secteur auquel appartient le service.',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'GenService',
+    @level2type = N'COLUMN',
+    @level2name = N'CleGenSecteur'
