@@ -12,6 +12,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
     {
         Undefined = 0,
 
+        // 1. Stock
+
         CommandeFournisseur = 100,
         Demande = 101,
         LivraisonInterne = 105,
@@ -20,13 +22,21 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         LotInterneTemporaire = 109,
         RetourDemande = 110,
 
+        // 4. GMAO
+
         Intervention = 400,
+
+        // Tournée
 
         DemandePrelevement = 800,
         RegroupementTache = 801,
 
+        // 9. Facturation
+
         Paiement = 901,
         Facture = 903,
+
+        // 12. Symphonie
 
         Dossier = 1201,
         Echantillon = 1202,
@@ -34,6 +44,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         Devis = 1205,
         FeuillePaillasse = 1206,
         EchantillonPredossier = 1215,
+
+        // 14. Prélude
 
         Predossier = 1407,
         PlaqueMicrotube = 1408,

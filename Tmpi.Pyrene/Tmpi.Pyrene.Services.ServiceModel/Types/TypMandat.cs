@@ -12,6 +12,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
     {
         Undefined = 0,
 
+        // 1. Stock
+
         Demande = 101,
         CommandeFournisseur = 102,
     }
