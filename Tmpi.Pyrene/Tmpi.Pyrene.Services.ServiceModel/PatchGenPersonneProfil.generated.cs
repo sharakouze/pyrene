@@ -10,6 +10,7 @@
 using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.Infrastructure;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
@@ -18,7 +19,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneProfil spécifiée est introuvable.")]
 	[Route("/GenPersonne/Profil/{Id}", HttpVerbs.Patch, Summary = "Modifie une ressource GenPersonneProfil à partir de son Id.")]
-	public partial class PatchGenPersonneProfil : PatchByIdRequestBase<int>
+	public partial class PatchGenPersonneProfil : IReturnVoid
 	{
+        public int Id { get; set; }
+
+        public PatchElement[] Fields { get; set; }
 	}
 }

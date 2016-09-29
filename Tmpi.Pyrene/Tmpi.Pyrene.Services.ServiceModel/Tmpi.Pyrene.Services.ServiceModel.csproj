@@ -66,9 +66,7 @@
     <Compile Include="AutocompleteGenTVA.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="AutocompleteRequestBase.cs" />
     <Compile Include="BasicEntity.cs" />
-    <Compile Include="DeleteByIdRequestBase.cs" />
     <Compile Include="DeleteGenCompteur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
@@ -153,7 +151,6 @@
     <Compile Include="GenTVA.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="GetByIdRequestBase.cs" />
     <Compile Include="GetGenCompteur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
@@ -202,7 +199,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="PatchByIdRequestBase.cs" />
     <Compile Include="PatchGenCompteur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
@@ -245,6 +241,8 @@
     <Compile Include="PatchGenTVA.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="SwaggerDataTypes.cs" />
+    <Compile Include="SwaggerParameterTypes.cs" />
     <Compile Include="Types\GenCompteur.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>

@@ -10,6 +10,7 @@
 using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.Infrastructure;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
@@ -18,7 +19,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenExercice spécifiée est introuvable.")]
 	[Route("/GenExercice/{Id}", HttpVerbs.Patch, Summary = "Modifie une ressource GenExercice à partir de son Id.")]
-	public partial class PatchGenExercice : PatchByIdRequestBase<int>
+	public partial class PatchGenExercice : IReturnVoid
 	{
+        public int Id { get; set; }
+
+        public PatchElement[] Fields { get; set; }
 	}
 }

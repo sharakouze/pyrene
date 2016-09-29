@@ -10,6 +10,7 @@
 using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.Infrastructure;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
@@ -18,7 +19,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournBanque spécifiée est introuvable.")]
 	[Route("/GenFourn/Banque/{Id}", HttpVerbs.Patch, Summary = "Modifie une ressource GenFournBanque à partir de son Id.")]
-	public partial class PatchGenFournBanque : PatchByIdRequestBase<int>
+	public partial class PatchGenFournBanque : IReturnVoid
 	{
+        public int Id { get; set; }
+
+        public PatchElement[] Fields { get; set; }
 	}
 }

@@ -10,6 +10,7 @@
 using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.Infrastructure;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
@@ -18,7 +19,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteur spécifiée est introuvable.")]
 	[Route("/GenCompteur/{Id}", HttpVerbs.Patch, Summary = "Modifie une ressource GenCompteur à partir de son Id.")]
-	public partial class PatchGenCompteur : PatchByIdRequestBase<int>
+	public partial class PatchGenCompteur : IReturnVoid
 	{
+        public int Id { get; set; }
+
+        public PatchElement[] Fields { get; set; }
 	}
 }

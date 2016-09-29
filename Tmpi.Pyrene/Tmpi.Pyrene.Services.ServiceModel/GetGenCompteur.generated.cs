@@ -10,6 +10,7 @@
 using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.Infrastructure;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
@@ -18,7 +19,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteur spécifiée est introuvable.")]
 	[Route("/GenCompteur/{Id}", HttpVerbs.Get, Summary = "Retourne une ressource GenCompteur à partir de son Id.")]
-	public partial class GetGenCompteur : GetByIdRequestBase<int, GenCompteur>
+	public partial class GetGenCompteur : IReturn<GenCompteur>
 	{
-	}
+        [ApiMember(Description = "", IsRequired = true, DataType = "password", ParameterType = SwaggerParameterTypes.Path)]
+        public int Id { get; set; }
+
+        [ApiMember(Description = "", DataType = "Array[string]")]
+        public string[] Fields { get; set; }
+
+        [ApiMember(Description = "", DataType = "password")]
+        public string Test { get; set; }
+    }
+
 }

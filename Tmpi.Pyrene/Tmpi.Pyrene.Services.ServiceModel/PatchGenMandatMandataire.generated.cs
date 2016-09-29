@@ -10,6 +10,7 @@
 using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.Infrastructure;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
@@ -18,7 +19,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandatMandataire spécifiée est introuvable.")]
 	[Route("/GenMandat/Mandataire/{Id}", HttpVerbs.Patch, Summary = "Modifie une ressource GenMandatMandataire à partir de son Id.")]
-	public partial class PatchGenMandatMandataire : PatchByIdRequestBase<int>
+	public partial class PatchGenMandatMandataire : IReturnVoid
 	{
+        public int Id { get; set; }
+
+        public PatchElement[] Fields { get; set; }
 	}
 }

@@ -25,14 +25,15 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
 		[PrimaryKey]
-		[ApiMember(Description = "Clé primaire.", IsRequired = true, DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
 		public int CleGenPersonne { get; set; }
 
 		/// <summary>
 		/// Image de la signature.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Image de la signature.", IsRequired = true, DataType = "file")]
+		[ApiMember(Description = "Image de la signature.", DataType = SwaggerDataTypes.File, IsRequired = true)]
 		public byte[] ImgSignature { get; set; }
 
 		/// <summary>
@@ -40,7 +41,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[StringLength(255)]
 		[Required]
-		[ApiMember(Description = "Type MIME de l'image.", IsRequired = true, DataType = SwaggerType.String)]
+		[ApiMember(Description = "Type MIME de l'image.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string TypMime { get; set; }
 
 	}

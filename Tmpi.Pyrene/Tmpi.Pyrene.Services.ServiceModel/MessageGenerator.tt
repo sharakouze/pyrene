@@ -71,6 +71,7 @@ using ServiceStack;
 	{
 #>
 using <#= SourceNamespace #>;
+using Tmpi.Pyrene.Infrastructure;
 
 <#
 	} // end if
@@ -206,8 +207,12 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 #>
-	<#= string.Join(" ", classDefinitionWords) #> class <#= getByIdClassName #> : GetByIdRequestBase<<#= tkey #>, <#= codeClass.Name #>>
+	<#= string.Join(" ", classDefinitionWords) #> class <#= getByIdClassName #> : IReturn<<#= codeClass.Name #>>
 	{
+        [ApiMember(Description = "", IsRequired = true, DataType = "password", ParameterType = SwaggerParameterTypes.Path)]
+        public <#= tkey #> Id { get; set; }
+
+        public string[] Fields { get; set; }
 	}
 }
 <#
@@ -241,8 +246,9 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 #>
-	<#= string.Join(" ", classDefinitionWords) #> class <#= deleteByIdClassName #> : DeleteByIdRequestBase<<#= tkey #>>
+	<#= string.Join(" ", classDefinitionWords) #> class <#= deleteByIdClassName #> : IReturnVoid
 	{
+        public <#= tkey #> Id { get; set; }
 	}
 }
 <#
@@ -276,8 +282,11 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 #>
-	<#= string.Join(" ", classDefinitionWords) #> class <#= patchClassName #> : PatchByIdRequestBase<<#= tkey #>>
+	<#= string.Join(" ", classDefinitionWords) #> class <#= patchClassName #> : IReturnVoid
 	{
+        public <#= tkey #> Id { get; set; }
+
+        public PatchElement[] Fields { get; set; }
 	}
 }
 <#
@@ -336,8 +345,14 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 #>
-	<#= string.Join(" ", classDefinitionWords) #> class <#= autocompleteClassName #> : AutocompleteRequestBase
+	<#= string.Join(" ", classDefinitionWords) #> class <#= autocompleteClassName #> : IReturn<BasicEntity[]>
 	{
+        public string Text { get; set; }
+
+        /// <summary>
+        /// Nombre maximum d'éléments à retourner.
+        /// </summary>
+        public int Max { get; set; }
 	}
 }
 <#

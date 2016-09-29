@@ -24,7 +24,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
 		public int Id { get; set; }
 
 		/// <summary>
@@ -33,7 +34,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", IsRequired = true, DataType = SwaggerType.String)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodObjet { get; set; }
 
 		/// <summary>
@@ -42,49 +43,49 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "Nom de famille.", IsRequired = true, DataType = SwaggerType.String)]
+		[ApiMember(Description = "Nom de famille.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string NomPersonne { get; set; }
 
 		/// <summary>
 		/// Prénom.
 		/// </summary>
 		[StringLength(100)]
-		[ApiMember(Description = "Prénom.", DataType = SwaggerType.String)]
+		[ApiMember(Description = "Prénom.", DataType = SwaggerDataTypes.String)]
 		public string PrePersonne { get; set; }
 
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerType.String)]
+		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
 		public string TxtObjet { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Actif ou inactif.", IsRequired = true, DataType = SwaggerType.Boolean)]
+		[ApiMember(Description = "Actif ou inactif.", DataType = SwaggerDataTypes.Boolean, IsRequired = true)]
 		public bool EstActif { get; set; }
 
 		/// <summary>
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de création.", DataType = SwaggerDataTypes.Date)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerDataTypes.Date)]
 		public DateTime DatModif { get; set; }
 
 		/// <summary>
 		/// Identifiant de synchronisation externe.
 		/// </summary>
 		[StringLength(100)]
-		[ApiMember(Description = "Identifiant de synchronisation externe.", DataType = SwaggerType.String)]
+		[ApiMember(Description = "Identifiant de synchronisation externe.", DataType = SwaggerDataTypes.String)]
 		public string CodExterne { get; set; }
 
 		/// <summary>
@@ -98,21 +99,21 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Numéro de téléphone.
 		/// </summary>
 		[StringLength(25)]
-		[ApiMember(Description = "Numéro de téléphone.", DataType = SwaggerType.String)]
+		[ApiMember(Description = "Numéro de téléphone.", DataType = SwaggerDataTypes.String)]
 		public string NumTelep { get; set; }
 
 		/// <summary>
 		/// Numéro de fax.
 		/// </summary>
 		[StringLength(25)]
-		[ApiMember(Description = "Numéro de fax.", DataType = SwaggerType.String)]
+		[ApiMember(Description = "Numéro de fax.", DataType = SwaggerDataTypes.String)]
 		public string NumFax { get; set; }
 
 		/// <summary>
 		/// Adresse email.
 		/// </summary>
 		[StringLength(100)]
-		[ApiMember(Description = "Adresse email.", DataType = SwaggerType.String)]
+		[ApiMember(Description = "Adresse email.", DataType = SwaggerDataTypes.String)]
 		public string NumEmail { get; set; }
 
 		[Reference]

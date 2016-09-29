@@ -10,6 +10,7 @@
 using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.Infrastructure;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
@@ -18,7 +19,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteur spécifiée est introuvable.")]
 	[Route("/GenCompteur/{Id}", HttpVerbs.Delete, Summary = "Supprime une ressource GenCompteur à partir de son Id.")]
-	public partial class DeleteGenCompteur : DeleteByIdRequestBase<int>
+	public partial class DeleteGenCompteur : IReturnVoid
 	{
+        public int Id { get; set; }
 	}
 }

@@ -25,7 +25,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
 		public int Id { get; set; }
 
 		/// <summary>
@@ -33,7 +34,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Id du fournisseur parent.", IsRequired = true, DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id du fournisseur parent.", DataType = SwaggerDataTypes.Integer, IsRequired = true)]
 		public int CleGenFourn { get; set; }
 
 		/// <summary>
@@ -41,7 +42,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[StringLength(34)]
 		[Required]
-		[ApiMember(Description = "Code IBAN.", IsRequired = true, DataType = SwaggerType.String)]
+		[ApiMember(Description = "Code IBAN.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodIBAN { get; set; }
 
 		/// <summary>
@@ -49,7 +50,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[StringLength(11)]
 		[Required]
-		[ApiMember(Description = "Code BIC.", IsRequired = true, DataType = SwaggerType.String)]
+		[ApiMember(Description = "Code BIC.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodBIC { get; set; }
 
 		/// <summary>
@@ -57,28 +58,28 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[StringLength(200)]
 		[Required]
-		[ApiMember(Description = "Nom de l'établissement bancaire.", IsRequired = true, DataType = SwaggerType.String)]
+		[ApiMember(Description = "Nom de l'établissement bancaire.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string LibEtablissement { get; set; }
 
 		/// <summary>
 		/// Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur.", IsRequired = true, DataType = SwaggerType.Boolean)]
+		[ApiMember(Description = "Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur.", DataType = SwaggerDataTypes.Boolean, IsRequired = true)]
 		public bool EstDefaut { get; set; }
 
 		/// <summary>
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de création.", DataType = SwaggerDataTypes.Date)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerDataTypes.Date)]
 		public DateTime DatModif { get; set; }
 
 	}

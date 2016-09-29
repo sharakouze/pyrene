@@ -10,6 +10,7 @@
 using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.Infrastructure;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
@@ -18,7 +19,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenExercice spécifiée est introuvable.")]
 	[Route("/GenExercice/{Id}", HttpVerbs.Delete, Summary = "Supprime une ressource GenExercice à partir de son Id.")]
-	public partial class DeleteGenExercice : DeleteByIdRequestBase<int>
+	public partial class DeleteGenExercice : IReturnVoid
 	{
+        public int Id { get; set; }
 	}
 }

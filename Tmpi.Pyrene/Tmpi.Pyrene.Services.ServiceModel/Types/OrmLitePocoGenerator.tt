@@ -431,70 +431,79 @@ namespace <#= fileNamespace #>
                 {
 					lstApiMemberProps.Add("Description = \"" + col.Description + "\"");
                 }
-
-                if (col.IsNullable == false && col.IsAutoIncrement == false)
-                {
-                    bool required = true;
-                    if (lstInterfaces.Contains("IAuditable") && (col.ProperPropertyType == "DateTime")
-                        && (col.PropertyName == "DatCreation" || col.PropertyName == "DatModif"))
-                    {
-                        required = false;
-                    }
-                    if (required)
-                    {
-                        lstApiMemberProps.Add("IsRequired = true");
-                    }
-                }
                 
-                string swaggerType = "";
+                string swagDataType = "";
                 switch (col.PropertyType)
                 {
                     case "byte":
                     case "sbyte":
-                        swaggerType = "SwaggerType.Byte";
+                        swagDataType = "SwaggerDataTypes.Byte";
                         break;
                     case "bool":
-                        swaggerType = "SwaggerType.Boolean";
+                        swagDataType = "SwaggerDataTypes.Boolean";
                         break;
                     case "short":
                     case "ushort":
                     case "int":
                     case "uint":
-                        swaggerType = "SwaggerType.Int";
+                        swagDataType = "SwaggerDataTypes.Integer";
                         break;
                     case "long":
                     case "ulong":
-                        swaggerType = "SwaggerType.Long";
+                        swagDataType = "SwaggerDataTypes.Long";
                         break;
                     case "float":
-                        swaggerType = "SwaggerType.Float";
+                        swagDataType = "SwaggerDataTypes.Float";
                         break;
                     case "double":
                     case "decimal":
-                        swaggerType = "SwaggerType.Double";
+                        swagDataType = "SwaggerDataTypes.Double";
                         break;
                     case "string":
-                        swaggerType = "SwaggerType.String";
+                        swagDataType = "SwaggerDataTypes.String";
                         break;
                     case "DateTime":
-                        swaggerType = "SwaggerType.Date";
+                        swagDataType = "SwaggerDataTypes.Date";
                         break;
                     case "byte[]":
-                        swaggerType = "\"file\"";
+                        swagDataType = "SwaggerDataTypes.File";
                         break;
                 }
-
-                if (!string.IsNullOrEmpty(swaggerType))
+                if (!string.IsNullOrEmpty(swagDataType))
                 {
-                    lstApiMemberProps.Add("DataType = " + swaggerType);
+                    lstApiMemberProps.Add("DataType = " + swagDataType);
                 }
 
-                if (lstApiMemberProps.Any())
+                if (col.IsPK)
                 {
+#>
+		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
+<#
+                }
+                else
+                {
+                    if (col.IsNullable == false && col.IsAutoIncrement == false)
+                    {
+                        bool required = true;
+                        if (lstInterfaces.Contains("IAuditable") && (col.ProperPropertyType == "DateTime")
+                            && (col.PropertyName == "DatCreation" || col.PropertyName == "DatModif"))
+                        {
+                            required = false;
+                        }
+                        if (required)
+                        {
+                            lstApiMemberProps.Add("IsRequired = true");
+                        }
+                    }
+
+                    if (lstApiMemberProps.Any())
+                    {
 #>
 		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
 <#
-			    } // end if
+			        } // end if
+                } // end if
 
                 if (allEnums.Contains(col.PropertyType))
                 {
