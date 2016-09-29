@@ -64,14 +64,14 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de création.", DataType = SwaggerType.Date)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerType.Date)]
 		public DateTime DatModif { get; set; }
 
 		/// <summary>

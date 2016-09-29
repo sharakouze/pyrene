@@ -17,7 +17,7 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, "CleGenMandat", "CleGenPersonne", "CleGenSociete", "CleGenSecteur", "CleGenService")]
+	[CompositeIndex(true, nameof(CleGenMandat), nameof(CleGenPersonne), nameof(CleGenSociete), nameof(CleGenSecteur), nameof(CleGenService))]
 	public partial class GenMandatMandataire : IHasId<int>,
 		IAuditable
 	{
@@ -29,44 +29,62 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int Id { get; set; }
 
 		/// <summary>
+		/// Id du mandat parent.
+		/// </summary>
+		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
+		[Required]
+		[ApiMember(Description = "Id du mandat parent.", IsRequired = true, DataType = SwaggerType.Int)]
+		public int CleGenMandat { get; set; }
+
+		/// <summary>
+		/// Id de l'utilisateur mandataire.
+		/// </summary>
+		[References(typeof(GenPersonne))]
+		[Required]
+		[ApiMember(Description = "Id de l'utilisateur mandataire.", IsRequired = true, DataType = SwaggerType.Int)]
+		public int CleGenPersonne { get; set; }
+
+		/// <summary>
+		/// Id de la société ayant accès au mandat, ou null pour toutes les sociétés.
+		/// </summary>
+		[References(typeof(GenSociete))]
+		[ApiMember(Description = "Id de la société ayant accès au mandat, ou null pour toutes les sociétés.", DataType = SwaggerType.Int)]
+		public int? CleGenSociete { get; set; }
+
+		/// <summary>
+		/// Id du secteur ayant accès au mandat, ou null pour tous les secteurs.
+		/// </summary>
+		[References(typeof(GenSecteur))]
+		[ApiMember(Description = "Id du secteur ayant accès au mandat, ou null pour tous les secteurs.", DataType = SwaggerType.Int)]
+		public int? CleGenSecteur { get; set; }
+
+		/// <summary>
+		/// Id du service ayant accès au mandat, ou null pour tous les services.
+		/// </summary>
+		[References(typeof(GenService))]
+		[ApiMember(Description = "Id du service ayant accès au mandat, ou null pour tous les services.", DataType = SwaggerType.Int)]
+		public int? CleGenService { get; set; }
+
+		/// <summary>
+		/// Si true, le mandat est suspendu.
+		/// </summary>
+		[Required]
+		[ApiMember(Description = "Si true, le mandat est suspendu.", IsRequired = true, DataType = SwaggerType.Boolean)]
+		public bool EstSuspendu { get; set; }
+
+		/// <summary>
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de création.", DataType = SwaggerType.Date)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerType.Date)]
 		public DateTime DatModif { get; set; }
-
-		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
-		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Int)]
-		public int CleGenMandat { get; set; }
-
-		[References(typeof(GenPersonne))]
-		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Int)]
-		public int CleGenPersonne { get; set; }
-
-		[References(typeof(GenSociete))]
-		[ApiMember(DataType = SwaggerType.Int)]
-		public int? CleGenSociete { get; set; }
-
-		[References(typeof(GenSecteur))]
-		[ApiMember(DataType = SwaggerType.Int)]
-		public int? CleGenSecteur { get; set; }
-
-		[References(typeof(GenService))]
-		[ApiMember(DataType = SwaggerType.Int)]
-		public int? CleGenService { get; set; }
-
-		[Required]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Boolean)]
-		public bool EstSuspendu { get; set; }
 
 	}
 }

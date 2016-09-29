@@ -17,7 +17,7 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, "CleGenFourn", "NomContact")]
+	[CompositeIndex(true, nameof(CleGenFourn), nameof(NomContact))]
 	public partial class GenFournContact : IHasId<int>,
 		IAuditable
 	{
@@ -29,11 +29,11 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int Id { get; set; }
 
 		/// <summary>
-		/// Id du fournisseur associé.
+		/// Id du fournisseur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Id du fournisseur associé.", IsRequired = true, DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id du fournisseur parent.", IsRequired = true, DataType = SwaggerType.Int)]
 		public int CleGenFourn { get; set; }
 
 		/// <summary>
@@ -62,14 +62,14 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de création.", DataType = SwaggerType.Date)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerType.Date)]
 		public DateTime DatModif { get; set; }
 
 		/// <summary>
@@ -97,15 +97,15 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Titre de civilité.
 		/// </summary>
 		[ApiMember(Description = "Titre de civilité.")]
-		[ApiAllowableValues("TypCivilite", typeof(TypCivilite))]
+		[ApiAllowableValues(nameof(TypCivilite), typeof(TypCivilite))]
 		public TypCivilite? TypCivilite { get; set; }
 
 		/// <summary>
-		/// Fonction du contact.
+		/// Fonction ou poste du contact chez le fournisseur.
 		/// </summary>
 		[StringLength(100)]
-		[ApiMember(Description = "Fonction du contact.", DataType = SwaggerType.String)]
-		public string CodFonction { get; set; }
+		[ApiMember(Description = "Fonction ou poste du contact chez le fournisseur.", DataType = SwaggerType.String)]
+		public string LibFonction { get; set; }
 
 	}
 }

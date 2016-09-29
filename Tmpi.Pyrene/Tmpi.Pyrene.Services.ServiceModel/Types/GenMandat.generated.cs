@@ -17,7 +17,7 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, "TypMandat", "NivMandat")]
+	[CompositeIndex(true, nameof(TypMandat), nameof(NivMandat))]
 	public partial class GenMandat : IHasId<int>,
 		IEntity,
 		IAuditable
@@ -65,14 +65,14 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de création.", DataType = SwaggerType.Date)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerType.Date)]
 		public DateTime DatModif { get; set; }
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Type de mandat.", IsRequired = true)]
-		[ApiAllowableValues("TypMandat", typeof(TypMandat))]
+		[ApiAllowableValues(nameof(TypMandat), typeof(TypMandat))]
 		public TypMandat TypMandat { get; set; }
 
 		/// <summary>

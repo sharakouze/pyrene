@@ -17,7 +17,7 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, "CleGenCompteur", "ValPeriode")]
+	[CompositeIndex(true, nameof(CleGenCompteur), nameof(ValPeriode))]
 	public partial class GenCompteurValeur : IHasId<int>
 	{
 		/// <summary>

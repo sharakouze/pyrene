@@ -37,7 +37,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
             RuleFor(x => x.AdrCode).Length(0, 10);
 
-            RuleFor(x => x.AdrVille).Length(0, 100);
+            RuleFor(x => x.AdrCommune).Length(0, 100);
 
             RuleFor(x => x.AdrPays).Length(0, 100);
 

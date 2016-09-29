@@ -64,14 +64,14 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de création.", DataType = SwaggerType.Date)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerType.Date)]
 		public DateTime DatModif { get; set; }
 
 		/// <summary>
@@ -95,9 +95,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Code postal.", DataType = SwaggerType.String)]
 		public string AdrCode { get; set; }
 
+		/// <summary>
+		/// Ville ou commune.
+		/// </summary>
 		[StringLength(100)]
-		[ApiMember(DataType = SwaggerType.String)]
-		public string AdrVille { get; set; }
+		[ApiMember(Description = "Ville ou commune.", DataType = SwaggerType.String)]
+		public string AdrCommune { get; set; }
 
 		/// <summary>
 		/// Pays.
@@ -192,19 +195,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Mode de règlement.
 		/// </summary>
 		[ApiMember(Description = "Mode de règlement.")]
-		[ApiAllowableValues("TypModeReglement", typeof(TypModeReglement))]
+		[ApiAllowableValues(nameof(TypModeReglement), typeof(TypModeReglement))]
 		public TypModeReglement? TypModeReglement { get; set; }
 
 		[Required]
 		[ApiMember(IsRequired = true, DataType = SwaggerType.Boolean)]
 		public bool EstEnvoiMailBonCde { get; set; }
-
-		/// <summary>
-		/// Id de l'utilisateur propriétaire.
-		/// </summary>
-		[References(typeof(GenPersonne))]
-		[ApiMember(Description = "Id de l'utilisateur propriétaire.", DataType = SwaggerType.Int)]
-		public int? CleGenPersonne { get; set; }
 
 		[Reference]
 		public List<GenFournBanque> LstBanque { get; set; }

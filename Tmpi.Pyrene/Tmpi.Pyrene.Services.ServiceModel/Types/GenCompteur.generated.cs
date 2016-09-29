@@ -17,7 +17,7 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, "TypCompteur", "CleGenSociete", "CleGenSecteur", "CleGenService")]
+	[CompositeIndex(true, nameof(TypCompteur), nameof(CleGenSociete), nameof(CleGenSecteur), nameof(CleGenService))]
 	public partial class GenCompteur : IHasId<int>,
 		IEntity,
 		IAuditable
@@ -65,14 +65,14 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de création.", DataType = SwaggerType.Date)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerType.Date)]
 		public DateTime DatModif { get; set; }
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Périodicité.", IsRequired = true)]
-		[ApiAllowableValues("TypPeriodicite", typeof(TypPeriodicite))]
+		[ApiAllowableValues(nameof(TypPeriodicite), typeof(TypPeriodicite))]
 		public TypPeriodicite TypPeriodicite { get; set; }
 
 		/// <summary>
@@ -95,7 +95,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Type de compteur.", IsRequired = true)]
-		[ApiAllowableValues("TypCompteur", typeof(TypCompteur))]
+		[ApiAllowableValues(nameof(TypCompteur), typeof(TypCompteur))]
 		public TypCompteur TypCompteur { get; set; }
 
 		/// <summary>

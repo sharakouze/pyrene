@@ -17,8 +17,8 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, "CleGenPersonne", "CleGenSociete", "CleGenSecteur", "CleGenService")]
-	[CompositeIndex(true, "CodObjet", "CleGenPersonne")]
+	[CompositeIndex(true, nameof(CleGenPersonne), nameof(CleGenSociete), nameof(CleGenSecteur), nameof(CleGenService))]
+	[CompositeIndex(true, nameof(CodObjet), nameof(CleGenPersonne))]
 	public partial class GenPersonneProfil : IHasId<int>,
 		IAuditable
 	{
@@ -30,45 +30,54 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int Id { get; set; }
 
 		/// <summary>
-		/// Id de la personne associée.
+		/// Id de l'utilisateur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Id de la personne associée.", IsRequired = true, DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id de l'utilisateur parent.", IsRequired = true, DataType = SwaggerType.Int)]
 		public int CleGenPersonne { get; set; }
 
 		/// <summary>
-		/// Code unique.
+		/// Code.
 		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[ApiMember(Description = "Code unique.", IsRequired = true, DataType = SwaggerType.String)]
+		[ApiMember(Description = "Code.", IsRequired = true, DataType = SwaggerType.String)]
 		public string CodObjet { get; set; }
 
 		/// <summary>
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de création.", DataType = SwaggerType.Date)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerType.Date)]
 		public DateTime DatModif { get; set; }
 
+		/// <summary>
+		/// Id de la société à laquelle a accès le profil, ou null pour toutes les sociétés.
+		/// </summary>
 		[References(typeof(GenSociete))]
-		[ApiMember(DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id de la société à laquelle a accès le profil, ou null pour toutes les sociétés.", DataType = SwaggerType.Int)]
 		public int? CleGenSociete { get; set; }
 
+		/// <summary>
+		/// Id du secteur auquel a accès le profil, ou null pour tous les secteurs.
+		/// </summary>
 		[References(typeof(GenSecteur))]
-		[ApiMember(DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id du secteur auquel a accès le profil, ou null pour tous les secteurs.", DataType = SwaggerType.Int)]
 		public int? CleGenSecteur { get; set; }
 
+		/// <summary>
+		/// Id du service auquel a accès le profil, ou null pour tous les services.
+		/// </summary>
 		[References(typeof(GenService))]
-		[ApiMember(DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id du service auquel a accès le profil, ou null pour tous les services.", DataType = SwaggerType.Int)]
 		public int? CleGenService { get; set; }
 
 	}

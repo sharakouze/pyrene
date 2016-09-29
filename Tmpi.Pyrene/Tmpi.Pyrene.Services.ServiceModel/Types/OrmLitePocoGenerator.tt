@@ -178,9 +178,13 @@ namespace <#= fileNamespace #>
 		{
 			foreach (var idx in table.Indices.Where(i => i.IndexColumns.Count > 1))
 			{
-				var idxColumns = idx.IndexColumns.Select(i => i.Name);
+                var q = from c1 in idx.IndexColumns
+                        join c2 in table.Columns on c1.Name equals c2.Name
+                        let noAlias = (c2.Name == c2.PropertyName)
+                        select noAlias ? "nameof(" + c2.PropertyName + ")" : "\"" + c2.Name + "\"";
+                var idxColumns  = q.ToList();
 #>
-	[CompositeIndex(<#= idx.IsUnique ? "true, " : "" #>"<#= string.Join("\", \"", idxColumns) #>")]
+	[CompositeIndex(<#= idx.IsUnique ? "true, " : "" #><#= string.Join(", ", idxColumns) #>)]
 <#
 			} // end foreach
 		} // end if
@@ -261,48 +265,58 @@ namespace <#= fileNamespace #>
 					switch (col.PropertyName)
                     {
 						case "CodObjet":
-							col.Description = "Code unique";
+                            bool isUnique = false;
+                            if (table.Indices != null)
+                            {
+				                var q = from idx in table.Indices
+                                        where idx.IsUnique == true
+						                where idx.IndexColumns.Count == 1
+                                        where idx.IndexColumns.Any(c => c.Name == col.Name)
+						                select idx;
+                                isUnique = q.Any();
+                            }
+							col.Description = isUnique ? "Code unique." : "Code.";
 							break;
 						case "LibObjet":
-							col.Description = "Désignation";
+							col.Description = "Désignation.";
 							break;
 						case "TxtObjet":
-							col.Description = "Commentaire ou description";
+							col.Description = "Commentaire ou description.";
 							break;
 						case "EstActif":
 							col.Description = "Actif ou inactif";
 							break;
 						case "DatCreation":
-							col.Description = "Date de création";
+							col.Description = "Date de création.";
 							break;
 						case "DatModif":
-							col.Description = "Date de dernière modification";
+							col.Description = "Date de dernière modification.";
 							break;
 						case "CodExterne":
-							col.Description = "Identifiant de synchronisation externe";
+							col.Description = "Identifiant de synchronisation externe.";
 							break;
 
 						case "NumTelep":
-							col.Description = "Numéro de téléphone";
+							col.Description = "Numéro de téléphone.";
 							break;
 						case "NumFax":
-							col.Description = "Numéro de fax";
+							col.Description = "Numéro de fax.";
 							break;
 						case "NumEmail":
-							col.Description = "Adresse email";
+							col.Description = "Adresse email.";
 							break;
 
 						case "AdrRue":
-							col.Description = "Rue";
+							col.Description = "Rue.";
 							break;
 						case "AdrCode":
-							col.Description = "Code postal";
+							col.Description = "Code postal.";
 							break;
 						case "AdrCommune":
-							col.Description = "Ville ou commune";
+							col.Description = "Ville ou commune.";
 							break;
 						case "AdrPays":
-							col.Description = "Pays";
+							col.Description = "Pays.";
 							break;
                     }
                 }
@@ -391,8 +405,7 @@ namespace <#= fileNamespace #>
 			{
 				var q = from idx in table.Indices
 						where idx.IndexColumns.Count == 1
-						from idxcol in idx.IndexColumns
-						where idxcol.Name == col.Name
+                        where idx.IndexColumns.Any(c => c.Name == col.Name)
 						select idx;
 				if (q.Any())
 				{
@@ -421,7 +434,16 @@ namespace <#= fileNamespace #>
 
                 if (col.IsNullable == false && col.IsAutoIncrement == false)
                 {
-					lstApiMemberProps.Add("IsRequired = true");
+                    bool required = true;
+                    if (lstInterfaces.Contains("IAuditable") && (col.ProperPropertyType == "DateTime")
+                        && (col.PropertyName == "DatCreation" || col.PropertyName == "DatModif"))
+                    {
+                        required = false;
+                    }
+                    if (required)
+                    {
+                        lstApiMemberProps.Add("IsRequired = true");
+                    }
                 }
                 
                 string swaggerType = "";
@@ -477,7 +499,7 @@ namespace <#= fileNamespace #>
                 if (allEnums.Contains(col.PropertyType))
                 {
 #>
-		[ApiAllowableValues("<#= col.PropertyName #>", typeof(<#= col.PropertyType #>))]
+		[ApiAllowableValues(nameof(<#= col.PropertyName #>), typeof(<#= col.PropertyType #>))]
 <#
                 }
 

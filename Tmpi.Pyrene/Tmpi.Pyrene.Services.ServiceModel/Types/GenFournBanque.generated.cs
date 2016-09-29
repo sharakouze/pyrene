@@ -17,7 +17,7 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, "CleGenFourn", "NumRib")]
+	[CompositeIndex(true, nameof(CleGenFourn), nameof(CodIBAN))]
 	public partial class GenFournBanque : IHasId<int>,
 		IAuditable
 	{
@@ -37,26 +37,20 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int CleGenFourn { get; set; }
 
 		/// <summary>
-		/// Identifiant RIB.
+		/// Code IBAN.
 		/// </summary>
-		[StringLength(23)]
+		[StringLength(34)]
 		[Required]
-		[ApiMember(Description = "Identifiant RIB.", IsRequired = true, DataType = SwaggerType.String)]
-		public string NumRib { get; set; }
+		[ApiMember(Description = "Code IBAN.", IsRequired = true, DataType = SwaggerType.String)]
+		public string CodIBAN { get; set; }
 
 		/// <summary>
-		/// Date de création.
+		/// Code BIC.
 		/// </summary>
+		[StringLength(11)]
 		[Required]
-		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
-		public DateTime DatCreation { get; set; }
-
-		/// <summary>
-		/// Date de dernière modification.
-		/// </summary>
-		[Required]
-		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
-		public DateTime DatModif { get; set; }
+		[ApiMember(Description = "Code BIC.", IsRequired = true, DataType = SwaggerType.String)]
+		public string CodBIC { get; set; }
 
 		/// <summary>
 		/// Nom de l'établissement bancaire.
@@ -67,11 +61,25 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public string LibEtablissement { get; set; }
 
 		/// <summary>
-		/// Si true,.
+		/// Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Si true,.", IsRequired = true, DataType = SwaggerType.Boolean)]
+		[ApiMember(Description = "Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur.", IsRequired = true, DataType = SwaggerType.Boolean)]
 		public bool EstDefaut { get; set; }
+
+		/// <summary>
+		/// Date de création.
+		/// </summary>
+		[Required]
+		[ApiMember(Description = "Date de création.", DataType = SwaggerType.Date)]
+		public DateTime DatCreation { get; set; }
+
+		/// <summary>
+		/// Date de dernière modification.
+		/// </summary>
+		[Required]
+		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerType.Date)]
+		public DateTime DatModif { get; set; }
 
 	}
 }

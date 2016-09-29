@@ -64,14 +64,14 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de création.", DataType = SwaggerType.Date)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", IsRequired = true, DataType = SwaggerType.Date)]
+		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerType.Date)]
 		public DateTime DatModif { get; set; }
 
 		/// <summary>
@@ -81,10 +81,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Identifiant de synchronisation externe.", DataType = SwaggerType.String)]
 		public string CodExterne { get; set; }
 
+		/// <summary>
+		/// Id de la société à laquelle appartient le secteur.
+		/// </summary>
 		[ForeignKey(typeof(GenSociete), OnDelete = "CASCADE")]
 		[Required]
 		[Index]
-		[ApiMember(IsRequired = true, DataType = SwaggerType.Int)]
+		[ApiMember(Description = "Id de la société à laquelle appartient le secteur.", IsRequired = true, DataType = SwaggerType.Int)]
 		public int CleGenSociete { get; set; }
 
 		/// <summary>
@@ -101,9 +104,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Code postal.", DataType = SwaggerType.String)]
 		public string AdrCode { get; set; }
 
+		/// <summary>
+		/// Ville ou commune.
+		/// </summary>
 		[StringLength(100)]
-		[ApiMember(DataType = SwaggerType.String)]
-		public string AdrVille { get; set; }
+		[ApiMember(Description = "Ville ou commune.", DataType = SwaggerType.String)]
+		public string AdrCommune { get; set; }
 
 		/// <summary>
 		/// Pays.
