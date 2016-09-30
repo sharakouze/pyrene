@@ -21,9 +21,15 @@ namespace Tmpi.Pyrene.Services.ServiceModel
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenSociete spécifiée est introuvable.")]
 	public partial class GetGenSociete : IReturn<GenSociete>
 	{
-        [ApiMember(Description = "", IsRequired = true, DataType = "password", ParameterType = SwaggerParameterTypes.Path)]
+        /// <summary>
+        /// Id de la ressource <see cref="GenSociete" /> à retourner.
+        /// </summary>
+        [ApiMember(Description = "", IsRequired = true, DataType = SwaggerDataTypes.Integer, ParameterType = SwaggerParameterTypes.Path)]
         public int Id { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string[] Fields { get; set; }
 	}
 }

@@ -21,9 +21,15 @@ namespace Tmpi.Pyrene.Services.ServiceModel
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournBanque spécifiée est introuvable.")]
 	public partial class GetGenFournBanque : IReturn<GenFournBanque>
 	{
-        [ApiMember(Description = "", IsRequired = true, DataType = "password", ParameterType = SwaggerParameterTypes.Path)]
+        /// <summary>
+        /// Id de la ressource <see cref="GenFournBanque" /> à retourner.
+        /// </summary>
+        [ApiMember(Description = "", IsRequired = true, DataType = SwaggerDataTypes.Integer, ParameterType = SwaggerParameterTypes.Path)]
         public int Id { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string[] Fields { get; set; }
 	}
 }

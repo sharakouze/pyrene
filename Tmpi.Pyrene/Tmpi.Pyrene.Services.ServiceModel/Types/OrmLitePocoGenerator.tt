@@ -5,7 +5,9 @@
 <#
 	/***** TODO *****
 	- DefaultAttribute
-	- Remplacer la PK par une CompositeIndex pour les PK composite
+    - Alternative a TransformRoutePath avec des const
+    - Commentaires sur les [References] ?
+    - Ajout de propriétés [References] pour les FK ?
 	****************/
 
 	/*********************/

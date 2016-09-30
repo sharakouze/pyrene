@@ -4,7 +4,6 @@
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#
 	/***** TODO *****
-	- ApiAttribute + ApiMemberAttribute
 	****************/
 
 	/*********************/
@@ -208,9 +207,22 @@ namespace <#= fileNamespace #>
 #>
 	<#= string.Join(" ", classDefinitionWords) #> class <#= getByIdClassName #> : IReturn<<#= codeClass.Name #>>
 	{
-        [ApiMember(Description = "", IsRequired = true, DataType = "password", ParameterType = SwaggerParameterTypes.Path)]
+        /// <summary>
+        /// Id de la ressource <see cref="<#= codeClass.Name #>" /> à retourner.
+        /// </summary>
+<#
+			    if (AddApiAttributes)
+                {
+#>
+        [ApiMember(Description = "", IsRequired = true, DataType = SwaggerDataTypes.Integer, ParameterType = SwaggerParameterTypes.Path)]
+<#
+                }
+#>
         public <#= tkey #> Id { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string[] Fields { get; set; }
 	}
 }
