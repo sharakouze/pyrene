@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
@@ -18,6 +19,9 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleGenMandat), nameof(CleGenPersonne), nameof(CleGenSociete), nameof(CleGenSecteur), nameof(CleGenService))]
+    [Route("/GenMandat/Mandataire", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandatMandataire.")]
+    [Route("/GenMandat/Mandataire/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandatMandataire à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandatMandataire spécifiée est introuvable.")]
 	public partial class GenMandatMandataire : IHasId<int>,
 		IAuditable
 	{
@@ -25,8 +29,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
 		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, IsRequired = true, Verb = HttpVerbs.Put, ParameterType = SwaggerParameterTypes.Path)]
 		public int Id { get; set; }
 
 		/// <summary>

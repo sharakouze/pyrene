@@ -40,7 +40,6 @@
 	Regex GetByIdClassFilterExclude = null;
 	Regex DeleteByIdClassFilterExclude = null;
 	Regex PatchByIdClassFilterExclude = null;
-	Regex PutByIdAndPostClassFilterExclude = null;
 	Regex AutocompleteClassFilterExclude = null;
 
 #>
@@ -194,17 +193,17 @@ namespace <#= fileNamespace #>
 	/// <#= string.Format(getByIdDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
 <#
-			if (AddApiAttributes)
-            {
-#>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
-<#
-            }
             if (AddRouteAttributes)
             {
 #>
 	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Get, Summary = "<#= string.Format(getByIdDescription, codeClass.Name) #>")]
 <#
+			    if (AddApiAttributes)
+                {
+#>
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
+<#
+                }
 			} // end if
 #>
 	<#= string.Join(" ", classDefinitionWords) #> class <#= getByIdClassName #> : IReturn<<#= codeClass.Name #>>
@@ -233,17 +232,17 @@ namespace <#= fileNamespace #>
 	/// <#= string.Format(deleteByIdDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
 <#
-			if (AddApiAttributes)
-            {
-#>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
-<#
-            }
             if (AddRouteAttributes)
             {
 #>
 	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Delete, Summary = "<#= string.Format(deleteByIdDescription, codeClass.Name) #>")]
 <#
+			    if (AddApiAttributes)
+                {
+#>
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
+<#
+                }
 			} // end if
 #>
 	<#= string.Join(" ", classDefinitionWords) #> class <#= deleteByIdClassName #> : IReturnVoid
@@ -269,17 +268,17 @@ namespace <#= fileNamespace #>
 	/// <#= string.Format(patchDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
 <#
-			if (AddApiAttributes)
-            {
-#>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
-<#
-            }
             if (AddRouteAttributes)     
             {
 #>
 	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Patch, Summary = "<#= string.Format(patchDescription, codeClass.Name) #>")]
 <#
+			    if (AddApiAttributes)
+                {
+#>
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
+<#
+                }
 			} // end if
 #>
 	<#= string.Join(" ", classDefinitionWords) #> class <#= patchClassName #> : IReturnVoid
@@ -293,33 +292,6 @@ namespace <#= fileNamespace #>
 				manager.EndBlock(); // end newfile
             }
 			
-			bool putByIdAndPostExcluded = PutByIdAndPostClassFilterExclude != null && PutByIdAndPostClassFilterExclude.IsMatch(codeClass.Name);
-			if (!putByIdAndPostExcluded)
-            {
-				if (AddRouteAttributes)
-                {
-					manager.StartNewFile(codeClass.Name + ".generated.cs");
-#>
-namespace <#= codeClass.Namespace == null ? fileNamespace : codeClass.Namespace.Name #>
-{
-<#
-			    if (AddApiAttributes)
-                {
-#>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
-<#
-                }
-#>
-	[Route("/<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une ressource {0}.", codeClass.Name) #>")]
-	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une ressource {0} à partir de son Id.", codeClass.Name) #>")]
-	partial class <#= codeClass.Name #>
-	{
-	}
-}
-<#
-					manager.EndBlock(); // end newfile
-                } // end if
-            } // end if
         } // end if
 
 		if (allInterfaces.Any(i => i.FullName == "Tmpi.Pyrene.Services.ServiceModel.Types.IEntity"))

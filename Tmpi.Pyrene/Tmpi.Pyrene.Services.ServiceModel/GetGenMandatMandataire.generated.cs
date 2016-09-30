@@ -17,8 +17,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource <see cref="GenMandatMandataire" /> à partir de son Id.
 	/// </summary>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandatMandataire spécifiée est introuvable.")]
 	[Route("/GenMandat/Mandataire/{Id}", HttpVerbs.Get, Summary = "Retourne une ressource GenMandatMandataire à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandatMandataire spécifiée est introuvable.")]
 	public partial class GetGenMandatMandataire : IReturn<GenMandatMandataire>
 	{
         [ApiMember(Description = "", IsRequired = true, DataType = "password", ParameterType = SwaggerParameterTypes.Path)]

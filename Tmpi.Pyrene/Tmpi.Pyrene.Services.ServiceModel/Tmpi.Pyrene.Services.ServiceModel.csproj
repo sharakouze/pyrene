@@ -109,48 +109,6 @@
     <Compile Include="DeleteGenTVA.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="GenCompteur.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenCompteurValeur.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenExercice.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenFourn.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenFournBanque.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenFournContact.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenMandat.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenMandatMandataire.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenPersonne.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenPersonneProfil.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenSecteur.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenService.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenSociete.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenTVA.generated.cs">
-      <DependentUpon>MessageGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="GetGenCompteur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>

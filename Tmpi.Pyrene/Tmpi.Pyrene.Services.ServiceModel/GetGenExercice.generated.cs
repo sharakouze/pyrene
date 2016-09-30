@@ -17,8 +17,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource <see cref="GenExercice" /> à partir de son Id.
 	/// </summary>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenExercice spécifiée est introuvable.")]
 	[Route("/GenExercice/{Id}", HttpVerbs.Get, Summary = "Retourne une ressource GenExercice à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenExercice spécifiée est introuvable.")]
 	public partial class GetGenExercice : IReturn<GenExercice>
 	{
         [ApiMember(Description = "", IsRequired = true, DataType = "password", ParameterType = SwaggerParameterTypes.Path)]

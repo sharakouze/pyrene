@@ -52,6 +52,16 @@
 	// Ajoute [ApiMember], [ApiAllowableValues]...
 	bool AddApiAttributes = true;
 
+	// true pour ajouter l'attribut [Route(...)] sur les classes générées.
+	bool AddRouteAttributes = true;
+
+	// true pour transformer la route de la ressource, ex: GenFournContact de '/GenFournContact/' en '/GenFourn/Contact/'.
+	bool TransformRoutePath = true;
+
+	// Filtre les routes générées.
+	Regex PutTableFilterExclude = null;
+	Regex PostTableFilterExclude = null;
+
 	// if true: Changes the classname to singular if tablename is not singular.
 	bool MakeSingular = false;
 
@@ -106,6 +116,41 @@
 		tweakSchema(allTables);
     }
 
+	// transformation du route path suivant les ForeignKeys
+	// exemple : classe GenFournContact passe de '/GenFournContact/' en '/GenFourn/Contact/'
+	Func<Table, List<string>> getRoutePathFromTable = null;
+	getRoutePathFromTable = table =>
+	{
+		var lstRoute = new List<string>();
+		string str = null;
+
+		if (table.FKeys != null && table.FKeys.Any())
+		{
+			var refTableNames = table.FKeys
+				.Where(fk => table.Name.StartsWith(fk.ToTable))
+				.Select(fk => fk.ToTable)
+				.ToList();
+
+			string refTableName = refTableNames.OrderByDescending(s => s.Length).FirstOrDefault();
+			if (!string.IsNullOrEmpty(refTableName))
+			{
+				var tbl = allTables.SingleOrDefault(c => c.Name == refTableName) as Table;
+				if (tbl != null)
+				{
+					str = table.Name.Replace(tbl.Name, "");
+					lstRoute = getRoutePathFromTable(tbl);
+				}
+			}
+		}
+		if (string.IsNullOrEmpty(str))
+		{
+			str = table.Name;
+		}
+
+		lstRoute.Add(str);
+		return lstRoute;
+	};
+
 	// namespace
 	var fileNamespace = Namespace;
 	if (string.IsNullOrWhiteSpace(fileNamespace))
@@ -129,6 +174,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
@@ -188,6 +234,37 @@ namespace <#= fileNamespace #>
 <#
 			} // end foreach
 		} // end if
+
+		bool putExcluded = PutTableFilterExclude != null && PutTableFilterExclude.IsMatch(table.ClassName);
+		bool postExcluded = PostTableFilterExclude != null && PostTableFilterExclude.IsMatch(table.ClassName);
+
+        if (AddRouteAttributes && (!putExcluded || !postExcluded))
+        {
+    		string strRoute = table.ClassName;
+		    if (TransformRoutePath)
+		    {
+			    strRoute = string.Join("/", getRoutePathFromTable(table));
+		    }
+            if (!postExcluded)
+            {
+#>
+    [Route("/<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une ressource {0}.", table.ClassName) #>")]
+<#
+            }
+            if (!putExcluded)
+            {
+#>
+    [Route("/<#= strRoute #>/{Id}", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une ressource {0} à partir de son Id.", table.ClassName) #>")]
+<#
+            }
+
+            if (AddApiAttributes)
+            {
+#>
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= table.ClassName #> spécifiée est introuvable.")]
+<#
+            }
+        } // end if
 		
 		var lstInterfaces = new List<string>();
 
@@ -474,12 +551,20 @@ namespace <#= fileNamespace #>
                     lstApiMemberProps.Add("DataType = " + swagDataType);
                 }
 
-                if (col.IsPK)
+                if (col.IsPK && (!putExcluded || !postExcluded))
                 {
+                    if (!postExcluded)
+                    {
 #>
-		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
 		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
 <#
+                    }
+                    if (!putExcluded)
+                    {
+#>
+		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, IsRequired = true, Verb = HttpVerbs.Put, ParameterType = SwaggerParameterTypes.Path)]
+<#
+                    }
                 }
                 else
                 {

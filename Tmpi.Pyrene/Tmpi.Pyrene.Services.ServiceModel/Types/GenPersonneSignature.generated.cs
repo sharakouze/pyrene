@@ -11,12 +11,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
+    [Route("/GenPersonne/Signature", HttpVerbs.Post, Summary = "Ajoute une ressource GenPersonneSignature.")]
+    [Route("/GenPersonne/Signature/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonneSignature à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneSignature spécifiée est introuvable.")]
 	public partial class GenPersonneSignature
 	{
 		/// <summary>
@@ -25,8 +29,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
 		[PrimaryKey]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
 		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, IsRequired = true, Verb = HttpVerbs.Put, ParameterType = SwaggerParameterTypes.Path)]
 		public int CleGenPersonne { get; set; }
 
 		/// <summary>

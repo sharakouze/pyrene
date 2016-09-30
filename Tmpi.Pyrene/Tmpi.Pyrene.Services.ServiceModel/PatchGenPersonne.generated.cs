@@ -17,8 +17,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Modifie une ressource <see cref="GenPersonne" /> à partir de son Id.
 	/// </summary>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonne spécifiée est introuvable.")]
 	[Route("/GenPersonne/{Id}", HttpVerbs.Patch, Summary = "Modifie une ressource GenPersonne à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonne spécifiée est introuvable.")]
 	public partial class PatchGenPersonne : IReturnVoid
 	{
         public int Id { get; set; }

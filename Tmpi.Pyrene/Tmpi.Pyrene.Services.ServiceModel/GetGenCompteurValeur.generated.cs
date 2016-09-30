@@ -17,8 +17,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource <see cref="GenCompteurValeur" /> à partir de son Id.
 	/// </summary>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeur spécifiée est introuvable.")]
 	[Route("/GenCompteur/Valeur/{Id}", HttpVerbs.Get, Summary = "Retourne une ressource GenCompteurValeur à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeur spécifiée est introuvable.")]
 	public partial class GetGenCompteurValeur : IReturn<GenCompteurValeur>
 	{
         [ApiMember(Description = "", IsRequired = true, DataType = "password", ParameterType = SwaggerParameterTypes.Path)]

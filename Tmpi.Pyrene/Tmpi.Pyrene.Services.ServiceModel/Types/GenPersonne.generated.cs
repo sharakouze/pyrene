@@ -11,12 +11,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
+    [Route("/GenPersonne", HttpVerbs.Post, Summary = "Ajoute une ressource GenPersonne.")]
+    [Route("/GenPersonne/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonne à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonne spécifiée est introuvable.")]
 	public partial class GenPersonne : IHasId<int>,
 		IAuditable
 	{
@@ -24,8 +28,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
 		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, IsRequired = true, Verb = HttpVerbs.Put, ParameterType = SwaggerParameterTypes.Path)]
 		public int Id { get; set; }
 
 		/// <summary>
