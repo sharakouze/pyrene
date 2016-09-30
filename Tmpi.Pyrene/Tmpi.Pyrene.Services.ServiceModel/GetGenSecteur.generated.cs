@@ -24,13 +24,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// <summary>
         /// Id de la ressource <see cref="GenSecteur" /> à retourner.
         /// </summary>
-        [ApiMember(Description = "Id de la ressource GenSecteur à retourner.", IsRequired = true, DataType = SwaggerDataTypes.Integer, ParameterType = SwaggerParameterTypes.Path)]
+        [ApiMember(Description = "Id de la ressource GenSecteur à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
         public int Id { get; set; }
 
         /// <summary>
         /// Champs à retourner, ou null pour retourner tous les champs.
         /// </summary>
-        [ApiMember(Description = "Champs à retourner, ou null pour retourner tous les champs.", DataType = SwaggerDataTypes.Array)]
+        [ApiMember(Description = "Champs à retourner, ou null pour retourner tous les champs.", DataType = SwaggerDataTypes.ArrayOfString)]
         public string[] Fields { get; set; }
 	}
 }

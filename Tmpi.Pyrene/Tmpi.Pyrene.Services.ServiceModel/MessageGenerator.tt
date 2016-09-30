@@ -181,6 +181,8 @@ namespace <#= fileNamespace #>
                 }
 			}
 
+            string swagDataType = "SwaggerDataTypes." + tkey.Substring(0,1).ToUpper() + tkey.Substring(1);
+
 			bool getByIdExcluded = GetByIdClassFilterExclude != null && GetByIdClassFilterExclude.IsMatch(codeClass.Name);
 			if (!getByIdExcluded)
 			{
@@ -217,7 +219,7 @@ namespace <#= fileNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-        [ApiMember(Description = "<#= string.Format(idPropDescription, codeClass.Name) #>", IsRequired = true, DataType = SwaggerDataTypes.Integer, ParameterType = SwaggerParameterTypes.Path)]
+        [ApiMember(Description = "<#= string.Format(idPropDescription, codeClass.Name) #>", DataType = <#= swagDataType #>, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
 <#
                 }
 #>
@@ -230,7 +232,7 @@ namespace <#= fileNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-        [ApiMember(Description = "<#= fieldsPropDescription #>", DataType = SwaggerDataTypes.Array)]
+        [ApiMember(Description = "<#= fieldsPropDescription #>", DataType = SwaggerDataTypes.ArrayOfString)]
 <#
                 }
 #>
@@ -244,18 +246,19 @@ namespace <#= fileNamespace #>
 			if (!deleteByIdExcluded)
 			{
 				var deleteByIdClassName = "Delete" + codeClass.Name;
-				var deleteByIdDescription = "Supprime une ressource {0} à partir de son Id.";
+				var deleteByIdClassDescription = "Supprime une ressource {0} à partir de son Id.";
+                var idPropDescription = "Id de la ressource {0} à supprimer.";
 
 				manager.StartNewFile(deleteByIdClassName + ".generated.cs");
 #>
 	/// <summary>
-	/// <#= string.Format(deleteByIdDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
+	/// <#= string.Format(deleteByIdClassDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
 <#
             if (AddRouteAttributes)
             {
 #>
-	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Delete, Summary = "<#= string.Format(deleteByIdDescription, codeClass.Name) #>")]
+	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Delete, Summary = "<#= string.Format(deleteByIdClassDescription, codeClass.Name) #>")]
 <#
 			    if (AddApiAttributes)
                 {
@@ -267,6 +270,17 @@ namespace <#= fileNamespace #>
 #>
 	<#= string.Join(" ", classDefinitionWords) #> class <#= deleteByIdClassName #> : IReturnVoid
 	{
+        /// <summary>
+        /// <#= string.Format(idPropDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
+        /// </summary>
+<#
+			    if (AddApiAttributes)
+                {
+#>
+        [ApiMember(Description = "<#= string.Format(idPropDescription, codeClass.Name) #>", DataType = <#= swagDataType #>, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+<#
+                }
+#>
         public <#= tkey #> Id { get; set; }
 	}
 <#

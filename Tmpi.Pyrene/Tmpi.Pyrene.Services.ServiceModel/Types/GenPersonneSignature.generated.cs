@@ -29,10 +29,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
 		[PrimaryKey]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int,
-            Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, IsRequired = true,
-            Verb = HttpVerbs.Put, ParameterType = SwaggerParameterTypes.Path)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
 		public int CleGenPersonne { get; set; }
 
 		/// <summary>

@@ -21,6 +21,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneProfil spécifiée est introuvable.")]
 	public partial class DeleteGenPersonneProfil : IReturnVoid
 	{
+        /// <summary>
+        /// Id de la ressource <see cref="GenPersonneProfil" /> à supprimer.
+        /// </summary>
+        [ApiMember(Description = "Id de la ressource GenPersonneProfil à supprimer.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
         public int Id { get; set; }
 	}
 }

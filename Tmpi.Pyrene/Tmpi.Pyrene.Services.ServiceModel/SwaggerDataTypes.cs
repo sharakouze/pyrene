@@ -25,5 +25,7 @@
         public const string File = "file";
 
         public const string Array = "Array";
+
+        public const string ArrayOfString = "Array[string]";
     }
 }

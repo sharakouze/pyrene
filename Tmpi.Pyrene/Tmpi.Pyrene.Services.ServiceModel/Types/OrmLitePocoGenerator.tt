@@ -512,46 +512,20 @@ namespace <#= fileNamespace #>
                 }
                 
                 string swagDataType = "";
-                switch (col.PropertyType)
+
+                if (allEnums.Contains(col.PropertyType))
                 {
-                    case "byte":
-                    case "sbyte":
-                        swagDataType = "SwaggerDataTypes.Byte";
-                        break;
-                    case "bool":
-                        swagDataType = "SwaggerDataTypes.Bool";
-                        break;
-                    case "short":
-                    case "ushort":
-                        swagDataType = "SwaggerDataTypes.Short";
-                        break;
-                    case "int":
-                    case "uint":
-                        swagDataType = "SwaggerDataTypes.Int";
-                        break;
-                    case "long":
-                    case "ulong":
-                        swagDataType = "SwaggerDataTypes.Long";
-                        break;
-                    case "float":
-                        swagDataType = "SwaggerDataTypes.Float";
-                        break;
-                    case "double":
-                        swagDataType = "SwaggerDataTypes.Double";
-                        break;
-                    case "decimal":
-                        swagDataType = "SwaggerDataTypes.Decimal";
-                        break;
-                    case "string":
-                        swagDataType = "SwaggerDataTypes.String";
-                        break;
-                    case "DateTime":
-                        swagDataType = "SwaggerDataTypes.DateTime";
-                        break;
-                    case "byte[]":
-                        swagDataType = "SwaggerDataTypes.File";
-                        break;
+                    //swagDataType = "SwaggerDataTypes.String";
                 }
+                else if (col.PropertyType == "byte[]")
+                {
+                    swagDataType = "SwaggerDataTypes.File";
+                }
+                else
+                {
+                    swagDataType = "SwaggerDataTypes." + col.PropertyType.Substring(0,1).ToUpper() + col.PropertyType.Substring(1);
+                }
+
                 if (!string.IsNullOrEmpty(swagDataType))
                 {
                     lstApiMemberProps.Add("DataType = " + swagDataType);
@@ -562,15 +536,13 @@ namespace <#= fileNamespace #>
                     if (!postExcluded)
                     {
 #>
-		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>,
-            Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
+		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, Verb = HttpVerbs.Post)]
 <#
                     }
                     if (!putExcluded)
                     {
 #>
-		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, IsRequired = true,
-            Verb = HttpVerbs.Put, ParameterType = SwaggerParameterTypes.Path)]
+		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
 <#
                     }
                 }

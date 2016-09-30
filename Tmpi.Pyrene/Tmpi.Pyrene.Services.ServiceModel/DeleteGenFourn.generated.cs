@@ -21,6 +21,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFourn spécifiée est introuvable.")]
 	public partial class DeleteGenFourn : IReturnVoid
 	{
+        /// <summary>
+        /// Id de la ressource <see cref="GenFourn" /> à supprimer.
+        /// </summary>
+        [ApiMember(Description = "Id de la ressource GenFourn à supprimer.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
         public int Id { get; set; }
 	}
 }

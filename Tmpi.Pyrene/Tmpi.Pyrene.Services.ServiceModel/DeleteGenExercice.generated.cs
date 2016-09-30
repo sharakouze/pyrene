@@ -21,6 +21,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenExercice spécifiée est introuvable.")]
 	public partial class DeleteGenExercice : IReturnVoid
 	{
+        /// <summary>
+        /// Id de la ressource <see cref="GenExercice" /> à supprimer.
+        /// </summary>
+        [ApiMember(Description = "Id de la ressource GenExercice à supprimer.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
         public int Id { get; set; }
 	}
 }
