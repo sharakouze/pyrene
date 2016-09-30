@@ -519,13 +519,15 @@ namespace <#= fileNamespace #>
                         swagDataType = "SwaggerDataTypes.Byte";
                         break;
                     case "bool":
-                        swagDataType = "SwaggerDataTypes.Boolean";
+                        swagDataType = "SwaggerDataTypes.Bool";
                         break;
                     case "short":
                     case "ushort":
+                        swagDataType = "SwaggerDataTypes.Short";
+                        break;
                     case "int":
                     case "uint":
-                        swagDataType = "SwaggerDataTypes.Integer";
+                        swagDataType = "SwaggerDataTypes.Int";
                         break;
                     case "long":
                     case "ulong":
@@ -535,14 +537,16 @@ namespace <#= fileNamespace #>
                         swagDataType = "SwaggerDataTypes.Float";
                         break;
                     case "double":
-                    case "decimal":
                         swagDataType = "SwaggerDataTypes.Double";
+                        break;
+                    case "decimal":
+                        swagDataType = "SwaggerDataTypes.Decimal";
                         break;
                     case "string":
                         swagDataType = "SwaggerDataTypes.String";
                         break;
                     case "DateTime":
-                        swagDataType = "SwaggerDataTypes.Date";
+                        swagDataType = "SwaggerDataTypes.DateTime";
                         break;
                     case "byte[]":
                         swagDataType = "SwaggerDataTypes.File";
@@ -558,13 +562,15 @@ namespace <#= fileNamespace #>
                     if (!postExcluded)
                     {
 #>
-		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
+		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>,
+            Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
 <#
                     }
                     if (!putExcluded)
                     {
 #>
-		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, IsRequired = true, Verb = HttpVerbs.Put, ParameterType = SwaggerParameterTypes.Path)]
+		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, IsRequired = true,
+            Verb = HttpVerbs.Put, ParameterType = SwaggerParameterTypes.Path)]
 <#
                     }
                 }

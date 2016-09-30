@@ -29,8 +29,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, IsRequired = true, Verb = HttpVerbs.Put, ParameterType = SwaggerParameterTypes.Path)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int,
+            Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, IsRequired = true,
+            Verb = HttpVerbs.Put, ParameterType = SwaggerParameterTypes.Path)]
 		public int Id { get; set; }
 
 		/// <summary>
@@ -38,7 +40,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Id du fournisseur parent.", DataType = SwaggerDataTypes.Integer, IsRequired = true)]
+		[ApiMember(Description = "Id du fournisseur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleGenFourn { get; set; }
 
 		/// <summary>
@@ -69,21 +71,21 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur.", DataType = SwaggerDataTypes.Boolean, IsRequired = true)]
+		[ApiMember(Description = "Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur.", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
 		public bool EstDefaut { get; set; }
 
 		/// <summary>
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", DataType = SwaggerDataTypes.Date)]
+		[ApiMember(Description = "Date de création.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerDataTypes.Date)]
+		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime DatModif { get; set; }
 
 	}

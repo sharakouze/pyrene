@@ -4,6 +4,7 @@
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#
 	/***** TODO *****
+    - Alternative a TransformRoutePath avec des const
 	****************/
 
 	/*********************/
@@ -71,6 +72,8 @@ using ServiceStack;
 using <#= SourceNamespace #>;
 using Tmpi.Pyrene.Infrastructure;
 
+namespace <#= fileNamespace #>
+{
 <#
 	} // end if
 
@@ -182,20 +185,20 @@ using Tmpi.Pyrene.Infrastructure;
 			if (!getByIdExcluded)
 			{
 				var getByIdClassName = "Get" + codeClass.Name;
-				var getByIdDescription = "Retourne une ressource {0} à partir de son Id.";
+				var getByIdClassDescription = "Retourne une ressource {0} à partir de son Id.";
+                var idPropDescription = "Id de la ressource {0} à retourner.";
+				var fieldsPropDescription = "Champs à retourner, ou null pour retourner tous les champs.";
 
 				manager.StartNewFile(getByIdClassName + ".generated.cs");
 #>
-namespace <#= fileNamespace #>
-{
 	/// <summary>
-	/// <#= string.Format(getByIdDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
+	/// <#= string.Format(getByIdClassDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
 <#
             if (AddRouteAttributes)
             {
 #>
-	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Get, Summary = "<#= string.Format(getByIdDescription, codeClass.Name) #>")]
+	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Get, Summary = "<#= string.Format(getByIdClassDescription, codeClass.Name) #>")]
 <#
 			    if (AddApiAttributes)
                 {
@@ -208,24 +211,31 @@ namespace <#= fileNamespace #>
 	<#= string.Join(" ", classDefinitionWords) #> class <#= getByIdClassName #> : IReturn<<#= codeClass.Name #>>
 	{
         /// <summary>
-        /// Id de la ressource <see cref="<#= codeClass.Name #>" /> à retourner.
+        /// <#= string.Format(idPropDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
         /// </summary>
 <#
 			    if (AddApiAttributes)
                 {
 #>
-        [ApiMember(Description = "", IsRequired = true, DataType = SwaggerDataTypes.Integer, ParameterType = SwaggerParameterTypes.Path)]
+        [ApiMember(Description = "<#= string.Format(idPropDescription, codeClass.Name) #>", IsRequired = true, DataType = SwaggerDataTypes.Integer, ParameterType = SwaggerParameterTypes.Path)]
 <#
                 }
 #>
         public <#= tkey #> Id { get; set; }
 
         /// <summary>
-        /// 
+        /// <#= fieldsPropDescription #>
         /// </summary>
+<#
+			    if (AddApiAttributes)
+                {
+#>
+        [ApiMember(Description = "<#= fieldsPropDescription #>", DataType = SwaggerDataTypes.Array)]
+<#
+                }
+#>
         public string[] Fields { get; set; }
 	}
-}
 <#
 				manager.EndBlock(); // end newfile
 			} // end if
@@ -238,8 +248,6 @@ namespace <#= fileNamespace #>
 
 				manager.StartNewFile(deleteByIdClassName + ".generated.cs");
 #>
-namespace <#= fileNamespace #>
-{
 	/// <summary>
 	/// <#= string.Format(deleteByIdDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
@@ -261,7 +269,6 @@ namespace <#= fileNamespace #>
 	{
         public <#= tkey #> Id { get; set; }
 	}
-}
 <#
 				manager.EndBlock(); // end newfile
             }
@@ -274,8 +281,6 @@ namespace <#= fileNamespace #>
 				
 				manager.StartNewFile(patchClassName + ".generated.cs");
 #>
-namespace <#= fileNamespace #>
-{
 	/// <summary>
 	/// <#= string.Format(patchDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
@@ -299,7 +304,6 @@ namespace <#= fileNamespace #>
 
         public PatchElement[] Fields { get; set; }
 	}
-}
 <#
 				manager.EndBlock(); // end newfile
             }
@@ -316,8 +320,6 @@ namespace <#= fileNamespace #>
 
 				manager.StartNewFile(autocompleteClassName + ".generated.cs");
 #>
-namespace <#= fileNamespace #>
-{
 	/// <summary>
 	/// <#= string.Format(autocompleteDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
@@ -338,12 +340,17 @@ namespace <#= fileNamespace #>
         /// </summary>
         public int Max { get; set; }
 	}
-}
 <#
 				manager.EndBlock(); // end newfile
             } // end if
 		} // end if
     } // end foreach
+
+	manager.StartFooter();
+#>
+}
+<#
+	manager.EndBlock(); // end footer
 
 	manager.Process(SplitIntoMultipleFiles);
 #>

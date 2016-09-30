@@ -30,8 +30,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, IsRequired = true, Verb = HttpVerbs.Put, ParameterType = SwaggerParameterTypes.Path)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int,
+            Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, IsRequired = true,
+            Verb = HttpVerbs.Put, ParameterType = SwaggerParameterTypes.Path)]
 		public int Id { get; set; }
 
 		/// <summary>
@@ -63,21 +65,21 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Actif ou inactif.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Actif ou inactif.", DataType = SwaggerDataTypes.Boolean, IsRequired = true)]
+		[ApiMember(Description = "Actif ou inactif.", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
 		public bool EstActif { get; set; }
 
 		/// <summary>
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", DataType = SwaggerDataTypes.Date)]
+		[ApiMember(Description = "Date de création.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerDataTypes.Date)]
+		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime DatModif { get; set; }
 
 		/// <summary>
@@ -107,21 +109,21 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Id de la société ayant accès au compteur, ou null pour toutes les sociétés.
 		/// </summary>
 		[References(typeof(GenSociete))]
-		[ApiMember(Description = "Id de la société ayant accès au compteur, ou null pour toutes les sociétés.", DataType = SwaggerDataTypes.Integer)]
+		[ApiMember(Description = "Id de la société ayant accès au compteur, ou null pour toutes les sociétés.", DataType = SwaggerDataTypes.Int)]
 		public int? CleGenSociete { get; set; }
 
 		/// <summary>
 		/// Id du secteur ayant accès au compteur, ou null pour tous les secteurs.
 		/// </summary>
 		[References(typeof(GenSecteur))]
-		[ApiMember(Description = "Id du secteur ayant accès au compteur, ou null pour tous les secteurs.", DataType = SwaggerDataTypes.Integer)]
+		[ApiMember(Description = "Id du secteur ayant accès au compteur, ou null pour tous les secteurs.", DataType = SwaggerDataTypes.Int)]
 		public int? CleGenSecteur { get; set; }
 
 		/// <summary>
 		/// Id du service ayant accès au compteur, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
-		[ApiMember(Description = "Id du service ayant accès au compteur, ou null pour tous les services.", DataType = SwaggerDataTypes.Integer)]
+		[ApiMember(Description = "Id du service ayant accès au compteur, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
 		public int? CleGenService { get; set; }
 
 		/// <summary>

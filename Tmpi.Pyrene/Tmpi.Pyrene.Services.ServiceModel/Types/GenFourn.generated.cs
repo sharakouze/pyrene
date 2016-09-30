@@ -29,8 +29,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Integer, IsRequired = true, Verb = HttpVerbs.Put, ParameterType = SwaggerParameterTypes.Path)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int,
+            Verb = HttpVerbs.Post, ParameterType = SwaggerParameterTypes.Form)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, IsRequired = true,
+            Verb = HttpVerbs.Put, ParameterType = SwaggerParameterTypes.Path)]
 		public int Id { get; set; }
 
 		/// <summary>
@@ -62,21 +64,21 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Actif ou inactif.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Actif ou inactif.", DataType = SwaggerDataTypes.Boolean, IsRequired = true)]
+		[ApiMember(Description = "Actif ou inactif.", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
 		public bool EstActif { get; set; }
 
 		/// <summary>
 		/// Date de création.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", DataType = SwaggerDataTypes.Date)]
+		[ApiMember(Description = "Date de création.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerDataTypes.Date)]
+		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime DatModif { get; set; }
 
 		/// <summary>
@@ -160,21 +162,21 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Frais de port.
 		/// </summary>
 		[DecimalLength(15, 2)]
-		[ApiMember(Description = "Frais de port.", DataType = SwaggerDataTypes.Double)]
+		[ApiMember(Description = "Frais de port.", DataType = SwaggerDataTypes.Decimal)]
 		public decimal? MntFPort { get; set; }
 
 		/// <summary>
 		/// Montant minimum pour frais de port gratuits.
 		/// </summary>
 		[DecimalLength(15, 2)]
-		[ApiMember(Description = "Montant minimum pour frais de port gratuits.", DataType = SwaggerDataTypes.Double)]
+		[ApiMember(Description = "Montant minimum pour frais de port gratuits.", DataType = SwaggerDataTypes.Decimal)]
 		public decimal? MntFPortGratuit { get; set; }
 
 		/// <summary>
 		/// Montant minimum à commander.
 		/// </summary>
 		[DecimalLength(15, 2)]
-		[ApiMember(Description = "Montant minimum à commander.", DataType = SwaggerDataTypes.Double)]
+		[ApiMember(Description = "Montant minimum à commander.", DataType = SwaggerDataTypes.Decimal)]
 		public decimal? MntCommandeMin { get; set; }
 
 		/// <summary>
@@ -193,7 +195,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Note globale.
 		/// </summary>
 		[DecimalLength(5, 2)]
-		[ApiMember(Description = "Note globale.", DataType = SwaggerDataTypes.Double)]
+		[ApiMember(Description = "Note globale.", DataType = SwaggerDataTypes.Decimal)]
 		public decimal? ValNote { get; set; }
 
 		/// <summary>
@@ -204,7 +206,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public TypModeReglement? TypModeReglement { get; set; }
 
 		[Required]
-		[ApiMember(DataType = SwaggerDataTypes.Boolean, IsRequired = true)]
+		[ApiMember(DataType = SwaggerDataTypes.Bool, IsRequired = true)]
 		public bool EstEnvoiMailBonCde { get; set; }
 
 		[Reference]
