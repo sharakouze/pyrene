@@ -145,7 +145,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public void Patch(PatchGenCompteur request)
 		{
-			Debug.Assert(request.Fields != null);
+			//Debug.Assert(request.Fields != null);
 			if (request.Fields == null)
 			{
 				throw new ArgumentNullException(nameof(request.Fields));

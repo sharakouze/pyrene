@@ -21,8 +21,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenSecteur spécifiée est introuvable.")]
 	public partial class PatchGenSecteur : IReturnVoid
 	{
+        /// <summary>
+        /// Id de la ressource <see cref="GenSecteur" /> à modifier.
+        /// </summary>
+        [ApiMember(Description = "Id de la ressource GenSecteur à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
         public int Id { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        [ApiMember(Description = "", DataType = "Array[" + nameof(PatchElement) + "]", IsRequired = true, ParameterType = SwaggerParameterTypes.Form)]
         public PatchElement[] Fields { get; set; }
-	}
+    }
 }

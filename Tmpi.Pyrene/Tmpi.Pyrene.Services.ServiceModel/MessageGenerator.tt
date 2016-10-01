@@ -290,19 +290,22 @@ namespace <#= fileNamespace #>
 			bool patchByIdExcluded = PatchByIdClassFilterExclude != null && PatchByIdClassFilterExclude.IsMatch(codeClass.Name);
 			if (!patchByIdExcluded)
             {
-				var patchClassName = "Patch" + codeClass.Name;
-				var patchDescription = "Modifie une ressource {0} à partir de son Id.";
+                string patchClassNameFormat = "Patch{0}";
+				string patchClassName = string.Format(patchClassNameFormat, codeClass.Name);
+				var patchClassDescription = "Modifie une ressource {0} à partir de son Id.";
+                var idPropDescription = "Id de la ressource {0} à modifier.";
+                var fieldsPropDescription = "";
 				
 				manager.StartNewFile(patchClassName + ".generated.cs");
 #>
 	/// <summary>
-	/// <#= string.Format(patchDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
+	/// <#= string.Format(patchClassDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
 	/// </summary>
 <#
             if (AddRouteAttributes)     
             {
 #>
-	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Patch, Summary = "<#= string.Format(patchDescription, codeClass.Name) #>")]
+	[Route("/<#= strRoute #>/{Id}", HttpVerbs.Patch, Summary = "<#= string.Format(patchClassDescription, codeClass.Name) #>")]
 <#
 			    if (AddApiAttributes)
                 {
@@ -314,11 +317,34 @@ namespace <#= fileNamespace #>
 #>
 	<#= string.Join(" ", classDefinitionWords) #> class <#= patchClassName #> : IReturnVoid
 	{
+        /// <summary>
+        /// <#= string.Format(idPropDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
+        /// </summary>
+<#
+			    if (AddApiAttributes)
+                {
+#>
+        [ApiMember(Description = "<#= string.Format(idPropDescription, codeClass.Name) #>", DataType = <#= swagDataType #>, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+<#
+                }
+#>
         public <#= tkey #> Id { get; set; }
 
-        public PatchElement[] Fields { get; set; }
-	}
+        /// <summary>
+        /// 
+        /// </summary>
 <#
+			    if (AddApiAttributes)
+                {
+#>
+        [ApiMember(Description = "<#= string.Format(fieldsPropDescription, codeClass.Name) #>", DataType = "Array[" + nameof(PatchElement) + "]", IsRequired = true, ParameterType = SwaggerParameterTypes.Form)]
+<#
+                }
+#>
+        public PatchElement[] Fields { get; set; }
+    }
+<#
+
 				manager.EndBlock(); // end newfile
             }
 			
