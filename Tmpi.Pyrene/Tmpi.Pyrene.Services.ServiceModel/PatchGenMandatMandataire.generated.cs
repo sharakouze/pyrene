@@ -30,7 +30,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// <summary>
         /// 
         /// </summary>
-        [ApiMember(Description = "", DataType = "Array[" + nameof(PatchElement) + "]", IsRequired = true, ParameterType = SwaggerParameterTypes.Form)]
+        [ApiMember(Description = "", DataType = "Array[" + nameof(PatchElement) + "]", IsRequired = true, ParameterType = SwaggerParameterTypes.Body)]
         public PatchElement[] Fields { get; set; }
     }
 }
