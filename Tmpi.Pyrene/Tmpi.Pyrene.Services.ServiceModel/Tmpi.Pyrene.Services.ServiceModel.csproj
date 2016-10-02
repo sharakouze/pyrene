@@ -109,6 +109,30 @@
     <Compile Include="DeleteGenTVA.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="FindGenCompteur.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FindGenExercice.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FindGenFourn.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FindGenMandat.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FindGenSecteur.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FindGenService.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FindGenSociete.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FindGenTVA.generated.cs">
+      <DependentUpon>MessageGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="GetGenCompteur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
@@ -157,6 +181,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="Patch.cs" />
     <Compile Include="PatchGenCompteur.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
@@ -199,6 +224,7 @@
     <Compile Include="PatchGenTVA.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="PatchHelper.cs" />
     <Compile Include="SwaggerDataTypes.cs" />
     <Compile Include="SwaggerParameterTypes.cs" />
     <Compile Include="Types\GenCompteur.generated.cs">

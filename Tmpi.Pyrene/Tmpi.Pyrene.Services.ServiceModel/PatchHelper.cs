@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Tmpi.Pyrene.Infrastructure
+namespace Tmpi.Pyrene.Services.ServiceModel
 {
     public static class PatchHelper
     {
-        public static List<string> PopulateFromPatch<T>(T updateObject, IEnumerable<PatchElement> patches,
-            bool convertEmptyStringAsNull = true)
+        public static List<string> PopulateFromPatch<T>(T updateObject, IEnumerable<Patch> patches,
+            bool emptyStringAsNull = true)
         {
             var fields = new List<string>();
 
@@ -19,7 +19,7 @@ namespace Tmpi.Pyrene.Infrastructure
 
                 fields.Add(fieldExpr.Member.Name);
 
-                if (convertEmptyStringAsNull && (object.Equals(patch.Value, string.Empty)))
+                if (emptyStringAsNull && (object.Equals(patch.Value, string.Empty)))
                 {
                     patch.Value = null;
                 }

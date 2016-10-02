@@ -10,14 +10,13 @@
 using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
-using Tmpi.Pyrene.Infrastructure;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Modifie une ressource <see cref="GenService" /> à partir de son Id.
+	/// Modifie partiellement une ressource <see cref="GenService" /> à partir de son Id.
 	/// </summary>
-	[Route("/GenService/{Id}", HttpVerbs.Patch, Summary = "Modifie une ressource GenService à partir de son Id.")]
+	[Route("/GenService/{Id}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenService à partir de son Id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenService spécifiée est introuvable.")]
 	public partial class PatchGenService : IReturnVoid
 	{
@@ -30,7 +29,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// <summary>
         /// 
         /// </summary>
-        [ApiMember(Description = "", DataType = "Array[" + nameof(PatchElement) + "]", IsRequired = true, ParameterType = SwaggerParameterTypes.Body)]
-        public PatchElement[] Fields { get; set; }
+        [ApiMember(Description = "Liste des modifications.", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParameterTypes.Body)]
+        public Patch[] Fields { get; set; }
     }
 }

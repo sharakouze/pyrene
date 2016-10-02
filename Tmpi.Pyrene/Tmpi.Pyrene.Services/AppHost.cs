@@ -100,7 +100,7 @@ namespace Tmpi.Pyrene.Services
                     RouteSummary =
                     {
                         { "/GenCompteur", "Compteurs de numérotation" },
-                        { "/GenExtercice", "Exercices budgétaires" },
+                        { "/GenExercice", "Exercices budgétaires" },
                         { "/GenFourn", "Fournisseurs" },
                         { "/GenMandat", "Mandats" },
                         { "/GenPersonne", "Utilisateurs" },

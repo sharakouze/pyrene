@@ -10,21 +10,25 @@
 using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
-using Tmpi.Pyrene.Infrastructure;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Autocomplete une ressource <see cref="GenCompteur" />.
+	/// Retourne des prédictions sur les ressources <see cref="GenCompteur" />.
 	/// </summary>
-	[Route("/GenCompteur/Autocomplete/{Text}", HttpVerbs.Get, Summary = "Autocomplete une ressource GenCompteur.")]
+	[Route("/GenCompteur/Autocomplete/{Text}", HttpVerbs.Get, Summary = "Retourne des prédictions sur les ressources GenCompteur.")]
 	public partial class AutocompleteGenCompteur : IReturn<BasicEntity[]>
 	{
+        /// <summary>
+        /// Texte à rechercher.
+        /// </summary>
+        [ApiMember(Description = "Texte à rechercher.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
         public string Text { get; set; }
 
         /// <summary>
-        /// Nombre maximum d'éléments à retourner.
+        /// Nombre maximum de prédictions à retourner.
         /// </summary>
+        [ApiMember(Description = "Nombre maximum de prédictions à retourner.", DataType = SwaggerDataTypes.Int)]
         public int Max { get; set; }
 	}
 }

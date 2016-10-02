@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using ServiceStack;
 using ServiceStack.OrmLite;
-using Tmpi.Pyrene.Infrastructure;
 using Tmpi.Pyrene.Services.ServiceModel;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
@@ -88,6 +87,17 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 				throw HttpError.NotFound(
 					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournContact), request.Id));
 			}
+		}
+
+		/// <summary>
+		/// Met à jour l'entité <see cref="GenFourn" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public List<GenFourn> Get(FindGenFourn request)
+		{
+            return null;
 		}
 
 		/// <summary>

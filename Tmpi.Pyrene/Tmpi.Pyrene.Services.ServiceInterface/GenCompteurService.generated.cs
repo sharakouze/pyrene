@@ -12,16 +12,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using ServiceStack;
 using ServiceStack.OrmLite;
-using Tmpi.Pyrene.Infrastructure;
 using Tmpi.Pyrene.Services.ServiceModel;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceInterface
 {
-	/// <summary>
-	/// Service qui traite les requêtes sur l'entité <see cref="GenCompteur" />.
-	/// </summary>
-	public partial class GenCompteurService : Service
+    /// <summary>
+    /// Service qui traite les requêtes sur l'entité <see cref="GenCompteur" />.
+    /// </summary>
+    public partial class GenCompteurService : Service
 	{
 		/// <summary>
 		/// 
@@ -73,6 +72,17 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 				throw HttpError.NotFound(
 					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenCompteurValeur), request.Id));
 			}
+		}
+
+		/// <summary>
+		/// Met à jour l'entité <see cref="GenCompteur" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public List<GenCompteur> Get(FindGenCompteur request)
+		{
+            return null;
 		}
 
 		/// <summary>
@@ -145,7 +155,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public void Patch(PatchGenCompteur request)
 		{
-			//Debug.Assert(request.Fields != null);
+			Debug.Assert(request.Fields != null);
 			if (request.Fields == null)
 			{
 				throw new ArgumentNullException(nameof(request.Fields));

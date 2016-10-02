@@ -41,6 +41,7 @@
 	Regex DeleteByIdClassFilterExclude = null;
 	Regex PatchByIdClassFilterExclude = null;
 	Regex AutocompleteClassFilterExclude = null;
+	Regex FindClassFilterExclude = null;
 
 #>
 <#
@@ -70,7 +71,6 @@ using ServiceStack;
 	{
 #>
 using <#= SourceNamespace #>;
-using Tmpi.Pyrene.Infrastructure;
 
 namespace <#= fileNamespace #>
 {
@@ -292,9 +292,9 @@ namespace <#= fileNamespace #>
             {
                 string patchClassNameFormat = "Patch{0}";
 				string patchClassName = string.Format(patchClassNameFormat, codeClass.Name);
-				var patchClassDescription = "Modifie une ressource {0} à partir de son Id.";
+				var patchClassDescription = "Modifie partiellement une ressource {0} à partir de son Id.";
                 var idPropDescription = "Id de la ressource {0} à modifier.";
-                var fieldsPropDescription = "";
+                var fieldsPropDescription = "Liste des modifications.";
 				
 				manager.StartNewFile(patchClassName + ".generated.cs");
 #>
@@ -337,11 +337,11 @@ namespace <#= fileNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-        [ApiMember(Description = "<#= string.Format(fieldsPropDescription, codeClass.Name) #>", DataType = "Array[" + nameof(PatchElement) + "]", IsRequired = true, ParameterType = SwaggerParameterTypes.Body)]
+        [ApiMember(Description = "<#= string.Format(fieldsPropDescription, codeClass.Name) #>", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParameterTypes.Body)]
 <#
                 }
 #>
-        public PatchElement[] Fields { get; set; }
+        public Patch[] Fields { get; set; }
     }
 <#
 
@@ -356,7 +356,9 @@ namespace <#= fileNamespace #>
 			if (!autocompleteExcluded)
             {
 				var autocompleteClassName = "Autocomplete" + codeClass.Name;
-				var autocompleteDescription = "Autocomplete une ressource {0}.";
+				var autocompleteDescription = "Retourne des prédictions sur les ressources {0}.";
+                var textPropDescription = "Texte à rechercher.";
+                var maxPropDescription = "Nombre maximum de prédictions à retourner.";
 
 				manager.StartNewFile(autocompleteClassName + ".generated.cs");
 #>
@@ -373,12 +375,86 @@ namespace <#= fileNamespace #>
 #>
 	<#= string.Join(" ", classDefinitionWords) #> class <#= autocompleteClassName #> : IReturn<BasicEntity[]>
 	{
+        /// <summary>
+        /// <#= textPropDescription #>
+        /// </summary>
+<#
+			    if (AddApiAttributes)
+                {
+#>
+        [ApiMember(Description = "<#= string.Format(textPropDescription, codeClass.Name) #>", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+<#
+                }
+#>
         public string Text { get; set; }
 
         /// <summary>
-        /// Nombre maximum d'éléments à retourner.
+        /// <#= maxPropDescription #>
         /// </summary>
+<#
+			    if (AddApiAttributes)
+                {
+#>
+        [ApiMember(Description = "<#= string.Format(maxPropDescription, codeClass.Name) #>", DataType = SwaggerDataTypes.Int)]
+<#
+                }
+#>
         public int Max { get; set; }
+	}
+<#
+				manager.EndBlock(); // end newfile
+            } // end if
+
+			bool findExcluded = FindClassFilterExclude != null && FindClassFilterExclude.IsMatch(codeClass.Name);
+			if (!findExcluded)
+            {
+				var findClassName = "Find" + codeClass.Name;
+				var findDescription = "Retourne un ensemble de ressources {0}.";
+                var textPropDescription = "Texte à rechercher.";
+                var maxPropDescription = "Nombre maximum d'éléments à retourner.";
+
+				manager.StartNewFile(findClassName + ".generated.cs");
+#>
+	/// <summary>
+	/// <#= string.Format(findDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
+	/// </summary>
+<#
+			if (AddRouteAttributes)
+            {
+#>
+	[Route("/<#= strRoute #>", HttpVerbs.Get, Summary = "<#= string.Format(findDescription, codeClass.Name) #>")]
+<#
+			} // end if
+#>
+	<#= string.Join(" ", classDefinitionWords) #> class <#= findClassName #> : IReturn<BasicEntity[]>
+	{
+        /// <summary>
+        /// <#= textPropDescription #>
+        /// </summary>
+<#
+			    if (AddApiAttributes)
+                {
+#>
+        [ApiMember(Description = "<#= string.Format(textPropDescription, codeClass.Name) #>", DataType = SwaggerDataTypes.Int)]
+<#
+                }
+#>
+        public int Skip { get; set; }
+
+        /// <summary>
+        /// <#= maxPropDescription #>
+        /// </summary>
+<#
+			    if (AddApiAttributes)
+                {
+#>
+        [ApiMember(Description = "<#= string.Format(maxPropDescription, codeClass.Name) #>", DataType = SwaggerDataTypes.Int)]
+<#
+                }
+#>
+        public int Take { get; set; }
+
+        public string Sort { get; set; }
 	}
 <#
 				manager.EndBlock(); // end newfile

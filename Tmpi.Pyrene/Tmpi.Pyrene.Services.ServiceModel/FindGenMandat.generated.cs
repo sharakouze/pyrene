@@ -14,21 +14,23 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Retourne des prédictions sur les ressources <see cref="GenSociete" />.
+	/// Retourne un ensemble de ressources <see cref="GenMandat" />.
 	/// </summary>
-	[Route("/GenSociete/Autocomplete/{Text}", HttpVerbs.Get, Summary = "Retourne des prédictions sur les ressources GenSociete.")]
-	public partial class AutocompleteGenSociete : IReturn<BasicEntity[]>
+	[Route("/GenMandat", HttpVerbs.Get, Summary = "Retourne un ensemble de ressources GenMandat.")]
+	public partial class FindGenMandat : IReturn<BasicEntity[]>
 	{
         /// <summary>
         /// Texte à rechercher.
         /// </summary>
-        [ApiMember(Description = "Texte à rechercher.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
-        public string Text { get; set; }
+        [ApiMember(Description = "Texte à rechercher.", DataType = SwaggerDataTypes.Int)]
+        public int Skip { get; set; }
 
         /// <summary>
-        /// Nombre maximum de prédictions à retourner.
+        /// Nombre maximum d'éléments à retourner.
         /// </summary>
-        [ApiMember(Description = "Nombre maximum de prédictions à retourner.", DataType = SwaggerDataTypes.Int)]
-        public int Max { get; set; }
+        [ApiMember(Description = "Nombre maximum d'éléments à retourner.", DataType = SwaggerDataTypes.Int)]
+        public int Take { get; set; }
+
+        public string Sort { get; set; }
 	}
 }

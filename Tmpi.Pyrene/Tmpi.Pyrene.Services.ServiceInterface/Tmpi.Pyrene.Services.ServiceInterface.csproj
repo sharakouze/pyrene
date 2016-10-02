@@ -70,6 +70,7 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Autocomplete.cs" />
     <Compile Include="GenCompteurService.generated.cs">
       <DependentUpon>ServiceGenerator.tt</DependentUpon>
     </Compile>

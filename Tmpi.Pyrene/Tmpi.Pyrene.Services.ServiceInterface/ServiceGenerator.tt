@@ -80,28 +80,26 @@
         {
 			string entityName = null;
 
-			var baseClass = VisualStudioHelper.CodeModel.GetBaseClass(codeClass);
-			if (baseClass != null)
-			{
-				switch (baseClass.Name)
-				{
-					case "GetByIdRequestBase":
-						entityName = codeClass.Name.Substring(3);
-						break;
-				
-					case "DeleteByIdRequestBase":
-						entityName = codeClass.Name.Substring(6);
-						break;
-
-					case "PatchByIdRequestBase":
-						entityName = codeClass.Name.Substring(5);
-						break;
-
-					case "AutocompleteRequestBase":
-						entityName = codeClass.Name.Substring(12);
-						break;
-				}
-			}
+            if (codeClass.Name.StartsWith("Get"))
+            {
+				entityName = codeClass.Name.Substring(3);
+            }
+            else if (codeClass.Name.StartsWith("Delete"))
+            {
+ 				entityName = codeClass.Name.Substring(6);
+            }
+            else if (codeClass.Name.StartsWith("Patch"))
+            {
+                entityName = codeClass.Name.Substring(5);
+            }
+            else if (codeClass.Name.StartsWith("Autocomplete"))
+            {
+                entityName = codeClass.Name.Substring(12);
+            }
+            else if (codeClass.Name.StartsWith("Find"))
+            {
+                entityName = codeClass.Name.Substring(4);
+            }
 
 			// get all interfaces implemented by this class
 			var allInterfaces = VisualStudioHelper.CodeModel.GetAllImplementedInterfaces(codeClass);
@@ -142,7 +140,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using ServiceStack;
 using ServiceStack.OrmLite;
-using Tmpi.Pyrene.Infrastructure;
 using <#= sourceNamespace #>;
 using <#= sourceNamespace #>.Types;
 
@@ -258,6 +255,23 @@ namespace <#= fileNamespace #>
 				throw HttpError.NotFound(
 					string.Format(ErrorMessages.EntityByIdNotFound, nameof(<#= entityName #>), request.Id));
 			}
+		}
+
+<#
+			}
+			else if (requestName.StartsWith("Find"))
+            {
+				var entityName = requestName.Substring(4);
+#>
+		/// <summary>
+		/// Met à jour l'entité <see cref="<#= entityName #>" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		public List<<#= entityName #>> Get(<#= requestName #> request)
+		{
+            return null;
 		}
 
 <#
