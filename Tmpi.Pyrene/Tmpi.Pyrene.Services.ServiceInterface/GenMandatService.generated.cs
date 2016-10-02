@@ -121,7 +121,14 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public GenMandat Get(GetGenMandat request)
 		{
-			var entity = Db.SingleById<GenMandat>(request.Id);
+            var q = Db.From<GenMandat>().Where(x => x.Id == request.Id);
+
+            if (request.Fields != null && request.Fields.Any())
+            {
+                q = q.Select(request.Fields);
+            }
+
+			var entity = Db.Single<GenMandat>(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
@@ -138,7 +145,14 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public GenMandatMandataire Get(GetGenMandatMandataire request)
 		{
-			var entity = Db.SingleById<GenMandatMandataire>(request.Id);
+            var q = Db.From<GenMandatMandataire>().Where(x => x.Id == request.Id);
+
+            if (request.Fields != null && request.Fields.Any())
+            {
+                q = q.Select(request.Fields);
+            }
+
+			var entity = Db.Single<GenMandatMandataire>(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(

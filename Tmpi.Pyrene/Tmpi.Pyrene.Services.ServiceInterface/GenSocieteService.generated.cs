@@ -106,7 +106,14 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public GenSociete Get(GetGenSociete request)
 		{
-			var entity = Db.SingleById<GenSociete>(request.Id);
+            var q = Db.From<GenSociete>().Where(x => x.Id == request.Id);
+
+            if (request.Fields != null && request.Fields.Any())
+            {
+                q = q.Select(request.Fields);
+            }
+
+			var entity = Db.Single<GenSociete>(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(

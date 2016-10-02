@@ -195,7 +195,14 @@ namespace <#= fileNamespace #>
 		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public <#= entityName #> Get(<#= requestName #> request)
 		{
-			var entity = Db.SingleById<<#= entityName #>>(request.Id);
+            var q = Db.From<<#= entityName #>>().Where(x => x.Id == request.Id);
+
+            if (request.Fields != null && request.Fields.Any())
+            {
+                q = q.Select(request.Fields);
+            }
+
+			var entity = Db.Single<<#= entityName #>>(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(

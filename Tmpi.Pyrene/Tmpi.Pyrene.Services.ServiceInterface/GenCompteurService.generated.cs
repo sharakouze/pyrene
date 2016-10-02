@@ -17,10 +17,10 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceInterface
 {
-    /// <summary>
-    /// Service qui traite les requêtes sur l'entité <see cref="GenCompteur" />.
-    /// </summary>
-    public partial class GenCompteurService : Service
+	/// <summary>
+	/// Service qui traite les requêtes sur l'entité <see cref="GenCompteur" />.
+	/// </summary>
+	public partial class GenCompteurService : Service
 	{
 		/// <summary>
 		/// 
@@ -121,7 +121,14 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public GenCompteur Get(GetGenCompteur request)
 		{
-			var entity = Db.SingleById<GenCompteur>(request.Id);
+            var q = Db.From<GenCompteur>().Where(x => x.Id == request.Id);
+
+            if (true)
+            {
+                q = q.Select(request.Fields);
+            }
+
+			var entity = Db.Single<GenCompteur>(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
@@ -138,7 +145,14 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public GenCompteurValeur Get(GetGenCompteurValeur request)
 		{
-			var entity = Db.SingleById<GenCompteurValeur>(request.Id);
+            var q = Db.From<GenCompteurValeur>().Where(x => x.Id == request.Id);
+
+            if (request.Fields != null && request.Fields.Any())
+            {
+                q = q.Select(request.Fields);
+            }
+
+			var entity = Db.Single<GenCompteurValeur>(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(

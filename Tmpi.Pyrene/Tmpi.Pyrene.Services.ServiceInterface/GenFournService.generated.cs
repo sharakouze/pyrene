@@ -136,7 +136,14 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public GenFourn Get(GetGenFourn request)
 		{
-			var entity = Db.SingleById<GenFourn>(request.Id);
+            var q = Db.From<GenFourn>().Where(x => x.Id == request.Id);
+
+            if (request.Fields != null && request.Fields.Any())
+            {
+                q = q.Select(request.Fields);
+            }
+
+			var entity = Db.Single<GenFourn>(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
@@ -153,7 +160,14 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public GenFournBanque Get(GetGenFournBanque request)
 		{
-			var entity = Db.SingleById<GenFournBanque>(request.Id);
+            var q = Db.From<GenFournBanque>().Where(x => x.Id == request.Id);
+
+            if (request.Fields != null && request.Fields.Any())
+            {
+                q = q.Select(request.Fields);
+            }
+
+			var entity = Db.Single<GenFournBanque>(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
@@ -170,7 +184,14 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
 		public GenFournContact Get(GetGenFournContact request)
 		{
-			var entity = Db.SingleById<GenFournContact>(request.Id);
+            var q = Db.From<GenFournContact>().Where(x => x.Id == request.Id);
+
+            if (request.Fields != null && request.Fields.Any())
+            {
+                q = q.Select(request.Fields);
+            }
+
+			var entity = Db.Single<GenFournContact>(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
