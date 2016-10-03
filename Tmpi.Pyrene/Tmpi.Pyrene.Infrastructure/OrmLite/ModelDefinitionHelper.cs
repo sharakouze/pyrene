@@ -14,7 +14,7 @@ namespace Tmpi.Pyrene.Infrastructure
             var modelDef = typeof(T).GetModelMetadata();
             if (modelDef != null)
             {
-                var lst = fields.Where(f => !modelDef.FieldDefinitions.Select(fd => fd.Name).Contains(f, StringComparer.InvariantCultureIgnoreCase));
+                var lst = fields.Where(f => !modelDef.FieldDefinitions.Select(fd => fd.Name).Contains(f, StringComparer.OrdinalIgnoreCase));
 
                 return lst;
             }

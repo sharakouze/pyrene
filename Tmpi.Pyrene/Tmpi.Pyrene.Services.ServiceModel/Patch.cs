@@ -13,7 +13,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// <summary>
         /// Valeur du champ.
         /// </summary>
-        [ApiMember(Description = "Valeur du champ.", DataType = "object", IsRequired = true)]
+        [ApiMember(Description = "Valeur du champ.", IsRequired = true)]
         public object Value { get; set; }
     }
 }

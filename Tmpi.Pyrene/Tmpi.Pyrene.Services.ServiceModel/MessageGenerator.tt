@@ -340,7 +340,7 @@ namespace <#= fileNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-        [ApiMember(Description = "<#= string.Format(fieldsPropDescription, codeClass.Name) #>", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Body)]
+        [ApiMember(Description = "<#= string.Format(fieldsPropDescription, codeClass.Name) #>", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
 <#
                 }
 #>
