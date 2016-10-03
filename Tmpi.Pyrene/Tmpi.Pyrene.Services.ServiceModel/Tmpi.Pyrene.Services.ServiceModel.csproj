@@ -226,7 +226,7 @@
     </Compile>
     <Compile Include="PatchHelper.cs" />
     <Compile Include="SwaggerDataTypes.cs" />
-    <Compile Include="SwaggerParameterTypes.cs" />
+    <Compile Include="SwaggerParamTypes.cs" />
     <Compile Include="Types\GenCompteur.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>

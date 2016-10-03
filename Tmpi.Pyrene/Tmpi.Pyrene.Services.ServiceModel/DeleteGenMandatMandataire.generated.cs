@@ -23,7 +23,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// <summary>
         /// Id de la ressource <see cref="GenMandatMandataire" /> à supprimer.
         /// </summary>
-        [ApiMember(Description = "Id de la ressource GenMandatMandataire à supprimer.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+        [ApiMember(Description = "Id de la ressource GenMandatMandataire à supprimer.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int Id { get; set; }
 	}
 }

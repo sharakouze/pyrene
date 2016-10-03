@@ -23,13 +23,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// <summary>
         /// Id de la ressource <see cref="GenFourn" /> à modifier.
         /// </summary>
-        [ApiMember(Description = "Id de la ressource GenFourn à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+        [ApiMember(Description = "Id de la ressource GenFourn à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int Id { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [ApiMember(Description = "Liste des modifications.", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParameterTypes.Body)]
+        [ApiMember(Description = "Liste des modifications.", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Body)]
         public Patch[] Fields { get; set; }
     }
 }

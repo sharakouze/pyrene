@@ -219,7 +219,7 @@ namespace <#= fileNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-        [ApiMember(Description = "<#= string.Format(idPropDescription, codeClass.Name) #>", DataType = <#= swagDataType #>, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+        [ApiMember(Description = "<#= string.Format(idPropDescription, codeClass.Name) #>", DataType = <#= swagDataType #>, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 <#
                 }
 #>
@@ -277,7 +277,7 @@ namespace <#= fileNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-        [ApiMember(Description = "<#= string.Format(idPropDescription, codeClass.Name) #>", DataType = <#= swagDataType #>, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+        [ApiMember(Description = "<#= string.Format(idPropDescription, codeClass.Name) #>", DataType = <#= swagDataType #>, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 <#
                 }
 #>
@@ -324,7 +324,7 @@ namespace <#= fileNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-        [ApiMember(Description = "<#= string.Format(idPropDescription, codeClass.Name) #>", DataType = <#= swagDataType #>, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+        [ApiMember(Description = "<#= string.Format(idPropDescription, codeClass.Name) #>", DataType = <#= swagDataType #>, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 <#
                 }
 #>
@@ -337,7 +337,7 @@ namespace <#= fileNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-        [ApiMember(Description = "<#= string.Format(fieldsPropDescription, codeClass.Name) #>", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParameterTypes.Body)]
+        [ApiMember(Description = "<#= string.Format(fieldsPropDescription, codeClass.Name) #>", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Body)]
 <#
                 }
 #>
@@ -382,7 +382,7 @@ namespace <#= fileNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-        [ApiMember(Description = "<#= string.Format(textPropDescription, codeClass.Name) #>", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+        [ApiMember(Description = "<#= string.Format(textPropDescription, codeClass.Name) #>", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 <#
                 }
 #>

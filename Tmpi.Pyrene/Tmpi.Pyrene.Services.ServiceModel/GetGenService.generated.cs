@@ -23,7 +23,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// <summary>
         /// Id de la ressource <see cref="GenService" /> à retourner.
         /// </summary>
-        [ApiMember(Description = "Id de la ressource GenService à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+        [ApiMember(Description = "Id de la ressource GenService à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int Id { get; set; }
 
         /// <summary>

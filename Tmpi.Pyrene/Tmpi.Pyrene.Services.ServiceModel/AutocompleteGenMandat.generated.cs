@@ -22,7 +22,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// <summary>
         /// Texte à rechercher.
         /// </summary>
-        [ApiMember(Description = "Texte à rechercher.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParameterTypes.Path)]
+        [ApiMember(Description = "Texte à rechercher.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public string Text { get; set; }
 
         /// <summary>

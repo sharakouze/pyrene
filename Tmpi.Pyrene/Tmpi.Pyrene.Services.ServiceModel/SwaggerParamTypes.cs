@@ -1,6 +1,6 @@
 ﻿namespace Tmpi.Pyrene.Services.ServiceModel
 {
-    internal static class SwaggerParameterTypes
+    internal static class SwaggerParamTypes
     {
         /// <summary>
         /// Used together with Path Templating, where the parameter value is actually part of the operation's URL.
