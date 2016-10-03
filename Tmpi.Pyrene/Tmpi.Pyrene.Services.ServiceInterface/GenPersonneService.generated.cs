@@ -9,54 +9,55 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.Services.ServiceModel;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.Infrastructure;
 
 namespace Tmpi.Pyrene.Services.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur l'entité <see cref="GenPersonne" />.
+	/// Service qui traite les requêtes sur les ressources <see cref="GenPersonne" />.
 	/// </summary>
 	public partial class GenPersonneService : Service
 	{
 		/// <summary>
-		/// Supprime l'entité <see cref="GenPersonne" /> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="GenPersonne" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Delete(DeleteGenPersonne request)
 		{
 			int count = Db.DeleteById<GenPersonne>(request.Id);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenPersonne), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonne), request.Id));
 			}
 		}
 
 		/// <summary>
-		/// Supprime l'entité <see cref="GenPersonneProfil" /> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="GenPersonneProfil" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Delete(DeleteGenPersonneProfil request)
 		{
 			int count = Db.DeleteById<GenPersonneProfil>(request.Id);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenPersonneProfil), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonneProfil), request.Id));
 			}
 		}
 
 		/// <summary>
-		/// Ajoute l'entité <see cref="GenPersonne" /> spécifiée dans la requête.
+		/// Ajoute la ressource <see cref="GenPersonne" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="GenPersonne" /> ajoutée.</returns>
+		/// <returns>Ressource <see cref="GenPersonne" /> ajoutée.</returns>
 		public GenPersonne Post(GenPersonne request)
 		{
 			var id = Db.Insert(request, selectIdentity: true);
@@ -66,117 +67,153 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
-		/// Remplace l'entité <see cref="GenPersonne" /> spécifiée dans la requête.
+		/// Remplace la ressource <see cref="GenPersonne" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Put(GenPersonne request)
 		{
 			int count = Db.Update(request);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenPersonne), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonne), request.Id));
 			}
 		}
 
 		/// <summary>
-		/// Retourne l'entité <see cref="GenPersonne" /> spécifiée dans la requête.
+		/// Retourne la ressource <see cref="GenPersonne" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="GenPersonne" /> trouvée.</returns>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <returns>Ressource <see cref="GenPersonne" /> trouvée.</returns>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public GenPersonne Get(GetGenPersonne request)
 		{
-            var q = Db.From<GenPersonne>().Where(x => x.Id == request.Id);
-
-            if (request.Fields != null && request.Fields.Any())
+            if (!request.Fields.IsNullOrEmpty())
             {
-                q = q.Select(request.Fields);
+                var undef = ModelDefinitionHelper.GetUndefinedFields<GenPersonne>(request.Fields);
+                if (undef.Any())
+                {
+                    string str = string.Join(", ", undef.Select(f => "'" + f + "'"));
+                    throw new ArgumentException(
+                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenPersonne), str));
+                }
             }
 
-			var entity = Db.Single<GenPersonne>(q);
+            var q = Db.From<GenPersonne>().Where(x => x.Id == request.Id).Select(request.Fields);
+
+			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenPersonne), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonne), request.Id));
 			}
+
 			return entity;
 		}
 
 		/// <summary>
-		/// Retourne l'entité <see cref="GenPersonneProfil" /> spécifiée dans la requête.
+		/// Retourne la ressource <see cref="GenPersonneProfil" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="GenPersonneProfil" /> trouvée.</returns>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <returns>Ressource <see cref="GenPersonneProfil" /> trouvée.</returns>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public GenPersonneProfil Get(GetGenPersonneProfil request)
 		{
-            var q = Db.From<GenPersonneProfil>().Where(x => x.Id == request.Id);
-
-            if (request.Fields != null && request.Fields.Any())
+            if (!request.Fields.IsNullOrEmpty())
             {
-                q = q.Select(request.Fields);
+                var undef = ModelDefinitionHelper.GetUndefinedFields<GenPersonneProfil>(request.Fields);
+                if (undef.Any())
+                {
+                    string str = string.Join(", ", undef.Select(f => "'" + f + "'"));
+                    throw new ArgumentException(
+                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenPersonneProfil), str));
+                }
             }
 
-			var entity = Db.Single<GenPersonneProfil>(q);
+            var q = Db.From<GenPersonneProfil>().Where(x => x.Id == request.Id).Select(request.Fields);
+
+			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenPersonneProfil), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonneProfil), request.Id));
 			}
+
 			return entity;
 		}
 
 		/// <summary>
-		/// Met à jour l'entité <see cref="GenPersonne" /> spécifiée dans la requête.
+		/// Met à jour la ressource <see cref="GenPersonne" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Patch(PatchGenPersonne request)
 		{
-			Debug.Assert(request.Fields != null);
-			if (request.Fields == null)
+			if (request.Fields.IsNullOrEmpty())
 			{
 				throw new ArgumentNullException(nameof(request.Fields));
 			}
+            else
+            {
+                var undef = ModelDefinitionHelper.GetUndefinedFields<GenCompteurValeur>(request.Fields.Select(f => f.Field));
+                if (undef.Any())
+                {
+                    string str = string.Join(", ", undef.Select(f => "'" + f + "'"));
+                    throw new ArgumentException(
+                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenCompteurValeur), str));
+                }
+            }
 
 			var entity = new GenPersonne();
-			var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
+			var fields = PatchHelper.PopulateFromPatch(entity, request.Fields.ToDictionary(f => f.Field, f => f.Value));
 
-			var updateExpr = Db.From<GenPersonne>().Update(updateFields).Where(x => x.Id == request.Id);
-			int count = Db.UpdateOnly(entity, updateExpr);
+			var q = Db.From<GenPersonne>().Update(fields).Where(x => x.Id == request.Id);
+			int count = Db.UpdateOnly(entity, q);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenPersonne), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonne), request.Id));
 			}
 		}
 
 		/// <summary>
-		/// Met à jour l'entité <see cref="GenPersonneProfil" /> spécifiée dans la requête.
+		/// Met à jour la ressource <see cref="GenPersonneProfil" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Patch(PatchGenPersonneProfil request)
 		{
-			Debug.Assert(request.Fields != null);
-			if (request.Fields == null)
+			if (request.Fields.IsNullOrEmpty())
 			{
 				throw new ArgumentNullException(nameof(request.Fields));
 			}
+            else
+            {
+                var undef = ModelDefinitionHelper.GetUndefinedFields<GenCompteurValeur>(request.Fields.Select(f => f.Field));
+                if (undef.Any())
+                {
+                    string str = string.Join(", ", undef.Select(f => "'" + f + "'"));
+                    throw new ArgumentException(
+                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenCompteurValeur), str));
+                }
+            }
 
 			var entity = new GenPersonneProfil();
-			var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
+			var fields = PatchHelper.PopulateFromPatch(entity, request.Fields.ToDictionary(f => f.Field, f => f.Value));
 
-			var updateExpr = Db.From<GenPersonneProfil>().Update(updateFields).Where(x => x.Id == request.Id);
-			int count = Db.UpdateOnly(entity, updateExpr);
+			var q = Db.From<GenPersonneProfil>().Update(fields).Where(x => x.Id == request.Id);
+			int count = Db.UpdateOnly(entity, q);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenPersonneProfil), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonneProfil), request.Id));
 			}
 		}
 

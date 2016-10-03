@@ -17,6 +17,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// Retourne une ressource <see cref="GenService" /> à partir de son Id.
 	/// </summary>
 	[Route("/GenService/{Id}", HttpVerbs.Get, Summary = "Retourne une ressource GenService à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenService ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenService spécifiée est introuvable.")]
 	public partial class GetGenService : IReturn<GenService>
 	{

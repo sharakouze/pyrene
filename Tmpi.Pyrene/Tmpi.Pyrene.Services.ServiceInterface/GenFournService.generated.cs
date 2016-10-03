@@ -9,16 +9,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.Services.ServiceModel;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.Infrastructure;
 
 namespace Tmpi.Pyrene.Services.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur l'entité <see cref="GenFourn" />.
+	/// Service qui traite les requêtes sur les ressources <see cref="GenFourn" />.
 	/// </summary>
 	public partial class GenFournService : Service
 	{
@@ -45,66 +46,66 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime l'entité <see cref="GenFourn" /> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="GenFourn" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Delete(DeleteGenFourn request)
 		{
 			int count = Db.DeleteById<GenFourn>(request.Id);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFourn), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.Id));
 			}
 		}
 
 		/// <summary>
-		/// Supprime l'entité <see cref="GenFournBanque" /> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="GenFournBanque" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Delete(DeleteGenFournBanque request)
 		{
 			int count = Db.DeleteById<GenFournBanque>(request.Id);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournBanque), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.Id));
 			}
 		}
 
 		/// <summary>
-		/// Supprime l'entité <see cref="GenFournContact" /> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="GenFournContact" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Delete(DeleteGenFournContact request)
 		{
 			int count = Db.DeleteById<GenFournContact>(request.Id);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournContact), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.Id));
 			}
 		}
 
 		/// <summary>
-		/// Met à jour l'entité <see cref="GenFourn" /> spécifiée dans la requête.
+		/// Met à jour la ressource <see cref="GenFourn" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public List<GenFourn> Get(FindGenFourn request)
 		{
             return null;
 		}
 
 		/// <summary>
-		/// Ajoute l'entité <see cref="GenFourn" /> spécifiée dans la requête.
+		/// Ajoute la ressource <see cref="GenFourn" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="GenFourn" /> ajoutée.</returns>
+		/// <returns>Ressource <see cref="GenFourn" /> ajoutée.</returns>
 		public GenFourn Post(GenFourn request)
 		{
 			var id = Db.Insert(request, selectIdentity: true);
@@ -114,167 +115,221 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
-		/// Remplace l'entité <see cref="GenFourn" /> spécifiée dans la requête.
+		/// Remplace la ressource <see cref="GenFourn" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Put(GenFourn request)
 		{
 			int count = Db.Update(request);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFourn), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.Id));
 			}
 		}
 
 		/// <summary>
-		/// Retourne l'entité <see cref="GenFourn" /> spécifiée dans la requête.
+		/// Retourne la ressource <see cref="GenFourn" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="GenFourn" /> trouvée.</returns>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <returns>Ressource <see cref="GenFourn" /> trouvée.</returns>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public GenFourn Get(GetGenFourn request)
 		{
-            var q = Db.From<GenFourn>().Where(x => x.Id == request.Id);
-
-            if (request.Fields != null && request.Fields.Any())
+            if (!request.Fields.IsNullOrEmpty())
             {
-                q = q.Select(request.Fields);
+                var undef = ModelDefinitionHelper.GetUndefinedFields<GenFourn>(request.Fields);
+                if (undef.Any())
+                {
+                    string str = string.Join(", ", undef.Select(f => "'" + f + "'"));
+                    throw new ArgumentException(
+                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenFourn), str));
+                }
             }
 
-			var entity = Db.Single<GenFourn>(q);
+            var q = Db.From<GenFourn>().Where(x => x.Id == request.Id).Select(request.Fields);
+
+			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFourn), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.Id));
 			}
+
 			return entity;
 		}
 
 		/// <summary>
-		/// Retourne l'entité <see cref="GenFournBanque" /> spécifiée dans la requête.
+		/// Retourne la ressource <see cref="GenFournBanque" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="GenFournBanque" /> trouvée.</returns>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <returns>Ressource <see cref="GenFournBanque" /> trouvée.</returns>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public GenFournBanque Get(GetGenFournBanque request)
 		{
-            var q = Db.From<GenFournBanque>().Where(x => x.Id == request.Id);
-
-            if (request.Fields != null && request.Fields.Any())
+            if (!request.Fields.IsNullOrEmpty())
             {
-                q = q.Select(request.Fields);
+                var undef = ModelDefinitionHelper.GetUndefinedFields<GenFournBanque>(request.Fields);
+                if (undef.Any())
+                {
+                    string str = string.Join(", ", undef.Select(f => "'" + f + "'"));
+                    throw new ArgumentException(
+                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenFournBanque), str));
+                }
             }
 
-			var entity = Db.Single<GenFournBanque>(q);
+            var q = Db.From<GenFournBanque>().Where(x => x.Id == request.Id).Select(request.Fields);
+
+			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournBanque), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.Id));
 			}
+
 			return entity;
 		}
 
 		/// <summary>
-		/// Retourne l'entité <see cref="GenFournContact" /> spécifiée dans la requête.
+		/// Retourne la ressource <see cref="GenFournContact" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="GenFournContact" /> trouvée.</returns>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <returns>Ressource <see cref="GenFournContact" /> trouvée.</returns>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public GenFournContact Get(GetGenFournContact request)
 		{
-            var q = Db.From<GenFournContact>().Where(x => x.Id == request.Id);
-
-            if (request.Fields != null && request.Fields.Any())
+            if (!request.Fields.IsNullOrEmpty())
             {
-                q = q.Select(request.Fields);
+                var undef = ModelDefinitionHelper.GetUndefinedFields<GenFournContact>(request.Fields);
+                if (undef.Any())
+                {
+                    string str = string.Join(", ", undef.Select(f => "'" + f + "'"));
+                    throw new ArgumentException(
+                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenFournContact), str));
+                }
             }
 
-			var entity = Db.Single<GenFournContact>(q);
+            var q = Db.From<GenFournContact>().Where(x => x.Id == request.Id).Select(request.Fields);
+
+			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournContact), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.Id));
 			}
+
 			return entity;
 		}
 
 		/// <summary>
-		/// Met à jour l'entité <see cref="GenFourn" /> spécifiée dans la requête.
+		/// Met à jour la ressource <see cref="GenFourn" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Patch(PatchGenFourn request)
 		{
-			Debug.Assert(request.Fields != null);
-			if (request.Fields == null)
+			if (request.Fields.IsNullOrEmpty())
 			{
 				throw new ArgumentNullException(nameof(request.Fields));
 			}
+            else
+            {
+                var undef = ModelDefinitionHelper.GetUndefinedFields<GenCompteurValeur>(request.Fields.Select(f => f.Field));
+                if (undef.Any())
+                {
+                    string str = string.Join(", ", undef.Select(f => "'" + f + "'"));
+                    throw new ArgumentException(
+                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenCompteurValeur), str));
+                }
+            }
 
 			var entity = new GenFourn();
-			var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
+			var fields = PatchHelper.PopulateFromPatch(entity, request.Fields.ToDictionary(f => f.Field, f => f.Value));
 
-			var updateExpr = Db.From<GenFourn>().Update(updateFields).Where(x => x.Id == request.Id);
-			int count = Db.UpdateOnly(entity, updateExpr);
+			var q = Db.From<GenFourn>().Update(fields).Where(x => x.Id == request.Id);
+			int count = Db.UpdateOnly(entity, q);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFourn), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.Id));
 			}
 		}
 
 		/// <summary>
-		/// Met à jour l'entité <see cref="GenFournBanque" /> spécifiée dans la requête.
+		/// Met à jour la ressource <see cref="GenFournBanque" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Patch(PatchGenFournBanque request)
 		{
-			Debug.Assert(request.Fields != null);
-			if (request.Fields == null)
+			if (request.Fields.IsNullOrEmpty())
 			{
 				throw new ArgumentNullException(nameof(request.Fields));
 			}
+            else
+            {
+                var undef = ModelDefinitionHelper.GetUndefinedFields<GenCompteurValeur>(request.Fields.Select(f => f.Field));
+                if (undef.Any())
+                {
+                    string str = string.Join(", ", undef.Select(f => "'" + f + "'"));
+                    throw new ArgumentException(
+                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenCompteurValeur), str));
+                }
+            }
 
 			var entity = new GenFournBanque();
-			var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
+			var fields = PatchHelper.PopulateFromPatch(entity, request.Fields.ToDictionary(f => f.Field, f => f.Value));
 
-			var updateExpr = Db.From<GenFournBanque>().Update(updateFields).Where(x => x.Id == request.Id);
-			int count = Db.UpdateOnly(entity, updateExpr);
+			var q = Db.From<GenFournBanque>().Update(fields).Where(x => x.Id == request.Id);
+			int count = Db.UpdateOnly(entity, q);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournBanque), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.Id));
 			}
 		}
 
 		/// <summary>
-		/// Met à jour l'entité <see cref="GenFournContact" /> spécifiée dans la requête.
+		/// Met à jour la ressource <see cref="GenFournContact" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Patch(PatchGenFournContact request)
 		{
-			Debug.Assert(request.Fields != null);
-			if (request.Fields == null)
+			if (request.Fields.IsNullOrEmpty())
 			{
 				throw new ArgumentNullException(nameof(request.Fields));
 			}
+            else
+            {
+                var undef = ModelDefinitionHelper.GetUndefinedFields<GenCompteurValeur>(request.Fields.Select(f => f.Field));
+                if (undef.Any())
+                {
+                    string str = string.Join(", ", undef.Select(f => "'" + f + "'"));
+                    throw new ArgumentException(
+                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenCompteurValeur), str));
+                }
+            }
 
 			var entity = new GenFournContact();
-			var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
+			var fields = PatchHelper.PopulateFromPatch(entity, request.Fields.ToDictionary(f => f.Field, f => f.Value));
 
-			var updateExpr = Db.From<GenFournContact>().Update(updateFields).Where(x => x.Id == request.Id);
-			int count = Db.UpdateOnly(entity, updateExpr);
+			var q = Db.From<GenFournContact>().Update(fields).Where(x => x.Id == request.Id);
+			int count = Db.UpdateOnly(entity, q);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenFournContact), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.Id));
 			}
 		}
 

@@ -5,6 +5,7 @@
 <#
 	/***** TODO *****
     - Alternative a TransformRoutePath avec des const
+    - abstract class xxxById pour les requests
 	****************/
 
 	/*********************/
@@ -205,6 +206,7 @@ namespace <#= fileNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource <#= codeClass.Name #> ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
 <#
                 }
@@ -310,6 +312,7 @@ namespace <#= fileNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource <#= codeClass.Name #> ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= codeClass.Name #> spécifiée est introuvable.")]
 <#
                 }

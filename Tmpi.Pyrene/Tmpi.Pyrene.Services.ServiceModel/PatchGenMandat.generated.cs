@@ -17,6 +17,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// Modifie partiellement une ressource <see cref="GenMandat" /> à partir de son Id.
 	/// </summary>
 	[Route("/GenMandat/{Id}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenMandat à partir de son Id.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenMandat ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandat spécifiée est introuvable.")]
 	public partial class PatchGenMandat : IReturnVoid
 	{

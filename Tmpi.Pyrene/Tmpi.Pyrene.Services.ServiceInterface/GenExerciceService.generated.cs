@@ -9,16 +9,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.Services.ServiceModel;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.Infrastructure;
 
 namespace Tmpi.Pyrene.Services.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur l'entité <see cref="GenExercice" />.
+	/// Service qui traite les requêtes sur les ressources <see cref="GenExercice" />.
 	/// </summary>
 	public partial class GenExerciceService : Service
 	{
@@ -45,36 +46,36 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime l'entité <see cref="GenExercice" /> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="GenExercice" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Delete(DeleteGenExercice request)
 		{
 			int count = Db.DeleteById<GenExercice>(request.Id);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenExercice), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.Id));
 			}
 		}
 
 		/// <summary>
-		/// Met à jour l'entité <see cref="GenExercice" /> spécifiée dans la requête.
+		/// Met à jour la ressource <see cref="GenExercice" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public List<GenExercice> Get(FindGenExercice request)
 		{
             return null;
 		}
 
 		/// <summary>
-		/// Ajoute l'entité <see cref="GenExercice" /> spécifiée dans la requête.
+		/// Ajoute la ressource <see cref="GenExercice" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="GenExercice" /> ajoutée.</returns>
+		/// <returns>Ressource <see cref="GenExercice" /> ajoutée.</returns>
 		public GenExercice Post(GenExercice request)
 		{
 			var id = Db.Insert(request, selectIdentity: true);
@@ -84,67 +85,85 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
-		/// Remplace l'entité <see cref="GenExercice" /> spécifiée dans la requête.
+		/// Remplace la ressource <see cref="GenExercice" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Put(GenExercice request)
 		{
 			int count = Db.Update(request);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenExercice), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.Id));
 			}
 		}
 
 		/// <summary>
-		/// Retourne l'entité <see cref="GenExercice" /> spécifiée dans la requête.
+		/// Retourne la ressource <see cref="GenExercice" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="GenExercice" /> trouvée.</returns>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <returns>Ressource <see cref="GenExercice" /> trouvée.</returns>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public GenExercice Get(GetGenExercice request)
 		{
-            var q = Db.From<GenExercice>().Where(x => x.Id == request.Id);
-
-            if (request.Fields != null && request.Fields.Any())
+            if (!request.Fields.IsNullOrEmpty())
             {
-                q = q.Select(request.Fields);
+                var undef = ModelDefinitionHelper.GetUndefinedFields<GenExercice>(request.Fields);
+                if (undef.Any())
+                {
+                    string str = string.Join(", ", undef.Select(f => "'" + f + "'"));
+                    throw new ArgumentException(
+                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenExercice), str));
+                }
             }
 
-			var entity = Db.Single<GenExercice>(q);
+            var q = Db.From<GenExercice>().Where(x => x.Id == request.Id).Select(request.Fields);
+
+			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenExercice), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.Id));
 			}
+
 			return entity;
 		}
 
 		/// <summary>
-		/// Met à jour l'entité <see cref="GenExercice" /> spécifiée dans la requête.
+		/// Met à jour la ressource <see cref="GenExercice" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="HttpError">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Patch(PatchGenExercice request)
 		{
-			Debug.Assert(request.Fields != null);
-			if (request.Fields == null)
+			if (request.Fields.IsNullOrEmpty())
 			{
 				throw new ArgumentNullException(nameof(request.Fields));
 			}
+            else
+            {
+                var undef = ModelDefinitionHelper.GetUndefinedFields<GenCompteurValeur>(request.Fields.Select(f => f.Field));
+                if (undef.Any())
+                {
+                    string str = string.Join(", ", undef.Select(f => "'" + f + "'"));
+                    throw new ArgumentException(
+                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenCompteurValeur), str));
+                }
+            }
 
 			var entity = new GenExercice();
-			var updateFields = PatchHelper.PopulateFromPatch(entity, request.Fields);
+			var fields = PatchHelper.PopulateFromPatch(entity, request.Fields.ToDictionary(f => f.Field, f => f.Value));
 
-			var updateExpr = Db.From<GenExercice>().Update(updateFields).Where(x => x.Id == request.Id);
-			int count = Db.UpdateOnly(entity, updateExpr);
+			var q = Db.From<GenExercice>().Update(fields).Where(x => x.Id == request.Id);
+			int count = Db.UpdateOnly(entity, q);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ErrorMessages.EntityByIdNotFound, nameof(GenExercice), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.Id));
 			}
 		}
 

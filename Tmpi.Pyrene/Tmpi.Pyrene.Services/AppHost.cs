@@ -37,6 +37,7 @@ namespace Tmpi.Pyrene.Services
         private void ConfigJson()
         {
             JsConfig.DateHandler = DateHandler.ISO8601;
+            JsConfig.ExcludeDefaultValues = true;
         }
 
         public override void Configure(Container container)

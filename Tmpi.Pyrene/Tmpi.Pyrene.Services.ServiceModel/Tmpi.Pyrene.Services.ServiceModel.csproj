@@ -224,7 +224,6 @@
     <Compile Include="PatchGenTVA.generated.cs">
       <DependentUpon>MessageGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="PatchHelper.cs" />
     <Compile Include="SwaggerDataTypes.cs" />
     <Compile Include="SwaggerParamTypes.cs" />
     <Compile Include="Types\GenCompteur.generated.cs">
@@ -304,12 +303,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Tmpi.Pyrene.Infrastructure\Tmpi.Pyrene.Infrastructure.csproj">
-      <Project>{e10042b4-7da4-48d8-ae04-4d87a0317d0a}</Project>
-      <Name>Tmpi.Pyrene.Infrastructure</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
