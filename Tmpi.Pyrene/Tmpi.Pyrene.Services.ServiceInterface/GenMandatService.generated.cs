@@ -125,10 +125,10 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		{
             if (!request.Fields.IsNullOrEmpty())
             {
-                var undefFields = ModelDefinitionHelper.GetUndefinedFields<GenMandat>(request.Fields);
-                if (undefFields.Any())
+                var errFields = ModelDefinitionHelper.GetUndefinedFields<GenMandat>(request.Fields);
+                if (errFields.Any())
                 {
-                    string str = string.Join(", ", undefFields.Select(f => "'" + f + "'"));
+                    string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
                     throw new ArgumentException(
                         string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenMandat), str));
                 }
@@ -157,10 +157,10 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		{
             if (!request.Fields.IsNullOrEmpty())
             {
-                var undefFields = ModelDefinitionHelper.GetUndefinedFields<GenMandatMandataire>(request.Fields);
-                if (undefFields.Any())
+                var errFields = ModelDefinitionHelper.GetUndefinedFields<GenMandatMandataire>(request.Fields);
+                if (errFields.Any())
                 {
-                    string str = string.Join(", ", undefFields.Select(f => "'" + f + "'"));
+                    string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
                     throw new ArgumentException(
                         string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenMandatMandataire), str));
                 }
@@ -194,10 +194,10 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
             var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
 
-            var undefFields = ModelDefinitionHelper.GetUndefinedFields<GenMandat>(patchDic.Keys);
-            if (undefFields.Any())
+            var errFields = ModelDefinitionHelper.GetUndefinedFields<GenMandat>(patchDic.Keys);
+            if (errFields.Any())
             {
-                string str = string.Join(", ", undefFields.Select(f => "'" + f + "'"));
+                string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
                 throw new ArgumentException(
                     string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenMandat), str));
             }
@@ -231,10 +231,10 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
             var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
 
-            var undefFields = ModelDefinitionHelper.GetUndefinedFields<GenMandatMandataire>(patchDic.Keys);
-            if (undefFields.Any())
+            var errFields = ModelDefinitionHelper.GetUndefinedFields<GenMandatMandataire>(patchDic.Keys);
+            if (errFields.Any())
             {
-                string str = string.Join(", ", undefFields.Select(f => "'" + f + "'"));
+                string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
                 throw new ArgumentException(
                     string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenMandatMandataire), str));
             }

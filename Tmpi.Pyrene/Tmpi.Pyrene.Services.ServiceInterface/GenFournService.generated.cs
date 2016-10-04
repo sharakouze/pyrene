@@ -140,10 +140,10 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		{
             if (!request.Fields.IsNullOrEmpty())
             {
-                var undefFields = ModelDefinitionHelper.GetUndefinedFields<GenFourn>(request.Fields);
-                if (undefFields.Any())
+                var errFields = ModelDefinitionHelper.GetUndefinedFields<GenFourn>(request.Fields);
+                if (errFields.Any())
                 {
-                    string str = string.Join(", ", undefFields.Select(f => "'" + f + "'"));
+                    string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
                     throw new ArgumentException(
                         string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenFourn), str));
                 }
@@ -172,10 +172,10 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		{
             if (!request.Fields.IsNullOrEmpty())
             {
-                var undefFields = ModelDefinitionHelper.GetUndefinedFields<GenFournBanque>(request.Fields);
-                if (undefFields.Any())
+                var errFields = ModelDefinitionHelper.GetUndefinedFields<GenFournBanque>(request.Fields);
+                if (errFields.Any())
                 {
-                    string str = string.Join(", ", undefFields.Select(f => "'" + f + "'"));
+                    string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
                     throw new ArgumentException(
                         string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenFournBanque), str));
                 }
@@ -204,10 +204,10 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		{
             if (!request.Fields.IsNullOrEmpty())
             {
-                var undefFields = ModelDefinitionHelper.GetUndefinedFields<GenFournContact>(request.Fields);
-                if (undefFields.Any())
+                var errFields = ModelDefinitionHelper.GetUndefinedFields<GenFournContact>(request.Fields);
+                if (errFields.Any())
                 {
-                    string str = string.Join(", ", undefFields.Select(f => "'" + f + "'"));
+                    string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
                     throw new ArgumentException(
                         string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenFournContact), str));
                 }
@@ -241,10 +241,10 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
             var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
 
-            var undefFields = ModelDefinitionHelper.GetUndefinedFields<GenFourn>(patchDic.Keys);
-            if (undefFields.Any())
+            var errFields = ModelDefinitionHelper.GetUndefinedFields<GenFourn>(patchDic.Keys);
+            if (errFields.Any())
             {
-                string str = string.Join(", ", undefFields.Select(f => "'" + f + "'"));
+                string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
                 throw new ArgumentException(
                     string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenFourn), str));
             }
@@ -278,10 +278,10 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
             var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
 
-            var undefFields = ModelDefinitionHelper.GetUndefinedFields<GenFournBanque>(patchDic.Keys);
-            if (undefFields.Any())
+            var errFields = ModelDefinitionHelper.GetUndefinedFields<GenFournBanque>(patchDic.Keys);
+            if (errFields.Any())
             {
-                string str = string.Join(", ", undefFields.Select(f => "'" + f + "'"));
+                string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
                 throw new ArgumentException(
                     string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenFournBanque), str));
             }
@@ -315,10 +315,10 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
             var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
 
-            var undefFields = ModelDefinitionHelper.GetUndefinedFields<GenFournContact>(patchDic.Keys);
-            if (undefFields.Any())
+            var errFields = ModelDefinitionHelper.GetUndefinedFields<GenFournContact>(patchDic.Keys);
+            if (errFields.Any())
             {
-                string str = string.Join(", ", undefFields.Select(f => "'" + f + "'"));
+                string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
                 throw new ArgumentException(
                     string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenFournContact), str));
             }
