@@ -19,9 +19,6 @@
 
 GO
 
-CREATE INDEX [IX_GenMandat_LibObjet] ON [GenMandat] ([LibObjet]);
-
-GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Type de mandat.',
     @level0type = N'SCHEMA',

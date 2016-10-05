@@ -23,10 +23,6 @@
 
 GO
 
-CREATE INDEX [IX_GenSecteur_LibObjet] ON [GenSecteur] ([LibObjet]);
-
-GO
-
 CREATE INDEX [IX_GenSecteur_CleGenSociete] ON [GenSecteur] ([CleGenSociete]);
 
 GO

@@ -32,9 +32,6 @@
 
 GO
 
-CREATE INDEX [IX_GenFourn_LibObjet] ON [GenFourn] ([LibObjet]);
-
-GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Code comptabilité.',
     @level0type = N'SCHEMA',

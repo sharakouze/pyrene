@@ -74,6 +74,10 @@
     <Build Include="Tables\GenFournContact.sql" />
     <Build Include="Tables\GenService.sql" />
     <Build Include="Tables\GenCompteur.sql" />
+    <Build Include="Scripts\TextIndex.sql" />
+    <None Include="Scripts\FullTextIndex.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Tmpi.Pyrene.Database.publish.xml" />
@@ -87,8 +91,14 @@
     <Build Include="Tables\GenPersonneSignature.sql" />
     <Build Include="Tables\GenSociete.sql" />
     <Build Include="Tables\GenSecteur.sql" />
+    <Build Include="Scripts\FullTextIndex.sql">
+      <DependentUpon>Scripts\FullTextIndex.tt</DependentUpon>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Tmpi.Pyrene.Database.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Scripts\Script.PostDeployment1.sql" />
   </ItemGroup>
 </Project>

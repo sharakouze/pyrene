@@ -23,10 +23,6 @@
 
 GO
 
-CREATE INDEX [IX_GenService_LibObjet] ON [GenService] ([LibObjet]);
-
-GO
-
 CREATE INDEX [IX_GenService_CleGenSecteur] ON [GenService] ([CleGenSecteur]);
 
 GO

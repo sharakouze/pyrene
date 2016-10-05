@@ -23,28 +23,32 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
         /// </summary>
         public GenPersonneValidator()
         {
-            RuleFor(x => x.CodObjet).NotEmpty();
-            RuleFor(x => x.CodObjet).Length(0, 100);
-
-            RuleFor(x => x.NomPersonne).NotEmpty();
-            RuleFor(x => x.NomPersonne).Length(0, 100);
-
-            RuleFor(x => x.PrePersonne).Length(0, 100);
-
-            RuleFor(x => x.TxtObjet).Length(0, 500);
-
-            RuleFor(x => x.CodExterne).Length(0, 100);
-
-            RuleFor(x => x.NumTelep).Length(0, 25);
-
-            RuleFor(x => x.NumFax).Length(0, 25);
-
-            RuleFor(x => x.NumEmail).Length(0, 100);
-            RuleFor(x => x.NumEmail).EmailAddress();
+            RuleFor(x => x.CodObjet)
+                .NotEmpty()
+                .Length(0, 100);
+            RuleFor(x => x.NomPersonne)
+                .NotEmpty()
+                .Length(0, 100);
+            RuleFor(x => x.PrePersonne)
+                .Length(0, 100);
+            RuleFor(x => x.TxtObjet)
+                .Length(0, 500);
+            RuleFor(x => x.CodExterne)
+                .Length(0, 100);
+            RuleFor(x => x.NumTelep)
+                .Length(0, 25);
+            RuleFor(x => x.NumFax)
+                .Length(0, 25);
+            RuleFor(x => x.NumEmail)
+                .Length(0, 100)
+                .EmailAddress();
 
             SetRules();
         }
         
+        /// <summary>
+        /// Définit des règles de validation supplémentaires.
+        /// </summary>
         partial void SetRules();
     }
 }

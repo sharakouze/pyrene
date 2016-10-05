@@ -26,6 +26,9 @@
     // true pour créer les validors de la ValidationFeature
     bool CreateValidators= true;
 
+    // true pour rajouter .WithMessage() pour chaque RuleFor
+    bool ValidatorsWithMessage = false;
+
 	// RegExp pour filtrer globalement les classes traitées, null pour tout inclure et/ou ne rien exclure.
 	Regex ClassFilterInclude = null;
 	Regex ClassFilterExclude = null;
@@ -383,13 +386,25 @@ namespace <#= fileNamespace #>
                         {
                             if (prop.Key.Type.AsFullName == "System.String")
                             {
-                                lstValidation.Add(".NotEmpty()");
+                                string str = ".NotEmpty()";
+                                if (ValidatorsWithMessage)
+                                {
+                                    str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_NotEmpty)", requestName, prop.Key.Name);
+                                }
+                                lstValidation.Add(str);
                             }
                         }
                         var strLengthAttr = prop.Value.FirstOrDefault(attr => attr.FullName == "ServiceStack.DataAnnotations.StringLengthAttribute");
                         if (strLengthAttr != null)
                         {
-                            lstValidation.Add(".Length(0, "+strLengthAttr.Value +")");
+                            int min = 0;
+                            int max = Convert.ToInt32(strLengthAttr.Value);
+                            string str = string.Format(".Length({0}, {1})", min, max);
+                            if (ValidatorsWithMessage)
+                            {
+                                str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_Length, {2}, {3})", requestName, prop.Key.Name, min, max);
+                            }
+                            lstValidation.Add(str);
                         }
 
                         if (prop.Key.Name == "NumEmail")
@@ -397,25 +412,27 @@ namespace <#= fileNamespace #>
                             lstValidation.Add(".EmailAddress()");
                         }
 
-                        foreach (var v in lstValidation)
-                        {
-#>
-            RuleFor(x => x.<#= prop.Key.Name #>)<#= v #>;
-<#
-                        } // end foreach
-
                         if (lstValidation.Any())
                         {
-
 #>
-
+            RuleFor(x => x.<#= prop.Key.Name #>)
 <#
+                            for (int i = 0; i < lstValidation.Count; i++)
+                            {
+#>
+                <#= lstValidation[i] #><#= i == lstValidation.Count - 1 ? ";" : "" #>
+<#
+                            } // end foreach
                         } // end if
                     } // end foreach
 #>
+
             SetRules();
         }
         
+        /// <summary>
+        /// Définit des règles de validation supplémentaires.
+        /// </summary>
         partial void SetRules();
     }
 }

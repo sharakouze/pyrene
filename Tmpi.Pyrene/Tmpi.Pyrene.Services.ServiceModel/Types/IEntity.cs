@@ -1,6 +1,4 @@
-﻿using ServiceStack.Model;
-
-namespace Tmpi.Pyrene.Services.ServiceModel.Types
+﻿namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
     /// <summary>
     /// Représente une entité identifiée par un code, une désignation et un état actif ou inactif.

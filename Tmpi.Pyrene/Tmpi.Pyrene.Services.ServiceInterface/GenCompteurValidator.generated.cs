@@ -23,22 +23,26 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
         /// </summary>
         public GenCompteurValidator()
         {
-            RuleFor(x => x.CodObjet).NotEmpty();
-            RuleFor(x => x.CodObjet).Length(0, 100);
-
-            RuleFor(x => x.LibObjet).NotEmpty();
-            RuleFor(x => x.LibObjet).Length(0, 200);
-
-            RuleFor(x => x.TxtObjet).Length(0, 500);
-
-            RuleFor(x => x.CodExterne).Length(0, 100);
-
-            RuleFor(x => x.ValFormatNumero).NotEmpty();
-            RuleFor(x => x.ValFormatNumero).Length(0, 100);
+            RuleFor(x => x.CodObjet)
+                .NotEmpty()
+                .Length(0, 100);
+            RuleFor(x => x.LibObjet)
+                .NotEmpty()
+                .Length(0, 200);
+            RuleFor(x => x.TxtObjet)
+                .Length(0, 500);
+            RuleFor(x => x.CodExterne)
+                .Length(0, 100);
+            RuleFor(x => x.ValFormatNumero)
+                .NotEmpty()
+                .Length(0, 100);
 
             SetRules();
         }
         
+        /// <summary>
+        /// Définit des règles de validation supplémentaires.
+        /// </summary>
         partial void SetRules();
     }
 }

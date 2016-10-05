@@ -16,11 +16,6 @@
 
 GO
 
-CREATE INDEX [IX_GenExercice_LibObjet] ON [GenExercice] ([LibObjet]);
-
-GO
-
-
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Date de début.',
     @level0type = N'SCHEMA',

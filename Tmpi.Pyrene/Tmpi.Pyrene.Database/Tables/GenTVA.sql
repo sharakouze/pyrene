@@ -15,10 +15,6 @@
 
 GO
 
-CREATE INDEX [IX_GenTVA_LibObjet] ON [GenTVA] ([LibObjet]);
-
-GO
-
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Taux de TVA.',
     @level0type = N'SCHEMA',

@@ -21,11 +21,6 @@
     CONSTRAINT [FK_GenCompteur_CleGenService] FOREIGN KEY ([CleGenService]) REFERENCES [GenService] ([Id]),
 );
 
-
-GO
-
-CREATE INDEX [IX_GenCompteur_LibObjet] ON [GenCompteur] ([LibObjet]);
-
 GO
 
 EXEC sp_addextendedproperty @name = N'MS_Description',

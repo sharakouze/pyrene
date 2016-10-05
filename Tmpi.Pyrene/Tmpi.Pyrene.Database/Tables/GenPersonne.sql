@@ -19,10 +19,6 @@
 
 GO
 
-CREATE INDEX [IX_GenPersonne_LibObjet] ON [GenPersonne] ([NomPersonne]);
-
-GO
-
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Nom de famille.',
     @level0type = N'SCHEMA',

@@ -18,7 +18,3 @@
     CONSTRAINT [PK_GenSociete] PRIMARY KEY ([Id]),
     CONSTRAINT [UK_GenSociete_CodObjet] UNIQUE ([CodObjet])
 );
-
-GO
-
-CREATE INDEX [IX_GenSociete_LibObjet] ON [GenSociete] ([LibObjet]);
