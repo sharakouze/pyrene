@@ -60,6 +60,9 @@
 	// true pour transformer la route de la ressource, ex: GenFournContact de '/GenFournContact/' en '/GenFourn/Contact/'.
 	bool TransformRoutePath = true;
 
+    // true pour ajouter l'attribut [IgnoreDataMember] pour les clés primaires et foreign keys
+    bool AddIgnoreDataMemberForKeys = true;
+
 	// Filtre les routes générées.
 	Regex PutTableFilterExclude = null;
 	Regex PostTableFilterExclude = null;
@@ -177,6 +180,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Runtime.Serialization;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
@@ -344,7 +348,7 @@ namespace <#= fileNamespace #>
 					switch (col.PropertyName)
                     {
 						case "CodObjet":
-                            bool isUnique = false;
+                            bool isUniqueSingleCol = false;
                             if (table.Indices != null)
                             {
 				                var q = from idx in table.Indices
@@ -352,9 +356,9 @@ namespace <#= fileNamespace #>
 						                where idx.IndexColumns.Count == 1
                                         where idx.IndexColumns.Any(c => c.Name == col.Name)
 						                select idx;
-                                isUnique = q.Any();
+                                isUniqueSingleCol = q.Any();
                             }
-							col.Description = isUnique ? "Code unique." : "Code.";
+							col.Description = isUniqueSingleCol ? "Code unique." : "Code.";
 							break;
 						case "LibObjet":
 							col.Description = "Désignation.";
@@ -502,7 +506,27 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 
-			if (AddApiAttributes)
+            bool ignoreDataMember = false;
+            if (AddIgnoreDataMemberForKeys) 
+            {
+                if (col.IsPK && ((table.Indices != null) && table.Indices.Where(idx => idx.IsUnique == true).Any()))
+                {
+                    ignoreDataMember = true;
+                }
+                else if ((IncludeReferences && table.FKeys != null) && table.FKeys.Any(x => x.FromColumn == col.Name))
+                {
+                    ignoreDataMember = true;
+                }
+            }
+
+            if (ignoreDataMember)
+            {
+#>
+        [IgnoreDataMember]
+<#
+            }
+
+			if (AddApiAttributes && !ignoreDataMember)
 			{
 				var lstApiMemberProps = new List<string>();
 

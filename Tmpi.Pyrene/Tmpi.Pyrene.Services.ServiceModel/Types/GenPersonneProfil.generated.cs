@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Runtime.Serialization;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
@@ -30,8 +31,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+        [IgnoreDataMember]
 		public int Id { get; set; }
 
 		/// <summary>
@@ -39,7 +39,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Id de l'utilisateur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+        [IgnoreDataMember]
 		public int CleGenPersonne { get; set; }
 
 		/// <summary>
@@ -68,21 +68,21 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Id de la société à laquelle a accès le profil, ou null pour toutes les sociétés.
 		/// </summary>
 		[References(typeof(GenSociete))]
-		[ApiMember(Description = "Id de la société à laquelle a accès le profil, ou null pour toutes les sociétés.", DataType = SwaggerDataTypes.Int)]
+        [IgnoreDataMember]
 		public int? CleGenSociete { get; set; }
 
 		/// <summary>
 		/// Id du secteur auquel a accès le profil, ou null pour tous les secteurs.
 		/// </summary>
 		[References(typeof(GenSecteur))]
-		[ApiMember(Description = "Id du secteur auquel a accès le profil, ou null pour tous les secteurs.", DataType = SwaggerDataTypes.Int)]
+        [IgnoreDataMember]
 		public int? CleGenSecteur { get; set; }
 
 		/// <summary>
 		/// Id du service auquel a accès le profil, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
-		[ApiMember(Description = "Id du service auquel a accès le profil, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
+        [IgnoreDataMember]
 		public int? CleGenService { get; set; }
 
 	}
