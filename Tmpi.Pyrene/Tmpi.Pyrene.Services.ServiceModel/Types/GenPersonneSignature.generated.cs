@@ -33,6 +33,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int ClePersonne { get; set; }
 
+		[Ignore]
+		public string ClePersonne { get; set; }
+
 		/// <summary>
 		/// Image de la signature.
 		/// </summary>

@@ -42,6 +42,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int ClePersonne { get; set; }
 
+		[Ignore]
+		public string ClePersonne { get; set; }
+
 		[StringLength(100)]
 		[Required]
 		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
@@ -68,6 +71,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int? CleSociete { get; set; }
 
+		[Ignore]
+		public string CleSociete { get; set; }
+
 		/// <summary>
 		/// Secteur auquel a accès le profil, ou null pour tous les secteurs.
 		/// </summary>
@@ -75,12 +81,18 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int? CleSecteur { get; set; }
 
+		[Ignore]
+		public string CleSecteur { get; set; }
+
 		/// <summary>
 		/// Service auquel a accès le profil, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
         [IgnoreDataMember]
 		public int? CleService { get; set; }
+
+		[Ignore]
+		public string CleService { get; set; }
 
 	}
 }

@@ -19,9 +19,9 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, nameof(CleCompteur), nameof(ValPeriode))]
-    [Route("/Compteur/{CodCompteur}/Valeur/{ValPeriode}", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteurValeur.")]
-    [Route("/Compteur/{CodCompteur}/Valeur/{ValPeriode}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeur à partir de son Id.")]
+	[CompositeIndex(true, nameof(CleCompteurProprio), nameof(ValPeriode))]
+    [Route("/Compteur/{CodCompteurProprio}/Valeur/{ValPeriode}", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteurValeur.")]
+    [Route("/Compteur/{CodCompteurProprio}/Valeur/{ValPeriode}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeur à partir de son Id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeur spécifiée est introuvable.")]
 	public partial class GenCompteurValeur
 	{
@@ -39,7 +39,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ForeignKey(typeof(GenCompteur), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
-		public int CleCompteur { get; set; }
+		public int CleCompteurProprio { get; set; }
+
+		[Ignore]
+		public string CleCompteurProprio { get; set; }
 
 		/// <summary>
 		/// Valeur de la période.
@@ -54,6 +57,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[ApiMember(Description = "Valeur du compteur.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ValCompteur { get; set; }
+
+		[Reference]
+		public List<GenCompteurValeurTruc> LstTruc { get; set; }
 
 	}
 }

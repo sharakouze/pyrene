@@ -41,6 +41,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int CleMandat { get; set; }
 
+		[Ignore]
+		public string CleMandat { get; set; }
+
 		/// <summary>
 		/// Utilisateur mandataire.
 		/// </summary>
@@ -49,12 +52,18 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int ClePersonne { get; set; }
 
+		[Ignore]
+		public string ClePersonne { get; set; }
+
 		/// <summary>
 		/// Société ayant accès au mandat, ou null pour toutes les sociétés.
 		/// </summary>
 		[References(typeof(GenSociete))]
         [IgnoreDataMember]
 		public int? CleSociete { get; set; }
+
+		[Ignore]
+		public string CleSociete { get; set; }
 
 		/// <summary>
 		/// Secteur ayant accès au mandat, ou null pour tous les secteurs.
@@ -63,12 +72,18 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int? CleSecteur { get; set; }
 
+		[Ignore]
+		public string CleSecteur { get; set; }
+
 		/// <summary>
 		/// Service ayant accès au mandat, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
         [IgnoreDataMember]
 		public int? CleService { get; set; }
+
+		[Ignore]
+		public string CleService { get; set; }
 
 		/// <summary>
 		/// Si true, le mandat est suspendu.

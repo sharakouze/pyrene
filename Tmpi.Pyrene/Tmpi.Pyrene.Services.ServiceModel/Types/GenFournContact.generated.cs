@@ -41,6 +41,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int CleFourn { get; set; }
 
+		[Ignore]
+		public string CleFourn { get; set; }
+
 		/// <summary>
 		/// Nom de famille.
 		/// </summary>

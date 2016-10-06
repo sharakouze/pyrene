@@ -100,6 +100,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int? CleSociete { get; set; }
 
+		[Ignore]
+		public string CleSociete { get; set; }
+
 		/// <summary>
 		/// Secteur ayant accès au compteur, ou null pour tous les secteurs.
 		/// </summary>
@@ -107,12 +110,18 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int? CleSecteur { get; set; }
 
+		[Ignore]
+		public string CleSecteur { get; set; }
+
 		/// <summary>
 		/// Service ayant accès au compteur, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
         [IgnoreDataMember]
 		public int? CleService { get; set; }
+
+		[Ignore]
+		public string CleService { get; set; }
 
 		/// <summary>
 		/// Format du modèle de numérotation.

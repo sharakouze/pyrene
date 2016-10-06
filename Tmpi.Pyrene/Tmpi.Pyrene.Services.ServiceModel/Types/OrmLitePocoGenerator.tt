@@ -183,7 +183,8 @@
 
             if (keys != null)
             {
-                parts.AddRange(keys.Select(k => "{" + k + "}"));
+				string format = fkey.FromColumn.Replace(fkey.ToColumn, "{0}");
+                parts.AddRange(keys.Select(k => "{" + string.Format(format, k) + "}"));
             }
 
             string newTableName = table.Name.Replace(parentTable.Name, "");
@@ -390,13 +391,8 @@ namespace <#= fileNamespace #>
         } // end if
 
         List<string> priorProperyNames = new List<string>();
-        foreach (Column col in table.Columns)
+        foreach (Column col in table.Columns.Where(c => c.Ignore == false))
         {
-            if (col.Ignore)
-            {
-                continue;
-            }
-
             if (priorProperyNames.Contains(col.PropertyName)) //Change duplicate style names
             {
                 col.PropertyName = "_" + col.PropertyName;
@@ -572,27 +568,27 @@ namespace <#= fileNamespace #>
 <#
             } // end if
 
-            bool ignoreDataMember = false;
+            bool dataMemberIgnored = false;
             if (AddIgnoreDataMemberForKeys) 
             {
                 if (col.IsPK && ((table.Indices != null) && table.Indices.Where(idx => idx.IsUnique == true).Any()))
                 {
-                    ignoreDataMember = true;
+                    dataMemberIgnored = true;
                 }
                 else if ((IncludeReferences && table.FKeys != null) && table.FKeys.Any(x => x.FromColumn == col.Name))
                 {
-                    ignoreDataMember = true;
+                    dataMemberIgnored = true;
                 }
             }
 
-            if (ignoreDataMember)
+            if (dataMemberIgnored)
             {
 #>
         [IgnoreDataMember]
 <#
             }
 
-            if (AddApiAttributes && !ignoreDataMember)
+            if (AddApiAttributes && !dataMemberIgnored)
             {
                 List<string> lstApiMemberProps = new List<string>();
 
@@ -672,6 +668,21 @@ namespace <#= fileNamespace #>
 		public <#= MakePropertiesVirtual ? "virtual " : "" #><#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
 
 <#
+			if (dataMemberIgnored && (table.FKeys != null))
+            {
+				FKey fkey = table.FKeys.Where(fk => fk.FromColumn == col.Name).FirstOrDefault();
+                if (fkey != null)
+				{
+					string format = fkey.FromColumn.Replace(fkey.ToColumn, "{0}");
+					string propType = "string";
+					string propName = string.Format(format, fkey.ToColumn);
+#>
+		[Ignore]
+		public <#= MakePropertiesVirtual ? "virtual " : "" #><#= propType #> <#= propName #> { get; set; }
+
+<#
+                }
+            }
         } // end foreach (col)
 
         if (AddChildReferences)
@@ -724,19 +735,14 @@ namespace <#= fileNamespace #>
 	<#= string.Join(" ", queryClassDefinitionWords) #> class <#= table.ClassName #>Query : QueryDb<<#= table.ClassName #>>
 	{
 <#
-            foreach (Column col in table.Columns)
+            foreach (Column col in table.Columns.Where(c => c.Ignore == false))
             {
-                if (col.Ignore)
-                {
-                    continue;
-                }
-
-                var ormName = (col.IsPK && UseIdAsPK) ? "Id" : col.PropertyName;
-                var isString = col.ProperPropertyType == "string";
-                var nullablePropType = col.ProperPropertyType.Replace("?", "") + "?";
-                var isArray = col.ProperPropertyType.Contains("[]");
-                var isBool = col.ProperPropertyType.Contains("bool");
-                var isGuid = col.ProperPropertyType.Contains("Guid");
+                string ormName = (col.IsPK && UseIdAsPK) ? "Id" : col.PropertyName;
+                bool isString = col.ProperPropertyType == "string";
+                string nullablePropType = col.ProperPropertyType.Replace("?", "") + "?";
+                bool isArray = col.ProperPropertyType.Contains("[]");
+                bool isBool = col.ProperPropertyType.Contains("bool");
+                bool isGuid = col.ProperPropertyType.Contains("Guid");
 			
                 if (!col.IsPK)
                 {

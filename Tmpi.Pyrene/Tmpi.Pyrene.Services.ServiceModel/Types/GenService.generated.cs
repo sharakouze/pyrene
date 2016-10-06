@@ -85,6 +85,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int CleSecteur { get; set; }
 
+		[Ignore]
+		public string CleSecteur { get; set; }
+
 		/// <summary>
 		/// Rue.
 		/// </summary>

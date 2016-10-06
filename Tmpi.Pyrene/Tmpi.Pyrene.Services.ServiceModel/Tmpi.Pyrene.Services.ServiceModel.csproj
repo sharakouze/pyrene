@@ -59,6 +59,9 @@
     <Compile Include="Types\GenCompteurValeur.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="Types\GenCompteurValeurTruc.generated.cs">
+      <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="Types\GenExercice.generated.cs">
       <DependentUpon>OrmLitePocoGenerator.tt</DependentUpon>
     </Compile>
