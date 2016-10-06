@@ -1,27 +1,27 @@
 ﻿CREATE TABLE [GenFournBanque]
 (
-    [Id] INT NOT NULL IDENTITY,
-    [CleGenFourn] INT NOT NULL,
+    [CleBanque] INT NOT NULL IDENTITY,
+    [CleFourn] INT NOT NULL,
     [CodIBAN] VARCHAR(34) NOT NULL,
     [CodBIC] VARCHAR(11) NOT NULL,
     [LibEtablissement] VARCHAR(200) NOT NULL,
     [EstDefaut] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NOT NULL,
-    CONSTRAINT [PK_GenFournBanque] PRIMARY KEY ([Id]),
-    CONSTRAINT [UK_GenFournBanque_CleGenFourn_CodIBAN] UNIQUE ([CleGenFourn], [CodIBAN]), 
-    CONSTRAINT [FK_GenFournBanque_CleGenFourn] FOREIGN KEY ([CleGenFourn]) REFERENCES [GenFourn] ([Id]) ON DELETE CASCADE
+    CONSTRAINT [PK_GenFournBanque] PRIMARY KEY ([CleBanque]),
+    CONSTRAINT [UK_GenFournBanque_CleFourn_CodIBAN] UNIQUE ([CleFourn], [CodIBAN]), 
+    CONSTRAINT [FK_GenFournBanque_CleFourn] FOREIGN KEY ([CleFourn]) REFERENCES [GenFourn] ([CleFourn]) ON DELETE CASCADE
 );
 
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Id du fournisseur parent.',
+    @value = N'Fournisseur parent.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
     @level1name = N'GenFournBanque',
     @level2type = N'COLUMN',
-    @level2name = N'CleGenFourn'
+    @level2name = 'CleFourn'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Nom de l''établissement bancaire.',

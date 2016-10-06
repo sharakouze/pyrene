@@ -19,44 +19,34 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/GenTVA", HttpVerbs.Post, Summary = "Ajoute une ressource GenTVA.")]
-    [Route("/GenTVA/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenTVA à partir de son Id.")]
+    [Route("/TVA/{CodTVA}", HttpVerbs.Post, Summary = "Ajoute une ressource GenTVA.")]
+    [Route("/TVA/{CodTVA}", HttpVerbs.Put, Summary = "Remplace une ressource GenTVA à partir de son Id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenTVA spécifiée est introuvable.")]
-	public partial class GenTVA : IHasId<int>,
-		IEntity,
-		IAuditable
+	public partial class GenTVA : IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
+		[PrimaryKey]
         [IgnoreDataMember]
-		public int Id { get; set; }
+		public int CleTVA { get; set; }
 
-		/// <summary>
-		/// Code unique.
-		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string CodObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string CodTVA { get; set; }
 
-		/// <summary>
-		/// Désignation.
-		/// </summary>
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "Désignation.", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string LibObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string LibTVA { get; set; }
 
-		/// <summary>
-		/// Commentaire ou description.
-		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
-		public string TxtObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String)]
+		public string TxtTVA { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.

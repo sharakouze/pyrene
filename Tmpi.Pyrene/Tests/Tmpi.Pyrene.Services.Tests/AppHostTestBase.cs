@@ -14,23 +14,23 @@ namespace Tmpi.Pyrene.Services.Tests
 
         public AppHostTestBase()
         {
-            appHost = new BasicAppHost(typeof(GenCompteurService).Assembly)
-            {
-                ConfigureContainer = container =>
-                {
-                    //Add your IoC dependencies here
-                    container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(":memory:", SqliteDialect.Provider));
+            //appHost = new BasicAppHost(typeof(GenCompteurService).Assembly)
+            //{
+            //    ConfigureContainer = container =>
+            //    {
+            //        //Add your IoC dependencies here
+            //        container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(":memory:", SqliteDialect.Provider));
 
-                    using (var db = container.TryResolve<IDbConnectionFactory>().Open())
-                    {
-                        db.DropAndCreateTable<GenCompteur>();
-                        db.DropAndCreateTable<GenCompteurValeur>();
+            //        using (var db = container.TryResolve<IDbConnectionFactory>().Open())
+            //        {
+            //            db.DropAndCreateTable<GenCompteur>();
+            //            db.DropAndCreateTable<GenCompteurValeur>();
 
-                        db.Insert(new GenCompteur { CodObjet = "Test compteur", LibObjet = "test" });
-                    }
-                }
-            }
-            .Init();
+            //            db.Insert(new GenCompteur { CodObjet = "Test compteur", LibObjet = "test" });
+            //        }
+            //    }
+            //}
+            //.Init();
         }
 
         public void Dispose()

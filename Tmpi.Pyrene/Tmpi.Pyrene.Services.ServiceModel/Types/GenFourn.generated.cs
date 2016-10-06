@@ -19,44 +19,34 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/GenFourn", HttpVerbs.Post, Summary = "Ajoute une ressource GenFourn.")]
-    [Route("/GenFourn/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenFourn à partir de son Id.")]
+    [Route("/Fourn/{CodFourn}", HttpVerbs.Post, Summary = "Ajoute une ressource GenFourn.")]
+    [Route("/Fourn/{CodFourn}", HttpVerbs.Put, Summary = "Remplace une ressource GenFourn à partir de son Id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFourn spécifiée est introuvable.")]
-	public partial class GenFourn : IHasId<int>,
-		IEntity,
-		IAuditable
+	public partial class GenFourn : IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
+		[PrimaryKey]
         [IgnoreDataMember]
-		public int Id { get; set; }
+		public int CleFourn { get; set; }
 
-		/// <summary>
-		/// Code unique.
-		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string CodObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string CodFourn { get; set; }
 
-		/// <summary>
-		/// Désignation.
-		/// </summary>
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "Désignation.", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string LibObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string LibFourn { get; set; }
 
-		/// <summary>
-		/// Commentaire ou description.
-		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
-		public string TxtObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String)]
+		public string TxtFourn { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.

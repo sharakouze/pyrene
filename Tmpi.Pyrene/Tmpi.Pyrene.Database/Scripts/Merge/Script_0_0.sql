@@ -120,10 +120,10 @@ BEGIN TRY
 
 	merge into [GenSociete] as target
 	using (
-		select S.CleSociete as Id,
-			ltrim(rtrim(S.CodSociete)) as CodObjet,
-			ltrim(rtrim(S.LibSociete)) as LibObjet,
-			ltrim(rtrim(S.TxtSociete)) as TxtObjet,
+		select S.CleSociete,
+			ltrim(rtrim(S.CodSociete)) as CodSociete,
+			ltrim(rtrim(S.LibSociete)) as LibSociete,
+			ltrim(rtrim(S.TxtSociete)) as TxtSociete,
 			S.EstActif,
 			S.DatCreation,
 			coalesce(S.DatModif,S.DatCreation) as DatModif,
@@ -138,12 +138,12 @@ BEGIN TRY
 		from $(SourceSchemaName).[Gen_SocSociete] S left join $(SourceSchemaName).[Gen_Pays] P on S.ClePays=P.ClePays
 		where S.CleSociete>0
 	) as source
-	on (target.Id=source.Id)
+	on (target.CleSociete=source.CleSociete)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
+		insert (CleSociete, CodSociete, LibSociete, TxtSociete, EstActif, DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail)
-		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
+		values (CleSociete, CodSociete, LibSociete, TxtSociete, EstActif, DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail);
 
 	SET IDENTITY_INSERT [GenSociete] OFF;
@@ -151,7 +151,7 @@ BEGIN TRY
 	-- ajout société par défaut si la table est vide pour des raisons d'intégrité des données
 	if not exists (select * from [GenSociete])
 	begin
-		insert into [GenSociete] (CodObjet, LibObjet, EstActif, DatCreation, DatModif)
+		insert into [GenSociete] (CodSociete, LibSociete, EstActif, DatCreation, DatModif)
 		values ('SOC', 'Société par défaut', 1, GETDATE(), GETDATE());
 	end;
 
@@ -165,22 +165,22 @@ END CATCH;
 BEGIN TRY
 	BEGIN TRANSACTION;
 
-	declare @w_CleGenSocieteDef int;
-	select @w_CleGenSocieteDef=min(Id) from [GenSociete];
+	declare @w_CleSocieteDef int;
+	select @w_CleSocieteDef=min(CleSociete) from [GenSociete];
 
 	SET IDENTITY_INSERT [GenSecteur] ON;
 
 	merge into [GenSecteur] as target
 	using (
-		select CleSecteur as Id,
-			ltrim(rtrim(CodSecteur)) as CodObjet,
-			ltrim(rtrim(LibSecteur)) as LibObjet,
-			ltrim(rtrim(TxtSecteur)) as TxtObjet,
+		select CleSecteur,
+			ltrim(rtrim(CodSecteur)) as CodSecteur,
+			ltrim(rtrim(LibSecteur)) as LibSecteur,
+			ltrim(rtrim(TxtSecteur)) as TxtSecteur,
 			EstActif,
 			DatCreation,
 			coalesce(DatModif,DatCreation) as DatModif,
 			CleExterne as CodExterne,
-			coalesce(nullif(CleSociete,0),@w_CleGenSocieteDef) as CleGenSociete,
+			coalesce(nullif(CleSociete,0),@w_CleSocieteDef) as CleSociete,
 			AdrRue,
 			AdrCode,
 			AdrVille as AdrCommune,
@@ -191,21 +191,21 @@ BEGIN TRY
 		from $(SourceSchemaName).[Gen_SocSecteur]
 		where CleSecteur>0
 	) as source
-	on (target.Id=source.Id)
+	on (target.CleSecteur=source.CleSecteur)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
-			CleGenSociete, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail)
-		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
-			CleGenSociete, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail);
+		insert (CleSecteur, CodSecteur, LibSecteur, TxtSecteur, EstActif, DatCreation, DatModif, CodExterne,
+			CleSociete, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail)
+		values (CleSecteur, CodSecteur, LibSecteur, TxtSecteur, EstActif, DatCreation, DatModif, CodExterne,
+			CleSociete, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail);
 	
 	SET IDENTITY_INSERT [GenSecteur] OFF;
 
 	-- ajout secteur par défaut si la table est vide pour des raisons d'intégrité des données
 	if not exists (select * from [GenSecteur])
 	begin
-		insert into [GenSecteur] (CodObjet, LibObjet, EstActif, DatCreation, DatModif, CleGenSociete)
-		values ('SEC', 'Secteur par défaut', 1, GETDATE(), GETDATE(), @w_CleGenSocieteDef);
+		insert into [GenSecteur] (CodSecteur, LibSecteur, EstActif, DatCreation, DatModif, CleSociete)
+		values ('SEC', 'Secteur par défaut', 1, GETDATE(), GETDATE(), @w_CleSocieteDef);
 	end;
 
 	COMMIT;
@@ -218,22 +218,22 @@ END CATCH;
 BEGIN TRY
 	BEGIN TRANSACTION;
 
-	declare @w_CleGenSecteurDef int;
-	select @w_CleGenSecteurDef=min(Id) from [GenSecteur];
+	declare @w_CleSecteurDef int;
+	select @w_CleSecteurDef=min(CleSecteur) from [GenSecteur];
 
 	SET IDENTITY_INSERT [GenService] ON;
 
 	merge into [GenService] as target
 	using (
-		select CleService as Id,
-			ltrim(rtrim(CodService)) as CodObjet,
-			ltrim(rtrim(LibService)) as LibObjet,
-			ltrim(rtrim(TxtService)) as TxtObjet,
+		select CleService,
+			ltrim(rtrim(CodService)) as CodService,
+			ltrim(rtrim(LibService)) as LibService,
+			ltrim(rtrim(TxtService)) as TxtService,
 			EstActif,
 			DatCreation,
 			coalesce(DatModif,DatCreation) as DatModif,
 			CleExterne as CodExterne,
-			coalesce(nullif(CleSecteur,0),@w_CleGenSecteurDef) as CleGenSecteur,
+			coalesce(nullif(CleSecteur,0),@w_CleSecteurDef) as CleSecteur,
 			AdrRue,
 			AdrCode,
 			AdrVille as AdrCommune,
@@ -244,13 +244,13 @@ BEGIN TRY
 		from $(SourceSchemaName).[Gen_SocService]
 		where CleService>0
 	) as source
-	on (target.Id=source.Id)
+	on (target.CleService=source.CleService)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
-			CleGenSecteur, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail)
-		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
-			CleGenSecteur, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail);
+		insert (CleService, CodService, LibService, TxtService, EstActif, DatCreation, DatModif, CodExterne,
+			CleSecteur, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail)
+		values (CleService, CodService, LibService, TxtService, EstActif, DatCreation, DatModif, CodExterne,
+			CleSecteur, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail);
 	
 	SET IDENTITY_INSERT [GenService] OFF;
 
@@ -274,11 +274,11 @@ BEGIN TRY
 
 	merge into [GenPersonne] as target
 	using (
-		select ClePersonne as Id,
-			ltrim(rtrim(CodPersonne)) as CodObjet,
+		select ClePersonne,
+			ltrim(rtrim(CodPersonne)) as CodPersonne,
 			ltrim(rtrim(NomPersonne)) as NomPersonne,
 			ltrim(rtrim(PrePersonne)) as PrePersonne,
-			null as TxtObjet,
+			null as TxtPersonne,
 			EstActif,
 			DatCreation,
 			coalesce(DatModif,DatCreation) as DatModif,
@@ -290,12 +290,12 @@ BEGIN TRY
 		from $(SourceSchemaName).[Gen_SocPersonne]
 		where ClePersonne>0
 	) as source
-	on (target.Id=source.Id)
+	on (target.ClePersonne=source.ClePersonne)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CodObjet, NomPersonne, PrePersonne, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
+		insert (ClePersonne, CodPersonne, NomPersonne, PrePersonne, TxtPersonne, EstActif, DatCreation, DatModif, CodExterne,
 			TypCivilite, NumTelep, NumFax, NumEmail)
-		values (Id, CodObjet, NomPersonne, PrePersonne, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
+		values (ClePersonne, CodPersonne, NomPersonne, PrePersonne, TxtPersonne, EstActif, DatCreation, DatModif, CodExterne,
 			TypCivilite, NumTelep, NumFax, NumEmail);
 	
 	SET IDENTITY_INSERT [GenPersonne] OFF;
@@ -312,7 +312,7 @@ BEGIN TRY
 
 	merge into [GenPersonneSignature] as target
 	using (
-		select ClePersonne as CleGenPersonne,
+		select ClePersonne,
 			ImgPersonne as ImgSignature,
 			case lower(ImgFormat)
 				when null then 'image/jpeg'
@@ -324,11 +324,11 @@ BEGIN TRY
 		where ClePersonne>0
 			and ImgPersonne is not null
 	) as source
-	on (target.CleGenPersonne=source.CleGenPersonne)
+	on (target.ClePersonne=source.ClePersonne)
 	when not matched by target
 	then -- insert new rows
-		insert (CleGenPersonne, ImgSignature, TypMime)
-		values (CleGenPersonne, ImgSignature, TypMime);
+		insert (ClePersonne, ImgSignature, TypMime)
+		values (ClePersonne, ImgSignature, TypMime);
 
 	COMMIT;
 END TRY
@@ -343,22 +343,22 @@ BEGIN TRY
 
 	merge into [GenPersonneProfil] as target
 	using (
-		select PRF.ClePersonneProfil as Id,
-			PRF.ClePersonne as CleGenPersonne,
-			PRF.CodProfil as CodObjet,
-			PRF.CleSociete as CleGenSociete,
-			PRF.CleSecteur as CleGenSecteur,
-			PRF.CleService as CleGenService,
+		select PRF.ClePersonneProfil as CleProfil,
+			PRF.ClePersonne,
+			PRF.CodProfil,
+			PRF.CleSociete,
+			PRF.CleSecteur,
+			PRF.CleService,
 			P.DatCreation,
 			coalesce(P.DatModif,P.DatCreation) as DatModif
 		from $(SourceSchemaName).[Gen_SocPersonneProfil] PRF inner join $(SourceSchemaName).[Gen_SocPersonne] P on PRF.ClePersonne=P.ClePersonne
 		where PRF.ClePersonne>0
 	) as source
-	on (target.Id=source.Id)
+	on (target.CleProfil=source.CleProfil)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CleGenPersonne, CodObjet, CleGenSociete, CleGenSecteur, CleGenService, DatCreation, DatModif)
-		values (Id, CleGenPersonne, CodObjet, CleGenSociete, CleGenSecteur, CleGenService, DatCreation, DatModif);
+		insert (CleProfil, ClePersonne, CodProfil, CleSociete, CleSecteur, CleService, DatCreation, DatModif)
+		values (CleProfil, ClePersonne, CodProfil, CleSociete, CleSecteur, CleService, DatCreation, DatModif);
 	
 	SET IDENTITY_INSERT [GenPersonneProfil] OFF;
 
@@ -382,19 +382,19 @@ BEGIN TRY
 
 	merge into [GenCompteur] as target
 	using (
-		select N.CleMNumero as Id, 
-			ltrim(rtrim(N.CodMNumero)) as CodObjet, 
-			ltrim(rtrim(N.LibMNumero)) as LibObjet, 
-			ltrim(rtrim(N.TxtMNumero)) as TxtObjet, 
+		select N.CleMNumero as CleCompteur, 
+			ltrim(rtrim(N.CodMNumero)) as CodCompteur, 
+			ltrim(rtrim(N.LibMNumero)) as LibCompteur, 
+			ltrim(rtrim(N.TxtMNumero)) as TxtCompteur, 
 			N.EstActif, 
 			N.DatCreation,
 			coalesce(N.DatModif,N.DatCreation) as DatModif,
 			N.CleExterne as CodExterne,
 			N.TypCompteur, 
 			C.TypPeriodicite, 
-			null as CleGenSociete, 
-			coalesce(N.CleSecteur,C.CleSecteur) as CleGenSecteur, 
-			coalesce(N.CleService,C.CleService) as CleGenService, 
+			null as CleSociete, 
+			coalesce(N.CleSecteur,C.CleSecteur) as CleSecteur, 
+			coalesce(N.CleService,C.CleService) as CleService, 
 			isnull(N.ValPrefixe1,'')
 				+isnull('{date:'+N.ValDate1+'}','')
 				+isnull(N.ValPrefixe2,'')
@@ -405,21 +405,21 @@ BEGIN TRY
 		from $(SourceSchemaName).[Gen_CptCompteur] C inner join $(SourceSchemaName).[Gen_Cpt_MNumero] N on C.CleCompteur=N.CleCompteur
 		where C.CleCompteur>0 and N.CleMNumero>0
 	) as source
-	on (target.Id=source.Id)
+	on (target.CleCompteur=source.CleCompteur)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
-			TypCompteur, TypPeriodicite, CleGenSociete, CleGenSecteur, CleGenService, ValFormatNumero)
-		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
-			TypCompteur, TypPeriodicite, CleGenSociete, CleGenSecteur, CleGenService, ValFormatNumero);
+		insert (CleCompteur, CodCompteur, LibCompteur, TxtCompteur, EstActif, DatCreation, DatModif, CodExterne,
+			TypCompteur, TypPeriodicite, CleSociete, CleSecteur, CleService, ValFormatNumero)
+		values (CleCompteur, CodCompteur, LibCompteur, TxtCompteur, EstActif, DatCreation, DatModif, CodExterne,
+			TypCompteur, TypPeriodicite, CleSociete, CleSecteur, CleService, ValFormatNumero);
 	
 	SET IDENTITY_INSERT [GenCompteur] OFF;
 
-	-- mise à jour eventuelle de CleGenSociete
+	-- mise à jour eventuelle de CleSociete
 	update CPT
-	set CPT.CleGenSociete=SEC.CleGenSociete
-	from [GenCompteur] CPT inner join [GenSecteur] SEC on CPT.CleGenSecteur=SEC.Id
-	where CPT.CleGenSociete is null and CPT.CleGenSecteur is not null;
+	set CPT.CleSociete=SEC.CleSociete
+	from [GenCompteur] CPT inner join [GenSecteur] SEC on CPT.CleSecteur=SEC.CleSecteur
+	where CPT.CleSociete is null and CPT.CleSecteur is not null;
 
 	COMMIT;
 END TRY
@@ -433,17 +433,17 @@ BEGIN TRY
 
 	merge into [GenCompteurValeur] as target
 	using (
-		select N.CleMNumero as CleGenCompteur,
+		select N.CleMNumero as CleCompteur,
 			V.CodPeriode as ValPeriode,
 			V.ValCompteur
 		from $(SourceSchemaName).[Gen_Cpt_MNumero] N inner join $(SourceSchemaName).[Gen_CptValeur] V on N.CleCompteur=V.CleCompteur
 		where N.CleMNumero>0
 	) as source
-	on (target.CleGenCompteur=source.CleGenCompteur and target.ValPeriode=source.ValPeriode)
+	on (target.CleCompteur=source.CleCompteur and target.ValPeriode=source.ValPeriode)
 	when not matched by target
 	then -- insert new rows
-		insert (CleGenCompteur, ValPeriode, ValCompteur)
-		values (CleGenCompteur, ValPeriode, ValCompteur);
+		insert (CleCompteur, ValPeriode, ValCompteur)
+		values (CleCompteur, ValPeriode, ValCompteur);
 	
 	COMMIT;
 END TRY
@@ -464,10 +464,10 @@ BEGIN TRY
 
 	merge into [GenMandat] as target
 	using (
-		select CleMandat as Id,
-			ltrim(rtrim(CodMandat)) as CodObjet,
-			ltrim(rtrim(LibMandat)) as LibObjet,
-			ltrim(rtrim(TxtMandat)) as TxtObjet,
+		select CleMandat,
+			ltrim(rtrim(CodMandat)) as CodMandat,
+			ltrim(rtrim(LibMandat)) as LibMandat,
+			ltrim(rtrim(TxtMandat)) as TxtMandat,
 			EstActif,
 			DatCreation,
 			coalesce(DatModif,DatCreation) as DatModif,
@@ -479,12 +479,12 @@ BEGIN TRY
 		from $(SourceSchemaName).[GenP_MdtMandat]
 		where CleMandat>0
 	) as source
-	on (target.Id=source.Id)
+	on (target.CleMandat=source.CleMandat)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
+		insert (CleMandat, CodMandat, LibMandat, TxtMandat, EstActif, DatCreation, DatModif, CodExterne,
 			TypMandat, NivMandat, NbrSignature, TxtMessage)
-		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
+		values (CleMandat, CodMandat, LibMandat, TxtMandat, EstActif, DatCreation, DatModif, CodExterne,
 			TypMandat, NivMandat, NbrSignature, TxtMessage);
 	
 	SET IDENTITY_INSERT [GenMandat] OFF;
@@ -503,21 +503,21 @@ BEGIN TRY
 
 	merge into [GenMandatMandataire] as target
 	using (
-		select CleMdtMandataire as Id,
-			CleMandat as CleGenMandat,
-			CleMandataire as CleGenPersonne,
-			CleSociete as CleGenSociete,
-			CleSecteur as CleGenSecteur,
-			CleService as CleGenService,
+		select CleMdtMandataire as CleMandataire,
+			CleMandat,
+			CleMandataire as ClePersonne,
+			CleSociete,
+			CleSecteur,
+			CleService,
 			EstSuspendu
 		from $(SourceSchemaName).[GenP_MdtMandataire]
 		where CleMandat>0
 	) as source
-	on (target.Id=source.Id)
+	on (target.CleMandataire=source.CleMandataire)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CleGenMandat, CleGenPersonne, CleGenSociete, CleGenSecteur, CleGenService, EstSuspendu)
-		values (Id, CleGenMandat, CleGenPersonne, CleGenSociete, CleGenSecteur, CleGenService, EstSuspendu);
+		insert (CleMandataire, CleMandat, ClePersonne, CleSociete, CleSecteur, CleService, EstSuspendu)
+		values (CleMandataire, CleMandat, ClePersonne, CleSociete, CleSecteur, CleService, EstSuspendu);
 	
 	SET IDENTITY_INSERT [GenMandatMandataire] OFF;
 
@@ -541,10 +541,10 @@ BEGIN TRY
 
 	merge into [GenTVA] as target
 	using (
-		select CleTVA as Id,
-			ltrim(rtrim(CodTVA)) as CodObjet,
-			ltrim(rtrim(LibTVA)) as LibObjet,
-			ltrim(rtrim(TxtTVA)) as TxtObjet,
+		select CleTVA,
+			ltrim(rtrim(CodTVA)) as CodTVA,
+			ltrim(rtrim(LibTVA)) as LibTVA,
+			ltrim(rtrim(TxtTVA)) as TxtTVA,
 			EstActif,
 			DatCreation,
 			coalesce(DatModif,DatCreation) as DatModif,
@@ -553,11 +553,11 @@ BEGIN TRY
 		from $(SourceSchemaName).[Gen_DivTVA]
 		where CleTVA>0
 	) as source
-	on (target.Id=source.Id)
+	on (target.CleTVA=source.CleTVA)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne, TauTVA)
-		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne, TauTVA);
+		insert (CleTVA, CodTVA, LibTVA, TxtTVA, EstActif, DatCreation, DatModif, CodExterne, TauTVA)
+		values (CleTVA, CodTVA, LibTVA, TxtTVA, EstActif, DatCreation, DatModif, CodExterne, TauTVA);
 	
 	SET IDENTITY_INSERT [GenTVA] OFF;
 
@@ -581,10 +581,10 @@ BEGIN TRY
 
 	merge into [GenFourn] as target
 	using (
-		select CleFourn as Id, 
-			ltrim(rtrim(CodFourn)) as CodObjet,
-			ltrim(rtrim(LibFourn)) as LibObjet,
-			ltrim(rtrim(TxtFourn)) as TxtObjet,
+		select CleFourn, 
+			ltrim(rtrim(CodFourn)) as CodFourn,
+			ltrim(rtrim(LibFourn)) as LibFourn,
+			ltrim(rtrim(TxtFourn)) as TxtFourn,
 			1 as EstActif,
 			coalesce(DatSaisie,getdate()) as DatCreation,
 			coalesce(DatSaisie,getdate()) as DatModif,
@@ -610,14 +610,14 @@ BEGIN TRY
 		from $(SourceSchemaName).[t_Fourn]
 		where CleFourn>0
 	) as source
-	on (target.Id=source.Id)
+	on (target.CleFourn=source.CleFourn)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
+		insert (CleFourn, CodFourn, LibFourn, TxtFourn, EstActif, DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail, CodCompta, NumClient, 
 			NumTVAIntra, MntFPort, MntFPortGratuit, MntCommandeMin, DelLivraison, DelPaiement, ValNote,
 			TypModeReglement, EstEnvoiMailBonCde)
-		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
+		values (CleFourn, CodFourn, LibFourn, TxtFourn, EstActif, DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail, CodCompta, NumClient, 
 			NumTVAIntra, MntFPort, MntFPortGratuit, MntCommandeMin, DelLivraison, DelPaiement, ValNote,
 			TypModeReglement, EstEnvoiMailBonCde);
@@ -734,10 +734,10 @@ BEGIN TRY
 
 	merge into [GenFournContact] as target
 	using (
-		select FC.CleFourn as CleGenFourn,
+		select FC.CleFourn,
 			isnull(FC.NomContact_Clean,FC.NomContact) as NomContact,
 			null as PreContact,
-			null as TxtObjet, 
+			null as TxtContact, 
 			coalesce(F.DatSaisie,getdate()) as DatCreation,
 			coalesce(F.DatSaisie,getdate()) as DatModif,
 			FC.NumTelep, 
@@ -747,12 +747,12 @@ BEGIN TRY
 			null as LibFonction
 		from @GenFournContact FC inner join $(SourceSchemaName).[t_Fourn] F on FC.CleFourn=F.CleFourn
 	) as source
-	on (target.CleGenFourn=source.CleGenFourn and target.NomContact=source.NomContact)
+	on (target.CleFourn=source.CleFourn and target.NomContact=source.NomContact)
 	when not matched by target
 	then -- insert new rows
-		insert (CleGenFourn, NomContact, PreContact, TxtObjet, DatCreation, DatModif,
+		insert (CleFourn, NomContact, PreContact, TxtContact, DatCreation, DatModif,
 			NumTelep, NumFax, NumEmail, TypCivilite, LibFonction)
-		values (CleGenFourn, NomContact, PreContact, TxtObjet, DatCreation, DatModif,
+		values (CleFourn, NomContact, PreContact, TxtContact, DatCreation, DatModif,
 			NumTelep, NumFax, NumEmail, TypCivilite, LibFonction);
 
 	COMMIT;
@@ -770,8 +770,8 @@ BEGIN TRY
 
 	merge into [GenFournBanque] as target
 	using (
-		select FR.CleRib as Id,
-			FR.CleFourn as CleGenFourn,
+		select FR.CleRib as CleBanque,
+			FR.CleFourn as CleFourn,
 			[dbo].[TEMP_BBAN_TO_IBAN](FR.RibBanque+FR.RibGuichet+FR.RibCompte+FR.RibCle, @CodePaysIBAN) as CodIBAN,
 			@CodePaysIBAN as CodBIC,
 			FR.LibBanque as LibEtablissement,
@@ -785,11 +785,11 @@ BEGIN TRY
 			and FR.RibCompte is not null 
 			and FR.RibCle is not null 
 	) as source
-	on (target.Id=source.Id)
+	on (target.CleBanque=source.CleBanque)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CleGenFourn, CodIBAN, CodBIC, LibEtablissement, EstDefaut, DatCreation, DatModif)
-		values (Id, CleGenFourn, CodIBAN, CodBIC, LibEtablissement, EstDefaut, DatCreation, DatModif);
+		insert (CleBanque, CleFourn, CodIBAN, CodBIC, LibEtablissement, EstDefaut, DatCreation, DatModif)
+		values (CleBanque, CleFourn, CodIBAN, CodBIC, LibEtablissement, EstDefaut, DatCreation, DatModif);
 	
 	SET IDENTITY_INSERT [GenFournBanque] OFF;
 
@@ -813,10 +813,10 @@ BEGIN TRY
 
 	merge into [GenExercice] as target
 	using (
-		select CleExercice as Id,
-			ltrim(rtrim(CodExercice)) as CodObjet,
-			ltrim(rtrim(LibExercice)) as LibObjet,
-			ltrim(rtrim(TxtExercice)) as TxtObjet,
+		select CleExercice,
+			ltrim(rtrim(CodExercice)) as CodExercice,
+			ltrim(rtrim(LibExercice)) as LibExercice,
+			ltrim(rtrim(TxtExercice)) as TxtExercice,
 			case NivExercice
 				when 9 then 1 -- Actif
 				when 1 then 0 -- Inactif
@@ -831,12 +831,12 @@ BEGIN TRY
 		from $(SourceSchemaName).[Gen_DivExercice]
 		where CleExercice>0
 	) as source
-	on (target.Id=source.Id)
+	on (target.CleExercice=source.CleExercice)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
+		insert (CleExercice, CodExercice, LibExercice, TxtExercice, EstActif, DatCreation, DatModif, CodExterne,
 			DatDebut, DatFin)
-		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
+		values (CleExercice, CodExercice, LibExercice, TxtExercice, EstActif, DatCreation, DatModif, CodExterne,
 			DatDebut, DatFin);
 	
 	SET IDENTITY_INSERT [GenExercice] OFF;

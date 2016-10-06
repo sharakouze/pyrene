@@ -1,10 +1,10 @@
 ﻿CREATE TABLE [GenPersonne]
 (
-    [Id] INT NOT NULL IDENTITY,
-    [CodObjet] VARCHAR(100) NOT NULL,
+    [ClePersonne] INT NOT NULL IDENTITY,
+    [CodPersonne] VARCHAR(100) NOT NULL,
     [NomPersonne] VARCHAR(100) NOT NULL,
     [PrePersonne] VARCHAR(100) NULL,
-    [TxtObjet] VARCHAR(500) NULL,
+    [TxtPersonne] VARCHAR(500) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NOT NULL,
@@ -13,8 +13,8 @@
     [NumTelep] VARCHAR(25) NULL,
     [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
-    CONSTRAINT [PK_GenPersonne] PRIMARY KEY ([Id]),
-    CONSTRAINT [UK_GenPersonne_CodObjet] UNIQUE ([CodObjet])
+    CONSTRAINT [PK_GenPersonne] PRIMARY KEY ([ClePersonne]),
+    CONSTRAINT [UK_GenPersonne_CodPersonne] UNIQUE ([CodPersonne])
 );
 
 GO

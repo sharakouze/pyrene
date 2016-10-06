@@ -19,45 +19,35 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, nameof(TypCompteur), nameof(CleGenSociete), nameof(CleGenSecteur), nameof(CleGenService))]
-    [Route("/GenCompteur", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteur.")]
-    [Route("/GenCompteur/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteur à partir de son Id.")]
+	[CompositeIndex(true, nameof(TypCompteur), nameof(CleSociete), nameof(CleSecteur), nameof(CleService))]
+    [Route("/Compteur/{CodCompteur}", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteur.")]
+    [Route("/Compteur/{CodCompteur}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteur à partir de son Id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteur spécifiée est introuvable.")]
-	public partial class GenCompteur : IHasId<int>,
-		IEntity,
-		IAuditable
+	public partial class GenCompteur : IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
+		[PrimaryKey]
         [IgnoreDataMember]
-		public int Id { get; set; }
+		public int CleCompteur { get; set; }
 
-		/// <summary>
-		/// Code unique.
-		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string CodObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string CodCompteur { get; set; }
 
-		/// <summary>
-		/// Désignation.
-		/// </summary>
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "Désignation.", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string LibObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string LibCompteur { get; set; }
 
-		/// <summary>
-		/// Commentaire ou description.
-		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
-		public string TxtObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String)]
+		public string TxtCompteur { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.
@@ -104,25 +94,25 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public TypCompteur TypCompteur { get; set; }
 
 		/// <summary>
-		/// Id de la société ayant accès au compteur, ou null pour toutes les sociétés.
+		/// Société ayant accès au compteur, ou null pour toutes les sociétés.
 		/// </summary>
 		[References(typeof(GenSociete))]
         [IgnoreDataMember]
-		public int? CleGenSociete { get; set; }
+		public int? CleSociete { get; set; }
 
 		/// <summary>
-		/// Id du secteur ayant accès au compteur, ou null pour tous les secteurs.
+		/// Secteur ayant accès au compteur, ou null pour tous les secteurs.
 		/// </summary>
 		[References(typeof(GenSecteur))]
         [IgnoreDataMember]
-		public int? CleGenSecteur { get; set; }
+		public int? CleSecteur { get; set; }
 
 		/// <summary>
-		/// Id du service ayant accès au compteur, ou null pour tous les services.
+		/// Service ayant accès au compteur, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
         [IgnoreDataMember]
-		public int? CleGenService { get; set; }
+		public int? CleService { get; set; }
 
 		/// <summary>
 		/// Format du modèle de numérotation.

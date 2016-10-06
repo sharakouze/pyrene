@@ -19,36 +19,33 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, nameof(CleGenPersonne), nameof(CleGenSociete), nameof(CleGenSecteur), nameof(CleGenService))]
-	[CompositeIndex(true, nameof(CodObjet), nameof(CleGenPersonne))]
-    [Route("/GenPersonne/Profil", HttpVerbs.Post, Summary = "Ajoute une ressource GenPersonneProfil.")]
-    [Route("/GenPersonne/Profil/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonneProfil à partir de son Id.")]
+	[CompositeIndex(true, nameof(ClePersonne), nameof(CleSociete), nameof(CleSecteur), nameof(CleService))]
+	[CompositeIndex(true, nameof(CodProfil), nameof(ClePersonne))]
+    [Route("/Personne/{CodPersonne}/Profil/{CodProfil}", HttpVerbs.Post, Summary = "Ajoute une ressource GenPersonneProfil.")]
+    [Route("/Personne/{CodPersonne}/Profil/{CodProfil}", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonneProfil à partir de son Id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneProfil spécifiée est introuvable.")]
-	public partial class GenPersonneProfil : IHasId<int>,
-		IAuditable
+	public partial class GenPersonneProfil : IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
+		[PrimaryKey]
         [IgnoreDataMember]
-		public int Id { get; set; }
+		public int CleProfil { get; set; }
 
 		/// <summary>
-		/// Id de l'utilisateur parent.
+		/// Utilisateur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
-		public int CleGenPersonne { get; set; }
+		public int ClePersonne { get; set; }
 
-		/// <summary>
-		/// Code.
-		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[ApiMember(Description = "Code.", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string CodObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string CodProfil { get; set; }
 
 		/// <summary>
 		/// Date de création.
@@ -65,25 +62,25 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public DateTime DatModif { get; set; }
 
 		/// <summary>
-		/// Id de la société à laquelle a accès le profil, ou null pour toutes les sociétés.
+		/// Société à laquelle a accès le profil, ou null pour toutes les sociétés.
 		/// </summary>
 		[References(typeof(GenSociete))]
         [IgnoreDataMember]
-		public int? CleGenSociete { get; set; }
+		public int? CleSociete { get; set; }
 
 		/// <summary>
-		/// Id du secteur auquel a accès le profil, ou null pour tous les secteurs.
+		/// Secteur auquel a accès le profil, ou null pour tous les secteurs.
 		/// </summary>
 		[References(typeof(GenSecteur))]
         [IgnoreDataMember]
-		public int? CleGenSecteur { get; set; }
+		public int? CleSecteur { get; set; }
 
 		/// <summary>
-		/// Id du service auquel a accès le profil, ou null pour tous les services.
+		/// Service auquel a accès le profil, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
         [IgnoreDataMember]
-		public int? CleGenService { get; set; }
+		public int? CleService { get; set; }
 
 	}
 }

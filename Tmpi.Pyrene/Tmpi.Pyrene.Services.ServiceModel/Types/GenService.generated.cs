@@ -19,44 +19,34 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/GenService", HttpVerbs.Post, Summary = "Ajoute une ressource GenService.")]
-    [Route("/GenService/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenService à partir de son Id.")]
+    [Route("/Service/{CodService}", HttpVerbs.Post, Summary = "Ajoute une ressource GenService.")]
+    [Route("/Service/{CodService}", HttpVerbs.Put, Summary = "Remplace une ressource GenService à partir de son Id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenService spécifiée est introuvable.")]
-	public partial class GenService : IHasId<int>,
-		IEntity,
-		IAuditable
+	public partial class GenService : IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
+		[PrimaryKey]
         [IgnoreDataMember]
-		public int Id { get; set; }
+		public int CleService { get; set; }
 
-		/// <summary>
-		/// Code unique.
-		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string CodObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string CodService { get; set; }
 
-		/// <summary>
-		/// Désignation.
-		/// </summary>
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "Désignation.", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string LibObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string LibService { get; set; }
 
-		/// <summary>
-		/// Commentaire ou description.
-		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
-		public string TxtObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String)]
+		public string TxtService { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.
@@ -87,13 +77,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public string CodExterne { get; set; }
 
 		/// <summary>
-		/// Id du secteur auquel appartient le service.
+		/// Secteur auquel appartient le service.
 		/// </summary>
 		[ForeignKey(typeof(GenSecteur), OnDelete = "CASCADE")]
 		[Required]
 		[Index]
         [IgnoreDataMember]
-		public int CleGenSecteur { get; set; }
+		public int CleSecteur { get; set; }
 
 		/// <summary>
 		/// Rue.

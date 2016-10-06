@@ -19,56 +19,56 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, nameof(CleGenMandat), nameof(CleGenPersonne), nameof(CleGenSociete), nameof(CleGenSecteur), nameof(CleGenService))]
-    [Route("/GenMandat/Mandataire", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandatMandataire.")]
-    [Route("/GenMandat/Mandataire/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandatMandataire à partir de son Id.")]
+	[CompositeIndex(true, nameof(CleMandat), nameof(ClePersonne), nameof(CleSociete), nameof(CleSecteur), nameof(CleService))]
+    [Route("/Mandat/{CodMandat}/Mandataire/{ClePersonne}/{CleSociete}/{CleSecteur}/{CleService}", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandatMandataire.")]
+    [Route("/Mandat/{CodMandat}/Mandataire/{ClePersonne}/{CleSociete}/{CleSecteur}/{CleService}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandatMandataire à partir de son Id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandatMandataire spécifiée est introuvable.")]
-	public partial class GenMandatMandataire : IHasId<int>,
-		IAuditable
+	public partial class GenMandatMandataire : IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
+		[PrimaryKey]
         [IgnoreDataMember]
-		public int Id { get; set; }
+		public int CleMandataire { get; set; }
 
 		/// <summary>
-		/// Id du mandat parent.
+		/// Mandat parent.
 		/// </summary>
 		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
-		public int CleGenMandat { get; set; }
+		public int CleMandat { get; set; }
 
 		/// <summary>
-		/// Id de l'utilisateur mandataire.
+		/// Utilisateur mandataire.
 		/// </summary>
 		[References(typeof(GenPersonne))]
 		[Required]
         [IgnoreDataMember]
-		public int CleGenPersonne { get; set; }
+		public int ClePersonne { get; set; }
 
 		/// <summary>
-		/// Id de la société ayant accès au mandat, ou null pour toutes les sociétés.
+		/// Société ayant accès au mandat, ou null pour toutes les sociétés.
 		/// </summary>
 		[References(typeof(GenSociete))]
         [IgnoreDataMember]
-		public int? CleGenSociete { get; set; }
+		public int? CleSociete { get; set; }
 
 		/// <summary>
-		/// Id du secteur ayant accès au mandat, ou null pour tous les secteurs.
+		/// Secteur ayant accès au mandat, ou null pour tous les secteurs.
 		/// </summary>
 		[References(typeof(GenSecteur))]
         [IgnoreDataMember]
-		public int? CleGenSecteur { get; set; }
+		public int? CleSecteur { get; set; }
 
 		/// <summary>
-		/// Id du service ayant accès au mandat, ou null pour tous les services.
+		/// Service ayant accès au mandat, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
         [IgnoreDataMember]
-		public int? CleGenService { get; set; }
+		public int? CleService { get; set; }
 
 		/// <summary>
 		/// Si true, le mandat est suspendu.

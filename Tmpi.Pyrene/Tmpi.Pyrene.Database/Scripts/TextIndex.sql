@@ -1,37 +1,35 @@
-﻿CREATE INDEX [IX_GenCompteur_LibObjet] ON [GenCompteur] ([LibObjet]);
+﻿CREATE INDEX [IX_GenCompteur_LibCompteur] ON [GenCompteur] ([LibCompteur]);
 
 GO
 
-CREATE INDEX [IX_GenExercice_LibObjet] ON [GenExercice] ([LibObjet]);
+CREATE INDEX [IX_GenExercice_LibExercice] ON [GenExercice] ([LibExercice]);
 
 GO
 
-CREATE INDEX [IX_GenFourn_LibObjet] ON [GenFourn] ([LibObjet]);
+CREATE INDEX [IX_GenFourn_LibFourn] ON [GenFourn] ([LibFourn]);
 
 GO
 
-CREATE INDEX [IX_GenMandat_LibObjet] ON [GenMandat] ([LibObjet]);
+CREATE INDEX [IX_GenMandat_LibMandat] ON [GenMandat] ([LibMandat]);
 
 GO
 
-CREATE INDEX [IX_GenPersonne_LibObjet] ON [GenPersonne] ([NomPersonne]);
+CREATE INDEX [IX_GenPersonne_NomPersonne] ON [GenPersonne] ([NomPersonne]);
 
 GO
 
-CREATE INDEX [IX_GenSecteur_LibObjet] ON [GenSecteur] ([LibObjet]);
+CREATE INDEX [IX_GenSecteur_LibSecteur] ON [GenSecteur] ([LibSecteur]);
 
 GO
 
-CREATE INDEX [IX_GenService_LibObjet] ON [GenService] ([LibObjet]);
+CREATE INDEX [IX_GenService_LibService] ON [GenService] ([LibService]);
 
 GO
 
-CREATE INDEX [IX_GenSociete_LibObjet] ON [GenSociete] ([LibObjet]);
+CREATE INDEX [IX_GenSociete_LibSociete] ON [GenSociete] ([LibSociete]);
 
 GO
 
-CREATE INDEX [IX_GenTVA_LibObjet] ON [GenTVA] ([LibObjet]);
+CREATE INDEX [IX_GenTVA_LibTVA] ON [GenTVA] ([LibTVA]);
 
 GO
-
---CREATE FULLTEXT INDEX ON [GenCompteur] ([LibObjet]) KEY INDEX [PK_GenCompteur];

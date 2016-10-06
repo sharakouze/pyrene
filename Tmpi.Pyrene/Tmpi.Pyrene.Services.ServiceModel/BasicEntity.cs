@@ -3,7 +3,7 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
-    public class BasicEntity : IHasId<int>, IEntity
+    public class BasicEntity : IHasId<int>
     {
         public int Id { get; set; }
 

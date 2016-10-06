@@ -19,27 +19,27 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, nameof(CleGenFourn), nameof(CodIBAN))]
-    [Route("/GenFourn/Banque", HttpVerbs.Post, Summary = "Ajoute une ressource GenFournBanque.")]
-    [Route("/GenFourn/Banque/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenFournBanque à partir de son Id.")]
+	[CompositeIndex(true, nameof(CleFourn), nameof(CodIBAN))]
+    [Route("/Fourn/{CodFourn}/Banque/{CodIBAN}", HttpVerbs.Post, Summary = "Ajoute une ressource GenFournBanque.")]
+    [Route("/Fourn/{CodFourn}/Banque/{CodIBAN}", HttpVerbs.Put, Summary = "Remplace une ressource GenFournBanque à partir de son Id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournBanque spécifiée est introuvable.")]
-	public partial class GenFournBanque : IHasId<int>,
-		IAuditable
+	public partial class GenFournBanque : IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
+		[PrimaryKey]
         [IgnoreDataMember]
-		public int Id { get; set; }
+		public int CleBanque { get; set; }
 
 		/// <summary>
-		/// Id du fournisseur parent.
+		/// Fournisseur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
-		public int CleGenFourn { get; set; }
+		public int CleFourn { get; set; }
 
 		/// <summary>
 		/// Code IBAN.

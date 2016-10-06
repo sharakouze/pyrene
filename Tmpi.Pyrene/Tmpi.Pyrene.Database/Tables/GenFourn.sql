@@ -1,9 +1,9 @@
 ﻿CREATE TABLE [GenFourn]
 (
-    [Id] INT NOT NULL IDENTITY,
-    [CodObjet] VARCHAR(100) NOT NULL,
-    [LibObjet] VARCHAR(200) NOT NULL,
-    [TxtObjet] VARCHAR(500) NULL,
+    [CleFourn] INT NOT NULL IDENTITY,
+    [CodFourn] VARCHAR(100) NOT NULL,
+    [LibFourn] VARCHAR(200) NOT NULL,
+    [TxtFourn] VARCHAR(500) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NOT NULL,
@@ -26,8 +26,8 @@
     [ValNote] DECIMAL(5,2) NULL,
     [TypModeReglement] INT NULL,
     [EstEnvoiMailBonCde] BIT NOT NULL,
-    CONSTRAINT [PK_GenFourn] PRIMARY KEY ([Id]),
-    CONSTRAINT [UK_GenFourn_CodObjet] UNIQUE ([CodObjet]), 
+    CONSTRAINT [PK_GenFourn] PRIMARY KEY ([CleFourn]),
+    CONSTRAINT [UK_GenFourn_CodFourn] UNIQUE ([CodFourn]), 
 );
 
 GO

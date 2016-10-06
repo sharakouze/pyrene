@@ -1,9 +1,9 @@
 ﻿CREATE TABLE [GenSociete]
 (
-    [Id] INT NOT NULL IDENTITY,
-    [CodObjet] VARCHAR(100)  NOT NULL,
-    [LibObjet] VARCHAR(200) NOT NULL,
-    [TxtObjet] VARCHAR(500) NULL,
+    [CleSociete] INT NOT NULL IDENTITY,
+    [CodSociete] VARCHAR(100)  NOT NULL,
+    [LibSociete] VARCHAR(200) NOT NULL,
+    [TxtSociete] VARCHAR(500) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NOT NULL,
@@ -15,6 +15,6 @@
     [NumTelep] VARCHAR(25) NULL,
     [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
-    CONSTRAINT [PK_GenSociete] PRIMARY KEY ([Id]),
-    CONSTRAINT [UK_GenSociete_CodObjet] UNIQUE ([CodObjet])
+    CONSTRAINT [PK_GenSociete] PRIMARY KEY ([CleSociete]),
+    CONSTRAINT [UK_GenSociete_CodSociete] UNIQUE ([CodSociete])
 );

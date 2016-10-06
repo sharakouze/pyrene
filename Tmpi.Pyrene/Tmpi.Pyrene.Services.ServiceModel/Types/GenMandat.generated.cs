@@ -20,44 +20,34 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(TypMandat), nameof(NivMandat))]
-    [Route("/GenMandat", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandat.")]
-    [Route("/GenMandat/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandat à partir de son Id.")]
+    [Route("/Mandat/{CodMandat}", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandat.")]
+    [Route("/Mandat/{CodMandat}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandat à partir de son Id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandat spécifiée est introuvable.")]
-	public partial class GenMandat : IHasId<int>,
-		IEntity,
-		IAuditable
+	public partial class GenMandat : IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
+		[PrimaryKey]
         [IgnoreDataMember]
-		public int Id { get; set; }
+		public int CleMandat { get; set; }
 
-		/// <summary>
-		/// Code unique.
-		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string CodObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string CodMandat { get; set; }
 
-		/// <summary>
-		/// Désignation.
-		/// </summary>
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "Désignation.", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string LibObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string LibMandat { get; set; }
 
-		/// <summary>
-		/// Commentaire ou description.
-		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
-		public string TxtObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String)]
+		public string TxtMandat { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.

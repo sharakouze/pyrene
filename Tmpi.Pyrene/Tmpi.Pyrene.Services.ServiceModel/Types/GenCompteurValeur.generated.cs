@@ -19,26 +19,27 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, nameof(CleGenCompteur), nameof(ValPeriode))]
-    [Route("/GenCompteur/Valeur", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteurValeur.")]
-    [Route("/GenCompteur/Valeur/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeur à partir de son Id.")]
+	[CompositeIndex(true, nameof(CleCompteur), nameof(ValPeriode))]
+    [Route("/Compteur/{CodCompteur}/Valeur/{ValPeriode}", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteurValeur.")]
+    [Route("/Compteur/{CodCompteur}/Valeur/{ValPeriode}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeur à partir de son Id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeur spécifiée est introuvable.")]
-	public partial class GenCompteurValeur : IHasId<int>
+	public partial class GenCompteurValeur
 	{
 		/// <summary>
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
+		[PrimaryKey]
         [IgnoreDataMember]
-		public int Id { get; set; }
+		public int CleValeur { get; set; }
 
 		/// <summary>
-		/// Id du compteur parent.
+		/// Compteur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenCompteur), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
-		public int CleGenCompteur { get; set; }
+		public int CleCompteur { get; set; }
 
 		/// <summary>
 		/// Valeur de la période.

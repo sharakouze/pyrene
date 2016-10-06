@@ -1,24 +1,24 @@
 ﻿CREATE TABLE [GenCompteur] (
-    [Id] INT NOT NULL IDENTITY,
-    [CodObjet] VARCHAR(100) NOT NULL,
-    [LibObjet] VARCHAR(200) NOT NULL,
-    [TxtObjet] VARCHAR(500) NULL,
+    [CleCompteur] INT NOT NULL IDENTITY,
+    [CodCompteur] VARCHAR(100) NOT NULL,
+    [LibCompteur] VARCHAR(200) NOT NULL,
+    [TxtCompteur] VARCHAR(500) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NOT NULL,
     [CodExterne] VARCHAR(100) NULL,
     [TypPeriodicite] INT NOT NULL,
     [TypCompteur] INT NOT NULL,
-    [CleGenSociete] INT NULL,
-    [CleGenSecteur] INT NULL,
-    [CleGenService] INT NULL,
+    [CleSociete] INT NULL,
+    [CleSecteur] INT NULL,
+    [CleService] INT NULL,
 	[ValFormatNumero] VARCHAR(100) NOT NULL,
-    CONSTRAINT [PK_GenCompteur] PRIMARY KEY ([Id]),
-    CONSTRAINT [UK_GenCompteur_CodObjet] UNIQUE ([CodObjet]),
-    CONSTRAINT [UK_GenCompteur_TypCompteur_CleGenSociete_CleGenSecteur_CleGenService] UNIQUE ([TypCompteur], [CleGenSociete], [CleGenSecteur], [CleGenService]),
-    CONSTRAINT [FK_GenCompteur_CleGenSociete] FOREIGN KEY ([CleGenSociete]) REFERENCES [GenSociete] ([Id]),
-    CONSTRAINT [FK_GenCompteur_CleGenSecteur] FOREIGN KEY ([CleGenSecteur]) REFERENCES [GenSecteur] ([Id]),
-    CONSTRAINT [FK_GenCompteur_CleGenService] FOREIGN KEY ([CleGenService]) REFERENCES [GenService] ([Id]),
+    CONSTRAINT [PK_GenCompteur] PRIMARY KEY ([CleCompteur]),
+    CONSTRAINT [UK_GenCompteur_CodCompteur] UNIQUE ([CodCompteur]),
+    CONSTRAINT [UK_GenCompteur_TypCompteur_CleSociete_CleSecteur_CleService] UNIQUE ([TypCompteur], [CleSociete], [CleSecteur], [CleService]),
+    CONSTRAINT [FK_GenCompteur_CleSociete] FOREIGN KEY ([CleSociete]) REFERENCES [GenSociete] ([CleSociete]),
+    CONSTRAINT [FK_GenCompteur_CleSecteur] FOREIGN KEY ([CleSecteur]) REFERENCES [GenSecteur] ([CleSecteur]),
+    CONSTRAINT [FK_GenCompteur_CleService] FOREIGN KEY ([CleService]) REFERENCES [GenService] ([CleService]),
 );
 
 GO
@@ -51,28 +51,28 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'ValFormatNumero'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Id de la société ayant accès au compteur, ou null pour toutes les sociétés.',
+    @value = N'Société ayant accès au compteur, ou null pour toutes les sociétés.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
     @level1name = N'GenCompteur',
     @level2type = N'COLUMN',
-    @level2name = N'CleGenSociete'
+    @level2name = 'CleSociete'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Id du secteur ayant accès au compteur, ou null pour tous les secteurs.',
+    @value = N'Secteur ayant accès au compteur, ou null pour tous les secteurs.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
     @level1name = N'GenCompteur',
     @level2type = N'COLUMN',
-    @level2name = N'CleGenSecteur'
+    @level2name = 'CleSecteur'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Id du service ayant accès au compteur, ou null pour tous les services.',
+    @value = N'Service ayant accès au compteur, ou null pour tous les services.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
     @level1name = N'GenCompteur',
     @level2type = N'COLUMN',
-    @level2name = N'CleGenService'
+    @level2name = 'CleService'

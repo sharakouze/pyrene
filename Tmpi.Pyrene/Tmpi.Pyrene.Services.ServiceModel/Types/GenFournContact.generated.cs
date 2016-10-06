@@ -19,27 +19,27 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, nameof(CleGenFourn), nameof(NomContact))]
-    [Route("/GenFourn/Contact", HttpVerbs.Post, Summary = "Ajoute une ressource GenFournContact.")]
-    [Route("/GenFourn/Contact/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenFournContact à partir de son Id.")]
+	[CompositeIndex(true, nameof(CleFourn), nameof(NomContact))]
+    [Route("/Fourn/{CodFourn}/Contact/{NomContact}", HttpVerbs.Post, Summary = "Ajoute une ressource GenFournContact.")]
+    [Route("/Fourn/{CodFourn}/Contact/{NomContact}", HttpVerbs.Put, Summary = "Remplace une ressource GenFournContact à partir de son Id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournContact spécifiée est introuvable.")]
-	public partial class GenFournContact : IHasId<int>,
-		IAuditable
+	public partial class GenFournContact : IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
+		[PrimaryKey]
         [IgnoreDataMember]
-		public int Id { get; set; }
+		public int CleContact { get; set; }
 
 		/// <summary>
-		/// Id du fournisseur parent.
+		/// Fournisseur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
-		public int CleGenFourn { get; set; }
+		public int CleFourn { get; set; }
 
 		/// <summary>
 		/// Nom de famille.
@@ -56,12 +56,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Prénom.", DataType = SwaggerDataTypes.String)]
 		public string PreContact { get; set; }
 
-		/// <summary>
-		/// Commentaire ou description.
-		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
-		public string TxtObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String)]
+		public string TxtContact { get; set; }
 
 		/// <summary>
 		/// Date de création.

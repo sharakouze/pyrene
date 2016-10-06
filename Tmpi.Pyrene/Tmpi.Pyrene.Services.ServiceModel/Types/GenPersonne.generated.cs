@@ -19,27 +19,24 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/GenPersonne", HttpVerbs.Post, Summary = "Ajoute une ressource GenPersonne.")]
-    [Route("/GenPersonne/{Id}", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonne à partir de son Id.")]
+    [Route("/Personne/{CodPersonne}", HttpVerbs.Post, Summary = "Ajoute une ressource GenPersonne.")]
+    [Route("/Personne/{CodPersonne}", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonne à partir de son Id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonne spécifiée est introuvable.")]
-	public partial class GenPersonne : IHasId<int>,
-		IAuditable
+	public partial class GenPersonne : IAuditable
 	{
 		/// <summary>
 		/// Clé primaire.
 		/// </summary>
 		[AutoIncrement]
+		[PrimaryKey]
         [IgnoreDataMember]
-		public int Id { get; set; }
+		public int ClePersonne { get; set; }
 
-		/// <summary>
-		/// Code unique.
-		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string CodObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string CodPersonne { get; set; }
 
 		/// <summary>
 		/// Nom de famille.
@@ -57,12 +54,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Prénom.", DataType = SwaggerDataTypes.String)]
 		public string PrePersonne { get; set; }
 
-		/// <summary>
-		/// Commentaire ou description.
-		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
-		public string TxtObjet { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String)]
+		public string TxtPersonne { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.

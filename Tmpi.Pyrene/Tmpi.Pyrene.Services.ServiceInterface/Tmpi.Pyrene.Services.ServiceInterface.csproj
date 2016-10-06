@@ -70,60 +70,6 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="GenCompteurService.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenCompteurValidator.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenExerciceService.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenExerciceValidator.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenFournService.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenFournValidator.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenMandatService.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenMandatValidator.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenPersonneService.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenPersonneValidator.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenSecteurService.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenSecteurValidator.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenServiceService.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenServiceValidator.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenSocieteService.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenSocieteValidator.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenTVAService.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenTVAValidator.generated.cs">
-      <DependentUpon>ServiceGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="ServiceGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
