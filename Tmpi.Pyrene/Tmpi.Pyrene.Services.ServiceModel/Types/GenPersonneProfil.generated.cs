@@ -37,17 +37,26 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// <summary>
 		/// Utilisateur parent.
 		/// </summary>
-		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
+		[ForeignKey(typeof(GenPersonneProfil), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
 		public int ClePersonne { get; set; }
 
+		/// <summary>
+		/// Utilisateur parent. Code unique.
+		/// Remplace la colonne <see cref="ClePersonne" /> dans la sérialisation.
+		/// </summary>
+		[ApiMember(Description = "Utilisateur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		[Ignore]
-		public string ClePersonne { get; set; }
+		public string CodPersonne { get; set; }
 
+		/// <summary>
+		/// Code unique.
+		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[Index(true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodProfil { get; set; }
 
 		/// <summary>
@@ -67,32 +76,59 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// <summary>
 		/// Société à laquelle a accès le profil, ou null pour toutes les sociétés.
 		/// </summary>
-		[References(typeof(GenSociete))]
+		[References(typeof(GenPersonneProfil))]
         [IgnoreDataMember]
 		public int? CleSociete { get; set; }
 
+		/// <summary>
+		/// Société à laquelle a accès le profil, ou null pour toutes les sociétés. 
+		/// Remplace la colonne <see cref="CleSociete" /> dans la sérialisation.
+		/// </summary>
+		[ApiMember(Description = "Société à laquelle a accès le profil, ou null pour toutes les sociétés. ", DataType = SwaggerDataTypes.String)]
 		[Ignore]
-		public string CleSociete { get; set; }
+		public string CodSociete { get; set; }
 
 		/// <summary>
 		/// Secteur auquel a accès le profil, ou null pour tous les secteurs.
 		/// </summary>
-		[References(typeof(GenSecteur))]
+		[References(typeof(GenPersonneProfil))]
         [IgnoreDataMember]
 		public int? CleSecteur { get; set; }
 
+		/// <summary>
+		/// Secteur auquel a accès le profil, ou null pour tous les secteurs. 
+		/// Remplace la colonne <see cref="CleSecteur" /> dans la sérialisation.
+		/// </summary>
+		[ApiMember(Description = "Secteur auquel a accès le profil, ou null pour tous les secteurs. ", DataType = SwaggerDataTypes.String)]
 		[Ignore]
-		public string CleSecteur { get; set; }
+		public string CodSecteur { get; set; }
 
 		/// <summary>
 		/// Service auquel a accès le profil, ou null pour tous les services.
 		/// </summary>
-		[References(typeof(GenService))]
+		[References(typeof(GenPersonneProfil))]
         [IgnoreDataMember]
 		public int? CleService { get; set; }
 
+		/// <summary>
+		/// Service auquel a accès le profil, ou null pour tous les services. 
+		/// Remplace la colonne <see cref="CleService" /> dans la sérialisation.
+		/// </summary>
+		[ApiMember(Description = "Service auquel a accès le profil, ou null pour tous les services. ", DataType = SwaggerDataTypes.String)]
 		[Ignore]
-		public string CleService { get; set; }
+		public string CodService { get; set; }
+
+		[Reference]
+		public GenPersonneProfil  { get; set; }
+
+		[Reference]
+		public GenPersonneProfil  { get; set; }
+
+		[Reference]
+		public GenPersonneProfil  { get; set; }
+
+		[Reference]
+		public GenPersonneProfil  { get; set; }
 
 	}
 }

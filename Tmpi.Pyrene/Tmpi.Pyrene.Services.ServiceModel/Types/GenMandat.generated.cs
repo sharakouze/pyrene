@@ -33,20 +33,29 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int CleMandat { get; set; }
 
+		/// <summary>
+		/// Code unique.
+		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodMandat { get; set; }
 
+		/// <summary>
+		/// Désignation.
+		/// </summary>
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Désignation.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string LibMandat { get; set; }
 
+		/// <summary>
+		/// Commentaire ou description.
+		/// </summary>
 		[StringLength(500)]
-		[ApiMember(DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
 		public string TxtMandat { get; set; }
 
 		/// <summary>
@@ -106,7 +115,19 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public string TxtMessage { get; set; }
 
 		[Reference]
-		public List<GenMandatMandataire> LstMandataire { get; set; }
+		public GenMandatMandataire Mandataire { get; set; }
+
+		[Reference]
+		public GenMandatMandataire Mandataire { get; set; }
+
+		[Reference]
+		public GenMandatMandataire Mandataire { get; set; }
+
+		[Reference]
+		public GenMandatMandataire Mandataire { get; set; }
+
+		[Reference]
+		public GenMandatMandataire Mandataire { get; set; }
 
 	}
 }

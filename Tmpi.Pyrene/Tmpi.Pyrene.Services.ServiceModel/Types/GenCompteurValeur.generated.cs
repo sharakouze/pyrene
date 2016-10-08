@@ -36,18 +36,24 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// <summary>
 		/// Compteur parent.
 		/// </summary>
-		[ForeignKey(typeof(GenCompteur), OnDelete = "CASCADE")]
+		[ForeignKey(typeof(GenCompteurValeur), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
 		public int CleCompteurProprio { get; set; }
 
+		/// <summary>
+		/// Compteur parent. Code unique.
+		/// Remplace la colonne <see cref="CleCompteurProprio" /> dans la sérialisation.
+		/// </summary>
+		[ApiMember(Description = "Compteur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		[Ignore]
-		public string CleCompteurProprio { get; set; }
+		public string CodCompteurProprio { get; set; }
 
 		/// <summary>
 		/// Valeur de la période.
 		/// </summary>
 		[Required]
+		[Index(true)]
 		[ApiMember(Description = "Valeur de la période.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ValPeriode { get; set; }
 
@@ -59,7 +65,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int ValCompteur { get; set; }
 
 		[Reference]
-		public List<GenCompteurValeurTruc> LstTruc { get; set; }
+		public GenCompteurValeur  { get; set; }
+
+		[Reference]
+		public GenCompteurValeurTruc Truc { get; set; }
 
 	}
 }

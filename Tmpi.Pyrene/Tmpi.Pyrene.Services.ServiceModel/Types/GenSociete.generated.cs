@@ -32,20 +32,29 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int CleSociete { get; set; }
 
+		/// <summary>
+		/// Code unique.
+		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodSociete { get; set; }
 
+		/// <summary>
+		/// Désignation.
+		/// </summary>
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Désignation.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string LibSociete { get; set; }
 
+		/// <summary>
+		/// Commentaire ou description.
+		/// </summary>
 		[StringLength(500)]
-		[ApiMember(DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
 		public string TxtSociete { get; set; }
 
 		/// <summary>

@@ -32,20 +32,29 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int CleService { get; set; }
 
+		/// <summary>
+		/// Code unique.
+		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodService { get; set; }
 
+		/// <summary>
+		/// Désignation.
+		/// </summary>
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Désignation.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string LibService { get; set; }
 
+		/// <summary>
+		/// Commentaire ou description.
+		/// </summary>
 		[StringLength(500)]
-		[ApiMember(DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
 		public string TxtService { get; set; }
 
 		/// <summary>
@@ -79,14 +88,19 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// <summary>
 		/// Secteur auquel appartient le service.
 		/// </summary>
-		[ForeignKey(typeof(GenSecteur), OnDelete = "CASCADE")]
+		[ForeignKey(typeof(GenService), OnDelete = "CASCADE")]
 		[Required]
 		[Index]
         [IgnoreDataMember]
 		public int CleSecteur { get; set; }
 
+		/// <summary>
+		/// Secteur auquel appartient le service. Code unique.
+		/// Remplace la colonne <see cref="CleSecteur" /> dans la sérialisation.
+		/// </summary>
+		[ApiMember(Description = "Secteur auquel appartient le service. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		[Ignore]
-		public string CleSecteur { get; set; }
+		public string CodSecteur { get; set; }
 
 		/// <summary>
 		/// Rue.
@@ -136,6 +150,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[ApiMember(Description = "Adresse email.", DataType = SwaggerDataTypes.String)]
 		public string NumEmail { get; set; }
+
+		[Reference]
+		public GenService  { get; set; }
 
 	}
 }

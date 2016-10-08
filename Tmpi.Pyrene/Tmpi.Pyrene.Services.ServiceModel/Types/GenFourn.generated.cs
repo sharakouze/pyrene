@@ -32,20 +32,29 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int CleFourn { get; set; }
 
+		/// <summary>
+		/// Code unique.
+		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodFourn { get; set; }
 
+		/// <summary>
+		/// Désignation.
+		/// </summary>
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Désignation.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string LibFourn { get; set; }
 
+		/// <summary>
+		/// Commentaire ou description.
+		/// </summary>
 		[StringLength(500)]
-		[ApiMember(DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
 		public string TxtFourn { get; set; }
 
 		/// <summary>
@@ -198,10 +207,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public bool EstEnvoiMailBonCde { get; set; }
 
 		[Reference]
-		public List<GenFournBanque> LstBanque { get; set; }
+		public GenFournBanque Banque { get; set; }
 
 		[Reference]
-		public List<GenFournContact> LstContact { get; set; }
+		public GenFournContact Contact { get; set; }
 
 	}
 }

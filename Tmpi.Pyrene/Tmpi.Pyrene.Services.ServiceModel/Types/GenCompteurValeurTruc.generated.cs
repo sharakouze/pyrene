@@ -19,8 +19,8 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/Compteur/{CodCompteurProprio}/Valeur/{CleCompteurProprio}/{ValPeriode}/Truc", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteurValeurTruc.")]
-    [Route("/Compteur/{CodCompteurProprio}/Valeur/{CleCompteurProprio}/{ValPeriode}/Truc", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeurTruc à partir de son Id.")]
+    [Route("/Compteur/{CodCompteurProprio}/Valeur/{ValPeriode}/Truc", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteurValeurTruc.")]
+    [Route("/Compteur/{CodCompteurProprio}/Valeur/{ValPeriode}/Truc/{CleTruc}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeurTruc à partir de son Id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeurTruc spécifiée est introuvable.")]
 	public partial class GenCompteurValeurTruc
 	{
@@ -29,21 +29,28 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+        [IgnoreDataMember]
 		public int CleTruc { get; set; }
 
-		[ForeignKey(typeof(GenCompteurValeur), OnDelete = "CASCADE")]
+		[ForeignKey(typeof(GenCompteurValeurTruc), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
 		public int CleValeur { get; set; }
 
+		/// <summary>
+		/// Valeur de la période.
+		/// Remplace la colonne <see cref="CleValeur" /> dans la sérialisation.
+		/// </summary>
+		[ApiMember(Description = "Valeur de la période.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		[Ignore]
-		public string CleValeur { get; set; }
+		public int ValPeriode { get; set; }
 
 		[StringLength(500)]
 		[ApiMember(DataType = SwaggerDataTypes.String)]
 		public string TxtMachin { get; set; }
+
+		[Reference]
+		public GenCompteurValeurTruc  { get; set; }
 
 	}
 }

@@ -36,19 +36,25 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// <summary>
 		/// Fournisseur parent.
 		/// </summary>
-		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
+		[ForeignKey(typeof(GenFournContact), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
 		public int CleFourn { get; set; }
 
+		/// <summary>
+		/// Fournisseur parent. Code unique.
+		/// Remplace la colonne <see cref="CleFourn" /> dans la sérialisation.
+		/// </summary>
+		[ApiMember(Description = "Fournisseur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		[Ignore]
-		public string CleFourn { get; set; }
+		public string CodFourn { get; set; }
 
 		/// <summary>
 		/// Nom de famille.
 		/// </summary>
 		[StringLength(100)]
 		[Required]
+		[Index(true)]
 		[ApiMember(Description = "Nom de famille.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string NomContact { get; set; }
 
@@ -59,8 +65,11 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Prénom.", DataType = SwaggerDataTypes.String)]
 		public string PreContact { get; set; }
 
+		/// <summary>
+		/// Commentaire ou description.
+		/// </summary>
 		[StringLength(500)]
-		[ApiMember(DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
 		public string TxtContact { get; set; }
 
 		/// <summary>
@@ -111,6 +120,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[ApiMember(Description = "Fonction ou poste du contact chez le fournisseur.", DataType = SwaggerDataTypes.String)]
 		public string LibFonction { get; set; }
+
+		[Reference]
+		public GenFournContact  { get; set; }
 
 	}
 }

@@ -36,54 +36,79 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// <summary>
 		/// Mandat parent.
 		/// </summary>
-		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
+		[ForeignKey(typeof(GenMandatMandataire), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
 		public int CleMandat { get; set; }
 
+		/// <summary>
+		/// Mandat parent. Code unique.
+		/// Remplace la colonne <see cref="CleMandat" /> dans la sérialisation.
+		/// </summary>
+		[ApiMember(Description = "Mandat parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		[Ignore]
-		public string CleMandat { get; set; }
+		public string CodMandat { get; set; }
 
 		/// <summary>
 		/// Utilisateur mandataire.
 		/// </summary>
-		[References(typeof(GenPersonne))]
+		[References(typeof(GenMandatMandataire))]
 		[Required]
         [IgnoreDataMember]
 		public int ClePersonne { get; set; }
 
+		/// <summary>
+		/// Utilisateur mandataire. 
+		/// Remplace la colonne <see cref="ClePersonne" /> dans la sérialisation.
+		/// </summary>
+		[ApiMember(Description = "Utilisateur mandataire. ", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		[Ignore]
-		public string ClePersonne { get; set; }
+		public string CodPersonne { get; set; }
 
 		/// <summary>
 		/// Société ayant accès au mandat, ou null pour toutes les sociétés.
 		/// </summary>
-		[References(typeof(GenSociete))]
+		[References(typeof(GenMandatMandataire))]
         [IgnoreDataMember]
 		public int? CleSociete { get; set; }
 
+		/// <summary>
+		/// Société ayant accès au mandat, ou null pour toutes les sociétés. 
+		/// Remplace la colonne <see cref="CleSociete" /> dans la sérialisation.
+		/// </summary>
+		[ApiMember(Description = "Société ayant accès au mandat, ou null pour toutes les sociétés. ", DataType = SwaggerDataTypes.String)]
 		[Ignore]
-		public string CleSociete { get; set; }
+		public string CodSociete { get; set; }
 
 		/// <summary>
 		/// Secteur ayant accès au mandat, ou null pour tous les secteurs.
 		/// </summary>
-		[References(typeof(GenSecteur))]
+		[References(typeof(GenMandatMandataire))]
         [IgnoreDataMember]
 		public int? CleSecteur { get; set; }
 
+		/// <summary>
+		/// Secteur ayant accès au mandat, ou null pour tous les secteurs. 
+		/// Remplace la colonne <see cref="CleSecteur" /> dans la sérialisation.
+		/// </summary>
+		[ApiMember(Description = "Secteur ayant accès au mandat, ou null pour tous les secteurs. ", DataType = SwaggerDataTypes.String)]
 		[Ignore]
-		public string CleSecteur { get; set; }
+		public string CodSecteur { get; set; }
 
 		/// <summary>
 		/// Service ayant accès au mandat, ou null pour tous les services.
 		/// </summary>
-		[References(typeof(GenService))]
+		[References(typeof(GenMandatMandataire))]
         [IgnoreDataMember]
 		public int? CleService { get; set; }
 
+		/// <summary>
+		/// Service ayant accès au mandat, ou null pour tous les services. 
+		/// Remplace la colonne <see cref="CleService" /> dans la sérialisation.
+		/// </summary>
+		[ApiMember(Description = "Service ayant accès au mandat, ou null pour tous les services. ", DataType = SwaggerDataTypes.String)]
 		[Ignore]
-		public string CleService { get; set; }
+		public string CodService { get; set; }
 
 		/// <summary>
 		/// Si true, le mandat est suspendu.
@@ -105,6 +130,21 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime DatModif { get; set; }
+
+		[Reference]
+		public GenMandatMandataire  { get; set; }
+
+		[Reference]
+		public GenMandatMandataire  { get; set; }
+
+		[Reference]
+		public GenMandatMandataire  { get; set; }
+
+		[Reference]
+		public GenMandatMandataire  { get; set; }
+
+		[Reference]
+		public GenMandatMandataire  { get; set; }
 
 	}
 }

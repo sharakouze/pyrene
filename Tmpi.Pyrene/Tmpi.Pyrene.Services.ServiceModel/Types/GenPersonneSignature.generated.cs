@@ -24,17 +24,18 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneSignature spécifiée est introuvable.")]
 	public partial class GenPersonneSignature
 	{
-		/// <summary>
-		/// Clé primaire.
-		/// </summary>
-		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
+		[ForeignKey(typeof(GenPersonneSignature), OnDelete = "CASCADE")]
 		[Required]
-		[PrimaryKey]
         [IgnoreDataMember]
 		public int ClePersonne { get; set; }
 
+		/// <summary>
+		/// Code unique.
+		/// Remplace la colonne <see cref="ClePersonne" /> dans la sérialisation.
+		/// </summary>
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		[Ignore]
-		public string ClePersonne { get; set; }
+		public string CodPersonne { get; set; }
 
 		/// <summary>
 		/// Image de la signature.
@@ -50,6 +51,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[ApiMember(Description = "Type MIME de l'image.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string TypMime { get; set; }
+
+		[Reference]
+		public GenPersonneSignature  { get; set; }
 
 	}
 }

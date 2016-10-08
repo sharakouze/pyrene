@@ -1,0 +1,1313 @@
+﻿<#@ assembly name="System.dll" #>
+<#@ assembly name="System.Core.dll" #>
+<#@ assembly name="System.Data" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Data.Common" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#+
+public class Table
+{
+	public Table()
+    {
+		Columns = new List<Column>();
+		Indices = new List<TableIndex>();
+		ForeignKeys = new List<FKey>();
+    }
+
+	public string Name { get; set; }
+	public string ClassName { get; set; }
+	public string Schema { get; set; }
+	public bool IsView { get; set; }
+
+    public PKey PrimaryKey { get; set; }
+	public List<Column> Columns { get; set; }
+	public List<TableIndex> Indices { get; set; }
+	public List<FKey> ForeignKeys { get; set; }
+}
+
+public class Tables : List<Table>
+{
+	public Column GetColumn(string tableName, string columnName)
+    {
+		Table tbl = this.Where(t => t.Name == tableName).SingleOrDefault();
+		if (tbl != null)
+        {
+			Column col = tbl.Columns.Where(c => c.Name == columnName).SingleOrDefault();
+			return col;
+        }
+		return null;
+	}
+
+	public bool ChangePropertyType(string tableName, string columnName, string newPropertyType)
+    {
+		Column col = GetColumn(tableName, columnName);
+		if (col != null)
+        {
+			col.PropertyType = newPropertyType;
+			return true;
+        }
+		return false;
+    }
+}
+
+public class Column
+{
+    public string Name { get; set; }
+    public string PropertyName { get; set; }
+    public string PropertyType { get; set; }
+    public bool IsNullable { get; set; }
+	public bool IsAutoIncrement { get; set; }
+	public bool IsComputed { get; set; }
+	public int Size { get; set; }
+	public int Precision { get; set; }
+	public int Scale { get; set; }
+    public string Description { get; set; }
+	public string DefaultValue { get; set; }
+
+	public Table ParentTable { get; set; }
+
+	public Column Clone()
+    {
+		Column newCol = new Column()
+		{
+			Name = Name,
+			PropertyName = PropertyName,
+			PropertyType = PropertyType,
+			IsNullable = IsNullable,
+			IsAutoIncrement = IsAutoIncrement,
+			IsComputed = IsComputed,
+			Size = Size,
+			Precision = Precision,
+			Scale = Scale,
+			Description = Description,
+			DefaultValue = DefaultValue,
+			
+			//PAS ParentTable !
+		};
+		return newCol;
+    }
+	public bool IsPKey
+    {
+		get
+        {
+			if (ParentTable != null && ParentTable.PrimaryKey != null)
+			{
+				return ParentTable.PrimaryKey.PKeyColumns.Contains(this);
+			}
+			return false;
+        }
+    }
+	public bool IsFKey
+    {
+		get
+        {
+			if (ParentTable != null)
+			{
+				return ParentTable.ForeignKeys.Any(f => f.FromColumns.Contains(this));
+			}
+			return false;
+        }
+    }
+
+	public string ProperPropertyType
+	{
+		get
+		{
+			if (IsNullable &&
+				(PropertyType != "byte[]") &&
+				(PropertyType != "string") &&
+				(PropertyType != "Microsoft.SqlServer.Types.SqlGeography") &&
+				(PropertyType != "Microsoft.SqlServer.Types.SqlGeometry"))
+            {
+				return PropertyType + "?";
+            }
+			return PropertyType;
+		}
+	}
+}
+
+public class PKey
+{
+	public PKey()
+    {
+		PKeyColumns = new List<Column>();
+    }
+
+    public string Name { get; set; }
+
+	public List<Column> PKeyColumns { get; set; }
+}
+
+public class TableIndex
+{
+	public TableIndex()
+    {
+		IndexColumns = new List<Column>();
+    }
+
+    public string Name { get; set; }
+	public bool IsUnique { get; set; }
+	public bool IsClustered { get; set; }
+
+	public Table ParentTable { get; set; }
+
+	public List<Column> IndexColumns { get; set; }
+}
+
+public class FKey
+{
+	public FKey()
+    {
+		FromColumns = new List<Column>();
+		ReferencedColumns = new List<Column>();
+    }
+
+    public string Name { get; set; }
+	public string DeleteRule { get; set; }
+	public string UpdateRule { get; set; }
+
+	public List<Column> FromColumns { get; set; }
+	public List<Column> ReferencedColumns { get; set; }
+
+	public Table FromTable
+	{
+		get
+        {
+			Column col = FromColumns.FirstOrDefault();
+			if (col != null)
+            {
+				return col.ParentTable;
+            }
+			return null;
+        }
+    }
+	public Table ReferencedTable
+	{
+		get
+        {
+			Column col = ReferencedColumns.FirstOrDefault();
+			if (col != null)
+            {
+				return col.ParentTable;
+            }
+			return null;
+        }
+    }
+}
+
+public class SP
+{
+    public string Name;
+    public string CleanName;
+    public string ClassName;
+    public string Schema;
+    public string SchemaQualifiedName {get{return Schema+"."+Name;}}
+    public List<SPParam> Parameters;
+	public List<SPOutputColumn> SPOutputColumns;
+    public SP()
+	{
+        Parameters=new List<SPParam>();
+		SPOutputColumns = new List<SPOutputColumn>();
+    }
+    public string ArgList
+	{
+        get
+		{
+            StringBuilder sb=new StringBuilder();
+            int loopCount=1;
+            foreach(var par in Parameters)
+            {
+                sb.AppendFormat("{0} {1}", par.SysType,par.CleanName);
+                if(loopCount<Parameters.Count)
+                    sb.Append(",");
+                loopCount++;
+            }
+            return sb.ToString();
+        }
+	}
+}
+
+public class SPOutputColumn
+{
+	public string Name ;
+	public string DotNetType ;
+}
+
+public enum SPParamDir
+{
+  OutDirection,
+  InDirection,
+  InAndOutDirection
+}
+
+public class SPParam
+{
+	public string Name;
+    public string CleanName;
+    public string SysType;
+	public string NullableSysType;
+    public string DbType;
+    public SPParamDir Direction;
+}
+
+
+static Regex rxCleanUp = new Regex(@"[^\w\d_]", RegexOptions.Compiled);
+
+static string[] cs_keywords = { "abstract", "event", "new", "struct", "as", "explicit", "null",
+	 "switch", "base", "extern", "object", "this", "bool", "false", "operator", "throw",
+	 "break", "finally", "out", "true", "byte", "fixed", "override", "try", "case", "float",
+	 "params", "typeof", "catch", "for", "private", "uint", "char", "foreach", "protected",
+	 "ulong", "checked", "goto", "public", "unchecked", "class", "if", "readonly", "unsafe",
+	 "const", "implicit", "ref", "ushort", "continue", "in", "return", "using", "decimal",
+	 "int", "sbyte", "virtual", "default", "interface", "sealed", "volatile", "delegate",
+	 "internal", "short", "void", "do", "is", "sizeof", "while", "double", "lock",
+	 "stackalloc", "else", "long", "static", "enum", "namespace", "string" };
+
+static Func<string, string> CleanUp = (str) =>
+{
+	str = rxCleanUp.Replace(str, "_");
+
+	if (char.IsDigit(str[0]))
+	{
+		str = "_" + str;
+	}
+	else if (cs_keywords.Contains(str))
+	{
+		str = "@" + str;
+	}
+
+    return str;
+};
+
+
+
+public string GetColumnDefaultValue(Column col)
+{
+        string sysType=string.Format("\"{0}\"",col.DefaultValue);
+        switch (col.PropertyType.ToLower())
+        {
+			case "long":
+			case "int":
+			case "double":
+			case "decimal":
+			case "bool":
+                sysType= col.DefaultValue.ToString().Replace("'","").Replace("\"","");
+                break;
+            case "guid":
+                sysType=  string.Format("\"{0}\"",col.DefaultValue);
+                 break;
+            case "datetime":
+			{
+				if (col.DefaultValue.ToLower() == "current_time" || col.DefaultValue.ToLower() == "current_date"|| col.DefaultValue.ToLower() == "current_timestamp")
+					sysType=  "SystemMethods.CurrentDateTime";
+				else
+                	sysType=  "\"" +col.DefaultValue+"\"";
+                break;
+			}
+        }
+        return sysType;
+}
+
+Tables LoadTables(string connectionString, string schemaName = null, bool includeViews = false, bool makeSingular = false)
+{
+	SchemaReader reader = new SqlServerSchemaReader();
+	Tables tables = reader.ReadSchema(connectionString, schemaName, includeViews);
+
+    Regex rxClean = new Regex("^(Equals|GetHashCode|GetType|ToString|repo|Save|IsNew|Insert|Update|Delete|Exists|SingleOrDefault|Single|First|FirstOrDefault|Fetch|Page|Query)$");
+    foreach (var tbl in tables)
+    {
+		if (makeSingular)
+		{
+			tbl.ClassName = Inflector.MakeSingular(tbl.ClassName);
+		}
+
+        foreach (Column c in tbl.Columns)
+        {
+            c.PropertyName = rxClean.Replace(c.PropertyName, "_$1");
+
+            // Make sure property name doesn't clash with class name
+            if (c.PropertyName == tbl.ClassName)
+            {
+                c.PropertyName = "_" + c.PropertyName;
+            }
+        }
+    }
+
+    return tables;
+}
+
+List<SP> SPsNotSupported(string providerName)
+{
+	Warning("SP function creation is not supported for " + providerName);
+	WriteLine("");
+	WriteLine("// -----------------------------------------------------------------------------------------");
+	WriteLine("// SP function creation is not supported for  `{0}`", providerName);
+	WriteLine("// -----------------------------------------------------------------------------------------");
+	return new List<SP>();
+}
+
+string GetParamDirection(SPParamDir direction)
+		{ 
+		switch(direction)
+		{			
+			case SPParamDir.InAndOutDirection:
+				return "ParameterDirection.InputOutput";
+			case SPParamDir.OutDirection:
+				return "ParameterDirection.Output";
+			case SPParamDir.InDirection:
+			default:
+				return "ParameterDirection.Input";
+		} 
+		}
+
+
+List<SP> LoadSPs(string connectionString, string schemaName = null, bool includeSPReturnTypes = false)
+{
+	SchemaReader reader=new SqlServerSchemaReader();
+	List<SP> result = reader.ReadSPList(connectionString, schemaName, includeSPReturnTypes);
+
+
+        return result;
+
+}
+
+static int GetDatatypePrecision(string type)
+{
+	int startPos = type.IndexOf(",");
+	if (startPos < 0)
+		return -1;
+	int endPos = type.IndexOf(")");
+	if (endPos < 0)
+		return -1;
+	string typePrecisionStr = type.Substring(startPos+1,endPos-startPos-1);
+	int result = -1;
+	if (int.TryParse(typePrecisionStr,out result))
+		return result;
+	else
+		return -1;
+}
+
+static int GetDatatypeSize(string type)
+{
+	int startPos = type.IndexOf("(");
+	if (startPos < 0)
+		return -1;
+	int endPos = type.IndexOf(",");
+	if (endPos < 0)
+	{
+		endPos = type.IndexOf(")");
+	}
+	string typeSizeStr = type.Substring(startPos+1,endPos-startPos-1);
+	int result = -1;
+	if (int.TryParse(typeSizeStr,out result))
+		return result;
+	else
+		return -1;
+}
+
+abstract class SchemaReader
+{
+	protected readonly DbProviderFactory _factory;
+	
+	public SchemaReader(string providerName)
+    {
+		_factory = DbProviderFactories.GetFactory(providerName);
+    }
+
+	public abstract Tables ReadSchema(string connectionString, string schemaName, bool includeViews);
+	public abstract List<SP> ReadSPList(string connectionString, string schemaName, bool includeSPReturnTypes);
+}
+
+class SqlServerSchemaReader : SchemaReader
+{
+	public SqlServerSchemaReader()
+		: base("System.Data.SqlClient")
+	{
+	}
+
+	public override Tables ReadSchema(string connectionString, string schemaName, bool includeViews)
+	{
+		using (var connection = _factory.CreateConnection())
+        {
+			connection.ConnectionString = connectionString;
+			connection.Open();
+
+			Tables tables = LoadTables(connection, schemaName, includeViews);
+
+			foreach (Table tbl in tables)
+			{
+				tbl.Columns = LoadColumns(connection, tbl);
+
+				tbl.PrimaryKey = LoadPrimaryKey(connection, tbl);
+
+				tbl.Indices = LoadIndices(connection, tbl);
+			}
+				
+			LoadForeignKeys(connection, schemaName, tables);
+
+			return tables;
+        }
+	}
+
+	public override List<SP> ReadSPList(string connectionString, string schemaName, bool includeSPReturnTypes)
+	{
+		var result=new List<SP>();
+
+	/*	_connection=connection;
+		_factory=factory;
+
+		var cmd=_factory.CreateCommand();
+		cmd.Connection=connection;
+		cmd.CommandText=SP_NAMES_SQL;
+
+        //pull the tables in a reader
+        using(cmd)
+        {
+            using (var rdr=cmd.ExecuteReader())
+            {
+                while(rdr.Read())
+                {
+                    SP sp=new SP();
+                    sp.Name=rdr["sp_name"].ToString();
+                    sp.Schema = rdr["schema_name"].ToString();
+                    sp.CleanName=CleanUp(sp.Name);
+                    sp.ClassName=Inflector.MakeSingular(sp.CleanName);
+                    result.Add(sp);
+                }
+            }
+        }
+        foreach (var sp in result)
+        {
+            sp.Parameters=LoadSPParams(sp);
+			if (IncludeSPReturnTypes) sp.SPOutputColumns = LoadSPOutputColumns(sp);
+        }
+		*/
+        return result;
+    }
+
+	private Tables LoadTables(DbConnection connection, string schemaName, bool includeViews)
+    {
+		Tables tables = new Tables();
+
+		using (var cmd = _factory.CreateCommand())
+		{
+			cmd.Connection = connection;
+			cmd.CommandText = TABLE_SQL;
+
+			var p1 = cmd.CreateParameter();
+			p1.ParameterName = "@schemaName";
+			if (string.IsNullOrEmpty(schemaName))
+			{
+				p1.Value = DBNull.Value;
+			}
+			else
+			{
+				p1.Value = schemaName;
+			} 
+
+			var p2 = cmd.CreateParameter();
+			p2.ParameterName = "@includeViews";
+			p2.Value = includeViews;
+
+			cmd.Parameters.Add(p1);
+			cmd.Parameters.Add(p2);
+
+			using (var rdr = cmd.ExecuteReader())
+			{
+				while (rdr.Read())
+				{
+					Table tbl = new Table();
+
+					tbl.Name = rdr["TABLE_NAME"].ToString();
+					tbl.Schema = rdr["TABLE_SCHEMA"].ToString();
+					tbl.IsView = string.Equals(rdr["TABLE_TYPE"].ToString(), "VIEW", StringComparison.OrdinalIgnoreCase);
+
+					tbl.ClassName = CleanUp(tbl.Name);
+
+					tables.Add(tbl);
+				}
+			}
+		}
+		
+		return tables;
+    }
+
+	private List<Column> LoadColumns(DbConnection connection, Table tbl)
+	{
+		List<Column> columns = new List<Column>();
+
+		using (var cmd = _factory.CreateCommand())
+		{
+			cmd.Connection = connection;
+			cmd.CommandText = COLUMN_SQL;
+
+			var p1 = cmd.CreateParameter();
+			p1.ParameterName = "@tableName";
+			p1.Value = tbl.Name;
+
+			var p2 = cmd.CreateParameter();
+			p2.ParameterName = "@schemaName";
+			p2.Value = tbl.Schema;
+
+			cmd.Parameters.Add(p1);
+			cmd.Parameters.Add(p2);
+
+			using (var rdr = cmd.ExecuteReader())
+			{
+				while (rdr.Read())
+				{
+					Column col = new Column();
+
+					col.Name = rdr["COLUMN_NAME"].ToString();
+					col.Size = rdr["CHARACTER_MAXIMUM_LENGTH"] == DBNull.Value ? -1 : (int)rdr["CHARACTER_MAXIMUM_LENGTH"];
+					col.Precision = rdr["NUMERIC_PRECISION"] == DBNull.Value ? -1 : (byte)rdr["NUMERIC_PRECISION"];
+					col.Scale = rdr["NUMERIC_SCALE"] == DBNull.Value ? -1 : (int)rdr["NUMERIC_SCALE"];
+					col.IsNullable = string.Equals(rdr["IS_NULLABLE"].ToString(), "YES", StringComparison.OrdinalIgnoreCase);
+					col.IsAutoIncrement = ((int)rdr["IsIdentity"]) == 1;
+					col.IsComputed = ((int)rdr["IsComputed"]) == 1;
+					col.Description = rdr["MS_Description"].ToString();
+
+					col.PropertyName = CleanUp(col.Name);
+					col.PropertyType = GetPropertyType(rdr["DATA_TYPE"].ToString());
+					col.ParentTable = tbl;
+
+					columns.Add(col);
+				}
+			}
+		}
+	
+		return columns;
+	}
+
+    private PKey LoadPrimaryKey(DbConnection connection, Table tbl)
+	{
+		PKey pk = null;
+
+		using (var cmd = _factory.CreateCommand())
+		{
+			cmd.Connection = connection;
+			cmd.CommandText = PRIMARY_KEYS_SQL;
+
+			var p1 = cmd.CreateParameter();
+			p1.ParameterName = "@tableName";
+			p1.Value = tbl.Name;
+
+			var p2 = cmd.CreateParameter();
+			p2.ParameterName = "@schemaName";
+			p2.Value = tbl.Schema;
+
+			cmd.Parameters.Add(p1);
+			cmd.Parameters.Add(p2);
+
+			using (var rdr = cmd.ExecuteReader())
+			{
+				while (rdr.Read())
+				{
+					if (pk == null)
+					{
+						pk = new PKey();
+						
+						pk.Name = rdr["CONSTRAINT_NAME"].ToString();
+					}
+
+					string columnName = rdr["COLUMN_NAME"].ToString();
+
+					Column col = tbl.Columns.Where(c => c.Name == columnName).SingleOrDefault();
+					if (col != null)
+                    {
+						pk.PKeyColumns.Add(col);
+                    }
+				}
+			}
+		}
+
+		return pk;
+	}
+
+    private List<TableIndex> LoadIndices(DbConnection connection, Table tbl)
+    {
+        List<TableIndex> indices = new List<TableIndex>();
+
+        using (var cmd1 = _factory.CreateCommand())
+        {
+            cmd1.Connection = connection;
+            cmd1.CommandText = INDEX_COL_SQL;
+
+			var p1 = cmd1.CreateParameter();
+			p1.ParameterName = "@tableName";
+			p1.Value = tbl.Name;
+
+			var p2 = cmd1.CreateParameter();
+			p2.ParameterName = "@schemaName";
+			p2.Value = tbl.Schema;
+
+			cmd1.Parameters.Add(p1);
+			cmd1.Parameters.Add(p2);
+
+            using (var rdr = cmd1.ExecuteReader())
+            {
+            	while (rdr.Read())
+            	{
+					string indexName = rdr["IndexName"].ToString();
+					
+					TableIndex idx = indices.Where(i => i.Name == indexName).SingleOrDefault();
+					if (idx == null)
+                    {
+						idx = new TableIndex();
+
+            			idx.Name = indexName;
+            			idx.IsUnique = (bool)rdr["IsUnique"];
+						idx.IsClustered = string.Equals(rdr["TypeDesc"].ToString(), "CLUSTERED", StringComparison.OrdinalIgnoreCase);
+					
+						idx.ParentTable = tbl;
+
+            			indices.Add(idx);
+                    }
+
+					string colName = rdr["ColumnName"].ToString();
+					Column col = tbl.Columns.Where(c => c.Name == colName).SingleOrDefault();
+					if (col != null)
+                    {
+						idx.IndexColumns.Add(col);
+                    }
+            	}
+            }
+        }
+
+        return indices;
+	}
+
+	private void LoadForeignKeys(DbConnection connection, string schemaName, Tables tbls)
+    {
+		using (var cmd = _factory.CreateCommand())
+		{
+			cmd.Connection = connection;
+			cmd.CommandText = FOREIGN_KEYS_SQL;
+
+			var p1 = cmd.CreateParameter();
+			p1.ParameterName = "@schemaName";
+			if (string.IsNullOrEmpty(schemaName))
+			{
+				p1.Value = DBNull.Value;
+			}
+			else
+			{
+				p1.Value = schemaName;
+			}
+
+			cmd.Parameters.Add(p1);
+
+			using (var rdr = cmd.ExecuteReader())
+			{
+				while (rdr.Read())
+				{
+					string fkName = rdr["CONSTRAINT_NAME"].ToString(); 
+					string fkTableSchema = rdr["FK_TABLE_SCHEMA"].ToString();
+					string fkTableName = rdr["FK_TABLE_NAME"].ToString();
+
+					Table tbl = tbls.Where(t => t.Schema == fkTableSchema && t.Name == fkTableName).SingleOrDefault();
+					if (tbl != null)
+                    {
+						FKey fk = tbl.ForeignKeys.Where(f => f.Name == fkName).SingleOrDefault();
+						if (fk == null)
+                        {
+							fk = new FKey();
+							
+							fk.Name = fkName;
+							fk.DeleteRule = string.Equals(rdr["DELETE_RULE"].ToString(), "NO ACTION", StringComparison.OrdinalIgnoreCase) ? null : rdr["DELETE_RULE"].ToString();
+							fk.UpdateRule = string.Equals(rdr["UPDATE_RULE"].ToString(), "NO ACTION", StringComparison.OrdinalIgnoreCase) ? null : rdr["UPDATE_RULE"].ToString();
+
+							tbl.ForeignKeys.Add(fk);
+                        }
+
+						string fkColumnName = rdr["FK_COLUMN_NAME"].ToString();
+
+						Column col = tbl.Columns.Where(c => c.Name == fkColumnName).SingleOrDefault();
+						if (col != null)
+                        {
+							fk.FromColumns.Add(col);
+
+							string refTableSchema = rdr["REF_TABLE_SCHEMA"].ToString();
+							string refTableName = rdr["REF_TABLE_NAME"].ToString();
+							string refColumnName = rdr["REF_COLUMN_NAME"].ToString();
+
+							Table reftbl = tbls.Where(t => t.Schema == refTableSchema && t.Name == refTableName).SingleOrDefault();
+							if (reftbl != null)
+							{
+								Column refcol = reftbl.Columns.Where(c => c.Name == refColumnName).SingleOrDefault();
+								if (refcol != null)
+								{
+									fk.ReferencedColumns.Add(refcol);
+								}
+							}
+                        }
+                    }
+				}
+			}
+		}
+    }
+
+	List<SPParam> LoadSPParams(SP sp)
+	{
+		using (var cmd=_factory.CreateCommand())
+		{
+			//cmd.Connection=_connection;
+			cmd.CommandText=SP_PARAMETERS_SQL;
+
+			var p = cmd.CreateParameter();
+			p.ParameterName = "@spname";
+			p.Value=sp.Name;
+			cmd.Parameters.Add(p);
+
+			var result=new List<SPParam>();
+			using (var rdr=cmd.ExecuteReader())
+			{
+				while(rdr.Read())
+				{
+				    if (rdr["IS_RESULT"].ToString().ToUpper() == "YES")
+					   continue;
+					SPParam param=new SPParam();
+					param.SysType=GetPropertyType(rdr["DATA_TYPE"].ToString());
+					param.NullableSysType=GetNullablePropertyType(rdr["DATA_TYPE"].ToString());
+					param.DbType=GetDbType(rdr["DATA_TYPE"].ToString()).ToString();
+					param.Name=rdr["PARAMETER_NAME"].ToString().Replace("@","");
+					param.CleanName=CleanUp(param.Name);
+				    if (rdr["PARAMETER_MODE"].ToString().ToUpper() == "OUT")
+					   param.Direction = SPParamDir.OutDirection;
+					else if (rdr["PARAMETER_MODE"].ToString().ToUpper() == "IN")
+					   param.Direction = SPParamDir.InDirection;
+					else
+					   param.Direction = SPParamDir.InAndOutDirection;
+					result.Add(param);
+				}
+			}
+			return result;
+		}
+	}
+
+	List<SPOutputColumn> LoadSPOutputColumns(SP sp)
+	{ 
+		var result=new List<SPOutputColumn>();
+		using (var cmd=_factory.CreateCommand())
+		{
+			//cmd.Connection=_connection;
+			cmd.CommandText=string.Format(@"SELECT name,CAST(is_nullable as VARCHAR(1)) is_nullable,system_type_name FROM sys.dm_exec_describe_first_result_set_for_object(OBJECT_ID('{0}'), 1)  WHERE is_hidden = 0",sp.SchemaQualifiedName);
+			using (var rdr=cmd.ExecuteReader())
+			{
+				while(rdr.Read())
+				{   
+					if (!rdr.IsDBNull(0))
+					{
+						SPOutputColumn param=new SPOutputColumn();
+						param.Name = rdr["name"].ToString();
+
+						var sqlType = rdr["system_type_name"].ToString();
+						var index = sqlType.IndexOf('('); //Trim off size data
+						if (index > 0) sqlType = sqlType.Substring(0,index);
+
+						var nullable = rdr["is_nullable"].ToString() ; 
+						if (nullable == "0")
+						{ 
+							param.DotNetType = GetPropertyType(sqlType);
+						}
+						else
+						{ 
+							param.DotNetType = GetNullablePropertyType(sqlType);
+						}
+					if (!result.Any(t=>t.Name == param.Name)) result.Add(param);
+					}   
+				}
+			}				
+		} 
+		return result;
+	}
+
+	private string GetPropertyType(string sqlType)
+	{
+		string propertyType;
+		string dbType;
+		GetPropertyAndDbType(sqlType, out propertyType, out dbType);
+		
+		return propertyType;
+	}
+
+    string GetNullablePropertyType(string sqlType)
+    {
+        string value = GetPropertyType(sqlType);
+        if (value.ToUpper() != "STRING" && value.ToUpper() != "BYTE[]")
+            return value + "?";
+        else
+            return value;
+    }
+
+	private string GetDbType(string sqlType)
+	{
+		string propertyType;
+		string dbType;
+		GetPropertyAndDbType(sqlType, out propertyType, out dbType);
+		
+		return dbType;
+	}
+
+	private void GetPropertyAndDbType(string sqlType, out string propertyType,out string dbType)
+	{
+		string sysType = "string";
+		string sysDbType = "DbType.String";
+		
+		switch (sqlType.ToLower())
+		{
+			case "varchar":
+				sysType = "string";
+				sysDbType = "DbType.AnsiString";
+				break;
+			case "bigint":
+				sysType = "long";
+				sysDbType = "DbType.Int64";
+				break;
+			case "smallint":
+				sysType = "short";
+				sysDbType = "DbType.Int16";
+				break;
+			case "int":
+				sysType = "int";
+				sysDbType = "DbType.Int32";
+				break;
+			case "uniqueidentifier":
+				sysType = "Guid";
+				sysDbType = "DbType.Guid";
+				break;
+			case "smalldatetime":
+			case "datetime":
+			case "datetime2":
+			case "date":
+				sysType = "DateTime";
+				sysDbType = "DbType.DateTime";
+				break;
+			case "time":
+				sysType = "TimeSpan";
+				sysDbType = "DbType.Time";
+				break;
+			case "datetimeoffset":
+				sysType = "DateTimeOffset";
+				sysDbType = "DbType.DateTimeOffset";
+				break;
+  			case "float":
+				sysType = "double";
+				sysDbType = "DbType.Double";
+				break;
+			case "real":
+				sysType = "float";
+				sysDbType = "DbType.Double";
+				break;
+			case "numeric":
+			case "smallmoney":
+			case "decimal":
+			case "money":
+				sysType = "decimal";
+				sysDbType = "DbType.Decimal";
+				break;
+			case "tinyint":
+				sysType = "byte";
+				sysDbType = "DbType.Byte";
+				break;
+			case "bit":
+				sysType = "bool";
+				sysDbType = "DbType.Boolean";
+				break;
+			case "image":
+			case "binary":
+			case "varbinary":
+			case "timestamp":
+				sysType = "byte[]";
+				sysDbType = "DbType.Binary";
+				break;
+			case "geography":
+				sysType = "Microsoft.SqlServer.Types.SqlGeography";
+				sysDbType = "DbType.";
+				break;
+			case "geometry":
+				sysType = "Microsoft.SqlServer.Types.SqlGeometry";
+				sysDbType = "DbType.";
+				break;
+		}
+
+		propertyType = sysType;
+		dbType = sysDbType;
+	}
+
+	const string TABLE_SQL = @"SELECT TBL.TABLE_SCHEMA,
+			TBL.TABLE_NAME,
+			TBL.TABLE_TYPE
+		FROM INFORMATION_SCHEMA.TABLES TBL
+		WHERE (@schemaName IS NULL OR TBL.TABLE_SCHEMA=@schemaName)
+			AND (TBL.TABLE_TYPE='BASE TABLE' OR (@includeViews=1 AND TBL.TABLE_TYPE='VIEW'))";
+
+	const string COLUMN_SQL = @"SELECT COL.TABLE_SCHEMA,
+		COL.TABLE_NAME,
+		COL.COLUMN_NAME,
+		COL.IS_NULLABLE,
+		COL.DATA_TYPE,
+		COL.CHARACTER_MAXIMUM_LENGTH,
+		COL.NUMERIC_PRECISION,
+		COL.NUMERIC_SCALE,
+		COLUMNPROPERTY(OBJECT_ID('[' + COL.TABLE_SCHEMA + '].[' + COL.TABLE_NAME + ']'), COL.COLUMN_NAME, 'IsIdentity') as IsIdentity,
+		COLUMNPROPERTY(OBJECT_ID('[' + COL.TABLE_SCHEMA + '].[' + COL.TABLE_NAME + ']'), COL.COLUMN_NAME, 'IsComputed') as IsComputed,
+		PROP.value as MS_Description
+	FROM INFORMATION_SCHEMA.COLUMNS COL
+	LEFT JOIN SYS.EXTENDED_PROPERTIES PROP ON PROP.name='MS_Description' AND PROP.class=1
+		AND PROP.major_id=OBJECT_ID('[' + COL.TABLE_SCHEMA + '].[' + COL.TABLE_NAME + ']') AND PROP.minor_id=COL.ORDINAL_POSITION
+	WHERE COL.TABLE_NAME=@tableName AND COL.TABLE_SCHEMA=@schemaName
+	ORDER BY COL.TABLE_SCHEMA, COL.TABLE_NAME, COL.ORDINAL_POSITION";
+
+	const string PRIMARY_KEYS_SQL = @"SELECT TC.CONSTRAINT_NAME,
+		TC.TABLE_SCHEMA,
+		TC.TABLE_NAME,
+		KCU.COLUMN_NAME
+	FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS TC
+	INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE KCU ON TC.TABLE_SCHEMA=KCU.TABLE_SCHEMA AND TC.TABLE_NAME=KCU.TABLE_NAME AND TC.CONSTRAINT_NAME=KCU.CONSTRAINT_NAME
+	WHERE TC.CONSTRAINT_TYPE='PRIMARY KEY'
+		AND (TC.TABLE_NAME=@tableName AND TC.TABLE_SCHEMA=@schemaName)
+	ORDER BY KCU.ORDINAL_POSITION";
+
+    const string INDEX_COL_SQL = @"SELECT SCH.name as SchemaName,
+		TBL.name as TableName,
+		IDX.name as IndexName,
+		IDX.is_unique as IsUnique,
+		IDX.type_desc as TypeDesc,
+		COL.name as ColumnName
+	FROM sys.schemas SCH 
+	INNER JOIN sys.tables TBL ON SCH.schema_id=TBL.schema_id
+	INNER JOIN sys.indexes IDX ON TBL.object_id=IDX.object_id
+	INNER JOIN sys.index_columns IC ON IDX.object_id=IC.object_id AND IDX.index_id=IC.index_id
+	INNER JOIN sys.columns COL ON IC.object_id=COL.object_id AND IC.column_id=COL.column_id
+	WHERE IDX.is_primary_key=0
+		AND TBL.name=@tableName AND SCH.name=@schemaName
+	ORDER BY SCH.name, TBL.name, IDX.name, IC.key_ordinal";
+
+	const string FOREIGN_KEYS_SQL = @"SELECT RC.CONSTRAINT_NAME,
+		RC.DELETE_RULE,
+		RC.UPDATE_RULE,
+		KCU1.TABLE_SCHEMA as FK_TABLE_SCHEMA,
+		KCU1.TABLE_NAME as FK_TABLE_NAME,
+		KCU1.COLUMN_NAME as FK_COLUMN_NAME,
+		KCU2.CONSTRAINT_NAME as REF_CONSTRAINT_NAME,
+		KCU2.TABLE_SCHEMA as REF_TABLE_SCHEMA,
+		KCU2.TABLE_NAME as REF_TABLE_NAME,
+		KCU2.COLUMN_NAME as REF_COLUMN_NAME
+	FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS RC
+	INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE KCU1 ON KCU1.CONSTRAINT_SCHEMA=RC.CONSTRAINT_SCHEMA AND KCU1.CONSTRAINT_NAME=RC.CONSTRAINT_NAME 
+	INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE KCU2 ON KCU2.CONSTRAINT_SCHEMA=RC.UNIQUE_CONSTRAINT_SCHEMA AND KCU2.CONSTRAINT_NAME=RC.UNIQUE_CONSTRAINT_NAME 
+		AND KCU2.ORDINAL_POSITION=KCU1.ORDINAL_POSITION
+	WHERE (@schemaName IS NULL OR KCU1.TABLE_SCHEMA=@schemaName)
+	ORDER BY KCU1.TABLE_SCHEMA, KCU1.TABLE_NAME, KCU1.CONSTRAINT_NAME, KCU1.ORDINAL_POSITION";
+
+    const string SP_NAMES_SQL=@"SELECT  o.name AS sp_name, s.name AS schema_name
+FROM    sys.objects o
+        INNER JOIN sys.schemas s ON o.schema_id = s.schema_id
+WHERE   o.type = 'P'
+        AND o.name NOT IN ( 'fn_diagramobjects', 'sp_alterdiagram',
+                            'sp_creatediagram', 'sp_dropdiagram',
+                            'sp_helpdiagramdefinition', 'sp_helpdiagrams',
+                            'sp_renamediagram', 'sp_upgraddiagrams',
+                            'sysdiagrams' )";
+
+
+    const string SP_PARAMETERS_SQL=@"SELECT * from INFORMATION_SCHEMA.PARAMETERS
+                                where SPECIFIC_NAME = @spname
+                                order by ORDINAL_POSITION";
+
+}
+
+/// <summary>
+/// Summary for the Inflector class
+/// </summary>
+public static class Inflector {
+    private static readonly List<InflectorRule> _plurals = new List<InflectorRule>();
+    private static readonly List<InflectorRule> _singulars = new List<InflectorRule>();
+    private static readonly List<string> _uncountables = new List<string>();
+
+    /// <summary>
+    /// Initializes the <see cref="Inflector"/> class.
+    /// </summary>
+    static Inflector() {
+        AddPluralRule("$", "s");
+        AddPluralRule("s$", "s");
+        AddPluralRule("(ax|test)is$", "$1es");
+        AddPluralRule("(octop|vir)us$", "$1i");
+        AddPluralRule("(alias|status)$", "$1es");
+        AddPluralRule("(bu)s$", "$1ses");
+        AddPluralRule("(buffal|tomat)o$", "$1oes");
+        AddPluralRule("([ti])um$", "$1a");
+        AddPluralRule("sis$", "ses");
+        AddPluralRule("(?:([^f])fe|([lr])f)$", "$1$2ves");
+        AddPluralRule("(hive)$", "$1s");
+        AddPluralRule("([^aeiouy]|qu)y$", "$1ies");
+        AddPluralRule("(x|ch|ss|sh)$", "$1es");
+        AddPluralRule("(matr|vert|ind)ix|ex$", "$1ices");
+        AddPluralRule("([m|l])ouse$", "$1ice");
+        AddPluralRule("^(ox)$", "$1en");
+        AddPluralRule("(quiz)$", "$1zes");
+
+        AddSingularRule("s$", String.Empty);
+        AddSingularRule("ss$", "ss");
+        AddSingularRule("(n)ews$", "$1ews");
+        AddSingularRule("([ti])a$", "$1um");
+        AddSingularRule("((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$", "$1$2sis");
+        AddSingularRule("(^analy)ses$", "$1sis");
+        AddSingularRule("([^f])ves$", "$1fe");
+        AddSingularRule("(hive)s$", "$1");
+        AddSingularRule("(tive)s$", "$1");
+        AddSingularRule("([lr])ves$", "$1f");
+        AddSingularRule("([^aeiouy]|qu)ies$", "$1y");
+        AddSingularRule("(s)eries$", "$1eries");
+        AddSingularRule("(m)ovies$", "$1ovie");
+        AddSingularRule("(x|ch|ss|sh)es$", "$1");
+        AddSingularRule("([m|l])ice$", "$1ouse");
+        AddSingularRule("(bus)es$", "$1");
+        AddSingularRule("(o)es$", "$1");
+        AddSingularRule("(shoe)s$", "$1");
+        AddSingularRule("(cris|ax|test)es$", "$1is");
+        AddSingularRule("(octop|vir)i$", "$1us");
+        AddSingularRule("(alias|status)$", "$1");
+        AddSingularRule("(alias|status)es$", "$1");
+        AddSingularRule("^(ox)en", "$1");
+        AddSingularRule("(vert|ind)ices$", "$1ex");
+        AddSingularRule("(matr)ices$", "$1ix");
+        AddSingularRule("(quiz)zes$", "$1");
+
+        AddIrregularRule("person", "people");
+        AddIrregularRule("man", "men");
+        AddIrregularRule("child", "children");
+        AddIrregularRule("sex", "sexes");
+        AddIrregularRule("tax", "taxes");
+        AddIrregularRule("move", "moves");
+
+        AddUnknownCountRule("equipment");
+        AddUnknownCountRule("information");
+        AddUnknownCountRule("rice");
+        AddUnknownCountRule("money");
+        AddUnknownCountRule("species");
+        AddUnknownCountRule("series");
+        AddUnknownCountRule("fish");
+        AddUnknownCountRule("sheep");
+    }
+
+    /// <summary>
+    /// Adds the irregular rule.
+    /// </summary>
+    /// <param name="singular">The singular.</param>
+    /// <param name="plural">The plural.</param>
+    private static void AddIrregularRule(string singular, string plural) {
+        AddPluralRule(String.Concat("(", singular[0], ")", singular.Substring(1), "$"), String.Concat("$1", plural.Substring(1)));
+        AddSingularRule(String.Concat("(", plural[0], ")", plural.Substring(1), "$"), String.Concat("$1", singular.Substring(1)));
+    }
+
+    /// <summary>
+    /// Adds the unknown count rule.
+    /// </summary>
+    /// <param name="word">The word.</param>
+    private static void AddUnknownCountRule(string word) {
+        _uncountables.Add(word.ToLower());
+    }
+
+    /// <summary>
+    /// Adds the plural rule.
+    /// </summary>
+    /// <param name="rule">The rule.</param>
+    /// <param name="replacement">The replacement.</param>
+    private static void AddPluralRule(string rule, string replacement) {
+        _plurals.Add(new InflectorRule(rule, replacement));
+    }
+
+    /// <summary>
+    /// Adds the singular rule.
+    /// </summary>
+    /// <param name="rule">The rule.</param>
+    /// <param name="replacement">The replacement.</param>
+    private static void AddSingularRule(string rule, string replacement) {
+        _singulars.Add(new InflectorRule(rule, replacement));
+    }
+
+    /// <summary>
+    /// Makes the plural.
+    /// </summary>
+    /// <param name="word">The word.</param>
+    /// <returns></returns>
+    public static string MakePlural(string word) {
+        return ApplyRules(_plurals, word);
+    }
+
+    /// <summary>
+    /// Makes the singular.
+    /// </summary>
+    /// <param name="word">The word.</param>
+    /// <returns></returns>
+    public static string MakeSingular(string word) {
+        return ApplyRules(_singulars, word);
+    }
+
+    /// <summary>
+    /// Applies the rules.
+    /// </summary>
+    /// <param name="rules">The rules.</param>
+    /// <param name="word">The word.</param>
+    /// <returns></returns>
+    private static string ApplyRules(IList<InflectorRule> rules, string word) {
+        string result = word;
+        if (!_uncountables.Contains(word.ToLower())) {
+            for (int i = rules.Count - 1; i >= 0; i--) {
+                string currentPass = rules[i].Apply(word);
+                if (currentPass != null) {
+                    result = currentPass;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Converts the string to title case.
+    /// </summary>
+    /// <param name="word">The word.</param>
+    /// <returns></returns>
+    public static string ToTitleCase(string word) {
+        return Regex.Replace(ToHumanCase(AddUnderscores(word)), @"\b([a-z])",
+            delegate(Match match) { return match.Captures[0].Value.ToUpper(); });
+    }
+
+    /// <summary>
+    /// Converts the string to human case.
+    /// </summary>
+    /// <param name="lowercaseAndUnderscoredWord">The lowercase and underscored word.</param>
+    /// <returns></returns>
+    public static string ToHumanCase(string lowercaseAndUnderscoredWord) {
+        return MakeInitialCaps(Regex.Replace(lowercaseAndUnderscoredWord, @"_", " "));
+    }
+
+    /// <summary>
+    /// Adds the underscores.
+    /// </summary>
+    /// <param name="pascalCasedWord">The pascal cased word.</param>
+    /// <returns></returns>
+    public static string AddUnderscores(string pascalCasedWord) {
+        return Regex.Replace(Regex.Replace(Regex.Replace(pascalCasedWord, @"([A-Z]+)([A-Z][a-z])", "$1_$2"), @"([a-z\d])([A-Z])", "$1_$2"), @"[-\s]", "_").ToLower();
+    }
+
+    /// <summary>
+    /// Makes the initial caps.
+    /// </summary>
+    /// <param name="word">The word.</param>
+    /// <returns></returns>
+    public static string MakeInitialCaps(string word) {
+        return String.Concat(word.Substring(0, 1).ToUpper(), word.Substring(1).ToLower());
+    }
+
+    /// <summary>
+    /// Makes the initial lower case.
+    /// </summary>
+    /// <param name="word">The word.</param>
+    /// <returns></returns>
+    public static string MakeInitialLowerCase(string word) {
+        return String.Concat(word.Substring(0, 1).ToLower(), word.Substring(1));
+    }
+
+
+    /// <summary>
+    /// Determine whether the passed string is numeric, by attempting to parse it to a double
+    /// </summary>
+    /// <param name="str">The string to evaluated for numeric conversion</param>
+    /// <returns>
+    /// 	<c>true</c> if the string can be converted to a number; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool IsStringNumeric(string str) {
+        double result;
+        return (double.TryParse(str, System.Globalization.NumberStyles.Float, System.Globalization.NumberFormatInfo.CurrentInfo, out result));
+    }
+
+    /// <summary>
+    /// Adds the ordinal suffix.
+    /// </summary>
+    /// <param name="number">The number.</param>
+    /// <returns></returns>
+    public static string AddOrdinalSuffix(string number) {
+        if (IsStringNumeric(number)) {
+            int n = int.Parse(number);
+            int nMod100 = n % 100;
+
+            if (nMod100 >= 11 && nMod100 <= 13)
+                return String.Concat(number, "th");
+
+            switch (n % 10) {
+                case 1:
+                    return String.Concat(number, "st");
+                case 2:
+                    return String.Concat(number, "nd");
+                case 3:
+                    return String.Concat(number, "rd");
+                default:
+                    return String.Concat(number, "th");
+            }
+        }
+        return number;
+    }
+
+    /// <summary>
+    /// Converts the underscores to dashes.
+    /// </summary>
+    /// <param name="underscoredWord">The underscored word.</param>
+    /// <returns></returns>
+    public static string ConvertUnderscoresToDashes(string underscoredWord) {
+        return underscoredWord.Replace('_', '-');
+    }
+
+
+    #region Nested type: InflectorRule
+
+    /// <summary>
+    /// Summary for the InflectorRule class
+    /// </summary>
+    private class InflectorRule {
+        /// <summary>
+        ///
+        /// </summary>
+        public readonly Regex regex;
+
+        /// <summary>
+        ///
+        /// </summary>
+        public readonly string replacement;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InflectorRule"/> class.
+        /// </summary>
+        /// <param name="regexPattern">The regex pattern.</param>
+        /// <param name="replacementText">The replacement text.</param>
+        public InflectorRule(string regexPattern, string replacementText) {
+            regex = new Regex(regexPattern, RegexOptions.IgnoreCase);
+            replacement = replacementText;
+        }
+
+        /// <summary>
+        /// Applies the specified word.
+        /// </summary>
+        /// <param name="word">The word.</param>
+        /// <returns></returns>
+        public string Apply(string word) {
+            if (!regex.IsMatch(word))
+                return null;
+
+            string replace = regex.Replace(word, replacement);
+            if (word == word.ToUpper())
+                replace = replace.ToUpper();
+
+            return replace;
+        }
+    }
+
+    #endregion
+}
+#>

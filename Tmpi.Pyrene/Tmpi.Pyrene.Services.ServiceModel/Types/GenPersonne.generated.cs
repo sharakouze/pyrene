@@ -32,10 +32,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int ClePersonne { get; set; }
 
+		/// <summary>
+		/// Code unique.
+		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodPersonne { get; set; }
 
 		/// <summary>
@@ -54,8 +57,11 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ApiMember(Description = "Prénom.", DataType = SwaggerDataTypes.String)]
 		public string PrePersonne { get; set; }
 
+		/// <summary>
+		/// Commentaire ou description.
+		/// </summary>
 		[StringLength(500)]
-		[ApiMember(DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
 		public string TxtPersonne { get; set; }
 
 		/// <summary>
@@ -115,7 +121,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public string NumEmail { get; set; }
 
 		[Reference]
-		public List<GenPersonneProfil> LstProfil { get; set; }
+		public GenPersonneProfil Profil { get; set; }
+
+		[Reference]
+		public GenPersonneProfil Profil { get; set; }
+
+		[Reference]
+		public GenPersonneProfil Profil { get; set; }
+
+		[Reference]
+		public GenPersonneProfil Profil { get; set; }
 
 		[Reference]
 		public GenPersonneSignature Signature { get; set; }

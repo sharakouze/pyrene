@@ -1,7 +1,14 @@
-﻿<#@ template language="C#" hostspecific="true" #>
-<#@ include file="$(SolutionDir)Shared\MultipleOutputHelper.ttinclude" #>
-<#@ include file="$(SolutionDir)Shared\VisualStudioHelper.ttinclude" #>
-<#@ include file="$(SolutionDir)Shared\OrmLite.Core.ttinclude" #>
+﻿<#@ template language="C#" hostspecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="EnvDTE.dll" #>
+<#@ assembly name="System.Core.dll" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Linq" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\VisualStudioHelper.ttinclude" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\SqlSchemaReader.ttinclude" #>
 <#
 	/***** TODO *****
 	- DefaultAttribute
@@ -14,9 +21,14 @@
 	/** CUSTOM SETTINGS **/
 	/*********************/
 
-    ConnectionStringName = "PyreneModel";			// Uses last connection string in config if not specified
-    ClassPrefix = "";
-    ClassSuffix = "";
+	// chaine de connection pour l'extration du schéma
+    string ConnectionString = @"Server=(LocalDB)\MSSQLLocalDB;Database=TMPI_PYRENE;Integrated Security=True;MultipleActiveResultSets=True";
+
+	// schema ou vide pour tous les schémas
+	string SchemaName = "";
+
+    // if true: Changes the classname to singular if tablename is not singular.
+    bool MakeSingular = false;
 
     // Namespace des fichiers générés. Si vide DefaultNamespace du projet/répertoire courant.
     string Namespace = "";
@@ -60,148 +72,27 @@
     // true pour transformer la route de la ressource, ex: GenFournContact de '/GenFournContact/' en '/GenFourn/{xxx}/Contact/'.
     bool TransformRoutePath = true;
 
-    // true pour ajouter l'attribut [IgnoreDataMember] pour les clés primaires et foreign keys
-    bool AddIgnoreDataMemberForKeys = true;
+    bool UsePKAsRouteId = false;
 
     // Filtre les routes générées.
     Regex PutTableFilterExclude = null;
     Regex PostTableFilterExclude = null;
 
-    // if true: Changes the classname to singular if tablename is not singular.
-    bool MakeSingular = false;
-
-    // if true: Will create <TypeName>Query types with all possible search fields explicitly typed.
-    bool CreateAutoQueryTypes = false;
-
-    // if true: Adds NamedConnection attribute so AutoQuery will override default IDbConnection
-    bool AddNamedConnection = false;
-
-    // if not null: Will use name provided as NamedConnection and AddNamedConnection = true, else ConnectionStringName is used as default NamedConnection
-    string UseSpecificNamedConnection = "";
-
     // Si non null, méthode appliquée sur la collection des tables
-    Action<Tables> tweakSchema = null;
-    tweakSchema = tables =>
+    Action<Tables> TweakSchema = (tables) =>
     {	
-        // Tweak Schema
-        // tables["tablename"].Ignore = true;							// To ignore a table
-        // tables["tablename"].ClassName = "newname";					// To change the class name of a table
-        // tables["tablename"]["columnname"].Ignore = true;			// To ignore a column
-        // tables["tablename"]["columnname"].PropertyName="newname";	// To change the property name of a column
-        // tables["tablename"]["columnname"].PropertyType="bool";		// To change the property type of a column
+		tables.RemoveAll(t => t.Name == "__RefactorLog");
 
-        try
-        {
-            tables["__RefactorLog"].Ignore = true;
-        }
-        catch {
-        }
-		
-        try
-        {
-            // enums
-            tables["GenCompteur"]["TypCompteur"].PropertyType = "TypCompteur";
-            tables["GenCompteur"]["TypPeriodicite"].PropertyType = "TypPeriodicite";
-            tables["GenMandat"]["TypMandat"].PropertyType = "TypMandat";
-            tables["GenPersonne"]["TypCivilite"].PropertyType = "TypCivilite";
-            tables["GenFourn"]["TypModeReglement"].PropertyType = "TypModeReglement";
-            tables["GenFournContact"]["TypCivilite"].PropertyType = "TypCivilite";
-        }
-        catch {
-        }
+		tables.ChangePropertyType("GenCompteur", "TypCompteur", "TypCompteur");
+		tables.ChangePropertyType("GenCompteur", "TypPeriodicite", "TypPeriodicite");
+		tables.ChangePropertyType("GenMandat", "TypMandat", "TypMandat");
+		tables.ChangePropertyType("GenPersonne", "TypCivilite", "TypCivilite");
+		tables.ChangePropertyType("GenFourn", "TypModeReglement", "TypModeReglement");
+		tables.ChangePropertyType("GenFournContact", "TypCivilite", "TypCivilite");
     };
 
 #>
 <#
-    // Read schema
-    Tables allTables = LoadTables(MakeSingular);
-    if (tweakSchema != null)
-    {
-        tweakSchema(allTables);
-    }
-
-    // cherche parmi les contraintes uniques ou PK les meilleures colonnes pour identifier la ressource
-    Func<Table, List<Column>> getBestUniqueColumns = table =>
-    {
-        if (AddIgnoreDataMemberForKeys && (table.Indices != null))
-        {
-			TableIndex minUniqueIndex = table.Indices.Where(idx => idx.IsUnique).OrderBy(idx => idx.IndexColumns.Count).FirstOrDefault();
-			if (minUniqueIndex != null)
-			{
-				IEnumerable<Column> q = from idxcol in minUniqueIndex.IndexColumns
-					join col in table.Columns on idxcol.Name equals col.Name
-					select col;
-				return q.ToList();
-			}
-        }
-		if (table.HasPK())
-        {
-			return new List<Column>(new [] { table.PK });
-        }
-        return null;
-    };
-
-	// retourne la FK pointant sur la table parent la plus proche
-	Func<Table, FKey> getParentFKey = table =>
-    {
-        if (table.FKeys != null)
-        {
-            // si plusieurs parents, on prend le + proche (celui avec le nom le plus long)
-            FKey fkey = table.FKeys
-				.Where(fk => table.Name.StartsWith(fk.ToTable))
-				.OrderByDescending(fk => fk.ToTable.Length)
-				.FirstOrDefault();
-			return fkey;
-		}
-		return null;
-    };
-
-    // extraction du route path suivant les ForeignKeys/enfants
-    // exemple : classe GenFournContact passe de '/GenFournContact/' en '/GenFourn/{xxx}/Contact/'
-    Func<Table, List<string>> getRoutePartsFromTable = null;
-    getRoutePartsFromTable = table =>
-    {
-        List<string> lstRoute = new List<string>();
-        List<string> parts = new List<string>();
-
-		FKey fkey = getParentFKey(table);
-        if (fkey != null)
-        {
-			Table parentTable = allTables.SingleOrDefault(t => t.Name == fkey.ToTable);
-            Column fromCol = table.Columns.Where(c => c.Name == fkey.FromColumn).First();
-
-            List<string> keys = new List<string>(new [] { fromCol.PropertyName });
-
-            if (AddIgnoreDataMemberForKeys)
-            {
-                List<Column> lstCol = getBestUniqueColumns(parentTable);
-                if (lstCol != null)
-                {
-                    keys = lstCol.Select(c => c.PropertyName).ToList();
-                }
-            }
-
-            if (keys != null)
-            {
-				string format = fkey.FromColumn.Replace(fkey.ToColumn, "{0}");
-                parts.AddRange(keys.Select(k => "{" + string.Format(format, k) + "}"));
-            }
-
-            string newTableName = table.Name.Replace(parentTable.Name, "");
-            parts.Add(newTableName);
-
-            lstRoute = getRoutePartsFromTable(parentTable);
-        }
-        if (!parts.Any())
-        {
-			string newTableName = table.Name.Remove(0, 3);
-            parts.Add(newTableName);
-        }
-
-        lstRoute.AddRange(parts);
-        return lstRoute;
-    };
-
     // namespace
     string fileNamespace = Namespace;
     if (string.IsNullOrWhiteSpace(fileNamespace))
@@ -237,65 +128,48 @@ namespace <#= fileNamespace #>
 	manager.EndBlock(); // end header
     
     // get a reference to the project of this t4 template
-    var project = VisualStudioHelper.CurrentProject;
+    Project project = VisualStudioHelper.CurrentProject;
 
 	// contient tous les enums du projet
-    List<string> allEnums = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementEnum, false)
-        .OfType<EnvDTE.CodeEnum>()
+    List<string> allEnums = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, vsCMElement.vsCMElementEnum, false)
+        .OfType<CodeEnum>()
 		.Select(x => x.Name)
 		.ToList();
 
-    foreach (Table table in allTables.Where(t => t.Ignore == false))
+    // Read schema
+    Tables allTables = LoadTables(ConnectionString, SchemaName, false, MakeSingular);
+    if (TweakSchema != null)
+    {
+        TweakSchema(allTables);
+    }
+
+    foreach (Table table in allTables)
     {
         manager.StartNewFile(table.ClassName + ".generated.cs");
 
-        if (CreateAutoQueryTypes && AddNamedConnection)
-        {
-#>
-	[NamedConnection("<#= !string.IsNullOrEmpty(UseSpecificNamedConnection) ? UseSpecificNamedConnection : ConnectionStringName #>")]
-<#
-        } // end if
-
-        if (table.ClassName != table.Name)
-        {
-#>
-	[Alias("<#= table.Name #>")]
-<#
-        } // end if
-		
-        if (UseSchemaAttribute && !string.IsNullOrEmpty(table.Schema) && table.Schema != "dbo")
-        {
-#>
-	[Schema("<#= table.Schema #>")]
-<#
-        } // end if
-		
-        if (IncludeIndices && table.Indices != null)
-        {
-			// idxs composites
-            foreach (TableIndex idx in table.Indices.Where(i => i.IndexColumns.Count > 1))
-            {
-                IEnumerable<string> q = from c1 in idx.IndexColumns
-					join c2 in table.Columns on c1.Name equals c2.Name
-                    let noAlias = (c2.Name == c2.PropertyName)
-                    select noAlias ? string.Format("nameof({0})", c2.PropertyName) : string.Format("\"{0}\"", c2.Name);
-#>
-	[CompositeIndex(<#= idx.IsUnique ? "true, " : "" #><#= string.Join(", ", q) #>)]
-<#
-            } // end foreach
-        } // end if
-
         List<string> lstInterfaces = new List<string>();
 
-        if (table.HasPK())
+        if (table.PrimaryKey != null)
         {
+			if (table.PrimaryKey.PKeyColumns.Count > 1)
+            {
+				string errorMsg = string.Format("[{0}].[{1}].[{2}] : OrmLite ne supporte pas les clés primaires composites ; la table est ignorée.",
+					table.Schema, table.Name, table.PrimaryKey.Name);
+				Error(errorMsg);
+#>
+	// <#= errorMsg #>
+<#
+				continue;
+            }
+
+			Column pkCol = table.PrimaryKey.PKeyColumns.Single();
             if (UseIdAsPK)
             {
-                table.PK.PropertyName = "Id";
+                pkCol.PropertyName = "Id";
             }
-            if (table.PK.PropertyName == "Id")
+            if (pkCol.PropertyName == "Id")
             {
-                lstInterfaces.Add("IHasId<" + table.PK.PropertyType + ">");
+                lstInterfaces.Add("IHasId<" + pkCol.PropertyType + ">");
             }
         }
         if (AddCustomInterfaces)
@@ -307,14 +181,31 @@ namespace <#= fileNamespace #>
             }
         }
 
-        List<string> routeKeyParts = new List<string>();
-        bool routeKeyIsReadonly = false;
-		
-		List<Column> lstCol = getBestUniqueColumns(table);
-		if (lstCol != null)
+        if (table.ClassName != table.Name)
         {
-			routeKeyParts = lstCol.Select(c => c.PropertyName).ToList();
-			routeKeyIsReadonly = lstCol.Any(c => c.IsAutoIncrement || c.IsComputed);
+#>
+	[Alias("<#= table.Name #>")]
+<#
+        }
+		
+        if (UseSchemaAttribute && !string.IsNullOrEmpty(table.Schema) && table.Schema != "dbo")
+        {
+#>
+	[Schema("<#= table.Schema #>")]
+<#
+        }
+		
+        if (IncludeIndices)
+        {
+			IEnumerable<TableIndex> compositeIdx = table.Indices.Where(i => i.IndexColumns.Count > 1);
+            foreach (TableIndex idx in compositeIdx)
+            {
+				IEnumerable<string> q = idx.IndexColumns
+					.Select(c => (c.Name == c.PropertyName) ? string.Format("nameof({0})", c.PropertyName) : string.Format("\"{0}\"", c.Name));
+#>
+	[CompositeIndex(<#= idx.IsUnique ? "true, " : "" #><#= string.Join(", ", q) #>)]
+<#
+            }
         }
 
 		string resourceName = table.ClassName;
@@ -324,24 +215,28 @@ namespace <#= fileNamespace #>
 
         if (AddRouteAttributes && (!putExcluded || !postExcluded))
         {
-            string strRoute = table.ClassName;
+	        List<Column> routeKeyParts = GetBestUniqueColumns(table, UsePKAsRouteId);
+
+			string strRoute = table.ClassName;
             if (TransformRoutePath)
             {
-				FKey parentFKey = getParentFKey(table);
-                List<string> parts = getRoutePartsFromTable(table);
+                List<string> parts = GetRoutePartsFromTable(table, UsePKAsRouteId);
+
+				FKey parentFKey = GetParentFKey(table);
 				if (parentFKey != null)
                 {
-					routeKeyParts.RemoveAll(c => c == parentFKey.FromColumn);
+					routeKeyParts.RemoveAll(c => parentFKey.FromColumns.Contains(c));
                 }
 				strRoute = string.Join("/", parts);
             }
 
             if (!postExcluded)
             {
-                string strRoutePostSuffix = "";
+				bool routeKeyIsReadonly = routeKeyParts.Any(c => c.IsAutoIncrement || c.IsComputed);
+				string strRoutePostSuffix = "";
                 if (!routeKeyIsReadonly)
                 {
-                    strRoutePostSuffix = "/" + string.Join("/", routeKeyParts.Select(c => "{" + c + "}"));
+                    strRoutePostSuffix = "/" + string.Join("/", routeKeyParts.Select(c => "{" + c.PropertyName + "}"));
                 }
 #>
     [Route("/<#= strRoute #><#= strRoutePostSuffix #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une ressource {0}.", resourceName) #>")]
@@ -349,11 +244,7 @@ namespace <#= fileNamespace #>
             }
             if (!putExcluded)
             {
-                string strRoutePutSuffix = "";
-                if (!routeKeyIsReadonly)
-                {
-                    strRoutePutSuffix = "/" + string.Join("/", routeKeyParts.Select(c => "{" + c + "}"));
-                }
+                string strRoutePutSuffix = "/" + string.Join("/", routeKeyParts.Select(c => "{" + c.PropertyName + "}"));
 #>
     [Route("/<#= strRoute #><#= strRoutePutSuffix #>", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une ressource {0} à partir de son Id.", resourceName) #>")]
 <#
@@ -365,16 +256,10 @@ namespace <#= fileNamespace #>
     [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= resourceName #> spécifiée est introuvable.")]
 <#
             }
-        } // end if
-		
-        List<string> classDefinitionWords = new List<string>();
-        classDefinitionWords.Add("public");
-        if (MakeClassesPartial)
-        {
-			classDefinitionWords.Add("partial");
         }
+		
 #>
-	<#= string.Join(" ", classDefinitionWords) #> class <#= table.ClassName #><#= lstInterfaces.Any() ? " : " + string.Join(",\r\n\t\t", lstInterfaces) : "" #>
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= table.ClassName #><#= lstInterfaces.Any() ? " : " + string.Join(",\r\n\t\t", lstInterfaces) : "" #>
 	{
 <#
         if (GenerateEmptyConstructor)
@@ -388,10 +273,21 @@ namespace <#= fileNamespace #>
 		}
 
 <#
-        } // end if
+        }
+
+		string stdColFormat = "";
+		FKey parentFkey = GetParentFKey(table);
+		if (parentFkey != null)
+        {
+			stdColFormat = parentFkey.FromTable.ClassName.Replace(parentFkey.ReferencedTable.ClassName, "{0}");
+        }
+		else
+        {
+			stdColFormat = "{0}" + table.Name.Remove(0, 3);
+        }
 
         List<string> priorProperyNames = new List<string>();
-        foreach (Column col in table.Columns.Where(c => c.Ignore == false))
+        foreach (Column col in table.Columns)
         {
             if (priorProperyNames.Contains(col.PropertyName)) //Change duplicate style names
             {
@@ -401,69 +297,67 @@ namespace <#= fileNamespace #>
 
             if (string.IsNullOrWhiteSpace(col.Description))
             {
-                if (col.IsPK)
+                if (col.IsPKey)
                 {
                     col.Description = "Clé primaire.";
                 }
                 else
                 {
-
-                    switch (col.PropertyName)
+					if (col.PropertyName == string.Format(stdColFormat, "Cod"))
                     {
-                        case "CodObjet":
-                            bool isUniqueSingleCol = false;
-                            if (table.Indices != null)
-                            {
-                                var q = from idx in table.Indices
-                                        where idx.IsUnique == true
-                                        where idx.IndexColumns.Count == 1
-                                        where idx.IndexColumns.Any(c => c.Name == col.Name)
-                                        select idx;
-                                isUniqueSingleCol = q.Any();
-                            }
-                            col.Description = isUniqueSingleCol ? "Code unique." : "Code.";
-                            break;
-                        case "LibObjet":
-                            col.Description = "Désignation.";
-                            break;
-                        case "TxtObjet":
-                            col.Description = "Commentaire ou description.";
-                            break;
-                        case "EstActif":
-                            col.Description = "Actif ou inactif";
-                            break;
-                        case "DatCreation":
-                            col.Description = "Date de création.";
-                            break;
-                        case "DatModif":
-                            col.Description = "Date de dernière modification.";
-                            break;
-                        case "CodExterne":
-                            col.Description = "Identifiant de synchronisation externe.";
-                            break;
+						bool isUniqueSingleCol = table.Indices
+							.Where(idx => idx.IsUnique == true && idx.IndexColumns.Count == 1 && idx.IndexColumns.Contains(col))
+							.Any();
+                        col.Description = isUniqueSingleCol ? "Code unique." : "Code.";
+                    }
+					else if (col.PropertyName == string.Format(stdColFormat, "Lib"))
+                    {
+                        col.Description = "Désignation.";
+                    }
+					else if (col.PropertyName == string.Format(stdColFormat, "Txt"))
+                    {
+                        col.Description = "Commentaire ou description.";
+                    }
+					else
+					{
+						switch (col.PropertyName)
+						{
+							case "EstActif":
+								col.Description = "Actif ou inactif";
+								break;
+							case "DatCreation":
+								col.Description = "Date de création.";
+								break;
+							case "DatModif":
+								col.Description = "Date de dernière modification.";
+								break;
+							case "CodExterne":
+								col.Description = "Identifiant de synchronisation externe.";
+								break;
 
-                        case "NumTelep":
-                            col.Description = "Numéro de téléphone.";
-                            break;
-                        case "NumFax":
-                            col.Description = "Numéro de fax.";
-                            break;
-                        case "NumEmail":
-                            col.Description = "Adresse email.";
-                            break;
+							case "NumTelep":
+								col.Description = "Numéro de téléphone.";
+								break;
+							case "NumFax":
+								col.Description = "Numéro de fax.";
+								break;
+							case "NumEmail":
+								col.Description = "Adresse email.";
+								break;
 
-                        case "AdrRue":
-                            col.Description = "Rue.";
-                            break;
-                        case "AdrCode":
-                            col.Description = "Code postal.";
-                            break;
-                        case "AdrCommune":
-                            col.Description = "Ville ou commune.";
-                            break;
-                        case "AdrPays":
-                            col.Description = "Pays.";
-                            break;
+							case "AdrRue":
+								col.Description = "Rue.";
+								break;
+							case "AdrCode":
+								col.Description = "Code postal.";
+								break;
+							case "AdrCommune":
+								col.Description = "Ville ou commune.";
+								break;
+							case "AdrPays":
+								col.Description = "Pays.";
+								break;
+						}
                     }
                 }
             }
@@ -485,100 +379,86 @@ namespace <#= fileNamespace #>
 #>
         [Alias("<#= col.Name #>")]
 <#
-			} // end if
+			}
 
 			if (col.PropertyType == "string" && col.Size > 0)
 			{   
 #>
 		[StringLength(<#= col.Size #>)]
 <#
-            } // end if
+            }
 			
             if (col.PropertyType == "decimal" && col.Precision > 0)
             {
 #>
 		[DecimalLength(<#= col.Precision #>, <#= col.Scale #>)]
 <#
-            } // end if
+            }
 
             if (col.IsAutoIncrement)
             {
 #>
 		[AutoIncrement]
 <#
-            } // end if
+            }
 
             if (col.IsComputed)
             {
 #>
 		[Compute]        
 <#
-            } // end if
+            }
 
-            if (IncludeReferences && table.FKeys != null)
+            if (IncludeReferences)
             {
-                FKey fKey = table.FKeys.FirstOrDefault(x => x.FromColumn == col.Name);
+                FKey fKey = table.ForeignKeys.Where(fk => fk.FromColumns.Contains(col)).FirstOrDefault();
                 if (fKey != null)
                 {
-                    Table tbl = allTables.SingleOrDefault(t => t.Name == fKey.ToTable);
-                    if (tbl != null)
+                    Table tbl = fKey.FromTable;
+                    if (string.IsNullOrEmpty(fKey.DeleteRule))
                     {
-                        if (fKey.IsDeleteCascade)
-                        {
-#>
-		[ForeignKey(typeof(<#= tbl.ClassName #>), OnDelete = "CASCADE")]
-<#
-                        } // end if
-                        else
-                        {
 #>
 		[References(typeof(<#= tbl.ClassName #>))]
 <#
-                        } // end else
-                    } // end if
-                } // end if
-            } // end if
+                    }
+                    else
+                    {
+#>
+		[ForeignKey(typeof(<#= tbl.ClassName #>), OnDelete = "<#= fKey.DeleteRule #>")]
+<#
+                    }
+                }
+            }
 
             if (col.IsNullable == false && col.IsAutoIncrement == false)
             {
 #>
 		[Required]
 <#
-            } // end if
+            }
 
-            if (IncludeIndices && table.Indices != null)
+            if (IncludeIndices)
             {
-                IEnumerable<TableIndex> q = from idx in table.Indices
-					where idx.IndexColumns.Count == 1
-                    where idx.IndexColumns.Any(c => c.Name == col.Name)
-					select idx;
-				TableIndex index = q.FirstOrDefault();
+				TableIndex index = table.Indices.Where(idx => idx.IndexColumns.Count == 1 && idx.IndexColumns.Contains(col)).FirstOrDefault();
                 if (index != null)
                 {
 #>
 		[Index<#= index.IsUnique ? "(true)" : "" #>]
 <#
-                } // end if
-            } // end if
+                }
+            }
 
-            if (col.IsPK && (col.PropertyName != "Id"))
+            if (col.IsPKey && (col.PropertyName != "Id"))
             {
 #>
 		[PrimaryKey]
 <#
-            } // end if
+            }
 
             bool dataMemberIgnored = false;
-            if (AddIgnoreDataMemberForKeys) 
+            if (!UsePKAsRouteId) 
             {
-                if (col.IsPK && ((table.Indices != null) && table.Indices.Where(idx => idx.IsUnique == true).Any()))
-                {
-                    dataMemberIgnored = true;
-                }
-                else if ((IncludeReferences && table.FKeys != null) && table.FKeys.Any(x => x.FromColumn == col.Name))
-                {
-                    dataMemberIgnored = true;
-                }
+				dataMemberIgnored = (col.IsPKey || col.IsFKey);
             }
 
             if (dataMemberIgnored)
@@ -587,74 +467,33 @@ namespace <#= fileNamespace #>
         [IgnoreDataMember]
 <#
             }
-
-            if (AddApiAttributes && !dataMemberIgnored)
+            else if (AddApiAttributes)
             {
-                List<string> lstApiMemberProps = new List<string>();
-
-                if (!string.IsNullOrEmpty(col.Description))
+				List<string> lstApiMemberProps = GetApiMemberProps(col, allEnums, lstInterfaces);
+				if (lstApiMemberProps.Any())
                 {
-                    lstApiMemberProps.Add("Description = \"" + col.Description + "\"");
-                }
-                
-                string swagDataType = "";
-
-                if (allEnums.Contains(col.PropertyType))
-                {
-                    //swagDataType = "SwaggerDataTypes.String";
-                }
-                else if (col.PropertyType == "byte[]")
-                {
-                    swagDataType = "SwaggerDataTypes.File";
-                }
-                else
-                {
-                    swagDataType = "SwaggerDataTypes." + col.PropertyType.Substring(0,1).ToUpper() + col.PropertyType.Substring(1);
-                }
-
-                if (!string.IsNullOrEmpty(swagDataType))
-                {
-                    lstApiMemberProps.Add("DataType = " + swagDataType);
-                }
-
-                if (col.IsPK && (!putExcluded || !postExcluded))
-                {
-                    if (!postExcluded)
-                    {
+					if (col.IsPKey && (!putExcluded || !postExcluded))
+					{
+						if (!postExcluded)
+						{
 #>
 		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, Verb = HttpVerbs.Post)]
 <#
-                    }
-                    if (!putExcluded)
-                    {
+						}
+						if (!putExcluded)
+						{
 #>
 		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 <#
-                    }
-                }
-                else
-                {
-                    if (col.IsNullable == false && col.IsAutoIncrement == false)
-                    {
-                        bool required = true;
-                        if (lstInterfaces.Contains("IAuditable") && (col.ProperPropertyType == "DateTime")
-                            && (col.PropertyName == "DatCreation" || col.PropertyName == "DatModif"))
-                        {
-                            required = false;
-                        }
-                        if (required)
-                        {
-                            lstApiMemberProps.Add("IsRequired = true");
-                        }
-                    }
-
-                    if (lstApiMemberProps.Any())
-                    {
+						}
+					}
+					else
+					{
 #>
 		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
 <#
-                    } // end if
-                } // end if
+					}
+				}
 
                 if (allEnums.Contains(col.PropertyType))
                 {
@@ -663,38 +502,71 @@ namespace <#= fileNamespace #>
 <#
                 }
 
-            } // end if
+            }
 #>
 		public <#= MakePropertiesVirtual ? "virtual " : "" #><#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
 
 <#
-			if (dataMemberIgnored && (table.FKeys != null))
+			if (!UsePKAsRouteId)
             {
-				FKey fkey = table.FKeys.Where(fk => fk.FromColumn == col.Name).FirstOrDefault();
-                if (fkey != null)
+				FKey thisFkey = table.ForeignKeys.Where(fk => fk.FromColumns.Contains(col)).FirstOrDefault();
+                if (thisFkey != null)
 				{
-					string format = fkey.FromColumn.Replace(fkey.ToColumn, "{0}");
-					string propType = "string";
-					string propName = string.Format(format, fkey.ToColumn);
+					Column fkFromCol = thisFkey.FromColumns.Single();
+					Column fkRefCol = thisFkey.ReferencedColumns.Single();
+
+					List<Column> lstNewFkCols = GetBestUniqueColumns(fkRefCol.ParentTable, UsePKAsRouteId);
+
+					string format = fkFromCol.PropertyName.Replace(fkRefCol.PropertyName, "{0}");
+
+					foreach (Column fkCol in lstNewFkCols)
+                    { 
+						Column newCol = fkCol.Clone();
+						newCol.IsNullable = fkFromCol.IsNullable;
+						newCol.Description = fkFromCol.Description + (string.IsNullOrEmpty(fkFromCol.Description) ? "" : " ") + newCol.Description;
+						newCol.PropertyName = string.Format(format, newCol.PropertyName);
+#>
+		/// <summary>
+<#
+						if (!string.IsNullOrEmpty(newCol.Description))
+                        {
+#>
+		/// <#= newCol.Description #>
+<#
+						}
+#>
+		/// Remplace la colonne <see cref="<#= col.PropertyName #>" /> dans la sérialisation.
+		/// </summary>
+<#
+						if (AddApiAttributes)
+						{
+							List<string> lstApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
+							if (lstApiMemberProps.Any())
+							{
+#>
+		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
+<#
+							}
+						}
 #>
 		[Ignore]
-		public <#= MakePropertiesVirtual ? "virtual " : "" #><#= propType #> <#= propName #> { get; set; }
+		public <#= MakePropertiesVirtual ? "virtual " : "" #><#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
 
 <#
-                }
+					}
+				}
             }
         } // end foreach (col)
 
         if (AddChildReferences)
         {
-            var q = from tbl in allTables
-                    where tbl.FKeys != null
+           var q = from tbl in allTables
                     where tbl.Name.StartsWith(table.Name)
-                    from fk in tbl.FKeys
-                    where fk.ToTable == table.Name
-                    let fkIsPK = tbl.HasPK() && tbl.PK.Name == fk.FromColumn
-                    let fkIsUnique = tbl.Indices != null &&
-                        tbl.Indices.Any(idx => idx.IsUnique && idx.IndexColumns.Count == 1 && idx.IndexColumns[0].Name == fk.FromColumn)
+                    from fk in tbl.ForeignKeys
+                    //where fk.ToTable == table.Name
+                    let fkIsPK = true //tbl.HasPK() && tbl.PK.Name == fk.FromColumn
+                    let fkIsUnique = true //tbl.Indices != null &&
+                        //tbl.Indices.Any(idx => idx.IsUnique && idx.IndexColumns.Count == 1 && idx.IndexColumns[0].Name == fk.FromColumn)
                     select new
 					{
                         Table = tbl,
@@ -714,91 +586,11 @@ namespace <#= fileNamespace #>
 		public <#= MakePropertiesVirtual ? "virtual " : "" #><#= propType #> <#= propName #> { get; set; }
 
 <#
-            } // end foreach
-        } // end if
-#>
-	}
-<#
-        manager.EndBlock(); // end newfile
-
-        if (CreateAutoQueryTypes)
-        {
-            manager.StartNewFile(table.ClassName + "Query.generated.cs");
-			
-            List<string> queryClassDefinitionWords = new List<string>();
-            queryClassDefinitionWords.Add("public");
-            if (MakeClassesPartial)
-            {
-                queryClassDefinitionWords.Add("partial");
             }
-#>
-	<#= string.Join(" ", queryClassDefinitionWords) #> class <#= table.ClassName #>Query : QueryDb<<#= table.ClassName #>>
-	{
-<#
-            foreach (Column col in table.Columns.Where(c => c.Ignore == false))
-            {
-                string ormName = (col.IsPK && UseIdAsPK) ? "Id" : col.PropertyName;
-                bool isString = col.ProperPropertyType == "string";
-                string nullablePropType = col.ProperPropertyType.Replace("?", "") + "?";
-                bool isArray = col.ProperPropertyType.Contains("[]");
-                bool isBool = col.ProperPropertyType.Contains("bool");
-                bool isGuid = col.ProperPropertyType.Contains("Guid");
-			
-                if (!col.IsPK)
-                {
-#>
-		public <#= !isArray && !isString ? nullablePropType : col.ProperPropertyType #> <#= ormName #> { get; set; }
-<#
-                }
-                if (col.IsPK && UseIdAsPK)
-                {
-#>
-		public <#= isString ? "string" : nullablePropType #> Id { get; set; }
-<#
-                }
-                if (col.IsPK && !UseIdAsPK)
-                {
-#>
-		public <#= isString ? "string" : nullablePropType#> <#= col.PropertyName #> { get; set; }
-<#
-                }
-                if (isString)
-                {
-#>
-		public <#= col.ProperPropertyType #> <#= ormName #>StartsWith { get; set; }
-		public <#= col.ProperPropertyType #> <#= ormName #>EndsWith { get; set; }
-		public <#= col.ProperPropertyType #> <#= ormName #>Contains { get; set; }
-		public <#= col.ProperPropertyType #> <#= ormName #>Like { get; set; } 
-		public <#= col.ProperPropertyType #>[] <#= ormName #>Between { get; set; }
-		public <#= col.ProperPropertyType #>[] <#= ormName #>In { get; set; }
-<#
-                }
-                else if (!isArray && !isBool)
-                {
-                    if (!isGuid)
-                    {
-#>
-		public <#= nullablePropType #> <#= ormName #>GreaterThanOrEqualTo { get; set; }
-		public <#= nullablePropType #> <#= ormName #>GreaterThan { get; set; }
-		public <#= nullablePropType #> <#= ormName #>LessThan { get; set; }
-		public <#= nullablePropType #> <#= ormName #>LessThanOrEqualTo { get; set; }
-		public <#= nullablePropType #> <#= ormName #>NotEqualTo { get; set; }
-		public <#= col.ProperPropertyType #>[] <#= ormName #>Between { get; set; }
-<#
-                    }
-#>
-		public <#= col.ProperPropertyType #>[] <#= ormName #>In { get; set; }
-<#
-                } // end elseif
-#>
-
-<#
-            } // end foreach
+        }
 #>
 	}
 <#
-        }
-
         manager.EndBlock(); // end newfile
     } // end foreach (table)
 	
@@ -809,4 +601,137 @@ namespace <#= fileNamespace #>
     manager.EndBlock(); // end footer
 	
     manager.Process(SplitIntoMultipleFiles);
+#>
+<#+
+List<string> GetApiMemberProps(Column col, List<string> lstEnums, List<string> lstInterfaces)
+{
+    List<string> lstApiMemberProps = new List<string>();
+
+    if (!string.IsNullOrEmpty(col.Description))
+    {
+        lstApiMemberProps.Add("Description = \"" + col.Description + "\"");
+    }
+                
+    string swagDataType = "";
+
+    if (lstEnums.Contains(col.PropertyType))
+    {
+        //swagDataType = "SwaggerDataTypes.String";
+    }
+    else if (col.PropertyType == "byte[]")
+    {
+        swagDataType = "SwaggerDataTypes.File";
+    }
+    else
+    {
+        swagDataType = "SwaggerDataTypes." + col.PropertyType.Substring(0,1).ToUpper() + col.PropertyType.Substring(1);
+    }
+
+    if (!string.IsNullOrEmpty(swagDataType))
+    {
+        lstApiMemberProps.Add("DataType = " + swagDataType);
+    }
+
+    if (!col.IsPKey)
+    {
+        if (col.IsNullable == false && col.IsAutoIncrement == false)
+        {
+            bool required = true;
+            if (lstInterfaces.Contains("IAuditable") && (col.ProperPropertyType == "DateTime")
+                && (col.PropertyName == "DatCreation" || col.PropertyName == "DatModif"))
+            {
+                required = false;
+            }
+            if (required)
+            {
+                lstApiMemberProps.Add("IsRequired = true");
+            }
+        }
+    }
+
+	return lstApiMemberProps;
+}
+
+/// <summary>
+/// Cherche parmi les PK ou les contraintes uniques les meilleures colonnes pour identifier la ressource.
+/// </summary>
+List<Column> GetBestUniqueColumns(Table table, bool usePK)
+{
+	List<Column> pkCols = null;
+
+	if (table.PrimaryKey != null)
+    {
+		pkCols = table.PrimaryKey.PKeyColumns;
+    }
+
+	if (usePK)
+    {
+		return pkCols;
+    }
+	else 
+    {
+		TableIndex index = table.Indices.Where(idx => idx.IsUnique)
+			.OrderBy(idx => idx.IndexColumns.Count)
+			.FirstOrDefault();
+		if (index != null)
+		{
+			return index.IndexColumns;
+		}
+    }
+
+    return pkCols;
+}
+
+/// <summary>
+/// Retourne la FK pointant sur la table parent la plus proche.
+/// </summary>
+FKey GetParentFKey(Table table)
+{
+    // si plusieurs parents, on prend celui avec le nom le plus long
+    FKey fkey = table.ForeignKeys
+		.Where(fk => table.Name.StartsWith(fk.ReferencedTable.Name))
+		.OrderByDescending(fk => fk.ReferencedTable.Name.Length)
+		.FirstOrDefault();
+	return fkey;
+}
+
+/// <summary>
+/// extraction du route path suivant les ForeignKeys/enfants
+/// exemple : classe GenFournContact passe de '/GenFournContact/' en '/GenFourn/{xxx}/Contact/'
+/// </summary>
+List<string> GetRoutePartsFromTable(Table table, bool usePK)
+{
+    List<string> lstRoute = new List<string>();
+    List<string> parts = new List<string>();
+
+	FKey fkParent = GetParentFKey(table);
+    if (fkParent != null)
+    {
+		Table parentTable = fkParent.ReferencedTable;
+	    List<Column> parentCols = GetBestUniqueColumns(parentTable, usePK);
+        if (parentCols != null)
+        {
+			Column fkFromCol = fkParent.FromColumns.Single();
+			Column fkRefCol = fkParent.ReferencedColumns.Single();
+
+			string format = fkFromCol.PropertyName.Replace(fkRefCol.PropertyName, "{0}");
+			
+            List<string> keys = parentCols.Select(c => "{" + string.Format(format, c.PropertyName) + "}").ToList();
+            parts.AddRange(keys);
+        }
+
+        string newTableName = table.Name.Replace(parentTable.Name, "");
+        parts.Add(newTableName);
+
+        lstRoute = GetRoutePartsFromTable(parentTable, usePK);
+    }
+    if (!parts.Any())
+    {
+		string newTableName = table.Name.Remove(0, 3);
+        parts.Add(newTableName);
+    }
+
+    lstRoute.AddRange(parts);
+    return lstRoute;
+}
 #>
