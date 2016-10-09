@@ -32,15 +32,18 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         [IgnoreDataMember]
 		public int CleTruc { get; set; }
 
-		[ForeignKey(typeof(GenCompteurValeurTruc), OnDelete = "CASCADE")]
+		[ForeignKey(typeof(GenCompteurValeur), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
 		public int CleValeur { get; set; }
 
 		/// <summary>
 		/// Valeur de la période.
-		/// Remplace la colonne <see cref="CleValeur" /> dans la sérialisation.
 		/// </summary>
+        /// <remarks>
+		/// Remplace la propriété <see cref="CleValeur" /> dans la sérialisation.
+		/// Référence la propriété <see cref="GenCompteurValeur.ValPeriode" />.
+        /// </remarks>
 		[ApiMember(Description = "Valeur de la période.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		[Ignore]
 		public int ValPeriode { get; set; }
@@ -48,9 +51,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(500)]
 		[ApiMember(DataType = SwaggerDataTypes.String)]
 		public string TxtMachin { get; set; }
-
-		[Reference]
-		public GenCompteurValeurTruc  { get; set; }
 
 	}
 }

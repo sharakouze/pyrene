@@ -72,6 +72,7 @@
     // true pour transformer la route de la ressource, ex: GenFournContact de '/GenFournContact/' en '/GenFourn/{xxx}/Contact/'.
     bool TransformRoutePath = true;
 
+	// false pour preferer l'utilisation des contraintes d'unicité plutot que les PK pour identifier les ressources.
     bool UsePKAsRouteId = false;
 
     // Filtre les routes générées.
@@ -301,64 +302,61 @@ namespace <#= fileNamespace #>
                 {
                     col.Description = "Clé primaire.";
                 }
-                else
+                else if (col.PropertyName == string.Format(stdColFormat, "Cod"))
                 {
-					if (col.PropertyName == string.Format(stdColFormat, "Cod"))
-                    {
-						bool isUniqueSingleCol = table.Indices
-							.Where(idx => idx.IsUnique == true && idx.IndexColumns.Count == 1 && idx.IndexColumns.Contains(col))
-							.Any();
-                        col.Description = isUniqueSingleCol ? "Code unique." : "Code.";
-                    }
-					else if (col.PropertyName == string.Format(stdColFormat, "Lib"))
-                    {
-                        col.Description = "Désignation.";
-                    }
-					else if (col.PropertyName == string.Format(stdColFormat, "Txt"))
-                    {
-                        col.Description = "Commentaire ou description.";
-                    }
-					else
+					bool isUniqueSingleCol = table.Indices
+						.Where(idx => idx.IsUnique == true && idx.IndexColumns.Count == 1 && idx.IndexColumns.Contains(col))
+						.Any();
+                    col.Description = isUniqueSingleCol ? "Code unique." : "Code.";
+                }
+				else if (col.PropertyName == string.Format(stdColFormat, "Lib"))
+                {
+                    col.Description = "Désignation.";
+                }
+				else if (col.PropertyName == string.Format(stdColFormat, "Txt"))
+                {
+                    col.Description = "Commentaire ou description.";
+                }
+				else
+				{
+					switch (col.PropertyName)
 					{
-						switch (col.PropertyName)
-						{
-							case "EstActif":
-								col.Description = "Actif ou inactif";
-								break;
-							case "DatCreation":
-								col.Description = "Date de création.";
-								break;
-							case "DatModif":
-								col.Description = "Date de dernière modification.";
-								break;
-							case "CodExterne":
-								col.Description = "Identifiant de synchronisation externe.";
-								break;
+						case "EstActif":
+							col.Description = "Actif ou inactif";
+							break;
+						case "DatCreation":
+							col.Description = "Date de création.";
+							break;
+						case "DatModif":
+							col.Description = "Date de dernière modification.";
+							break;
+						case "CodExterne":
+							col.Description = "Identifiant de synchronisation externe.";
+							break;
 
-							case "NumTelep":
-								col.Description = "Numéro de téléphone.";
-								break;
-							case "NumFax":
-								col.Description = "Numéro de fax.";
-								break;
-							case "NumEmail":
-								col.Description = "Adresse email.";
-								break;
+						case "NumTelep":
+							col.Description = "Numéro de téléphone.";
+							break;
+						case "NumFax":
+							col.Description = "Numéro de fax.";
+							break;
+						case "NumEmail":
+							col.Description = "Adresse email.";
+							break;
 
-							case "AdrRue":
-								col.Description = "Rue.";
-								break;
-							case "AdrCode":
-								col.Description = "Code postal.";
-								break;
-							case "AdrCommune":
-								col.Description = "Ville ou commune.";
-								break;
-							case "AdrPays":
-								col.Description = "Pays.";
-								break;
-						}
-                    }
+						case "AdrRue":
+							col.Description = "Rue.";
+							break;
+						case "AdrCode":
+							col.Description = "Code postal.";
+							break;
+						case "AdrCommune":
+							col.Description = "Ville ou commune.";
+							break;
+						case "AdrPays":
+							col.Description = "Pays.";
+							break;
+					}
                 }
             }
 
@@ -414,7 +412,7 @@ namespace <#= fileNamespace #>
                 FKey fKey = table.ForeignKeys.Where(fk => fk.FromColumns.Contains(col)).FirstOrDefault();
                 if (fKey != null)
                 {
-                    Table tbl = fKey.FromTable;
+                    Table tbl = fKey.ReferencedTable;
                     if (string.IsNullOrEmpty(fKey.DeleteRule))
                     {
 #>
@@ -532,11 +530,14 @@ namespace <#= fileNamespace #>
                         {
 #>
 		/// <#= newCol.Description #>
+		/// </summary>
 <#
 						}
 #>
-		/// Remplace la colonne <see cref="<#= col.PropertyName #>" /> dans la sérialisation.
-		/// </summary>
+        /// <remarks>
+		/// Remplace la propriété <see cref="<#= col.PropertyName #>" /> dans la sérialisation.
+		/// Référence la propriété <see cref="<#= fkCol.ParentTable.ClassName #>.<#= fkCol.PropertyName #>" />.
+        /// </remarks>
 <#
 						if (AddApiAttributes)
 						{
@@ -561,16 +562,16 @@ namespace <#= fileNamespace #>
         if (AddChildReferences)
         {
            var q = from tbl in allTables
-                    where tbl.Name.StartsWith(table.Name)
-                    from fk in tbl.ForeignKeys
-                    //where fk.ToTable == table.Name
-                    let fkIsPK = true //tbl.HasPK() && tbl.PK.Name == fk.FromColumn
-                    let fkIsUnique = true //tbl.Indices != null &&
-                        //tbl.Indices.Any(idx => idx.IsUnique && idx.IndexColumns.Count == 1 && idx.IndexColumns[0].Name == fk.FromColumn)
-                    select new
+					where tbl.Name.StartsWith(table.Name)
+					from fk in tbl.ForeignKeys
+					where fk.ReferencedTable == table
+					let fkCol = fk.FromColumns.Single()
+					let fkIsPK = tbl.PrimaryKey != null && tbl.PrimaryKey.PKeyColumns.Contains(fkCol)
+					let fkIsUnique = tbl.Indices.Any(idx => idx.IsUnique && idx.IndexColumns.Count == 1 && idx.IndexColumns.Contains(fkCol))
+					select new
 					{
-                        Table = tbl,
-                        IsUnique = fkIsPK || fkIsUnique
+						Table = tbl,
+						IsUnique = fkIsPK || fkIsUnique
 					};
             foreach (var obj in q)
             {

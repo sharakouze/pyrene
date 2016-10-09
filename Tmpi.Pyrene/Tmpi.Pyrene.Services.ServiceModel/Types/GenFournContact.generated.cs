@@ -36,15 +36,18 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// <summary>
 		/// Fournisseur parent.
 		/// </summary>
-		[ForeignKey(typeof(GenFournContact), OnDelete = "CASCADE")]
+		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
 		public int CleFourn { get; set; }
 
 		/// <summary>
 		/// Fournisseur parent. Code unique.
-		/// Remplace la colonne <see cref="CleFourn" /> dans la sérialisation.
 		/// </summary>
+        /// <remarks>
+		/// Remplace la propriété <see cref="CleFourn" /> dans la sérialisation.
+		/// Référence la propriété <see cref="GenFourn.CodFourn" />.
+        /// </remarks>
 		[ApiMember(Description = "Fournisseur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		[Ignore]
 		public string CodFourn { get; set; }
@@ -120,9 +123,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[ApiMember(Description = "Fonction ou poste du contact chez le fournisseur.", DataType = SwaggerDataTypes.String)]
 		public string LibFonction { get; set; }
-
-		[Reference]
-		public GenFournContact  { get; set; }
 
 	}
 }

@@ -88,7 +88,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// <summary>
 		/// Secteur auquel appartient le service.
 		/// </summary>
-		[ForeignKey(typeof(GenService), OnDelete = "CASCADE")]
+		[ForeignKey(typeof(GenSecteur), OnDelete = "CASCADE")]
 		[Required]
 		[Index]
         [IgnoreDataMember]
@@ -96,8 +96,11 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 
 		/// <summary>
 		/// Secteur auquel appartient le service. Code unique.
-		/// Remplace la colonne <see cref="CleSecteur" /> dans la sérialisation.
 		/// </summary>
+        /// <remarks>
+		/// Remplace la propriété <see cref="CleSecteur" /> dans la sérialisation.
+		/// Référence la propriété <see cref="GenSecteur.CodSecteur" />.
+        /// </remarks>
 		[ApiMember(Description = "Secteur auquel appartient le service. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		[Ignore]
 		public string CodSecteur { get; set; }
@@ -150,9 +153,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[ApiMember(Description = "Adresse email.", DataType = SwaggerDataTypes.String)]
 		public string NumEmail { get; set; }
-
-		[Reference]
-		public GenService  { get; set; }
 
 	}
 }

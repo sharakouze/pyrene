@@ -121,16 +121,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public string NumEmail { get; set; }
 
 		[Reference]
-		public GenPersonneProfil Profil { get; set; }
-
-		[Reference]
-		public GenPersonneProfil Profil { get; set; }
-
-		[Reference]
-		public GenPersonneProfil Profil { get; set; }
-
-		[Reference]
-		public GenPersonneProfil Profil { get; set; }
+		public List<GenPersonneProfil> LstProfil { get; set; }
 
 		[Reference]
 		public GenPersonneSignature Signature { get; set; }

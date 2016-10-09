@@ -115,19 +115,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public string TxtMessage { get; set; }
 
 		[Reference]
-		public GenMandatMandataire Mandataire { get; set; }
-
-		[Reference]
-		public GenMandatMandataire Mandataire { get; set; }
-
-		[Reference]
-		public GenMandatMandataire Mandataire { get; set; }
-
-		[Reference]
-		public GenMandatMandataire Mandataire { get; set; }
-
-		[Reference]
-		public GenMandatMandataire Mandataire { get; set; }
+		public List<GenMandatMandataire> LstMandataire { get; set; }
 
 	}
 }

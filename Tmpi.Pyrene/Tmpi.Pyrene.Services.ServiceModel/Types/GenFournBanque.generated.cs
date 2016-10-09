@@ -36,15 +36,18 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// <summary>
 		/// Fournisseur parent.
 		/// </summary>
-		[ForeignKey(typeof(GenFournBanque), OnDelete = "CASCADE")]
+		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
 		public int CleFourn { get; set; }
 
 		/// <summary>
 		/// Fournisseur parent. Code unique.
-		/// Remplace la colonne <see cref="CleFourn" /> dans la sérialisation.
 		/// </summary>
+        /// <remarks>
+		/// Remplace la propriété <see cref="CleFourn" /> dans la sérialisation.
+		/// Référence la propriété <see cref="GenFourn.CodFourn" />.
+        /// </remarks>
 		[ApiMember(Description = "Fournisseur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		[Ignore]
 		public string CodFourn { get; set; }
@@ -94,9 +97,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime DatModif { get; set; }
-
-		[Reference]
-		public GenFournBanque  { get; set; }
 
 	}
 }

@@ -105,14 +105,17 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// <summary>
 		/// Société ayant accès au compteur, ou null pour toutes les sociétés.
 		/// </summary>
-		[References(typeof(GenCompteur))]
+		[References(typeof(GenSociete))]
         [IgnoreDataMember]
 		public int? CleSociete { get; set; }
 
 		/// <summary>
 		/// Société ayant accès au compteur, ou null pour toutes les sociétés. 
-		/// Remplace la colonne <see cref="CleSociete" /> dans la sérialisation.
 		/// </summary>
+        /// <remarks>
+		/// Remplace la propriété <see cref="CleSociete" /> dans la sérialisation.
+		/// Référence la propriété <see cref="GenSociete.CodSociete" />.
+        /// </remarks>
 		[ApiMember(Description = "Société ayant accès au compteur, ou null pour toutes les sociétés. ", DataType = SwaggerDataTypes.String)]
 		[Ignore]
 		public string CodSociete { get; set; }
@@ -120,14 +123,17 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// <summary>
 		/// Secteur ayant accès au compteur, ou null pour tous les secteurs.
 		/// </summary>
-		[References(typeof(GenCompteur))]
+		[References(typeof(GenSecteur))]
         [IgnoreDataMember]
 		public int? CleSecteur { get; set; }
 
 		/// <summary>
 		/// Secteur ayant accès au compteur, ou null pour tous les secteurs. 
-		/// Remplace la colonne <see cref="CleSecteur" /> dans la sérialisation.
 		/// </summary>
+        /// <remarks>
+		/// Remplace la propriété <see cref="CleSecteur" /> dans la sérialisation.
+		/// Référence la propriété <see cref="GenSecteur.CodSecteur" />.
+        /// </remarks>
 		[ApiMember(Description = "Secteur ayant accès au compteur, ou null pour tous les secteurs. ", DataType = SwaggerDataTypes.String)]
 		[Ignore]
 		public string CodSecteur { get; set; }
@@ -135,14 +141,17 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// <summary>
 		/// Service ayant accès au compteur, ou null pour tous les services.
 		/// </summary>
-		[References(typeof(GenCompteur))]
+		[References(typeof(GenService))]
         [IgnoreDataMember]
 		public int? CleService { get; set; }
 
 		/// <summary>
 		/// Service ayant accès au compteur, ou null pour tous les services. 
-		/// Remplace la colonne <see cref="CleService" /> dans la sérialisation.
 		/// </summary>
+        /// <remarks>
+		/// Remplace la propriété <see cref="CleService" /> dans la sérialisation.
+		/// Référence la propriété <see cref="GenService.CodService" />.
+        /// </remarks>
 		[ApiMember(Description = "Service ayant accès au compteur, ou null pour tous les services. ", DataType = SwaggerDataTypes.String)]
 		[Ignore]
 		public string CodService { get; set; }
@@ -156,19 +165,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public string ValFormatNumero { get; set; }
 
 		[Reference]
-		public GenCompteur  { get; set; }
-
-		[Reference]
-		public GenCompteur  { get; set; }
-
-		[Reference]
-		public GenCompteur  { get; set; }
-
-		[Reference]
-		public GenCompteurValeur Valeur { get; set; }
-
-		[Reference]
-		public GenCompteurValeurTruc ValeurTruc { get; set; }
+		public List<GenCompteurValeur> LstValeur { get; set; }
 
 	}
 }
