@@ -1,6 +1,7 @@
-﻿<#@ template language="C#" hostspecific="true" #>
-<#@ include file="$(SolutionDir)Shared\MultipleOutputHelper.ttinclude" #>
-<#@ include file="$(SolutionDir)Shared\VisualStudioHelper.ttinclude" #>
+﻿<#@ template language="C#" hostspecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\VisualStudioHelper.ttinclude" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#
 	/***** TODO *****
@@ -47,13 +48,13 @@
 #>
 <#
 	// namespace
-	var fileNamespace = Namespace;
+	string fileNamespace = Namespace;
 	if (string.IsNullOrWhiteSpace(fileNamespace))
 	{
 		fileNamespace = VisualStudioHelper.CurrentFileNamespace;
 	}
 
-	var manager = Manager.Create(Host, GenerationEnvironment);
+	Manager manager = Manager.Create(Host, GenerationEnvironment);
 	manager.StartHeader();
 #>
 //------------------------------------------------------------------------------
@@ -89,45 +90,6 @@ namespace <#= fileNamespace #>
 	{
 		allClasses = allClasses.Where(c => c.FullName.StartsWith(SourceNamespace)).ToList();
 	}
-
-	// transformation du route path suivant les attributs ForeignKey
-	// exemple : classe GenFournContact passe de '/GenFournContact/' en '/GenFourn/Contact/'
-	Func<EnvDTE.CodeClass, List<string>> getRoutePathFromClass = null;
-	getRoutePathFromClass = codeClass =>
-	{
-		var lstRoute = new List<string>();
-		string str = null;
-
-		var allAttributes = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(codeClass).SelectMany(x => x.Value);
-		var fkAttributes = allAttributes.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.ReferencesAttribute" || 
-			attr.FullName == "ServiceStack.DataAnnotations.ForeignKeyAttribute").ToList();
-		if (fkAttributes.Any())
-		{
-			var refClassNames = fkAttributes.SelectMany(fk => fk.Value.Split(',')).Select(s => s.Trim())
-				.Where(s => s.StartsWith("typeof(") && s.EndsWith(")"))
-				.Select(s => s.Remove(s.Length-1, 1).Remove(0, 7).Trim()) // nettoyage
-				.Where(s => codeClass.Name.StartsWith(s))
-				.ToList();
-
-			string refClassName = refClassNames.OrderByDescending(s => s.Length).FirstOrDefault();
-			if (!string.IsNullOrEmpty(refClassName))
-			{
-				var cls = allClasses.SingleOrDefault(c => c.Name == refClassName) as EnvDTE.CodeClass;
-				if (cls != null)
-				{
-					str = codeClass.Name.Replace(cls.Name, "");
-					lstRoute = getRoutePathFromClass(cls);
-				}
-			}
-		}
-		if (string.IsNullOrEmpty(str))
-		{
-			str = codeClass.Name;
-		}
-
-		lstRoute.Add(str);
-		return lstRoute;
-	};
 
 	// iterate all classes
 	foreach (EnvDTE.CodeClass codeClass in allClasses)
@@ -472,4 +434,43 @@ namespace <#= fileNamespace #>
 	manager.EndBlock(); // end footer
 
 	manager.Process(SplitIntoMultipleFiles);
+#>
+<#+ 
+// transformation du route path suivant les attributs ForeignKey
+// exemple : classe GenFournContact passe de '/GenFournContact/' en '/GenFourn/Contact/'
+List<string> GetRoutePathFromClass(EnvDTE.CodeClass codeClass)
+{
+	var lstRoute = new List<string>();
+	string str = null;
+
+	var allAttributes = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(codeClass).SelectMany(x => x.Value);
+	var fkAttributes = allAttributes.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.ReferencesAttribute" || 
+		attr.FullName == "ServiceStack.DataAnnotations.ForeignKeyAttribute").ToList();
+	if (fkAttributes.Any())
+	{
+		var refClassNames = fkAttributes.SelectMany(fk => fk.Value.Split(',')).Select(s => s.Trim())
+			.Where(s => s.StartsWith("typeof(") && s.EndsWith(")"))
+			.Select(s => s.Remove(s.Length-1, 1).Remove(0, 7).Trim()) // nettoyage
+			.Where(s => codeClass.Name.StartsWith(s))
+			.ToList();
+
+		string refClassName = refClassNames.OrderByDescending(s => s.Length).FirstOrDefault();
+		if (!string.IsNullOrEmpty(refClassName))
+		{
+			var cls = allClasses.SingleOrDefault(c => c.Name == refClassName) as EnvDTE.CodeClass;
+			if (cls != null)
+			{
+				str = codeClass.Name.Replace(cls.Name, "");
+				lstRoute = getRoutePathFromClass(cls);
+			}
+		}
+	}
+	if (string.IsNullOrEmpty(str))
+	{
+		str = codeClass.Name;
+	}
+
+	lstRoute.Add(str);
+	return lstRoute;
+}
 #>

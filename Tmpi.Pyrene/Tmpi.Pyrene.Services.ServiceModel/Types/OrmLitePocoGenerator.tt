@@ -235,8 +235,8 @@ namespace <#= fileNamespace #>
 
             if (!postExcluded)
             {
-				bool routeKeyIsReadonly = routeKeyParts.Any(c => c.IsAutoIncrement || c.IsComputed);
 				string strRoutePostSuffix = "";
+				bool routeKeyIsReadonly = routeKeyParts.Any(c => c.IsAutoIncrement || c.IsComputed);
                 if (!routeKeyIsReadonly)
                 {
                     strRoutePostSuffix = "/" + string.Join("/", routeKeyParts.Select(c => "{" + c.PropertyName + "}"));
@@ -278,15 +278,8 @@ namespace <#= fileNamespace #>
 <#
         }
 
-        List<string> priorProperyNames = new List<string>();
         foreach (Column col in table.Columns)
         {
-            if (priorProperyNames.Contains(col.PropertyName)) //Change duplicate style names
-            {
-                col.PropertyName = "_" + col.PropertyName;
-            }
-            priorProperyNames.Add(col.PropertyName);
-
             if (!string.IsNullOrWhiteSpace(col.Description))
             {
                 if (!col.Description.EndsWith("."))
