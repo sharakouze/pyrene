@@ -57,7 +57,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[StringLength(34)]
 		[Required]
-		[Index(true)]
 		[ApiMember(Description = "Code IBAN.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodIBAN { get; set; }
 

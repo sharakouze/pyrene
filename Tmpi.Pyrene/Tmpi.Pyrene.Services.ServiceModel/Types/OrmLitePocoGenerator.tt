@@ -218,28 +218,30 @@ namespace <#= fileNamespace #>
 
         if (AddRouteAttributes && (!putExcluded || !postExcluded))
         {
-	        List<Column> routeKeyParts = GetBestUniqueColumns(table, UsePKAsRouteId);
+	        List<Column> lstKeyCols = GetBestUniqueColumns(table, UsePKAsRouteId);
+
+	        List<string> routeKeyParts = lstKeyCols.Select(c => c.PropertyName).ToList();
 
 			string strRoute = table.ClassName;
             if (TransformRoutePath)
             {
                 List<string> parts = GetRoutePartsFromTable(table, UsePKAsRouteId);
+				strRoute = string.Join("/", parts);
 
 				FKey parentFKey = GetParentFKey(table);
 				if (parentFKey != null)
                 {
-					routeKeyParts.RemoveAll(c => parentFKey.FromColumns.Contains(c));
+					routeKeyParts.RemoveAll(str => parentFKey.FromColumns.Any(c => c.PropertyName == str));
                 }
-				strRoute = string.Join("/", parts);
             }
 
             if (!postExcluded)
             {
 				string strRoutePostSuffix = "";
-				bool routeKeyIsReadonly = routeKeyParts.Any(c => c.IsAutoIncrement || c.IsComputed);
+				bool routeKeyIsReadonly = lstKeyCols.Any(c => c.IsAutoIncrement || c.IsComputed);
                 if (!routeKeyIsReadonly)
                 {
-                    strRoutePostSuffix = "/" + string.Join("/", routeKeyParts.Select(c => "{" + c.PropertyName + "}"));
+                    strRoutePostSuffix = "/" + string.Join("/", routeKeyParts.Select(c => "{" + c + "}"));
                 }
 #>
     [Route("/<#= strRoute #><#= strRoutePostSuffix #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une ressource {0}.", resourceName) #>")]
@@ -247,7 +249,7 @@ namespace <#= fileNamespace #>
             }
             if (!putExcluded)
             {
-                string strRoutePutSuffix = "/" + string.Join("/", routeKeyParts.Select(c => "{" + c.PropertyName + "}"));
+                string strRoutePutSuffix = "/" + string.Join("/", routeKeyParts.Select(c => "{" + c + "}"));
 #>
     [Route("/<#= strRoute #><#= strRoutePutSuffix #>", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une ressource {0}.", resourceName) #>")]
 <#

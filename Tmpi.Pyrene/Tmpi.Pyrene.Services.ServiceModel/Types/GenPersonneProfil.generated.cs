@@ -58,7 +58,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[Index(true)]
 		[ApiMember(Description = "Code.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodProfil { get; set; }
 

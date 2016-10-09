@@ -19,8 +19,8 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/Compteur/{CodCompteurProprio}/Valeur/{ValPeriode}/Truc", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteurValeurTruc.")]
-    [Route("/Compteur/{CodCompteurProprio}/Valeur/{ValPeriode}/Truc/{CleTruc}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeurTruc.")]
+    [Route("/Compteur/{CodCompteurProprio}/Valeur/{CleCompteurProprio}/{ValPeriode}/Truc", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteurValeurTruc.")]
+    [Route("/Compteur/{CodCompteurProprio}/Valeur/{CleCompteurProprio}/{ValPeriode}/Truc/{CleTruc}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeurTruc.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeurTruc spécifiée est introuvable.")]
 	public partial class GenCompteurValeurTruc
 	{
@@ -36,6 +36,17 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
         [IgnoreDataMember]
 		public int CleValeur { get; set; }
+
+		/// <summary>
+		/// Compteur parent.
+		/// </summary>
+        /// <remarks>
+		/// Remplace la propriété <see cref="CleValeur" /> dans la sérialisation.
+		/// Référence la propriété <see cref="GenCompteurValeur.CleCompteurProprio" />.
+        /// </remarks>
+		[ApiMember(Description = "Compteur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[Ignore]
+		public int CleCompteurProprio { get; set; }
 
 		/// <summary>
 		/// Valeur de la période.

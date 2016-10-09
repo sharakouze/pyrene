@@ -56,7 +56,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Valeur de la période.
 		/// </summary>
 		[Required]
-		[Index(true)]
 		[ApiMember(Description = "Valeur de la période.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ValPeriode { get; set; }
 

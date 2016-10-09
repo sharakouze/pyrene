@@ -29,6 +29,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
+		[PrimaryKey]
         [IgnoreDataMember]
 		public int ClePersonne { get; set; }
 

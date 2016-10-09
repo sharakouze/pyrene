@@ -57,7 +57,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[Index(true)]
 		[ApiMember(Description = "Nom de famille.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string NomContact { get; set; }
 

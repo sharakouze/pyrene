@@ -438,7 +438,8 @@ public class VsCodeModel
 	
 		foreach(EnvDTE.CodeClass partialClass in GetPartialClasses(codeClass))
         {
-			var allProperties = GetAllCodeElementsOfType(partialClass.Members, EnvDTE.vsCMElement.vsCMElementProperty, false);
+			var allProperties = GetAllCodeElementsOfType(partialClass.Members, EnvDTE.vsCMElement.vsCMElementProperty, false)
+				.OfType<EnvDTE.CodeProperty>();
 			foreach(EnvDTE.CodeProperty property in allProperties)
             {
 				var allAttributes = GetAllCodeElementsOfType(property.Attributes, EnvDTE.vsCMElement.vsCMElementAttribute, false);
@@ -448,6 +449,22 @@ public class VsCodeModel
 
 		return ret;
     }
+
+	public EnvDTE.CodeProperty GetProperty(EnvDTE.CodeClass codeClass, string propertyName)
+    {
+		foreach(EnvDTE.CodeClass partialClass in GetPartialClasses(codeClass))
+        {
+			var allProperties = GetAllCodeElementsOfType(partialClass.Members, EnvDTE.vsCMElement.vsCMElementProperty, false)
+				.OfType<EnvDTE.CodeProperty>();
+			EnvDTE.CodeProperty prop = allProperties.FirstOrDefault(p => p.Name == propertyName);
+			if (prop != null)
+            {
+				return prop;
+            }
+        }
+
+		return null;
+	}
 
 	#region private classes
 	private class CodeInterfaceEqualityComparer : IEqualityComparer<EnvDTE.CodeInterface>

@@ -87,7 +87,8 @@ namespace <#= fileNamespace #>
 	Project project = VisualStudioHelper.CurrentProject;
 
 	// get all class items from the code model
-	var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, vsCMElement.vsCMElementClass, false);
+	var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, vsCMElement.vsCMElementClass, false)
+		.OfType<CodeClass>();
 	if (!string.IsNullOrWhiteSpace(SourceNamespace))
 	{
 		allClasses = allClasses.Where(c => c.FullName.StartsWith(SourceNamespace)).ToList();
@@ -102,6 +103,12 @@ namespace <#= fileNamespace #>
 		{
 			continue;
 		}
+
+		var c = GetPrimaryKeyColumn(codeClass);
+#>
+<#= codeClass.Name #>
+	<#= c.Name #>
+<#
 
 		string strRoute = codeClass.Name;
 		if (AddRouteAttributes && TransformRoutePath)
@@ -431,9 +438,46 @@ namespace <#= fileNamespace #>
 	manager.Process(SplitIntoMultipleFiles);
 #>
 <#+ 
+CodeProperty GetPrimaryKeyColumn(CodeClass tableClass)
+{
+	IEnumerable<CodeInterface> allInterfaces = VisualStudioHelper.CodeModel.GetAllImplementedInterfaces(tableClass);
+	bool implIHasId = allInterfaces.Any(i => i.FullName.StartsWith("ServiceStack.Model.IHasId<") ||
+		i.FullName == "ServiceStack.Model.IHasIntId");
+	if (implIHasId)
+    {
+		CodeProperty prop = VisualStudioHelper.CodeModel.GetProperty(tableClass, "Id");
+		return prop;
+	}
+	else
+	{
+		var dic = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(tableClass);
+		var q = from kvp in dic
+			from attr in kvp.Value
+			where attr.FullName == "ServiceStack.DataAnnotations.PrimaryKeyAttribute"
+			select kvp.Key;
+		CodeProperty prop = q.FirstOrDefault();
+		return prop;
+    }
+}
 List<CodeProperty> GetBestUniqueColumns(CodeClass tableClass, bool usePK)
 {
-	IEnumerable<CodeElement> indices = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(tableClass.Attributes, vsCMElement.vsCMElementAttribute, false);
+/*	var dic = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(tableClass);
+	var q = from kvp in dic
+		from attr in kvp.Value
+		where attr.FullName == "ServiceStack.DataAnnotations.IndexAttribute"
+		let attrProps = attr.Value.Split(',')
+		where attrProps.FirstOrDefault() == "true"
+		select new
+		{
+			PropertyName = kvp.Key.Name,
+			IndexAttribute = attr
+        };
+	var idxAttrs = q.ToList();
+	var q2 = from idx in idxAttrs
+			where idx.Value.Split(',')
+	List<CodeElement> classAttr = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(tableClass.Attributes, vsCMElement.vsCMElementAttribute, false)
+		.OfType<CodeAttribute>()
+		.ToList();
 
 	
 	List<CodeProperty> pkCols = null;
@@ -458,7 +502,8 @@ List<CodeProperty> GetBestUniqueColumns(CodeClass tableClass, bool usePK)
 		}
     }
 
-    return pkCols;
+    return pkCols;*/
+	return null;
 }
 
 /// <summary>
@@ -475,7 +520,7 @@ List<string> GetRoutePathFromClass(CodeClass tableClass, IEnumerable<CodeClass> 
 		attr.FullName == "ServiceStack.DataAnnotations.ForeignKeyAttribute").ToList();
 	*/
 
-	var dicPropAttr = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(tableClass);
+	/*var dicPropAttr = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(tableClass);
 	List<CodeAttribute> fkAttributes = dicPropAttr.Values
 		.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.ReferencesAttribute" || attr.FullName == "ServiceStack.DataAnnotations.ForeignKeyAttribute")
 		.ToList();
@@ -504,7 +549,7 @@ List<string> GetRoutePathFromClass(CodeClass tableClass, IEnumerable<CodeClass> 
         parts.Add(newTableName);
     }
 
-	lstRoute.AddRange(parts);
+	lstRoute.AddRange(parts);*/
 	return lstRoute;
 }
 #>
