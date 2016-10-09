@@ -20,7 +20,7 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
     [Route("/Service/{CodService}", HttpVerbs.Post, Summary = "Ajoute une ressource GenService.")]
-    [Route("/Service/{CodService}", HttpVerbs.Put, Summary = "Remplace une ressource GenService à partir de son Id.")]
+    [Route("/Service/{CodService}", HttpVerbs.Put, Summary = "Remplace une ressource GenService.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenService spécifiée est introuvable.")]
 	public partial class GenService : IAuditable
 	{

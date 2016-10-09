@@ -20,23 +20,26 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
     [Route("/Personne/{CodPersonne}/Signature/", HttpVerbs.Post, Summary = "Ajoute une ressource GenPersonneSignature.")]
-    [Route("/Personne/{CodPersonne}/Signature/", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonneSignature à partir de son Id.")]
+    [Route("/Personne/{CodPersonne}/Signature/", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonneSignature.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneSignature spécifiée est introuvable.")]
 	public partial class GenPersonneSignature
 	{
+		/// <summary>
+		/// Clé primaire.
+		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
         [IgnoreDataMember]
 		public int ClePersonne { get; set; }
 
 		/// <summary>
-		/// Code unique.
+		/// Clé primaire. Code unique.
 		/// </summary>
         /// <remarks>
 		/// Remplace la propriété <see cref="ClePersonne" /> dans la sérialisation.
 		/// Référence la propriété <see cref="GenPersonne.CodPersonne" />.
         /// </remarks>
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Clé primaire. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		[Ignore]
 		public string CodPersonne { get; set; }
 

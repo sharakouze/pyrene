@@ -21,7 +21,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleCompteurProprio), nameof(ValPeriode))]
     [Route("/Compteur/{CodCompteurProprio}/Valeur/{ValPeriode}", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteurValeur.")]
-    [Route("/Compteur/{CodCompteurProprio}/Valeur/{ValPeriode}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeur à partir de son Id.")]
+    [Route("/Compteur/{CodCompteurProprio}/Valeur/{ValPeriode}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeur.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeur spécifiée est introuvable.")]
 	public partial class GenCompteurValeur
 	{

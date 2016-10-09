@@ -21,7 +21,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleFourn), nameof(CodIBAN))]
     [Route("/Fourn/{CodFourn}/Banque/{CodIBAN}", HttpVerbs.Post, Summary = "Ajoute une ressource GenFournBanque.")]
-    [Route("/Fourn/{CodFourn}/Banque/{CodIBAN}", HttpVerbs.Put, Summary = "Remplace une ressource GenFournBanque à partir de son Id.")]
+    [Route("/Fourn/{CodFourn}/Banque/{CodIBAN}", HttpVerbs.Put, Summary = "Remplace une ressource GenFournBanque.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournBanque spécifiée est introuvable.")]
 	public partial class GenFournBanque : IAuditable
 	{

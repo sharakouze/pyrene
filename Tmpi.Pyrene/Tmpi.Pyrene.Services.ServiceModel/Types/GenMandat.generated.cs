@@ -21,7 +21,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(TypMandat), nameof(NivMandat))]
     [Route("/Mandat/{CodMandat}", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandat.")]
-    [Route("/Mandat/{CodMandat}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandat à partir de son Id.")]
+    [Route("/Mandat/{CodMandat}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandat.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandat spécifiée est introuvable.")]
 	public partial class GenMandat : IAuditable
 	{

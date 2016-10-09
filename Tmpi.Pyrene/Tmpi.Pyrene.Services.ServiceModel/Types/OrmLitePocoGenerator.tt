@@ -82,6 +82,8 @@
     // Si non null, méthode appliquée sur la collection des tables
     Action<Tables> TweakSchema = (tables) =>
     {	
+		tables.ForEach(t => SetDescription(t));
+
 		tables.RemoveAll(t => t.Name == "__RefactorLog");
 
 		tables.ChangePropertyType("GenCompteur", "TypCompteur", "TypCompteur");
@@ -247,7 +249,7 @@ namespace <#= fileNamespace #>
             {
                 string strRoutePutSuffix = "/" + string.Join("/", routeKeyParts.Select(c => "{" + c.PropertyName + "}"));
 #>
-    [Route("/<#= strRoute #><#= strRoutePutSuffix #>", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une ressource {0} à partir de son Id.", resourceName) #>")]
+    [Route("/<#= strRoute #><#= strRoutePutSuffix #>", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une ressource {0}.", resourceName) #>")]
 <#
             }
 
@@ -276,17 +278,6 @@ namespace <#= fileNamespace #>
 <#
         }
 
-		string stdColFormat = "";
-		FKey parentFkey = GetParentFKey(table);
-		if (parentFkey != null)
-        {
-			stdColFormat = parentFkey.FromTable.ClassName.Replace(parentFkey.ReferencedTable.ClassName, "{0}");
-        }
-		else
-        {
-			stdColFormat = "{0}" + table.Name.Remove(0, 3);
-        }
-
         List<string> priorProperyNames = new List<string>();
         foreach (Column col in table.Columns)
         {
@@ -295,70 +286,6 @@ namespace <#= fileNamespace #>
                 col.PropertyName = "_" + col.PropertyName;
             }
             priorProperyNames.Add(col.PropertyName);
-
-            if (string.IsNullOrWhiteSpace(col.Description))
-            {
-                if (col.IsPKey)
-                {
-                    col.Description = "Clé primaire.";
-                }
-                else if (col.PropertyName == string.Format(stdColFormat, "Cod"))
-                {
-					bool isUniqueSingleCol = table.Indices
-						.Where(idx => idx.IsUnique == true && idx.IndexColumns.Count == 1 && idx.IndexColumns.Contains(col))
-						.Any();
-                    col.Description = isUniqueSingleCol ? "Code unique." : "Code.";
-                }
-				else if (col.PropertyName == string.Format(stdColFormat, "Lib"))
-                {
-                    col.Description = "Désignation.";
-                }
-				else if (col.PropertyName == string.Format(stdColFormat, "Txt"))
-                {
-                    col.Description = "Commentaire ou description.";
-                }
-				else
-				{
-					switch (col.PropertyName)
-					{
-						case "EstActif":
-							col.Description = "Actif ou inactif";
-							break;
-						case "DatCreation":
-							col.Description = "Date de création.";
-							break;
-						case "DatModif":
-							col.Description = "Date de dernière modification.";
-							break;
-						case "CodExterne":
-							col.Description = "Identifiant de synchronisation externe.";
-							break;
-
-						case "NumTelep":
-							col.Description = "Numéro de téléphone.";
-							break;
-						case "NumFax":
-							col.Description = "Numéro de fax.";
-							break;
-						case "NumEmail":
-							col.Description = "Adresse email.";
-							break;
-
-						case "AdrRue":
-							col.Description = "Rue.";
-							break;
-						case "AdrCode":
-							col.Description = "Code postal.";
-							break;
-						case "AdrCommune":
-							col.Description = "Ville ou commune.";
-							break;
-						case "AdrPays":
-							col.Description = "Pays.";
-							break;
-					}
-                }
-            }
 
             if (!string.IsNullOrWhiteSpace(col.Description))
             {
@@ -521,7 +448,8 @@ namespace <#= fileNamespace #>
                     { 
 						Column newCol = fkCol.Clone();
 						newCol.IsNullable = fkFromCol.IsNullable;
-						newCol.Description = fkFromCol.Description + (string.IsNullOrEmpty(fkFromCol.Description) ? "" : " ") + newCol.Description;
+						string newDescription = fkFromCol.Description + " " +newCol.Description;
+						newCol.Description = newDescription.Trim();
 						newCol.PropertyName = string.Format(format, newCol.PropertyName);
 #>
 		/// <summary>
@@ -604,6 +532,84 @@ namespace <#= fileNamespace #>
     manager.Process(SplitIntoMultipleFiles);
 #>
 <#+
+void SetDescription(Table table)
+{
+	foreach(Column col in table.Columns.Where(c => string.IsNullOrWhiteSpace(c.Description)))
+    {
+		string stdColFormat = "";
+		FKey parentFkey = GetParentFKey(table);
+		if (parentFkey != null)
+        {
+			stdColFormat = parentFkey.FromTable.ClassName.Replace(parentFkey.ReferencedTable.ClassName, "{0}");
+        }
+		else
+        {
+			stdColFormat = "{0}" + table.Name.Remove(0, 3);
+        }
+
+        if (col.IsPKey)
+        {
+            col.Description = "Clé primaire.";
+        }
+        else if (col.PropertyName == string.Format(stdColFormat, "Cod"))
+        {
+			bool isUniqueSingleCol = table.Indices
+				.Where(idx => idx.IsUnique == true && idx.IndexColumns.Count == 1 && idx.IndexColumns.Contains(col))
+				.Any();
+            col.Description = isUniqueSingleCol ? "Code unique." : "Code.";
+        }
+		else if (col.PropertyName == string.Format(stdColFormat, "Lib"))
+        {
+            col.Description = "Désignation.";
+        }
+		else if (col.PropertyName == string.Format(stdColFormat, "Txt"))
+        {
+            col.Description = "Commentaire ou description.";
+        }
+		else
+		{
+			switch (col.PropertyName)
+			{
+				case "EstActif":
+					col.Description = "Actif ou inactif";
+					break;
+				case "DatCreation":
+					col.Description = "Date de création.";
+					break;
+				case "DatModif":
+					col.Description = "Date de dernière modification.";
+					break;
+				case "CodExterne":
+					col.Description = "Identifiant de synchronisation externe.";
+					break;
+
+				case "NumTelep":
+					col.Description = "Numéro de téléphone.";
+					break;
+				case "NumFax":
+					col.Description = "Numéro de fax.";
+					break;
+				case "NumEmail":
+					col.Description = "Adresse email.";
+					break;
+
+				case "AdrRue":
+					col.Description = "Rue.";
+					break;
+				case "AdrCode":
+					col.Description = "Code postal.";
+					break;
+				case "AdrCommune":
+					col.Description = "Ville ou commune.";
+					break;
+				case "AdrPays":
+					col.Description = "Pays.";
+					break;
+			}
+        }
+    }
+}
+
 List<string> GetApiMemberProps(Column col, List<string> lstEnums, List<string> lstInterfaces)
 {
     List<string> lstApiMemberProps = new List<string>();

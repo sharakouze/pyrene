@@ -20,7 +20,7 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
     [Route("/Secteur/{CodSecteur}", HttpVerbs.Post, Summary = "Ajoute une ressource GenSecteur.")]
-    [Route("/Secteur/{CodSecteur}", HttpVerbs.Put, Summary = "Remplace une ressource GenSecteur à partir de son Id.")]
+    [Route("/Secteur/{CodSecteur}", HttpVerbs.Put, Summary = "Remplace une ressource GenSecteur.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenSecteur spécifiée est introuvable.")]
 	public partial class GenSecteur : IAuditable
 	{
@@ -95,13 +95,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int CleSociete { get; set; }
 
 		/// <summary>
-		/// Société à laquelle appartient le secteur. 
+		/// Société à laquelle appartient le secteur. Code unique.
 		/// </summary>
         /// <remarks>
 		/// Remplace la propriété <see cref="CleSociete" /> dans la sérialisation.
 		/// Référence la propriété <see cref="GenSociete.CodSociete" />.
         /// </remarks>
-		[ApiMember(Description = "Société à laquelle appartient le secteur. ", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Société à laquelle appartient le secteur. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		[Ignore]
 		public string CodSociete { get; set; }
 

@@ -21,7 +21,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleMandat), nameof(ClePersonne), nameof(CleSociete), nameof(CleSecteur), nameof(CleService))]
     [Route("/Mandat/{CodMandat}/Mandataire/{ClePersonne}/{CleSociete}/{CleSecteur}/{CleService}", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandatMandataire.")]
-    [Route("/Mandat/{CodMandat}/Mandataire/{ClePersonne}/{CleSociete}/{CleSecteur}/{CleService}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandatMandataire à partir de son Id.")]
+    [Route("/Mandat/{CodMandat}/Mandataire/{ClePersonne}/{CleSociete}/{CleSecteur}/{CleService}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandatMandataire.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandatMandataire spécifiée est introuvable.")]
 	public partial class GenMandatMandataire : IAuditable
 	{
@@ -61,13 +61,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int ClePersonne { get; set; }
 
 		/// <summary>
-		/// Utilisateur mandataire. 
+		/// Utilisateur mandataire. Code unique.
 		/// </summary>
         /// <remarks>
 		/// Remplace la propriété <see cref="ClePersonne" /> dans la sérialisation.
 		/// Référence la propriété <see cref="GenPersonne.CodPersonne" />.
         /// </remarks>
-		[ApiMember(Description = "Utilisateur mandataire. ", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Utilisateur mandataire. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		[Ignore]
 		public string CodPersonne { get; set; }
 
@@ -79,13 +79,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int? CleSociete { get; set; }
 
 		/// <summary>
-		/// Société ayant accès au mandat, ou null pour toutes les sociétés. 
+		/// Société ayant accès au mandat, ou null pour toutes les sociétés. Code unique.
 		/// </summary>
         /// <remarks>
 		/// Remplace la propriété <see cref="CleSociete" /> dans la sérialisation.
 		/// Référence la propriété <see cref="GenSociete.CodSociete" />.
         /// </remarks>
-		[ApiMember(Description = "Société ayant accès au mandat, ou null pour toutes les sociétés. ", DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Société ayant accès au mandat, ou null pour toutes les sociétés. Code unique.", DataType = SwaggerDataTypes.String)]
 		[Ignore]
 		public string CodSociete { get; set; }
 
@@ -97,13 +97,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int? CleSecteur { get; set; }
 
 		/// <summary>
-		/// Secteur ayant accès au mandat, ou null pour tous les secteurs. 
+		/// Secteur ayant accès au mandat, ou null pour tous les secteurs. Code unique.
 		/// </summary>
         /// <remarks>
 		/// Remplace la propriété <see cref="CleSecteur" /> dans la sérialisation.
 		/// Référence la propriété <see cref="GenSecteur.CodSecteur" />.
         /// </remarks>
-		[ApiMember(Description = "Secteur ayant accès au mandat, ou null pour tous les secteurs. ", DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Secteur ayant accès au mandat, ou null pour tous les secteurs. Code unique.", DataType = SwaggerDataTypes.String)]
 		[Ignore]
 		public string CodSecteur { get; set; }
 
@@ -115,13 +115,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int? CleService { get; set; }
 
 		/// <summary>
-		/// Service ayant accès au mandat, ou null pour tous les services. 
+		/// Service ayant accès au mandat, ou null pour tous les services. Code unique.
 		/// </summary>
         /// <remarks>
 		/// Remplace la propriété <see cref="CleService" /> dans la sérialisation.
 		/// Référence la propriété <see cref="GenService.CodService" />.
         /// </remarks>
-		[ApiMember(Description = "Service ayant accès au mandat, ou null pour tous les services. ", DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Service ayant accès au mandat, ou null pour tous les services. Code unique.", DataType = SwaggerDataTypes.String)]
 		[Ignore]
 		public string CodService { get; set; }
 
