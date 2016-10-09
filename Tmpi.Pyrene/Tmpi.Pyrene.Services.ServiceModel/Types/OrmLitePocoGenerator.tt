@@ -696,8 +696,8 @@ FKey GetParentFKey(Table table)
 }
 
 /// <summary>
-/// extraction du route path suivant les ForeignKeys/enfants
-/// exemple : classe GenFournContact passe de '/GenFournContact/' en '/GenFourn/{xxx}/Contact/'
+/// Extraction du route path suivant les ForeignKeys/enfants
+/// Exemple : classe GenFournContact passe de '/GenFournContact/' en '/GenFourn/{xxx}/Contact/'
 /// </summary>
 List<string> GetRoutePartsFromTable(Table table, bool usePK)
 {

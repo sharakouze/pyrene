@@ -1,5 +1,7 @@
 ﻿<#@ template language="C#" hostspecific="true" debug="true" #>
 <#@ output extension=".cs" #>
+<#@ assembly name="EnvDTE.dll" #>
+<#@ import namespace="EnvDTE" #>
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" #>
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\VisualStudioHelper.ttinclude" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
@@ -82,17 +84,17 @@ namespace <#= fileNamespace #>
 	manager.EndBlock(); // end header
  
 	// get a reference to the project of this t4 template
-	var project = VisualStudioHelper.CurrentProject;
+	Project project = VisualStudioHelper.CurrentProject;
 
 	// get all class items from the code model
-	var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementClass, false);
+	var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, vsCMElement.vsCMElementClass, false);
 	if (!string.IsNullOrWhiteSpace(SourceNamespace))
 	{
 		allClasses = allClasses.Where(c => c.FullName.StartsWith(SourceNamespace)).ToList();
 	}
 
 	// iterate all classes
-	foreach (EnvDTE.CodeClass codeClass in allClasses)
+	foreach (CodeClass codeClass in allClasses)
 	{
 		bool included = ClassFilterInclude == null || ClassFilterInclude.IsMatch(codeClass.Name);
 		bool excluded = ClassFilterExclude != null && ClassFilterExclude.IsMatch(codeClass.Name);
@@ -101,17 +103,10 @@ namespace <#= fileNamespace #>
 			continue;
 		}
 
-		var classDefinitionWords = new List<string>();
-		classDefinitionWords.Add("public");
-		if (MakeClassesPartial)
-		{
-			classDefinitionWords.Add("partial");
-		}
-
 		string strRoute = codeClass.Name;
 		if (AddRouteAttributes && TransformRoutePath)
 		{
-			strRoute = string.Join("/", getRoutePathFromClass(codeClass));
+			strRoute = string.Join("/", GetRoutePathFromClass(codeClass, allClasses));
 		}
 
 		// get all interfaces implemented by this class
@@ -174,7 +169,7 @@ namespace <#= fileNamespace #>
                 }
 			} // end if
 #>
-	<#= string.Join(" ", classDefinitionWords) #> class <#= getByIdClassName #> : IReturn<<#= codeClass.Name #>>
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= getByIdClassName #> : IReturn<<#= codeClass.Name #>>
 	{
         /// <summary>
         /// <#= string.Format(idPropDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
@@ -232,7 +227,7 @@ namespace <#= fileNamespace #>
                 }
 			} // end if
 #>
-	<#= string.Join(" ", classDefinitionWords) #> class <#= deleteByIdClassName #> : IReturnVoid
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= deleteByIdClassName #> : IReturnVoid
 	{
         /// <summary>
         /// <#= string.Format(idPropDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
@@ -280,7 +275,7 @@ namespace <#= fileNamespace #>
                 }
 			} // end if
 #>
-	<#= string.Join(" ", classDefinitionWords) #> class <#= patchClassName #> : IReturnVoid
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= patchClassName #> : IReturnVoid
 	{
         /// <summary>
         /// <#= string.Format(idPropDescription, "<see cref=\"" + codeClass.Name + "\" />") #>
@@ -338,7 +333,7 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 #>
-	<#= string.Join(" ", classDefinitionWords) #> class <#= autocompleteClassName #> : IReturn<BasicEntity[]>
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= autocompleteClassName #> : IReturn<BasicEntity[]>
 	{
         /// <summary>
         /// <#= textPropDescription #>
@@ -391,7 +386,7 @@ namespace <#= fileNamespace #>
 <#
 			} // end if
 #>
-	<#= string.Join(" ", classDefinitionWords) #> class <#= findClassName #> : IReturn<BasicEntity[]>
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= findClassName #> : IReturn<BasicEntity[]>
 	{
         /// <summary>
         /// <#= textPropDescription #>
@@ -436,41 +431,80 @@ namespace <#= fileNamespace #>
 	manager.Process(SplitIntoMultipleFiles);
 #>
 <#+ 
-// transformation du route path suivant les attributs ForeignKey
-// exemple : classe GenFournContact passe de '/GenFournContact/' en '/GenFourn/Contact/'
-List<string> GetRoutePathFromClass(EnvDTE.CodeClass codeClass)
+List<CodeProperty> GetBestUniqueColumns(CodeClass tableClass, bool usePK)
 {
-	var lstRoute = new List<string>();
-	string str = null;
+	IEnumerable<CodeElement> indices = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(tableClass.Attributes, vsCMElement.vsCMElementAttribute, false);
 
-	var allAttributes = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(codeClass).SelectMany(x => x.Value);
+	
+	List<CodeProperty> pkCols = null;
+
+	if (table.PrimaryKey != null)
+    {
+		pkCols = table.PrimaryKey.PKeyColumns;
+    }
+
+	if (usePK)
+    {
+		return pkCols;
+    }
+	else 
+    {
+		TableIndex index = table.Indices.Where(idx => idx.IsUnique)
+			.OrderBy(idx => idx.IndexColumns.Count)
+			.FirstOrDefault();
+		if (index != null)
+		{
+			return index.IndexColumns;
+		}
+    }
+
+    return pkCols;
+}
+
+/// <summary>
+/// Extraction du route path suivant les ForeignKeys/enfants
+/// Exemple : classe GenFournContact passe de '/GenFournContact/' en '/GenFourn/{xxx}/Contact/'
+/// </summary>
+List<string> GetRoutePathFromClass(CodeClass tableClass, IEnumerable<CodeClass> lstClasses)
+{
+    List<string> lstRoute = new List<string>();
+    List<string> parts = new List<string>();
+	/*
+	var allAttributes = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(tableClass).SelectMany(x => x.Value);
 	var fkAttributes = allAttributes.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.ReferencesAttribute" || 
 		attr.FullName == "ServiceStack.DataAnnotations.ForeignKeyAttribute").ToList();
+	*/
+
+	var dicPropAttr = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(tableClass);
+	List<CodeAttribute> fkAttributes = dicPropAttr.Values
+		.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.ReferencesAttribute" || attr.FullName == "ServiceStack.DataAnnotations.ForeignKeyAttribute")
+		.ToList();
 	if (fkAttributes.Any())
 	{
 		var refClassNames = fkAttributes.SelectMany(fk => fk.Value.Split(',')).Select(s => s.Trim())
 			.Where(s => s.StartsWith("typeof(") && s.EndsWith(")"))
 			.Select(s => s.Remove(s.Length-1, 1).Remove(0, 7).Trim()) // nettoyage
-			.Where(s => codeClass.Name.StartsWith(s))
+			.Where(s => tableClass.Name.StartsWith(s))
 			.ToList();
 
 		string refClassName = refClassNames.OrderByDescending(s => s.Length).FirstOrDefault();
 		if (!string.IsNullOrEmpty(refClassName))
 		{
-			var cls = allClasses.SingleOrDefault(c => c.Name == refClassName) as EnvDTE.CodeClass;
-			if (cls != null)
+			CodeClass parentTableClass = lstClasses.SingleOrDefault(c => c.Name == refClassName);
+			if (parentTableClass != null)
 			{
-				str = codeClass.Name.Replace(cls.Name, "");
-				lstRoute = getRoutePathFromClass(cls);
+				str = tableClass.Name.Replace(parentTableClass.Name, "");
+				lstRoute = GetRoutePathFromClass(parentTableClass);
 			}
 		}
 	}
-	if (string.IsNullOrEmpty(str))
-	{
-		str = codeClass.Name;
-	}
+    if (!parts.Any())
+    {
+		string newTableName = tableClass.Name.Remove(0, 3);
+        parts.Add(newTableName);
+    }
 
-	lstRoute.Add(str);
+	lstRoute.AddRange(parts);
 	return lstRoute;
 }
 #>
