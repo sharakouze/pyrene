@@ -24,86 +24,6 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenMandatService : Service
 	{
 		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns></returns>
-		public List<BasicEntity> Get(AutocompleteGenMandat request)
-		{
-			if (string.IsNullOrWhiteSpace(request.Text))
-			{
-				return null;
-			}
-
-            var q = Db.From<GenMandat>().Where(x => x.LibObjet.Contains(request.Text));
-            if (request.Max > 0)
-            {
-                q = q.Limit(request.Max);
-            }
-
-            var items = Db.Select<BasicEntity>(q);
-            return items;
-		}
-
-		/// <summary>
-		/// Supprime la ressource <see cref="GenMandat" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenMandat request)
-		{
-			int count = Db.DeleteById<GenMandat>(request.Id);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.Id));
-			}
-		}
-
-		/// <summary>
-		/// Supprime la ressource <see cref="GenMandatMandataire" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenMandatMandataire request)
-		{
-			int count = Db.DeleteById<GenMandatMandataire>(request.Id);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.Id));
-			}
-		}
-
-		/// <summary>
-		/// Ajoute la ressource <see cref="GenMandat" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenMandat" /> ajoutée.</returns>
-		public GenMandat Post(GenMandat request)
-		{
-			var id = Db.Insert(request, selectIdentity: true);
-			request.Id = (int)id;
-
-			return request;
-		}
-
-		/// <summary>
-		/// Remplace la ressource <see cref="GenMandat" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Put(GenMandat request)
-		{
-			int count = Db.Update(request);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.Id));
-			}
-		}
-
-		/// <summary>
 		/// Retourne la ressource <see cref="GenMandat" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
@@ -123,13 +43,13 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenMandat>().Where(x => x.CodMandat == request.CodMandat).Select(request.Fields);
+            var q = Db.From<GenMandat>().Where<GenMandat>(x => x.CodMandat == request.CodMandat).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandat), ""));
 			}
 
 			return entity;
@@ -155,90 +75,16 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenMandatMandataire>().Where(x => x.CodMandat == request.CodMandat x.ClePersonne == request.ClePersonne x.CleSociete == request.CleSociete x.CleSecteur == request.CleSecteur x.CleService == request.CleService).Select(request.Fields);
+            var q = Db.From<GenMandatMandataire>().Join<GenMandat>().Where<GenMandat>(x => x.CodMandat == request.CodMandat).Where<GenMandatMandataire>(x => x.ClePersonne == request.ClePersonne).Where<GenMandatMandataire>(x => x.CleSociete == request.CleSociete).Where<GenMandatMandataire>(x => x.CleSecteur == request.CleSecteur).Where<GenMandatMandataire>(x => x.CleService == request.CleService).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), ""));
 			}
 
 			return entity;
-		}
-
-		/// <summary>
-		/// Met à jour la ressource <see cref="GenMandat" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Patch(PatchGenMandat request)
-		{
-			if (request.Fields.IsNullOrEmpty())
-			{
-				throw new ArgumentNullException(nameof(request.Fields));
-			}
-
-            var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
-
-            var errFields = ModelDefinitionHelper.GetUndefinedFields<GenMandat>(patchDic.Keys);
-            if (errFields.Any())
-            {
-                string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                throw new ArgumentException(
-                    string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenMandat), str));
-            }
-
-			var entity = new GenMandat();
-			PatchHelper.PopulateFromPatch(entity, patchDic);
-
-			var q = Db.From<GenMandat>().Where(x => x.Id == request.Id).Update(patchDic.Keys);
-
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.Id));
-			}
-		}
-
-		/// <summary>
-		/// Met à jour la ressource <see cref="GenMandatMandataire" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Patch(PatchGenMandatMandataire request)
-		{
-			if (request.Fields.IsNullOrEmpty())
-			{
-				throw new ArgumentNullException(nameof(request.Fields));
-			}
-
-            var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
-
-            var errFields = ModelDefinitionHelper.GetUndefinedFields<GenMandatMandataire>(patchDic.Keys);
-            if (errFields.Any())
-            {
-                string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                throw new ArgumentException(
-                    string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenMandatMandataire), str));
-            }
-
-			var entity = new GenMandatMandataire();
-			PatchHelper.PopulateFromPatch(entity, patchDic);
-
-			var q = Db.From<GenMandatMandataire>().Where(x => x.Id == request.Id).Update(patchDic.Keys);
-
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.Id));
-			}
 		}
 
 	}

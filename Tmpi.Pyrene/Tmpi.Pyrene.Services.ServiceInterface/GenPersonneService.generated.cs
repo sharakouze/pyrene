@@ -24,79 +24,6 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenPersonneService : Service
 	{
 		/// <summary>
-		/// Supprime la ressource <see cref="GenPersonne" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenPersonne request)
-		{
-			int count = Db.DeleteById<GenPersonne>(request.Id);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonne), request.Id));
-			}
-		}
-
-		/// <summary>
-		/// Supprime la ressource <see cref="GenPersonneProfil" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenPersonneProfil request)
-		{
-			int count = Db.DeleteById<GenPersonneProfil>(request.Id);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonneProfil), request.Id));
-			}
-		}
-
-		/// <summary>
-		/// Supprime la ressource <see cref="GenPersonneSignature" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenPersonneSignature request)
-		{
-			int count = Db.DeleteById<GenPersonneSignature>(request.Id);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonneSignature), request.Id));
-			}
-		}
-
-		/// <summary>
-		/// Ajoute la ressource <see cref="GenPersonne" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenPersonne" /> ajoutée.</returns>
-		public GenPersonne Post(GenPersonne request)
-		{
-			var id = Db.Insert(request, selectIdentity: true);
-			request.Id = (int)id;
-
-			return request;
-		}
-
-		/// <summary>
-		/// Remplace la ressource <see cref="GenPersonne" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Put(GenPersonne request)
-		{
-			int count = Db.Update(request);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonne), request.Id));
-			}
-		}
-
-		/// <summary>
 		/// Retourne la ressource <see cref="GenPersonne" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
@@ -116,13 +43,13 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenPersonne>().Where(x => x.CodPersonne == request.CodPersonne).Select(request.Fields);
+            var q = Db.From<GenPersonne>().Where<GenPersonne>(x => x.CodPersonne == request.CodPersonne).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonne), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonne), ""));
 			}
 
 			return entity;
@@ -148,13 +75,13 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenPersonneProfil>().Where(x => x.CodPersonne == request.CodPersonne x.CodProfil == request.CodProfil).Select(request.Fields);
+            var q = Db.From<GenPersonneProfil>().Join<GenPersonne>().Where<GenPersonne>(x => x.CodPersonne == request.CodPersonne).Where<GenPersonneProfil>(x => x.CodProfil == request.CodProfil).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonneProfil), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonneProfil), ""));
 			}
 
 			return entity;
@@ -180,127 +107,16 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenPersonneSignature>().Where(x => x.CodPersonne == request.CodPersonne).Select(request.Fields);
+            var q = Db.From<GenPersonneSignature>().Join<GenPersonne>().Where<GenPersonne>(x => x.CodPersonne == request.CodPersonne).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonneSignature), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonneSignature), ""));
 			}
 
 			return entity;
-		}
-
-		/// <summary>
-		/// Met à jour la ressource <see cref="GenPersonne" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Patch(PatchGenPersonne request)
-		{
-			if (request.Fields.IsNullOrEmpty())
-			{
-				throw new ArgumentNullException(nameof(request.Fields));
-			}
-
-            var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
-
-            var errFields = ModelDefinitionHelper.GetUndefinedFields<GenPersonne>(patchDic.Keys);
-            if (errFields.Any())
-            {
-                string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                throw new ArgumentException(
-                    string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenPersonne), str));
-            }
-
-			var entity = new GenPersonne();
-			PatchHelper.PopulateFromPatch(entity, patchDic);
-
-			var q = Db.From<GenPersonne>().Where(x => x.Id == request.Id).Update(patchDic.Keys);
-
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonne), request.Id));
-			}
-		}
-
-		/// <summary>
-		/// Met à jour la ressource <see cref="GenPersonneProfil" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Patch(PatchGenPersonneProfil request)
-		{
-			if (request.Fields.IsNullOrEmpty())
-			{
-				throw new ArgumentNullException(nameof(request.Fields));
-			}
-
-            var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
-
-            var errFields = ModelDefinitionHelper.GetUndefinedFields<GenPersonneProfil>(patchDic.Keys);
-            if (errFields.Any())
-            {
-                string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                throw new ArgumentException(
-                    string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenPersonneProfil), str));
-            }
-
-			var entity = new GenPersonneProfil();
-			PatchHelper.PopulateFromPatch(entity, patchDic);
-
-			var q = Db.From<GenPersonneProfil>().Where(x => x.Id == request.Id).Update(patchDic.Keys);
-
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonneProfil), request.Id));
-			}
-		}
-
-		/// <summary>
-		/// Met à jour la ressource <see cref="GenPersonneSignature" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Patch(PatchGenPersonneSignature request)
-		{
-			if (request.Fields.IsNullOrEmpty())
-			{
-				throw new ArgumentNullException(nameof(request.Fields));
-			}
-
-            var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
-
-            var errFields = ModelDefinitionHelper.GetUndefinedFields<GenPersonneSignature>(patchDic.Keys);
-            if (errFields.Any())
-            {
-                string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                throw new ArgumentException(
-                    string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenPersonneSignature), str));
-            }
-
-			var entity = new GenPersonneSignature();
-			PatchHelper.PopulateFromPatch(entity, patchDic);
-
-			var q = Db.From<GenPersonneSignature>().Where(x => x.Id == request.Id).Update(patchDic.Keys);
-
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonneSignature), request.Id));
-			}
 		}
 
 	}

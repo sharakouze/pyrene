@@ -21,8 +21,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(ClePersonne), nameof(CleSociete), nameof(CleSecteur), nameof(CleService))]
 	[CompositeIndex(true, nameof(CodProfil), nameof(ClePersonne))]
-    [Route("/Personne/{CodPersonne}/Profil/{CodProfil}", HttpVerbs.Post, Summary = "Ajoute une ressource 'GenPersonneProfil'.")]
-    [Route("/Personne/{CodPersonne}/Profil/{CodProfil}", HttpVerbs.Put, Summary = "Remplace une ressource 'GenPersonneProfil'.")]
+    [Route("/GenPersonne/{CodPersonne}/Profil/{CodProfil}", HttpVerbs.Post, Summary = "Ajoute une ressource 'GenPersonneProfil'.")]
+    [Route("/GenPersonne/{CodPersonne}/Profil/{CodProfil}", HttpVerbs.Put, Summary = "Remplace une ressource 'GenPersonneProfil'.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenPersonneProfil' spécifiée est introuvable.")]
 	public partial class GenPersonneProfil : IAuditable
 	{

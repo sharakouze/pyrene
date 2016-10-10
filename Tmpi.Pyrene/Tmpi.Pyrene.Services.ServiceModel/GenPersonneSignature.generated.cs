@@ -19,8 +19,8 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/Personne/{CodPersonne}/Signature/", HttpVerbs.Post, Summary = "Ajoute une ressource 'GenPersonneSignature'.")]
-    [Route("/Personne/{CodPersonne}/Signature/", HttpVerbs.Put, Summary = "Remplace une ressource 'GenPersonneSignature'.")]
+    [Route("/GenPersonne/{CodPersonne}/Signature/", HttpVerbs.Post, Summary = "Ajoute une ressource 'GenPersonneSignature'.")]
+    [Route("/GenPersonne/{CodPersonne}/Signature/", HttpVerbs.Put, Summary = "Remplace une ressource 'GenPersonneSignature'.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenPersonneSignature' spécifiée est introuvable.")]
 	public partial class GenPersonneSignature
 	{

@@ -103,23 +103,23 @@
             }
             else if (codeClass.Name.StartsWith("Delete"))
             {
- 				entityName = codeClass.Name.Substring(6);
+ 			//	entityName = codeClass.Name.Substring(6);
             }
             else if (codeClass.Name.StartsWith("Patch"))
             {
-                entityName = codeClass.Name.Substring(5);
+            //    entityName = codeClass.Name.Substring(5);
             }
             else if (codeClass.Name.StartsWith("Autocomplete"))
             {
-                entityName = codeClass.Name.Substring(12);
+            //    entityName = codeClass.Name.Substring(12);
             }
             else if (codeClass.Name.StartsWith("Find"))
             {
-                entityName = codeClass.Name.Substring(4);
+            //    entityName = codeClass.Name.Substring(4);
             }
 			else
 			{
-				entityName = codeClass.Name;
+			//	entityName = codeClass.Name;
 			}
 
 			if (!string.IsNullOrEmpty(entityName))
@@ -193,7 +193,7 @@ namespace <#= fileNamespace #>
             }
 			else if (requestName.StartsWith("Get"))
             {
-				var lst = GetRouteProperties(requestClass, "");
+				List<string> parts = GetRouteParts(requestClass);
 
 				var entityName = requestName.Substring(3);
 #>
@@ -218,13 +218,28 @@ namespace <#= fileNamespace #>
             }
 
 <#
-				string whereExpr = "x =>";
-				foreach(CodeProperty property in lst)
+				List<string> expr = new List<string>();
+				string currentTable = "";
+				foreach (string str in parts)
                 {
-					whereExpr += string.Format(" x.{0} == request.{0}", property.Name);
+					if (str.StartsWith("{") && str.EndsWith("}"))
+                    {
+						string propName = str.Remove(0, 1); // Supprime le premier {
+						propName = propName.Remove(propName.Length - 1, 1); // Supprime le dernier }
+
+						expr.Add(string.Format(".Where<{0}>(x => x.{1} == request.{1})", currentTable, propName));
+                    }
+					else
+                    {
+						currentTable += str;
+						if (currentTable != entityName)
+                        {
+							expr.Add(string.Format(".Join<{0}>()", currentTable));
+                        }
+                    }
                 }
 #>
-            var q = Db.From<<#= entityName #>>().Where(<#= whereExpr #>).Select(request.Fields);
+            var q = Db.From<<#= entityName #>>()<#= string.Join("", expr) #>.Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
@@ -455,6 +470,26 @@ namespace <#= fileNamespace #>
 	manager.Process(SplitIntoMultipleFiles);
 #>
 <#+
+private List<string> GetRouteParts(CodeClass codeClass)
+{
+	IEnumerable<CodeAttribute> routeAttributes = VisualStudioHelper.CodeModel.GetAllClassAttributes(codeClass)
+		.Where(attr => attr.FullName == "ServiceStack.RouteAttribute")
+		.ToList();
+	CodeAttribute routeAttr = routeAttributes.First();
+
+	string[] parameters = routeAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+	string paramPath = parameters[0].Trim();
+
+	if (paramPath.StartsWith("\"") && paramPath.EndsWith("\""))
+    {
+		paramPath = paramPath.Remove(0, 1); // Supprime le premier "
+		paramPath = paramPath.Remove(paramPath.Length - 1, 1); // Supprime le dernier "
+    }
+
+	return paramPath.Split(new [] { '/' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+}
+
 private List<CodeProperty> GetRouteProperties(CodeClass codeClass, string verb)
 {
 	List<CodeProperty> properties = new List<CodeProperty>();

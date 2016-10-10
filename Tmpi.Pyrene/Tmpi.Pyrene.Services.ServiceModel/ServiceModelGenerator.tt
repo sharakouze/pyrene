@@ -14,7 +14,6 @@
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\SqlSchemaReader.ttinclude" #>
 <#
 	/***** TODO *****
-	- ConfigurationManager pour la connectionstring
 	- DefaultAttribute
     - Alternative a TransformRoutePath avec des const
     - Commentaires sur les [References] ?
@@ -1108,7 +1107,7 @@ List<string> GetRoutePartsFromTable(Table table, bool usePK, ref List<Column> ls
     }
     if (!parts.Any())
     {
-		string newTableName = table.Name.Remove(0, 3);
+		string newTableName = table.Name; //.Remove(0, 3);
         parts.Add(newTableName);
     }
 
@@ -1144,33 +1143,24 @@ private string GetConnectionString(Project project, string connectionStringName,
 		var config = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configFile, ConfigurationUserLevel.None);
 		var connSection = config.ConnectionStrings;
 
-		//if the connectionString is empty - which is the defauls
-		//look for count-1 - this is the last connection string
-		//and takes into account AppServices and LocalSqlServer
-		if(string.IsNullOrEmpty(connectionStringName))
+		// if the connectionString is empty - which is the defauls look for count-1 - this is the last connection string
+		// and takes into account AppServices and LocalSqlServer
+		if (string.IsNullOrEmpty(connectionStringName))
 		{
-			if(connSection.ConnectionStrings.Count>1)
+			if (connSection.ConnectionStrings.Count > 1)
 			{
-				connectionStringName = connSection.ConnectionStrings[connSection.ConnectionStrings.Count-1].Name;
-				result=connSection.ConnectionStrings[connSection.ConnectionStrings.Count-1].ConnectionString;
-				providerName=connSection.ConnectionStrings[connSection.ConnectionStrings.Count-1].ProviderName;
+				connectionStringName = connSection.ConnectionStrings[connSection.ConnectionStrings.Count - 1].Name;
 			}
 		}
-		else
+		try
 		{
-			try
-			{
-				result=connSection.ConnectionStrings[connectionStringName].ConnectionString;
-				providerName=connSection.ConnectionStrings[connectionStringName].ProviderName;
-			}
-			catch
-			{
-				result="There is no connection string name called '"+connectionStringName+"'";
-			}
+			connStr = connSection.ConnectionStrings[connectionStringName].ConnectionString;
+			providerName = connSection.ConnectionStrings[connectionStringName].ProviderName;
 		}
-        }
-//	if (String.IsNullOrEmpty(providerName))
-//		providerName="System.Data.SqlClient";
+		catch
+		{
+		}
+	}
 
     return connStr;
 }

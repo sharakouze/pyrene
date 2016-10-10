@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Modifie partiellement une ressource <see cref="GenPersonneSignature" />.
 	/// </summary>
-	[Route("/Personne/{CodPersonne}/Signature/", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource 'GenPersonneSignature'.")]
+	[Route("/GenPersonne/{CodPersonne}/Signature/", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource 'GenPersonneSignature'.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource 'GenPersonneSignature' ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenPersonneSignature' spécifiée est introuvable.")]
 	public partial class PatchGenPersonneSignature : IReturnVoid

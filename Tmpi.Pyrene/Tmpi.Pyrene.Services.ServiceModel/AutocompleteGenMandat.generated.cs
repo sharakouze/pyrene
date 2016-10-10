@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne des prédictions sur les ressources '<see cref="GenMandat" />'.
 	/// </summary>
-	[Route("/Mandat/Autocomplete/{Text}", HttpVerbs.Get, Summary = "Retourne des prédictions sur les ressources 'GenMandat'.")]
+	[Route("/GenMandat/Autocomplete/{Text}", HttpVerbs.Get, Summary = "Retourne des prédictions sur les ressources 'GenMandat'.")]
 	public partial class AutocompleteGenMandat : IReturn<BasicEntity[]>
 	{
         /// <summary>

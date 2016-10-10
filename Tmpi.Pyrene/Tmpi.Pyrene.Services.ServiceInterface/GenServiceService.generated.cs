@@ -24,71 +24,6 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenServiceService : Service
 	{
 		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns></returns>
-		public List<BasicEntity> Get(AutocompleteGenService request)
-		{
-			if (string.IsNullOrWhiteSpace(request.Text))
-			{
-				return null;
-			}
-
-            var q = Db.From<GenService>().Where(x => x.LibObjet.Contains(request.Text));
-            if (request.Max > 0)
-            {
-                q = q.Limit(request.Max);
-            }
-
-            var items = Db.Select<BasicEntity>(q);
-            return items;
-		}
-
-		/// <summary>
-		/// Supprime la ressource <see cref="GenService" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenService request)
-		{
-			int count = Db.DeleteById<GenService>(request.Id);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenService), request.Id));
-			}
-		}
-
-		/// <summary>
-		/// Ajoute la ressource <see cref="GenService" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenService" /> ajoutée.</returns>
-		public GenService Post(GenService request)
-		{
-			var id = Db.Insert(request, selectIdentity: true);
-			request.Id = (int)id;
-
-			return request;
-		}
-
-		/// <summary>
-		/// Remplace la ressource <see cref="GenService" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Put(GenService request)
-		{
-			int count = Db.Update(request);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenService), request.Id));
-			}
-		}
-
-		/// <summary>
 		/// Retourne la ressource <see cref="GenService" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
@@ -108,53 +43,16 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenService>().Where(x => x.CodService == request.CodService).Select(request.Fields);
+            var q = Db.From<GenService>().Where<GenService>(x => x.CodService == request.CodService).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenService), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenService), ""));
 			}
 
 			return entity;
-		}
-
-		/// <summary>
-		/// Met à jour la ressource <see cref="GenService" /> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Patch(PatchGenService request)
-		{
-			if (request.Fields.IsNullOrEmpty())
-			{
-				throw new ArgumentNullException(nameof(request.Fields));
-			}
-
-            var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
-
-            var errFields = ModelDefinitionHelper.GetUndefinedFields<GenService>(patchDic.Keys);
-            if (errFields.Any())
-            {
-                string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                throw new ArgumentException(
-                    string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenService), str));
-            }
-
-			var entity = new GenService();
-			PatchHelper.PopulateFromPatch(entity, patchDic);
-
-			var q = Db.From<GenService>().Where(x => x.Id == request.Id).Update(patchDic.Keys);
-
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenService), request.Id));
-			}
 		}
 
 	}

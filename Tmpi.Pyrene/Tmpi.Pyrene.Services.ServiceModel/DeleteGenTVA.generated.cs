@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Supprime une ressource <see cref="GenTVA" />.
 	/// </summary>
-	[Route("/TVA/{CodTVA}", HttpVerbs.Delete, Summary = "Supprime une ressource 'GenTVA'.")]
+	[Route("/GenTVA/{CodTVA}", HttpVerbs.Delete, Summary = "Supprime une ressource 'GenTVA'.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenTVA' spécifiée est introuvable.")]
 	public partial class DeleteGenTVA : IReturnVoid
 	{

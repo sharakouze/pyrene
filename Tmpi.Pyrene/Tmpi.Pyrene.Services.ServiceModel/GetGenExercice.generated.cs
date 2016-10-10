@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource <see cref="GenExercice" />.
 	/// </summary>
-	[Route("/Exercice/{CodExercice}", HttpVerbs.Get, Summary = "Retourne une ressource 'GenExercice'.")]
+	[Route("/GenExercice/{CodExercice}", HttpVerbs.Get, Summary = "Retourne une ressource 'GenExercice'.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource 'GenExercice' ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenExercice' spécifiée est introuvable.")]
 	public partial class GetGenExercice : IReturn<GenExercice>
