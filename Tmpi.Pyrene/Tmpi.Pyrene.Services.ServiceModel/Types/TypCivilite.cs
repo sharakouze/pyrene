@@ -1,6 +1,6 @@
-﻿#pragma warning disable 1591
+﻿using ServiceStack.DataAnnotations;
 
-using ServiceStack.DataAnnotations;
+#pragma warning disable 1591
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {

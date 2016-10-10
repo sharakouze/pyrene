@@ -311,7 +311,7 @@ public string GetColumnDefaultValue(Column col)
         return sysType;
 }
 
-Tables LoadTables(string connectionString, string schemaName = null, bool includeViews = false, bool makeSingular = false)
+Tables LoadTables(string connectionString, string schemaName = null, bool includeViews = false, bool makeSingular = false, bool makePlural = false)
 {
 	SchemaReader reader = new SqlServerSchemaReader();
 	Tables tables = reader.ReadSchema(connectionString, schemaName, includeViews);
@@ -322,6 +322,10 @@ Tables LoadTables(string connectionString, string schemaName = null, bool includ
 		if (makeSingular)
 		{
 			tbl.ClassName = Inflector.MakeSingular(tbl.ClassName);
+		}
+		else if (makePlural)
+		{
+			tbl.ClassName = Inflector.MakePlural(tbl.ClassName);
 		}
 
         foreach (Column c in tbl.Columns)
