@@ -450,20 +450,44 @@ public class VsCodeModel
 		return ret;
     }
 
-	public EnvDTE.CodeProperty GetProperty(EnvDTE.CodeClass codeClass, string propertyName)
+	/// <summary>
+	/// Retourne tous les attributs de la CodeClass spécifiée.
+	/// Respecte les classes partielles.
+	/// </summary>
+	/// <returns></returns>
+	public IEnumerable<EnvDTE.CodeAttribute> GetAllClassAttributes(EnvDTE.CodeClass codeClass)
     {
+		var ret = new List<EnvDTE.CodeAttribute>();
+
 		foreach(EnvDTE.CodeClass partialClass in GetPartialClasses(codeClass))
         {
-			var allProperties = GetAllCodeElementsOfType(partialClass.Members, EnvDTE.vsCMElement.vsCMElementProperty, false)
-				.OfType<EnvDTE.CodeProperty>();
-			EnvDTE.CodeProperty prop = allProperties.FirstOrDefault(p => p.Name == propertyName);
-			if (prop != null)
-            {
-				return prop;
-            }
+			var lst = GetAllCodeElementsOfType(partialClass.Attributes, EnvDTE.vsCMElement.vsCMElementAttribute, false)
+				.OfType<EnvDTE.CodeAttribute>()
+				.ToList();
+			ret.AddRange(lst);
         }
 
-		return null;
+		return ret;
+	}
+
+	/// <summary>
+	/// Retourne toutes les propriétés de la CodeClass spécifiée.
+	/// Respecte les classes partielles.
+	/// </summary>
+	/// <returns></returns>
+	public IEnumerable<EnvDTE.CodeProperty> GetAllProperties(EnvDTE.CodeClass codeClass)
+    {
+		var ret = new List<EnvDTE.CodeProperty>();
+
+		foreach(EnvDTE.CodeClass partialClass in GetPartialClasses(codeClass))
+        {
+			var lst = GetAllCodeElementsOfType(partialClass.Members, EnvDTE.vsCMElement.vsCMElementProperty, false)
+				.OfType<EnvDTE.CodeProperty>()
+				.ToList();
+			ret.AddRange(lst);
+        }
+
+		return ret;
 	}
 
 	#region private classes

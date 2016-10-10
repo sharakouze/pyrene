@@ -1,10 +1,17 @@
 ﻿<#@ template language="C#" hostspecific="true" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="EnvDTE.dll" #>
+<#@ assembly name="System.Core.dll" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Linq" #>
 <#@ include file="$(SolutionDir)Shared\MultipleOutputHelper.ttinclude" #>
 <#@ include file="$(SolutionDir)Shared\VisualStudioHelper.ttinclude" #>
-<#@ import namespace="System.Text.RegularExpressions" #>
 <#
 	/***** TODO *****
 	- Trace des fields introuvables dans Get et Patch
+	- Unicité
 	****************/
 
 	/*********************/
@@ -24,7 +31,7 @@
 	bool SplitIntoMultipleFiles = true;
     
     // true pour créer les validors de la ValidationFeature
-    bool CreateValidators= true;
+    bool CreateValidators = true;
 
     // true pour rajouter .WithMessage() pour chaque RuleFor
     bool ValidatorsWithMessage = false;
@@ -36,14 +43,14 @@
 #>
 <#
 	// namespace
-	var fileNamespace = Namespace;
+	string fileNamespace = Namespace;
 	if (string.IsNullOrWhiteSpace(fileNamespace))
     {
 		fileNamespace = VisualStudioHelper.CurrentFileNamespace;
 	}
 
 	// get a reference to the project of this t4 template
-	var srcProject = VisualStudioHelper.CurrentProject;
+	Project srcProject = VisualStudioHelper.CurrentProject;
 	if (!string.IsNullOrWhiteSpace(SourceProject))
     {
 		srcProject = VisualStudioHelper.GetProject(SourceProject);
@@ -51,7 +58,7 @@
 
 	string sourceNamespace = VisualStudioHelper.GetDefaultNamespace(srcProject);
 
-	var manager = Manager.Create(Host, GenerationEnvironment);
+	Manager manager = Manager.Create(Host, GenerationEnvironment);
 	manager.StartHeader();
 #>
 //------------------------------------------------------------------------------
@@ -66,13 +73,15 @@
 <#
 	manager.EndBlock(); // end header
 
-	var dic = new Dictionary<string, List<EnvDTE.CodeClass>>();
+	var dic = new Dictionary<string, List<CodeClass>>();
 
     // get all class items from the code model
-    var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(srcProject.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementClass, false);
-	allClasses = allClasses.OrderBy(c => c.Name).ToList();
-	// iterate all classes
-    foreach (EnvDTE.CodeClass codeClass in allClasses)
+    List<CodeClass> allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(srcProject.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementClass, false)
+		.OfType<CodeClass>()
+		.OrderBy(c => c.Name)
+		.ToList();
+
+    foreach (CodeClass codeClass in allClasses)
     {
 		bool included = ClassFilterInclude == null || ClassFilterInclude.IsMatch(codeClass.Name);
 		bool excluded = ClassFilterExclude != null && ClassFilterExclude.IsMatch(codeClass.Name);
@@ -81,10 +90,11 @@
 			continue;
         }
 		
-		IEnumerable<EnvDTE.CodeClass> partialClasses = VisualStudioHelper.CodeModel.GetPartialClasses(codeClass);
-		bool hasRouteAttr = partialClasses.SelectMany(c => c.Attributes.OfType<EnvDTE.CodeElement>()).Any(c => c.FullName == "ServiceStack.RouteAttribute");
+		IEnumerable<CodeAttribute> allClassAttributes = VisualStudioHelper.CodeModel.GetAllClassAttributes(codeClass);
+		
+		bool hasRouteAttr = allClassAttributes.Any(attr => attr.FullName == "ServiceStack.RouteAttribute");
 		if (hasRouteAttr)
-        {
+		{
 			string entityName = null;
 
             if (codeClass.Name.StartsWith("Get"))
@@ -107,10 +117,7 @@
             {
                 entityName = codeClass.Name.Substring(4);
             }
-
-			// get all interfaces implemented by this class
-			var allInterfaces = VisualStudioHelper.CodeModel.GetAllImplementedInterfaces(codeClass);
-			if (allInterfaces.Any(i => i.FullName == "ServiceStack.Model.IHasId<System.Int32>" || i.FullName == "ServiceStack.Model.IHasIntId"))
+			else
 			{
 				entityName = codeClass.Name;
 			}
@@ -130,16 +137,9 @@
         }
     } // end foreach
 
-	var classDefinitionWords = new List<string>();
-	classDefinitionWords.Add("public");
-	if (MakeClassesPartial)
-    {
-		classDefinitionWords.Add("partial");
-    }
-
 	foreach (var kvp in dic)
 	{
-		var serviceClassName = kvp.Key + "Service";
+		string serviceClassName = kvp.Key + "Service";
 		manager.StartNewFile(serviceClassName + ".generated.cs");
 #>
 using System;
@@ -156,10 +156,10 @@ namespace <#= fileNamespace #>
 	/// <summary>
 	/// Service qui traite les requêtes sur les ressources <see cref="<#= kvp.Key #>" />.
 	/// </summary>
-	<#= string.Join(" ", classDefinitionWords) #> class <#= serviceClassName #> : Service
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= serviceClassName #> : Service
 	{
 <#
-		foreach (EnvDTE.CodeClass requestClass in kvp.Value)
+		foreach (CodeClass requestClass in kvp.Value)
         {
             string requestName = requestClass.Name;
 
@@ -193,6 +193,8 @@ namespace <#= fileNamespace #>
             }
 			else if (requestName.StartsWith("Get"))
             {
+				var lst = GetRouteProperties(requestClass, "");
+
 				var entityName = requestName.Substring(3);
 #>
 		/// <summary>
@@ -215,7 +217,14 @@ namespace <#= fileNamespace #>
                 }
             }
 
-            var q = Db.From<<#= entityName #>>().Where(x => x.Id == request.Id).Select(request.Fields);
+<#
+				string whereExpr = "x =>";
+				foreach(CodeProperty property in lst)
+                {
+					whereExpr += string.Format(" x.{0} == request.{0}", property.Name);
+                }
+#>
+            var q = Db.From<<#= entityName #>>().Where(<#= whereExpr #>).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
@@ -369,7 +378,7 @@ namespace <#= fileNamespace #>
     /// <summary>
     /// Validation pour la requête <see cref="<#= requestName #>"/>.
     /// </summary>
-    <#= string.Join(" ", classDefinitionWords) #> class <#= requestName #>Validator : AbstractValidator<<#= requestName #>>
+    public <#= MakeClassesPartial ? "partial " : "" #>class <#= requestName #>Validator : AbstractValidator<<#= requestName #>>
     {
         /// <summary>
         /// Initialise une nouvelle instance de la classe <see cref="<#= requestName #>Validator" />.
@@ -444,4 +453,63 @@ namespace <#= fileNamespace #>
     } // end forach
 
 	manager.Process(SplitIntoMultipleFiles);
+#>
+<#+
+private List<CodeProperty> GetRouteProperties(CodeClass codeClass, string verb)
+{
+	List<CodeProperty> properties = new List<CodeProperty>();
+
+	IEnumerable<CodeAttribute> routeAttributes = VisualStudioHelper.CodeModel.GetAllClassAttributes(codeClass)
+		.Where(attr => attr.FullName == "ServiceStack.RouteAttribute")
+		.ToList();
+	foreach (CodeAttribute attr in routeAttributes)
+    {
+		string[] parameters = attr.Value.Split(',');
+
+		if (!string.IsNullOrEmpty(verb))
+        {
+			string paramVerbs = "";
+			
+			if (parameters.Length > 1)
+			{
+				paramVerbs = parameters[1];
+			}
+			else
+			{
+				paramVerbs = parameters.Where(s => s.Trim().StartsWith("Verbs =")).SingleOrDefault();
+			}
+			if (!string.IsNullOrEmpty(paramVerbs))
+            {
+				bool notFound = paramVerbs.IndexOf(verb, StringComparison.OrdinalIgnoreCase) == -1;
+				if (notFound)
+                {
+					continue;
+                }
+            }
+		}
+		
+		string paramPath = parameters[0].Trim();
+
+		if (paramPath.StartsWith("\"") && paramPath.EndsWith("\""))
+        {
+			paramPath = paramPath.Remove(0, 1); // Supprime le premier "
+			paramPath = paramPath.Remove(paramPath.Length - 1, 1); // Supprime le dernier "
+        }
+
+		List<string> lstPlaceholders = paramPath.Split('/').Where(s => s.StartsWith("{") && s.EndsWith("}")).ToList();
+		IEnumerable<CodeProperty> props = VisualStudioHelper.CodeModel.GetAllProperties(codeClass);
+
+		foreach (string ph in lstPlaceholders)
+        {
+			string propName = ph;
+			propName = propName.Remove(0, 1); // Supprime le premier {
+			propName = propName.Remove(propName.Length - 1, 1); // Supprime le dernier }
+
+			var prop = props.Where(p => p.Name == propName).Single();
+			properties.Add(prop);
+        }
+    }
+
+	return properties;
+}
 #>

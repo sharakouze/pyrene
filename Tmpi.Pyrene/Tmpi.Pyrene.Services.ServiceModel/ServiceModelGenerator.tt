@@ -1,9 +1,12 @@
 ﻿<#@ template language="C#" hostspecific="true" debug="true" #>
 <#@ output extension=".cs" #>
-<#@ assembly name="EnvDTE.dll" #>
-<#@ assembly name="System.Core.dll" #>
+<#@ assembly name="EnvDTE" #>
+<#@ assembly name="System" #>
+<#@ assembly name="System.Configuration" #>
+<#@ assembly name="System.Core" #>
 <#@ import namespace="EnvDTE" #>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Configuration" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="System.Linq" #>
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" #>
@@ -24,7 +27,8 @@
 	/*********************/
 
 	// chaine de connection pour l'extration du schéma
-    string ConnectionString = @"Server=(LocalDB)\MSSQLLocalDB;Database=TMPI_PYRENE;Integrated Security=True;MultipleActiveResultSets=True";
+    string ConnectionStringName = "PyreneModel";
+	string ConnectionString = "";
 
 	// schema a extraire ou vide pour tous les schémas
 	string SchemaName = "";
@@ -134,6 +138,12 @@
 		.Select(x => x.Name)
 		.ToList();
 
+	if (string.IsNullOrWhiteSpace(ConnectionString))
+    {
+		string providerName;
+		ConnectionString = GetConnectionString(project, ConnectionStringName, out providerName);
+    }
+	
     // Read schema
     Tables allTables = LoadTables(ConnectionString, SchemaName, false, MakeSingular, MakePlural);
     if (TweakSchema != null)
@@ -1104,5 +1114,64 @@ List<string> GetRoutePartsFromTable(Table table, bool usePK, ref List<Column> ls
 
     lstRoute.AddRange(parts);
     return lstRoute;
+}
+
+private string GetConnectionString(Project project, string connectionStringName, out string providerName)
+{
+	providerName = null;
+	string configPath = "";
+
+	foreach (ProjectItem item in project.ProjectItems)
+    {
+		if (item.Name.Equals("App.config", StringComparison.OrdinalIgnoreCase) || item.Name.Equals("Web.config", StringComparison.OrdinalIgnoreCase))
+		{
+			string fullPath = project.Properties.Item("FullPath").Value.ToString();
+			configPath = Path.Combine(fullPath, item.Name);
+		}
+    }
+	
+	string connStr = "";
+
+	if (string.IsNullOrEmpty(configPath))
+    {
+		throw new ArgumentNullException("The project does not contain App.config or Web.config file.");
+	}
+	else
+	{
+		ExeConfigurationFileMap configFile = new ExeConfigurationFileMap();
+		configFile.ExeConfigFilename = configPath;
+
+		var config = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configFile, ConfigurationUserLevel.None);
+		var connSection = config.ConnectionStrings;
+
+		//if the connectionString is empty - which is the defauls
+		//look for count-1 - this is the last connection string
+		//and takes into account AppServices and LocalSqlServer
+		if(string.IsNullOrEmpty(connectionStringName))
+		{
+			if(connSection.ConnectionStrings.Count>1)
+			{
+				connectionStringName = connSection.ConnectionStrings[connSection.ConnectionStrings.Count-1].Name;
+				result=connSection.ConnectionStrings[connSection.ConnectionStrings.Count-1].ConnectionString;
+				providerName=connSection.ConnectionStrings[connSection.ConnectionStrings.Count-1].ProviderName;
+			}
+		}
+		else
+		{
+			try
+			{
+				result=connSection.ConnectionStrings[connectionStringName].ConnectionString;
+				providerName=connSection.ConnectionStrings[connectionStringName].ProviderName;
+			}
+			catch
+			{
+				result="There is no connection string name called '"+connectionStringName+"'";
+			}
+		}
+        }
+//	if (String.IsNullOrEmpty(providerName))
+//		providerName="System.Data.SqlClient";
+
+    return connStr;
 }
 #>
