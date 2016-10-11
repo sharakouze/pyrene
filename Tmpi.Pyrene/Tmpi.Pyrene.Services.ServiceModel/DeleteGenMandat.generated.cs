@@ -18,15 +18,15 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Supprime une ressource <see cref="GenMandat" />.
 	/// </summary>
-	[Route("/GenMandat/{CodMandat}", HttpVerbs.Delete, Summary = "Supprime une ressource GenMandat.")]
+	[Route("/Mandat/{CleMandat}", HttpVerbs.Delete, Summary = "Supprime une ressource GenMandat.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandat spécifiée est introuvable.")]
 	public partial class DeleteGenMandat : IReturnVoid
 	{
         /// <summary>
-        /// Code unique.
+        /// Clé primaire.
         /// </summary>
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public string CodMandat { get; set; }
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+        public int CleMandat { get; set; }
 
 	}
 }

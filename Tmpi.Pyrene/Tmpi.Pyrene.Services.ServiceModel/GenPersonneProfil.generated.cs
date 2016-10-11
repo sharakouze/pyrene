@@ -21,8 +21,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(ClePersonne), nameof(CleSociete), nameof(CleSecteur), nameof(CleService))]
 	[CompositeIndex(true, nameof(CodProfil), nameof(ClePersonne))]
-    [Route("/GenPersonne/{CodPersonne}/Profil/{CodProfil}", HttpVerbs.Post, Summary = "Ajoute une ressource GenPersonneProfil.")]
-    [Route("/GenPersonne/{CodPersonne}/Profil/{CodProfil}", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonneProfil.")]
+    [Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Post, Summary = "Ajoute une ressource GenPersonneProfil.")]
+    [Route("/Personne/{ClePersonne}/Profil/{CleProfil}", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonneProfil.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneProfil spécifiée est introuvable.")]
 	public partial class GenPersonneProfil : IAuditable
 	{
@@ -31,7 +31,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleProfil { get; set; }
 
 		/// <summary>
@@ -39,26 +40,15 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Utilisateur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ClePersonne { get; set; }
-
-		/// <summary>
-		/// Utilisateur parent. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="ClePersonne" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenPersonne.CodPersonne" />.
-        /// </remarks>
-		[ApiMember(Description = "Utilisateur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		[Ignore]
-		public string CodPersonne { get; set; }
 
 		/// <summary>
 		/// Code.
 		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[ApiMember(Description = "Code.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Code.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodProfil { get; set; }
 
 		/// <summary>
@@ -79,55 +69,22 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Société à laquelle a accès le profil, ou null pour toutes les sociétés.
 		/// </summary>
 		[References(typeof(GenSociete))]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Société à laquelle a accès le profil, ou null pour toutes les sociétés.", DataType = SwaggerDataTypes.Int)]
 		public int? CleSociete { get; set; }
-
-		/// <summary>
-		/// Société à laquelle a accès le profil, ou null pour toutes les sociétés. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="CleSociete" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenSociete.CodSociete" />.
-        /// </remarks>
-		[ApiMember(Description = "Société à laquelle a accès le profil, ou null pour toutes les sociétés. Code unique.", DataType = SwaggerDataTypes.String)]
-		[Ignore]
-		public string CodSociete { get; set; }
 
 		/// <summary>
 		/// Secteur auquel a accès le profil, ou null pour tous les secteurs.
 		/// </summary>
 		[References(typeof(GenSecteur))]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Secteur auquel a accès le profil, ou null pour tous les secteurs.", DataType = SwaggerDataTypes.Int)]
 		public int? CleSecteur { get; set; }
-
-		/// <summary>
-		/// Secteur auquel a accès le profil, ou null pour tous les secteurs. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="CleSecteur" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenSecteur.CodSecteur" />.
-        /// </remarks>
-		[ApiMember(Description = "Secteur auquel a accès le profil, ou null pour tous les secteurs. Code unique.", DataType = SwaggerDataTypes.String)]
-		[Ignore]
-		public string CodSecteur { get; set; }
 
 		/// <summary>
 		/// Service auquel a accès le profil, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Service auquel a accès le profil, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }
-
-		/// <summary>
-		/// Service auquel a accès le profil, ou null pour tous les services. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="CleService" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenService.CodService" />.
-        /// </remarks>
-		[ApiMember(Description = "Service auquel a accès le profil, ou null pour tous les services. Code unique.", DataType = SwaggerDataTypes.String)]
-		[Ignore]
-		public string CodService { get; set; }
 
 	}
 }

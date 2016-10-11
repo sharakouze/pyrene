@@ -19,8 +19,8 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/GenExercice/{CodExercice}", HttpVerbs.Post, Summary = "Ajoute une ressource GenExercice.")]
-    [Route("/GenExercice/{CodExercice}", HttpVerbs.Put, Summary = "Remplace une ressource GenExercice.")]
+    [Route("/Exercice", HttpVerbs.Post, Summary = "Ajoute une ressource GenExercice.")]
+    [Route("/Exercice/{CleExercice}", HttpVerbs.Put, Summary = "Remplace une ressource GenExercice.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenExercice spécifiée est introuvable.")]
 	public partial class GenExercice : IAuditable
 	{
@@ -29,7 +29,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleExercice { get; set; }
 
 		/// <summary>
@@ -38,7 +39,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodExercice { get; set; }
 
 		/// <summary>

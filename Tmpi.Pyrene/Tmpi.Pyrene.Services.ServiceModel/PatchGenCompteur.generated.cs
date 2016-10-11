@@ -18,16 +18,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Modifie partiellement une ressource <see cref="GenCompteur" />.
 	/// </summary>
-	[Route("/GenCompteur/{CodCompteur}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenCompteur.")]
+	[Route("/Compteur/{CleCompteur}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenCompteur.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenCompteur ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteur spécifiée est introuvable.")]
 	public partial class PatchGenCompteur : IReturnVoid
 	{
         /// <summary>
-        /// Code unique.
+        /// Clé primaire.
         /// </summary>
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public string CodCompteur { get; set; }
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+        public int CleCompteur { get; set; }
 
         /// <summary>
         /// Liste des modifications.

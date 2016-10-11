@@ -78,7 +78,7 @@
     bool TransformRoutePath = true;
 
 	// false pour preferer l'utilisation des contraintes d'unicité plutot que les PK pour identifier les ressources.
-    bool UsePKAsRouteId = false;
+    bool UsePKAsRouteId = true;
 
     // Filtre les messages générés.
     Regex PutTableFilterExclude = null;
@@ -1093,7 +1093,7 @@ private string BuildStrRoutePath(List<Column> lstCols, bool keepEnd = true)
     {
 		if (phCol.ParentTable.ClassName != currentTable)
         {
-			string newTableName = phCol.ParentTable.ClassName;
+			string newTableName = phCol.ParentTable.ClassName.Remove(0, 3);
 			if (currentTable != "")
             {
 				newTableName = phCol.ParentTable.ClassName.Replace(currentTable, "");

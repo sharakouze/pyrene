@@ -20,8 +20,8 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleFourn), nameof(NomContact))]
-    [Route("/GenFourn/{CodFourn}/Contact/{NomContact}", HttpVerbs.Post, Summary = "Ajoute une ressource GenFournContact.")]
-    [Route("/GenFourn/{CodFourn}/Contact/{NomContact}", HttpVerbs.Put, Summary = "Remplace une ressource GenFournContact.")]
+    [Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Post, Summary = "Ajoute une ressource GenFournContact.")]
+    [Route("/Fourn/{CleFourn}/Contact/{CleContact}", HttpVerbs.Put, Summary = "Remplace une ressource GenFournContact.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournContact spécifiée est introuvable.")]
 	public partial class GenFournContact : IAuditable
 	{
@@ -30,7 +30,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleContact { get; set; }
 
 		/// <summary>
@@ -38,26 +39,15 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Fournisseur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleFourn { get; set; }
-
-		/// <summary>
-		/// Fournisseur parent. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="CleFourn" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenFourn.CodFourn" />.
-        /// </remarks>
-		[ApiMember(Description = "Fournisseur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		[Ignore]
-		public string CodFourn { get; set; }
 
 		/// <summary>
 		/// Nom de famille.
 		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[ApiMember(Description = "Nom de famille.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Nom de famille.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string NomContact { get; set; }
 
 		/// <summary>

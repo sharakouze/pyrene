@@ -18,16 +18,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource <see cref="GenMandat" />.
 	/// </summary>
-	[Route("/GenMandat/{CodMandat}", HttpVerbs.Get, Summary = "Retourne une ressource GenMandat.")]
+	[Route("/Mandat/{CleMandat}", HttpVerbs.Get, Summary = "Retourne une ressource GenMandat.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenMandat ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandat spécifiée est introuvable.")]
 	public partial class GetGenMandat : IReturn<GenMandat>
 	{
         /// <summary>
-        /// Code unique.
+        /// Clé primaire.
         /// </summary>
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public string CodMandat { get; set; }
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+        public int CleMandat { get; set; }
 
         /// <summary>
         /// Champs à retourner, ou null pour retourner tous les champs.

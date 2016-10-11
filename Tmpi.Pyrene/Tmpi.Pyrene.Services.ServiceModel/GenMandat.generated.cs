@@ -20,8 +20,8 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(TypMandat), nameof(NivMandat))]
-    [Route("/GenMandat/{CodMandat}", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandat.")]
-    [Route("/GenMandat/{CodMandat}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandat.")]
+    [Route("/Mandat", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandat.")]
+    [Route("/Mandat/{CleMandat}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandat.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandat spécifiée est introuvable.")]
 	public partial class GenMandat : IAuditable
 	{
@@ -30,7 +30,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleMandat { get; set; }
 
 		/// <summary>
@@ -39,7 +40,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodMandat { get; set; }
 
 		/// <summary>

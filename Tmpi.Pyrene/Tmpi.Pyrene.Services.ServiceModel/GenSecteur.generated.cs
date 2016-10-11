@@ -19,8 +19,8 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/GenSecteur/{CodSecteur}", HttpVerbs.Post, Summary = "Ajoute une ressource GenSecteur.")]
-    [Route("/GenSecteur/{CodSecteur}", HttpVerbs.Put, Summary = "Remplace une ressource GenSecteur.")]
+    [Route("/Secteur", HttpVerbs.Post, Summary = "Ajoute une ressource GenSecteur.")]
+    [Route("/Secteur/{CleSecteur}", HttpVerbs.Put, Summary = "Remplace une ressource GenSecteur.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenSecteur spécifiée est introuvable.")]
 	public partial class GenSecteur : IAuditable
 	{
@@ -29,7 +29,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleSecteur { get; set; }
 
 		/// <summary>
@@ -38,7 +39,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodSecteur { get; set; }
 
 		/// <summary>
@@ -91,19 +92,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ForeignKey(typeof(GenSociete), OnDelete = "CASCADE")]
 		[Required]
 		[Index]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Société à laquelle appartient le secteur.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleSociete { get; set; }
-
-		/// <summary>
-		/// Société à laquelle appartient le secteur. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="CleSociete" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenSociete.CodSociete" />.
-        /// </remarks>
-		[ApiMember(Description = "Société à laquelle appartient le secteur. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		[Ignore]
-		public string CodSociete { get; set; }
 
 		/// <summary>
 		/// Rue.

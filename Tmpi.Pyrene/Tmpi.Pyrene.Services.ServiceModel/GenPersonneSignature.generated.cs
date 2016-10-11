@@ -19,8 +19,8 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/GenPersonne/{CodPersonne}", HttpVerbs.Post, Summary = "Ajoute une ressource GenPersonneSignature.")]
-    [Route("/GenPersonne/{CodPersonne}", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonneSignature.")]
+    [Route("/Personne", HttpVerbs.Post, Summary = "Ajoute une ressource GenPersonneSignature.")]
+    [Route("/Personne/{ClePersonne}", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonneSignature.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneSignature spécifiée est introuvable.")]
 	public partial class GenPersonneSignature
 	{
@@ -30,19 +30,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
 		[PrimaryKey]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Utilisateur parent.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Utilisateur parent.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int ClePersonne { get; set; }
-
-		/// <summary>
-		/// Utilisateur parent. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="ClePersonne" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenPersonne.CodPersonne" />.
-        /// </remarks>
-		[ApiMember(Description = "Utilisateur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		[Ignore]
-		public string CodPersonne { get; set; }
 
 		/// <summary>
 		/// Image de la signature.

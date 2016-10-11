@@ -19,9 +19,9 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, nameof(TypCompteur), nameof(CleSocieteProprietaire), nameof(CleSecteur), nameof(CleService))]
-    [Route("/GenCompteur/{CodCompteur}", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteur.")]
-    [Route("/GenCompteur/{CodCompteur}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteur.")]
+	[CompositeIndex(true, nameof(TypCompteur), nameof(CleSociete), nameof(CleSecteur), nameof(CleService))]
+    [Route("/Compteur", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteur.")]
+    [Route("/Compteur/{CleCompteur}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteur.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteur spécifiée est introuvable.")]
 	public partial class GenCompteur : IAuditable
 	{
@@ -30,7 +30,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleCompteur { get; set; }
 
 		/// <summary>
@@ -39,7 +40,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodCompteur { get; set; }
 
 		/// <summary>
@@ -106,55 +107,22 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Société ayant accès au compteur, ou null pour toutes les sociétés.
 		/// </summary>
 		[References(typeof(GenSociete))]
-        [IgnoreDataMember]
-		public int? CleSocieteProprietaire { get; set; }
-
-		/// <summary>
-		/// Société ayant accès au compteur, ou null pour toutes les sociétés. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="CleSocieteProprietaire" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenSociete.CodSociete" />.
-        /// </remarks>
-		[ApiMember(Description = "Société ayant accès au compteur, ou null pour toutes les sociétés. Code unique.", DataType = SwaggerDataTypes.String)]
-		[Ignore]
-		public string CodSocieteProprietaire { get; set; }
+		[ApiMember(Description = "Société ayant accès au compteur, ou null pour toutes les sociétés.", DataType = SwaggerDataTypes.Int)]
+		public int? CleSociete { get; set; }
 
 		/// <summary>
 		/// Secteur ayant accès au compteur, ou null pour tous les secteurs.
 		/// </summary>
 		[References(typeof(GenSecteur))]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Secteur ayant accès au compteur, ou null pour tous les secteurs.", DataType = SwaggerDataTypes.Int)]
 		public int? CleSecteur { get; set; }
-
-		/// <summary>
-		/// Secteur ayant accès au compteur, ou null pour tous les secteurs. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="CleSecteur" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenSecteur.CodSecteur" />.
-        /// </remarks>
-		[ApiMember(Description = "Secteur ayant accès au compteur, ou null pour tous les secteurs. Code unique.", DataType = SwaggerDataTypes.String)]
-		[Ignore]
-		public string CodSecteur { get; set; }
 
 		/// <summary>
 		/// Service ayant accès au compteur, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Service ayant accès au compteur, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }
-
-		/// <summary>
-		/// Service ayant accès au compteur, ou null pour tous les services. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="CleService" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenService.CodService" />.
-        /// </remarks>
-		[ApiMember(Description = "Service ayant accès au compteur, ou null pour tous les services. Code unique.", DataType = SwaggerDataTypes.String)]
-		[Ignore]
-		public string CodService { get; set; }
 
 		/// <summary>
 		/// Format du modèle de numérotation.

@@ -20,8 +20,8 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleMandat), nameof(ClePersonne), nameof(CleSociete), nameof(CleSecteur), nameof(CleService))]
-    [Route("/GenMandat/{CodMandat}/Mandataire/{ClePersonne}/{CleSociete}/{CleSecteur}/{CleService}", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandatMandataire.")]
-    [Route("/GenMandat/{CodMandat}/Mandataire/{ClePersonne}/{CleSociete}/{CleSecteur}/{CleService}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandatMandataire.")]
+    [Route("/Mandat/{CleMandat}/Mandataire", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandatMandataire.")]
+    [Route("/Mandat/{CleMandat}/Mandataire/{CleMandataire}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandatMandataire.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandatMandataire spécifiée est introuvable.")]
 	public partial class GenMandatMandataire : IAuditable
 	{
@@ -30,7 +30,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleMandataire { get; set; }
 
 		/// <summary>
@@ -38,92 +39,37 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
 		[Required]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Mandat parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleMandat { get; set; }
-
-		/// <summary>
-		/// Mandat parent. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="CleMandat" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenMandat.CodMandat" />.
-        /// </remarks>
-		[ApiMember(Description = "Mandat parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		[Ignore]
-		public string CodMandat { get; set; }
 
 		/// <summary>
 		/// Utilisateur mandataire.
 		/// </summary>
 		[References(typeof(GenPersonne))]
 		[Required]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Utilisateur mandataire.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ClePersonne { get; set; }
-
-		/// <summary>
-		/// Utilisateur mandataire. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="ClePersonne" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenPersonne.CodPersonne" />.
-        /// </remarks>
-		[ApiMember(Description = "Utilisateur mandataire. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		[Ignore]
-		public string CodPersonne { get; set; }
 
 		/// <summary>
 		/// Société ayant accès au mandat, ou null pour toutes les sociétés.
 		/// </summary>
 		[References(typeof(GenSociete))]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Société ayant accès au mandat, ou null pour toutes les sociétés.", DataType = SwaggerDataTypes.Int)]
 		public int? CleSociete { get; set; }
-
-		/// <summary>
-		/// Société ayant accès au mandat, ou null pour toutes les sociétés. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="CleSociete" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenSociete.CodSociete" />.
-        /// </remarks>
-		[ApiMember(Description = "Société ayant accès au mandat, ou null pour toutes les sociétés. Code unique.", DataType = SwaggerDataTypes.String)]
-		[Ignore]
-		public string CodSociete { get; set; }
 
 		/// <summary>
 		/// Secteur ayant accès au mandat, ou null pour tous les secteurs.
 		/// </summary>
 		[References(typeof(GenSecteur))]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Secteur ayant accès au mandat, ou null pour tous les secteurs.", DataType = SwaggerDataTypes.Int)]
 		public int? CleSecteur { get; set; }
-
-		/// <summary>
-		/// Secteur ayant accès au mandat, ou null pour tous les secteurs. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="CleSecteur" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenSecteur.CodSecteur" />.
-        /// </remarks>
-		[ApiMember(Description = "Secteur ayant accès au mandat, ou null pour tous les secteurs. Code unique.", DataType = SwaggerDataTypes.String)]
-		[Ignore]
-		public string CodSecteur { get; set; }
 
 		/// <summary>
 		/// Service ayant accès au mandat, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
-        [IgnoreDataMember]
+		[ApiMember(Description = "Service ayant accès au mandat, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }
-
-		/// <summary>
-		/// Service ayant accès au mandat, ou null pour tous les services. Code unique.
-		/// </summary>
-        /// <remarks>
-		/// Remplace la propriété <see cref="CleService" /> dans la sérialisation.
-		/// Référence la propriété <see cref="GenService.CodService" />.
-        /// </remarks>
-		[ApiMember(Description = "Service ayant accès au mandat, ou null pour tous les services. Code unique.", DataType = SwaggerDataTypes.String)]
-		[Ignore]
-		public string CodService { get; set; }
 
 		/// <summary>
 		/// Si true, le mandat est suspendu.

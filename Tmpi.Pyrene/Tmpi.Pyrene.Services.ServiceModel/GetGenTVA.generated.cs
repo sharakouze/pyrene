@@ -18,16 +18,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource <see cref="GenTVA" />.
 	/// </summary>
-	[Route("/GenTVA/{CodTVA}", HttpVerbs.Get, Summary = "Retourne une ressource GenTVA.")]
+	[Route("/TVA/{CleTVA}", HttpVerbs.Get, Summary = "Retourne une ressource GenTVA.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenTVA ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenTVA spécifiée est introuvable.")]
 	public partial class GetGenTVA : IReturn<GenTVA>
 	{
         /// <summary>
-        /// Code unique.
+        /// Clé primaire.
         /// </summary>
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public string CodTVA { get; set; }
+		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+        public int CleTVA { get; set; }
 
         /// <summary>
         /// Champs à retourner, ou null pour retourner tous les champs.
