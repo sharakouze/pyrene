@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Modifie partiellement une ressource <see cref="GenCompteurValeurMachin" />.
 	/// </summary>
-	[Route("/GenCompteur/{CodCompteur}/GenCompteurValeur/{ValPeriode}/GenCompteurValeurMachin/{CodMachin}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenCompteurValeurMachin.")]
+	[Route("/GenCompteur/{CodCompteur}/Valeur/{ValPeriode}/Machin/{CodMachin}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenCompteurValeurMachin.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenCompteurValeurMachin ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeurMachin spécifiée est introuvable.")]
 	public partial class PatchGenCompteurValeurMachin : IReturnVoid

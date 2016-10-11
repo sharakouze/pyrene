@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource <see cref="GenFournBanque" />.
 	/// </summary>
-	[Route("/GenFourn/{CodFourn}/GenFournBanque/{CodIBAN}", HttpVerbs.Get, Summary = "Retourne une ressource GenFournBanque.")]
+	[Route("/GenFourn/{CodFourn}/Banque/{CodIBAN}", HttpVerbs.Get, Summary = "Retourne une ressource GenFournBanque.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenFournBanque ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournBanque spécifiée est introuvable.")]
 	public partial class GetGenFournBanque : IReturn<GenFournBanque>

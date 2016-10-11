@@ -49,7 +49,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CodFourn));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.Id));
 			}
 
 			return entity;
@@ -75,13 +75,13 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenFournBanque>().Join<GenFourn>().Where<GenFourn>(x => x.CodFourn == request.CodFourn).Where<GenFournBanque>(x => x.CodIBAN == request.CodIBAN).Select(request.Fields);
+            var q = Db.From<GenFournBanque>().Join<GenFourn>().Where<GenFourn>(x => x.CodFourn == request.CodFourn).Join<GenFournGenFournBanque>().Where<GenFournGenFournBanque>(x => x.CodIBAN == request.CodIBAN).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CodFourn));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.Id));
 			}
 
 			return entity;
@@ -107,13 +107,13 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenFournContact>().Join<GenFourn>().Where<GenFourn>(x => x.CodFourn == request.CodFourn).Where<GenFournContact>(x => x.NomContact == request.NomContact).Select(request.Fields);
+            var q = Db.From<GenFournContact>().Join<GenFourn>().Where<GenFourn>(x => x.CodFourn == request.CodFourn).Join<GenFournGenFournContact>().Where<GenFournGenFournContact>(x => x.NomContact == request.NomContact).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), ""));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.Id));
 			}
 
 			return entity;

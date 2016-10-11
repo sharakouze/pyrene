@@ -1097,11 +1097,11 @@ private string BuildStrRoutePath(List<Column> lstCols, bool keepEnd = true)
 			string newTableName = phCol.ParentTable.ClassName;
 			if (currentTable != "")
             {
-				//newTableName  = currentTable.Replace(phCol.ParentTable.ClassName, "");
+				newTableName = phCol.ParentTable.ClassName.Replace(currentTable, "");
             }
+			strRoute += "/" + newTableName;
 
 			currentTable = phCol.ParentTable.ClassName;
-			strRoute += "/" + newTableName;
         }
 
 		if (keepEnd || (phCol.ParentTable != tbl))

@@ -49,7 +49,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenCompteur), request.CodCompteur));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenCompteur), request.Id));
 			}
 
 			return entity;
@@ -75,17 +75,45 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenCompteurValeur>()
-                .Where(x => x.ValPeriode == request.ValPeriode)
-                .Join<GenCompteur>()
-                .Where<GenCompteur>(x => x.CodCompteur == request.CodCompteur)
-                .Select(request.Fields);
+            var q = Db.From<GenCompteurValeur>().Join<GenCompteur>().Where<GenCompteur>(x => x.CodCompteur == request.CodCompteur).Join<GenCompteurGenCompteurValeur>().Where<GenCompteurGenCompteurValeur>(x => x.ValPeriode == request.ValPeriode).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenCompteurValeur), request.CodCompteur));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenCompteurValeur), request.Id));
+			}
+
+			return entity;
+		}
+
+		/// <summary>
+		/// Retourne la ressource <see cref="GenCompteurValeurMachin" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Ressource <see cref="GenCompteurValeurMachin" /> trouvée.</returns>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
+		public GenCompteurValeurMachin Get(GetGenCompteurValeurMachin request)
+		{
+            if (!request.Fields.IsNullOrEmpty())
+            {
+                var errFields = ModelDefinitionHelper.GetUndefinedFields<GenCompteurValeurMachin>(request.Fields);
+                if (errFields.Any())
+                {
+                    string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
+                    throw new ArgumentException(
+                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenCompteurValeurMachin), str));
+                }
+            }
+
+            var q = Db.From<GenCompteurValeurMachin>().Join<GenCompteur>().Where<GenCompteur>(x => x.CodCompteur == request.CodCompteur).Join<GenCompteurGenCompteurValeur>().Where<GenCompteurGenCompteurValeur>(x => x.ValPeriode == request.ValPeriode).Join<GenCompteurGenCompteurValeurGenCompteurValeurMachin>().Where<GenCompteurGenCompteurValeurGenCompteurValeurMachin>(x => x.CodMachin == request.CodMachin).Select(request.Fields);
+
+			var entity = Db.Single(q);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenCompteurValeurMachin), request.Id));
 			}
 
 			return entity;

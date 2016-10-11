@@ -49,7 +49,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenSociete), ""));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenSociete), request.Id));
 			}
 
 			return entity;

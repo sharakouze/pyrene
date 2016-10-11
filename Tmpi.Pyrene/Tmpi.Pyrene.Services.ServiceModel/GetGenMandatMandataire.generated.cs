@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource <see cref="GenMandatMandataire" />.
 	/// </summary>
-	[Route("/GenMandat/{CodMandat}/GenMandatMandataire/{ClePersonne}/{CleSociete}/{CleSecteur}/{CleService}", HttpVerbs.Get, Summary = "Retourne une ressource GenMandatMandataire.")]
+	[Route("/GenMandat/{CodMandat}/Mandataire/{ClePersonne}/{CleSociete}/{CleSecteur}/{CleService}", HttpVerbs.Get, Summary = "Retourne une ressource GenMandatMandataire.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenMandatMandataire ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandatMandataire spécifiée est introuvable.")]
 	public partial class GetGenMandatMandataire : IReturn<GenMandatMandataire>

@@ -19,8 +19,8 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/GenCompteur/{CodCompteur}/GenCompteurValeur/{ValPeriode}/GenCompteurValeurMachin/{CodMachin}", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteurValeurMachin.")]
-    [Route("/GenCompteur/{CodCompteur}/GenCompteurValeur/{ValPeriode}/GenCompteurValeurMachin/{CodMachin}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeurMachin.")]
+    [Route("/GenCompteur/{CodCompteur}/Valeur/{ValPeriode}/Machin/{CodMachin}", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteurValeurMachin.")]
+    [Route("/GenCompteur/{CodCompteur}/Valeur/{ValPeriode}/Machin/{CodMachin}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeurMachin.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeurMachin spécifiée est introuvable.")]
 	public partial class GenCompteurValeurMachin
 	{

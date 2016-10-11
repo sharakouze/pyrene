@@ -20,8 +20,8 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleFourn), nameof(NomContact))]
-    [Route("/GenFourn/{CodFourn}/GenFournContact/{NomContact}", HttpVerbs.Post, Summary = "Ajoute une ressource GenFournContact.")]
-    [Route("/GenFourn/{CodFourn}/GenFournContact/{NomContact}", HttpVerbs.Put, Summary = "Remplace une ressource GenFournContact.")]
+    [Route("/GenFourn/{CodFourn}/Contact/{NomContact}", HttpVerbs.Post, Summary = "Ajoute une ressource GenFournContact.")]
+    [Route("/GenFourn/{CodFourn}/Contact/{NomContact}", HttpVerbs.Put, Summary = "Remplace une ressource GenFournContact.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournContact spécifiée est introuvable.")]
 	public partial class GenFournContact : IAuditable
 	{

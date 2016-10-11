@@ -20,8 +20,8 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleMandat), nameof(ClePersonne), nameof(CleSociete), nameof(CleSecteur), nameof(CleService))]
-    [Route("/GenMandat/{CodMandat}/GenMandatMandataire/{ClePersonne}/{CleSociete}/{CleSecteur}/{CleService}", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandatMandataire.")]
-    [Route("/GenMandat/{CodMandat}/GenMandatMandataire/{ClePersonne}/{CleSociete}/{CleSecteur}/{CleService}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandatMandataire.")]
+    [Route("/GenMandat/{CodMandat}/Mandataire/{ClePersonne}/{CleSociete}/{CleSecteur}/{CleService}", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandatMandataire.")]
+    [Route("/GenMandat/{CodMandat}/Mandataire/{ClePersonne}/{CleSociete}/{CleSecteur}/{CleService}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandatMandataire.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandatMandataire spécifiée est introuvable.")]
 	public partial class GenMandatMandataire : IAuditable
 	{
