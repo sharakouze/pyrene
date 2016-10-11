@@ -118,7 +118,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         /// </remarks>
 		[ApiMember(Description = "Société ayant accès au compteur, ou null pour toutes les sociétés. Code unique.", DataType = SwaggerDataTypes.String)]
 		[Ignore]
-		public string CodSociete { get; set; }
+		public string CodSocieteProprietaire { get; set; }
 
 		/// <summary>
 		/// Secteur ayant accès au compteur, ou null pour tous les secteurs.

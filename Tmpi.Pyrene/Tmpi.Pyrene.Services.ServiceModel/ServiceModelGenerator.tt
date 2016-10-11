@@ -424,21 +424,20 @@ namespace <#= pocoNamespace #>
 				FKey thisFkey = table.ForeignKeys.Where(fk => fk.FromColumns.Contains(col)).FirstOrDefault();
                 if (thisFkey != null)
 				{
-					Column fkFromCol = thisFkey.FromColumns.Single();
 					Column fkRefCol = thisFkey.ReferencedColumns.Single();
 
-					string format = "{0}";
-					if (lstPlaceholderCols.Contains(fkRefCol))
-                    {
-						format = fkFromCol.PropertyName.Replace(fkRefCol.PropertyName, "{0}");
-                    }
-
-					List<Column> lstNewFkCols = GetBestUniqueColumns(fkRefCol.ParentTable, UsePKAsRouteId);
+					List<Column> lstNewFkCols = GetBestUniqueColumns(thisFkey.ReferencedTable, UsePKAsRouteId);
 					foreach (Column fkCol in lstNewFkCols)
                     { 
+						string format = "{0}";
+						if (!lstPlaceholderCols.Contains(fkCol))
+						{
+							format = col.PropertyName.Replace(fkRefCol.PropertyName, "{0}");
+						}
+
 						Column newCol = fkCol.Clone();
-						newCol.IsNullable = fkFromCol.IsNullable;
-						string newDescription = fkFromCol.Description + " " + newCol.Description;
+						newCol.IsNullable = col.IsNullable;
+						string newDescription = col.Description + " " + newCol.Description;
 						newCol.Description = newDescription.Trim();
 						newCol.PropertyName = string.Format(format, newCol.PropertyName);
 

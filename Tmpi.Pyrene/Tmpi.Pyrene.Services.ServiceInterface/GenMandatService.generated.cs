@@ -75,7 +75,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenMandatMandataire>().Join<GenMandat>().Where<GenMandat>(x => x.CodMandat == request.CodMandat).Join<GenMandatGenMandatMandataire>().Where<GenMandatGenMandatMandataire>(x => x.ClePersonne == request.ClePersonne).Where<GenMandatGenMandatMandataire>(x => x.CleSociete == request.CleSociete).Where<GenMandatGenMandatMandataire>(x => x.CleSecteur == request.CleSecteur).Where<GenMandatGenMandatMandataire>(x => x.CleService == request.CleService).Select(request.Fields);
+            var q = Db.From<GenMandatMandataire>().Join<GenMandat>().Where<GenMandat>(x => x.CodMandat == request.CodMandat).Where<GenMandatMandataire>(x => x.ClePersonne == request.ClePersonne).Where<GenMandatMandataire>(x => x.CleSociete == request.CleSociete).Where<GenMandatMandataire>(x => x.CleSecteur == request.CleSecteur).Where<GenMandatMandataire>(x => x.CleService == request.CleService).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)

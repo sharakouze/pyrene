@@ -75,7 +75,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenCompteurValeur>().Join<GenCompteur>().Where<GenCompteur>(x => x.CodCompteur == request.CodCompteur).Join<GenCompteurGenCompteurValeur>().Where<GenCompteurGenCompteurValeur>(x => x.ValPeriode == request.ValPeriode).Select(request.Fields);
+            var q = Db.From<GenCompteurValeur>().Join<GenCompteur>().Where<GenCompteur>(x => x.CodCompteur == request.CodCompteur).Where<GenCompteurValeur>(x => x.ValPeriode == request.ValPeriode).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
@@ -107,7 +107,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenCompteurValeurMachin>().Join<GenCompteur>().Where<GenCompteur>(x => x.CodCompteur == request.CodCompteur).Join<GenCompteurGenCompteurValeur>().Where<GenCompteurGenCompteurValeur>(x => x.ValPeriode == request.ValPeriode).Join<GenCompteurGenCompteurValeurGenCompteurValeurMachin>().Where<GenCompteurGenCompteurValeurGenCompteurValeurMachin>(x => x.CodMachin == request.CodMachin).Select(request.Fields);
+            var q = Db.From<GenCompteurValeurMachin>().Join<GenCompteur>().Where<GenCompteur>(x => x.CodCompteur == request.CodCompteur).Join<GenCompteurValeur>().Where<GenCompteurValeur>(x => x.ValPeriode == request.ValPeriode).Where<GenCompteurValeurMachin>(x => x.CodMachin == request.CodMachin).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)

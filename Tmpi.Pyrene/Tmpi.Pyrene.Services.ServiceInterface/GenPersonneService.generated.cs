@@ -75,7 +75,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenPersonneProfil>().Join<GenPersonne>().Where<GenPersonne>(x => x.CodPersonne == request.CodPersonne).Join<GenPersonneGenPersonneProfil>().Where<GenPersonneGenPersonneProfil>(x => x.CodProfil == request.CodProfil).Select(request.Fields);
+            var q = Db.From<GenPersonneProfil>().Join<GenPersonne>().Where<GenPersonne>(x => x.CodPersonne == request.CodPersonne).Where<GenPersonneProfil>(x => x.CodProfil == request.CodProfil).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
