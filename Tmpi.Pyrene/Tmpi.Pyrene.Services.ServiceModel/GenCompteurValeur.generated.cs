@@ -20,9 +20,9 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleCompteur), nameof(ValPeriode))]
-    [Route("/GenCompteur/{CodCompteur}/Valeur/{ValPeriode}", HttpVerbs.Post, Summary = "Ajoute une ressource 'GenCompteurValeur'.")]
-    [Route("/GenCompteur/{CodCompteur}/Valeur/{ValPeriode}", HttpVerbs.Put, Summary = "Remplace une ressource 'GenCompteurValeur'.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenCompteurValeur' spécifiée est introuvable.")]
+    [Route("/GenCompteur/{CodCompteur}/GenCompteurValeur/{ValPeriode}", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteurValeur.")]
+    [Route("/GenCompteur/{CodCompteur}/GenCompteurValeur/{ValPeriode}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeur.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeur spécifiée est introuvable.")]
 	public partial class GenCompteurValeur
 	{
 		/// <summary>
@@ -48,7 +48,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Remplace la propriété <see cref="CleCompteur" /> dans la sérialisation.
 		/// Référence la propriété <see cref="GenCompteur.CodCompteur" />.
         /// </remarks>
-		[ApiMember(Description = "Compteur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Compteur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		[Ignore]
 		public string CodCompteur { get; set; }
 
@@ -56,7 +56,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Valeur de la période.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Valeur de la période.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Valeur de la période.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int ValPeriode { get; set; }
 
 		/// <summary>
@@ -65,6 +65,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[ApiMember(Description = "Valeur du compteur.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ValCompteur { get; set; }
+
+		[Reference]
+		public List<GenCompteurValeurMachin> LstMachin { get; set; }
 
 	}
 }

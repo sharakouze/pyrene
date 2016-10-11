@@ -20,9 +20,9 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleFourn), nameof(CodIBAN))]
-    [Route("/GenFourn/{CodFourn}/Banque/{CodIBAN}", HttpVerbs.Post, Summary = "Ajoute une ressource 'GenFournBanque'.")]
-    [Route("/GenFourn/{CodFourn}/Banque/{CodIBAN}", HttpVerbs.Put, Summary = "Remplace une ressource 'GenFournBanque'.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenFournBanque' spécifiée est introuvable.")]
+    [Route("/GenFourn/{CodFourn}/GenFournBanque/{CodIBAN}", HttpVerbs.Post, Summary = "Ajoute une ressource GenFournBanque.")]
+    [Route("/GenFourn/{CodFourn}/GenFournBanque/{CodIBAN}", HttpVerbs.Put, Summary = "Remplace une ressource GenFournBanque.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournBanque spécifiée est introuvable.")]
 	public partial class GenFournBanque : IAuditable
 	{
 		/// <summary>
@@ -48,7 +48,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Remplace la propriété <see cref="CleFourn" /> dans la sérialisation.
 		/// Référence la propriété <see cref="GenFourn.CodFourn" />.
         /// </remarks>
-		[ApiMember(Description = "Fournisseur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Fournisseur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		[Ignore]
 		public string CodFourn { get; set; }
 
@@ -57,7 +57,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[StringLength(34)]
 		[Required]
-		[ApiMember(Description = "Code IBAN.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code IBAN.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public string CodIBAN { get; set; }
 
 		/// <summary>

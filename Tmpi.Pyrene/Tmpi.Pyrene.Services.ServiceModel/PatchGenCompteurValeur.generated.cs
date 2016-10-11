@@ -18,21 +18,21 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Modifie partiellement une ressource <see cref="GenCompteurValeur" />.
 	/// </summary>
-	[Route("/GenCompteur/{CodCompteur}/Valeur/{ValPeriode}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource 'GenCompteurValeur'.")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource 'GenCompteurValeur' ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenCompteurValeur' spécifiée est introuvable.")]
+	[Route("/GenCompteur/{CodCompteur}/GenCompteurValeur/{ValPeriode}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenCompteurValeur.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenCompteurValeur ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeur spécifiée est introuvable.")]
 	public partial class PatchGenCompteurValeur : IReturnVoid
 	{
         /// <summary>
         /// Code unique.
         /// </summary>
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public string CodCompteur { get; set; }
 
         /// <summary>
         /// Valeur de la période.
         /// </summary>
-		[ApiMember(Description = "Valeur de la période.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Valeur de la période.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int ValPeriode { get; set; }
 
         /// <summary>

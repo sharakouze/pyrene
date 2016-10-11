@@ -21,9 +21,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(ClePersonne), nameof(CleSociete), nameof(CleSecteur), nameof(CleService))]
 	[CompositeIndex(true, nameof(CodProfil), nameof(ClePersonne))]
-    [Route("/GenPersonne/{CodPersonne}/Profil/{CodProfil}", HttpVerbs.Post, Summary = "Ajoute une ressource 'GenPersonneProfil'.")]
-    [Route("/GenPersonne/{CodPersonne}/Profil/{CodProfil}", HttpVerbs.Put, Summary = "Remplace une ressource 'GenPersonneProfil'.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenPersonneProfil' spécifiée est introuvable.")]
+    [Route("/GenPersonne/{CodPersonne}/GenPersonneProfil/{CodProfil}", HttpVerbs.Post, Summary = "Ajoute une ressource GenPersonneProfil.")]
+    [Route("/GenPersonne/{CodPersonne}/GenPersonneProfil/{CodProfil}", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonneProfil.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneProfil spécifiée est introuvable.")]
 	public partial class GenPersonneProfil : IAuditable
 	{
 		/// <summary>
@@ -49,7 +49,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Remplace la propriété <see cref="ClePersonne" /> dans la sérialisation.
 		/// Référence la propriété <see cref="GenPersonne.CodPersonne" />.
         /// </remarks>
-		[ApiMember(Description = "Utilisateur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Utilisateur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		[Ignore]
 		public string CodPersonne { get; set; }
 
@@ -58,7 +58,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[ApiMember(Description = "Code.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public string CodProfil { get; set; }
 
 		/// <summary>

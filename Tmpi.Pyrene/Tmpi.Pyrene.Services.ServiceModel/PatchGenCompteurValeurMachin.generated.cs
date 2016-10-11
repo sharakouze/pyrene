@@ -16,24 +16,30 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Modifie partiellement une ressource <see cref="GenFournContact" />.
+	/// Modifie partiellement une ressource <see cref="GenCompteurValeurMachin" />.
 	/// </summary>
-	[Route("/GenFourn/{CodFourn}/GenFournContact/{NomContact}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenFournContact.")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenFournContact ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournContact spécifiée est introuvable.")]
-	public partial class PatchGenFournContact : IReturnVoid
+	[Route("/GenCompteur/{CodCompteur}/GenCompteurValeur/{ValPeriode}/GenCompteurValeurMachin/{CodMachin}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenCompteurValeurMachin.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenCompteurValeurMachin ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeurMachin spécifiée est introuvable.")]
+	public partial class PatchGenCompteurValeurMachin : IReturnVoid
 	{
         /// <summary>
         /// Code unique.
         /// </summary>
 		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public string CodFourn { get; set; }
+        public string CodCompteur { get; set; }
 
         /// <summary>
-        /// Nom de famille.
+        /// Valeur de la période.
         /// </summary>
-		[ApiMember(Description = "Nom de famille.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public string NomContact { get; set; }
+		[ApiMember(Description = "Valeur de la période.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+        public int ValPeriode { get; set; }
+
+        /// <summary>
+        /// Code unique.
+        /// </summary>
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+        public string CodMachin { get; set; }
 
         /// <summary>
         /// Liste des modifications.

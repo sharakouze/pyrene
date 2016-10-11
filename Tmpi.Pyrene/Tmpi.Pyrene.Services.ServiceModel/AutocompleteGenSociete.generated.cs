@@ -16,9 +16,9 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Retourne des prédictions sur les ressources '<see cref="GenSociete" />'.
+	/// Retourne des prédictions sur les ressources <see cref="GenSociete" />.
 	/// </summary>
-	[Route("/GenSociete/Autocomplete/{Text}", HttpVerbs.Get, Summary = "Retourne des prédictions sur les ressources 'GenSociete'.")]
+	[Route("/GenSociete/Autocomplete/{Text}", HttpVerbs.Get, Summary = "Retourne des prédictions sur les ressources GenSociete.")]
 	public partial class AutocompleteGenSociete : IReturn<BasicEntity[]>
 	{
         /// <summary>

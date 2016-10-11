@@ -16,24 +16,30 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Retourne une ressource <see cref="GenFournBanque" />.
+	/// Retourne une ressource <see cref="GenCompteurValeurMachin" />.
 	/// </summary>
-	[Route("/GenFourn/{CodFourn}/GenFournBanque/{CodIBAN}", HttpVerbs.Get, Summary = "Retourne une ressource GenFournBanque.")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenFournBanque ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournBanque spécifiée est introuvable.")]
-	public partial class GetGenFournBanque : IReturn<GenFournBanque>
+	[Route("/GenCompteur/{CodCompteur}/GenCompteurValeur/{ValPeriode}/GenCompteurValeurMachin/{CodMachin}", HttpVerbs.Get, Summary = "Retourne une ressource GenCompteurValeurMachin.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenCompteurValeurMachin ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeurMachin spécifiée est introuvable.")]
+	public partial class GetGenCompteurValeurMachin : IReturn<GenCompteurValeurMachin>
 	{
         /// <summary>
         /// Code unique.
         /// </summary>
 		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public string CodFourn { get; set; }
+        public string CodCompteur { get; set; }
 
         /// <summary>
-        /// Code IBAN.
+        /// Valeur de la période.
         /// </summary>
-		[ApiMember(Description = "Code IBAN.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public string CodIBAN { get; set; }
+		[ApiMember(Description = "Valeur de la période.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+        public int ValPeriode { get; set; }
+
+        /// <summary>
+        /// Code unique.
+        /// </summary>
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+        public string CodMachin { get; set; }
 
         /// <summary>
         /// Champs à retourner, ou null pour retourner tous les champs.

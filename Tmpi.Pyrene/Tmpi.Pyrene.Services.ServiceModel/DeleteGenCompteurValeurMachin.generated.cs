@@ -16,11 +16,11 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Supprime une ressource <see cref="GenCompteurValeur" />.
+	/// Supprime une ressource <see cref="GenCompteurValeurMachin" />.
 	/// </summary>
-	[Route("/GenCompteur/{CodCompteur}/GenCompteurValeur/{ValPeriode}", HttpVerbs.Delete, Summary = "Supprime une ressource GenCompteurValeur.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeur spécifiée est introuvable.")]
-	public partial class DeleteGenCompteurValeur : IReturnVoid
+	[Route("/GenCompteur/{CodCompteur}/GenCompteurValeur/{ValPeriode}/GenCompteurValeurMachin/{CodMachin}", HttpVerbs.Delete, Summary = "Supprime une ressource GenCompteurValeurMachin.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeurMachin spécifiée est introuvable.")]
+	public partial class DeleteGenCompteurValeurMachin : IReturnVoid
 	{
         /// <summary>
         /// Code unique.
@@ -33,6 +33,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// </summary>
 		[ApiMember(Description = "Valeur de la période.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int ValPeriode { get; set; }
+
+        /// <summary>
+        /// Code unique.
+        /// </summary>
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+        public string CodMachin { get; set; }
 
 	}
 }

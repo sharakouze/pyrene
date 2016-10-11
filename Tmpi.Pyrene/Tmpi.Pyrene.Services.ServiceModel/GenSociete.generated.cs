@@ -19,9 +19,9 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/GenSociete/{CodSociete}", HttpVerbs.Post, Summary = "Ajoute une ressource 'GenSociete'.")]
-    [Route("/GenSociete/{CodSociete}", HttpVerbs.Put, Summary = "Remplace une ressource 'GenSociete'.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenSociete' spécifiée est introuvable.")]
+    [Route("/GenSociete/{CodSociete}", HttpVerbs.Post, Summary = "Ajoute une ressource GenSociete.")]
+    [Route("/GenSociete/{CodSociete}", HttpVerbs.Put, Summary = "Remplace une ressource GenSociete.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenSociete spécifiée est introuvable.")]
 	public partial class GenSociete : IAuditable
 	{
 		/// <summary>
@@ -38,7 +38,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public string CodSociete { get; set; }
 
 		/// <summary>

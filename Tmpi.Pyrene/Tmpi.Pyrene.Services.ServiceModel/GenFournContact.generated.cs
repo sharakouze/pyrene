@@ -20,9 +20,9 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleFourn), nameof(NomContact))]
-    [Route("/GenFourn/{CodFourn}/Contact/{NomContact}", HttpVerbs.Post, Summary = "Ajoute une ressource 'GenFournContact'.")]
-    [Route("/GenFourn/{CodFourn}/Contact/{NomContact}", HttpVerbs.Put, Summary = "Remplace une ressource 'GenFournContact'.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenFournContact' spécifiée est introuvable.")]
+    [Route("/GenFourn/{CodFourn}/GenFournContact/{NomContact}", HttpVerbs.Post, Summary = "Ajoute une ressource GenFournContact.")]
+    [Route("/GenFourn/{CodFourn}/GenFournContact/{NomContact}", HttpVerbs.Put, Summary = "Remplace une ressource GenFournContact.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournContact spécifiée est introuvable.")]
 	public partial class GenFournContact : IAuditable
 	{
 		/// <summary>
@@ -48,7 +48,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Remplace la propriété <see cref="CleFourn" /> dans la sérialisation.
 		/// Référence la propriété <see cref="GenFourn.CodFourn" />.
         /// </remarks>
-		[ApiMember(Description = "Fournisseur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Fournisseur parent. Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		[Ignore]
 		public string CodFourn { get; set; }
 
@@ -57,7 +57,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[ApiMember(Description = "Nom de famille.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Nom de famille.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public string NomContact { get; set; }
 
 		/// <summary>

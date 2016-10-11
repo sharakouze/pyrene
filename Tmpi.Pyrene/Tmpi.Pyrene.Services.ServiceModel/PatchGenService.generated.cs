@@ -18,15 +18,15 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Modifie partiellement une ressource <see cref="GenService" />.
 	/// </summary>
-	[Route("/GenService/{CodService}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource 'GenService'.")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource 'GenService' ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenService' spécifiée est introuvable.")]
+	[Route("/GenService/{CodService}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenService.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenService ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenService spécifiée est introuvable.")]
 	public partial class PatchGenService : IReturnVoid
 	{
         /// <summary>
         /// Code unique.
         /// </summary>
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public string CodService { get; set; }
 
         /// <summary>

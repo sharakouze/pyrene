@@ -18,15 +18,15 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Modifie partiellement une ressource <see cref="GenSecteur" />.
 	/// </summary>
-	[Route("/GenSecteur/{CodSecteur}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource 'GenSecteur'.")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource 'GenSecteur' ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenSecteur' spécifiée est introuvable.")]
+	[Route("/GenSecteur/{CodSecteur}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenSecteur.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenSecteur ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenSecteur spécifiée est introuvable.")]
 	public partial class PatchGenSecteur : IReturnVoid
 	{
         /// <summary>
         /// Code unique.
         /// </summary>
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public string CodSecteur { get; set; }
 
         /// <summary>

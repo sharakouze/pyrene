@@ -18,21 +18,21 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource <see cref="GenFournContact" />.
 	/// </summary>
-	[Route("/GenFourn/{CodFourn}/Contact/{NomContact}", HttpVerbs.Get, Summary = "Retourne une ressource 'GenFournContact'.")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource 'GenFournContact' ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenFournContact' spécifiée est introuvable.")]
+	[Route("/GenFourn/{CodFourn}/GenFournContact/{NomContact}", HttpVerbs.Get, Summary = "Retourne une ressource GenFournContact.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenFournContact ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournContact spécifiée est introuvable.")]
 	public partial class GetGenFournContact : IReturn<GenFournContact>
 	{
         /// <summary>
         /// Code unique.
         /// </summary>
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public string CodFourn { get; set; }
 
         /// <summary>
         /// Nom de famille.
         /// </summary>
-		[ApiMember(Description = "Nom de famille.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Nom de famille.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public string NomContact { get; set; }
 
         /// <summary>

@@ -240,57 +240,32 @@ namespace <#= pocoNamespace #>
 
 		string resourceName = table.ClassName;
 
-	    List<Column> lstKeyCols = GetBestUniqueColumns(table, UsePKAsRouteId);
-		List<Column> lstPlaceholderCols = new List<Column>();
-
-		List<string> lstRouteBaseParts = new List<string>(new [] { table.ClassName });
-	    List<string> lstRouteKeyParts = lstKeyCols.Select(c => c.PropertyName).ToList();
-
-        if (AddRouteAttributes && TransformRoutePath)
-        {
-            lstRouteBaseParts = GetRoutePartsFromTable(table, UsePKAsRouteId, ref lstPlaceholderCols);
-
-			FKey parentFKey = GetParentFKey(table);
-			if (parentFKey != null)
-            {
-				lstRouteKeyParts.RemoveAll(str => parentFKey.FromColumns.Any(c => c.PropertyName == str));
-            }
-        }
-
-		lstPlaceholderCols.AddRange(table.Columns.Where(c => lstRouteKeyParts.Contains(c.PropertyName)));
-		lstRouteKeyParts = lstRouteKeyParts.Select(c => "{" + c + "}").ToList();
+		List<Column> lstPlaceholderCols = GetRouteColumns(table, UsePKAsRouteId, TransformRoutePath);
 
         bool putExcluded = PutTableFilterExclude != null && PutTableFilterExclude.IsMatch(table.ClassName);
         bool postExcluded = PostTableFilterExclude != null && PostTableFilterExclude.IsMatch(table.ClassName);
 
         if (AddRouteAttributes && (!putExcluded || !postExcluded))
         {
-			string strRouteBase = "/" + string.Join("/", lstRouteBaseParts);
-			string strRouteKey = "/" + string.Join("/", lstRouteKeyParts);
-
             if (!postExcluded)
             {
-				string strRouteKeyPost = strRouteKey;
-				bool routeKeyIsReadonly = lstKeyCols.Any(c => c.IsAutoIncrement || c.IsComputed);
-                if (routeKeyIsReadonly)
-                {
-                    strRouteKeyPost = "";
-                }
+				string strRoute = BuildStrRoutePath(lstPlaceholderCols, !UsePKAsRouteId);
 #>
-    [Route("<#= strRouteBase #><#= strRouteKeyPost #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une ressource '{0}'.", resourceName) #>")]
+    [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une ressource {0}.", resourceName) #>")]
 <#
             }
             if (!putExcluded)
             {
+				string strRoute = BuildStrRoutePath(lstPlaceholderCols);
 #>
-    [Route("<#= strRouteBase #><#= strRouteKey #>", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une ressource '{0}'.", resourceName) #>")]
+    [Route("<#= strRoute #>", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une ressource {0}.", resourceName) #>")]
 <#
             }
 
             if (AddApiAttributes)
             {
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource '<#= resourceName #>' spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= resourceName #> spécifiée est introuvable.")]
 <#
             }
         }
@@ -422,6 +397,10 @@ namespace <#= pocoNamespace #>
 					}
 					else
 					{
+						if (lstPlaceholderCols.Contains(col))
+						{
+							lstApiMemberProps.Add("ParameterType = SwaggerParamTypes.Path");
+						}
 #>
 		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
 <#
@@ -448,7 +427,11 @@ namespace <#= pocoNamespace #>
 					Column fkFromCol = thisFkey.FromColumns.Single();
 					Column fkRefCol = thisFkey.ReferencedColumns.Single();
 
-					string format = GetFKeyColumnFormat(thisFkey);
+					string format = "{0}";
+					if (lstPlaceholderCols.Contains(fkRefCol))
+                    {
+						format = fkFromCol.PropertyName.Replace(fkRefCol.PropertyName, "{0}");
+                    }
 
 					List<Column> lstNewFkCols = GetBestUniqueColumns(fkRefCol.ParentTable, UsePKAsRouteId);
 					foreach (Column fkCol in lstNewFkCols)
@@ -476,6 +459,10 @@ namespace <#= pocoNamespace #>
 						if (AddApiAttributes)
 						{
 							List<string> lstApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
+							if (lstPlaceholderCols.Contains(fkCol))
+							{
+								lstApiMemberProps.Add("ParameterType = SwaggerParamTypes.Path");
+							}
 							if (lstApiMemberProps.Any())
 							{
 #>
@@ -563,16 +550,15 @@ namespace <#= msgNamespace #>
 <#
             if (AddRouteAttributes)
             {
-				string strRouteBase = "/" + string.Join("/", lstRouteBaseParts);
-				string strRouteKey = "/" + string.Join("/", lstRouteKeyParts);
+				string strRoute = BuildStrRoutePath(lstPlaceholderCols);
 #>
-	[Route("<#= strRouteBase #><#= strRouteKey #>", HttpVerbs.Get, Summary = "<#= string.Format(getTableClassDescription, "'" + resourceName + "'") #>")]
+	[Route("<#= strRoute #>", HttpVerbs.Get, Summary = "<#= string.Format(getTableClassDescription, resourceName) #>")]
 <#
 			    if (AddApiAttributes)
                 {
 #>
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource '<#= resourceName #>' ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource '<#= resourceName #>' spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource <#= resourceName #> ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= resourceName #> spécifiée est introuvable.")]
 <#
                 }
 			}
@@ -593,12 +579,10 @@ namespace <#= msgNamespace #>
 			if (AddApiAttributes)
             {
 				List<string> lstApiMemberProps = GetApiMemberProps(phCol, allEnums, lstInterfaces);
-				if (lstApiMemberProps.Any())
-				{
+				lstApiMemberProps.Add("ParameterType = SwaggerParamTypes.Path");
 #>
 		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
 <#
-				}
             }
 #>
         public <#= phCol.ProperPropertyType #> <#= phCol.PropertyName #> { get; set; }
@@ -655,15 +639,14 @@ namespace <#= msgNamespace #>
 <#
             if (AddRouteAttributes)
             {
-				string strRouteBase = "/" + string.Join("/", lstRouteBaseParts);
-				string strRouteKey = "/" + string.Join("/", lstRouteKeyParts);
+				string strRoute = BuildStrRoutePath(lstPlaceholderCols);
 #>
-	[Route("<#= strRouteBase #><#= strRouteKey #>", HttpVerbs.Delete, Summary = "<#= string.Format(deleteTableClassDescription, "'" + resourceName + "'") #>")]
+	[Route("<#= strRoute #>", HttpVerbs.Delete, Summary = "<#= string.Format(deleteTableClassDescription, resourceName) #>")]
 <#
 			    if (AddApiAttributes)
                 {
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource '<#= resourceName #>' spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= resourceName #> spécifiée est introuvable.")]
 <#
                 }
 			}
@@ -684,12 +667,10 @@ namespace <#= msgNamespace #>
 			if (AddApiAttributes)
             {
 				List<string> lstApiMemberProps = GetApiMemberProps(phCol, allEnums, lstInterfaces);
-				if (lstApiMemberProps.Any())
-				{
+				lstApiMemberProps.Add("ParameterType = SwaggerParamTypes.Path");
 #>
 		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
 <#
-				}
             }
 #>
         public <#= phCol.ProperPropertyType #> <#= phCol.PropertyName #> { get; set; }
@@ -735,16 +716,15 @@ namespace <#= msgNamespace #>
 <#
             if (AddRouteAttributes)
             {
-				string strRouteBase = "/" + string.Join("/", lstRouteBaseParts);
-				string strRouteKey = "/" + string.Join("/", lstRouteKeyParts);
+				string strRoute = BuildStrRoutePath(lstPlaceholderCols);
 #>
-	[Route("<#= strRouteBase #><#= strRouteKey #>", HttpVerbs.Patch, Summary = "<#= string.Format(patchTableClassDescription, "'" + resourceName + "'") #>")]
+	[Route("<#= strRoute #>", HttpVerbs.Patch, Summary = "<#= string.Format(patchTableClassDescription, resourceName) #>")]
 <#
 			    if (AddApiAttributes)
                 {
 #>
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource '<#= resourceName #>' ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource '<#= resourceName #>' spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource <#= resourceName #> ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= resourceName #> spécifiée est introuvable.")]
 <#
                 }
 			}
@@ -765,12 +745,10 @@ namespace <#= msgNamespace #>
 			if (AddApiAttributes)
             {
 				List<string> lstApiMemberProps = GetApiMemberProps(phCol, allEnums, lstInterfaces);
-				if (lstApiMemberProps.Any())
-				{
+				lstApiMemberProps.Add("ParameterType = SwaggerParamTypes.Path");
 #>
 		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
 <#
-				}
             }
 #>
         public <#= phCol.ProperPropertyType #> <#= phCol.PropertyName #> { get; set; }
@@ -811,7 +789,7 @@ namespace <#= msgNamespace #>
 			if (!autocompleteExcluded)
 			{
 				var autocompleteClassName = "Autocomplete" + table.ClassName;
-				var autocompleteDescription = "Retourne des prédictions sur les ressources '{0}'.";
+				var autocompleteDescription = "Retourne des prédictions sur les ressources {0}.";
 				var textPropDescription = "Texte à rechercher.";
 				var maxPropDescription = "Nombre maximum de prédictions à retourner.";
 
@@ -836,7 +814,7 @@ namespace <#= msgNamespace #>
 <#
 			if (AddRouteAttributes)
             {
-				string strRouteBase = "/" + string.Join("/", lstRouteBaseParts);
+				string strRouteBase = BuildStrRoutePath(lstPlaceholderCols, false);
 #>
 	[Route("<#= strRouteBase #>/Autocomplete/{Text}", HttpVerbs.Get, Summary = "<#= string.Format(autocompleteDescription, table.ClassName) #>")]
 <#
@@ -892,18 +870,6 @@ private string GetStandardColumnFormat(Table table)
 		return parentFkey.FromTable.ClassName.Replace(parentFkey.ReferencedTable.ClassName, "{0}");
 	}
 	return "{0}" + table.Name.Remove(0, 3);
-}
-
-/// <summary>
-/// Retourne une chaine qui représente le format que doit avoir une colonne FK dans une table.
-/// Exemple : CleService => "{0}" ; CleTiersPayeur => "{0}Payeur" ...
-/// </summary>
-private string GetFKeyColumnFormat(FKey fkey)
-{
-	Column fkFromCol = fkey.FromColumns.Single();
-	Column fkRefCol = fkey.ReferencedColumns.Single();
-
-	return fkFromCol.PropertyName.Replace(fkRefCol.PropertyName, "{0}");
 }
 
 private void SetColumnsDescription(Table table, string stdColFormat)
@@ -1060,7 +1026,7 @@ List<Column> GetBestUniqueColumns(Table table, bool usePK)
 }
 
 /// <summary>
-/// Retourne la FK pointant sur la table parent la plus proche.
+/// Retourne la FK pointant sur la table parent la plus proche avec un nom similaire.
 /// </summary>
 FKey GetParentFKey(Table table)
 {
@@ -1073,46 +1039,79 @@ FKey GetParentFKey(Table table)
 }
 
 /// <summary>
-/// Extraction du route path suivant les ForeignKeys/enfants
-/// Exemple : classe GenFournContact passe de '/GenFournContact/' en '/GenFourn/{xxx}/Contact/'
+/// Extraction des colonnes route path suivant les ForeignKeys/enfants
 /// </summary>
-List<string> GetRoutePartsFromTable(Table table, bool usePK, ref List<Column> lstPlaceholderCols)
+private List<Column> GetRouteColumns(Table table, bool usePK, bool recurseParents)
 {
-    List<string> lstRoute = new List<string>();
-    List<string> parts = new List<string>();
+	List<Column> lstCols = new List<Column>();
 
-	FKey fkParent = GetParentFKey(table);
-    if (fkParent != null)
+	if (recurseParents)
     {
-		Table parentTable = fkParent.ReferencedTable;
-	    List<Column> parentCols = GetBestUniqueColumns(parentTable, usePK);
-        if (parentCols != null)
+		FKey fkParent = GetParentFKey(table);
+		if (fkParent != null)
+		{
+			Table parentTable = fkParent.ReferencedTable;
+
+			List<Column> lst = GetRouteColumns(parentTable, usePK, recurseParents);
+			lstCols.AddRange(lst);
+		}
+    }
+
+	List<Column> parentCols = GetBestUniqueColumns(table, usePK);
+    if (parentCols != null)
+	{
+		foreach (Column pCol in parentCols)
         {
-			string format = GetFKeyColumnFormat(fkParent);
-
-			foreach (Column col in parentCols)
+			bool add = true;
+			// on ajoute pas la colonne si elle est ajouté précedement
+			FKey fkCol = table.ForeignKeys.FirstOrDefault(f => f.FromColumns.Contains(pCol));
+			if (fkCol != null)
             {
-				Column newCol = col.Clone();
-				newCol.PropertyName = string.Format(format, newCol.PropertyName);
-
-				lstPlaceholderCols.Add(newCol);
-				parts.Add("{" + newCol.PropertyName + "}");
+				if (lstCols.Select(c => c.ParentTable).Any(t => t == fkCol.ReferencedTable))
+                {
+					add = false;
+                }
+            }
+			if (add)
+            {
+				lstCols.Add(pCol);
             }
         }
-
-        string newTableName = table.Name.Replace(parentTable.Name, "");
-        parts.Add(newTableName);
-
-        lstRoute = GetRoutePartsFromTable(parentTable, usePK, ref lstPlaceholderCols);
     }
-    if (!parts.Any())
+
+	return lstCols;
+}
+
+private string BuildStrRoutePath(List<Column> lstCols, bool keepEnd = true)
+{
+	string strRoute = "";
+	string currentTable = "";
+
+	Column lastCol = lstCols.Last();
+	Table tbl = lastCol.ParentTable;
+
+	foreach (Column phCol in lstCols)
     {
-		string newTableName = table.Name; //.Remove(0, 3);
-        parts.Add(newTableName);
+		if (phCol.ParentTable.ClassName != currentTable)
+        {
+			string newTableName = phCol.ParentTable.ClassName;
+			if (currentTable != "")
+            {
+				//newTableName  = currentTable.Replace(phCol.ParentTable.ClassName, "");
+            }
+
+			currentTable = phCol.ParentTable.ClassName;
+			strRoute += "/" + newTableName;
+        }
+
+		if (keepEnd || (phCol.ParentTable != tbl))
+        {
+			strRoute += "/";
+			strRoute += "{" + phCol.PropertyName + "}";
+        }
     }
 
-    lstRoute.AddRange(parts);
-    return lstRoute;
+	return strRoute;
 }
 
 private string GetConnectionString(Project project, string connectionStringName, out string providerName)

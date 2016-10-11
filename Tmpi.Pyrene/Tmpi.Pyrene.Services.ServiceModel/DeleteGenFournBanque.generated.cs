@@ -18,20 +18,20 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Supprime une ressource <see cref="GenFournBanque" />.
 	/// </summary>
-	[Route("/GenFourn/{CodFourn}/Banque/{CodIBAN}", HttpVerbs.Delete, Summary = "Supprime une ressource 'GenFournBanque'.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenFournBanque' spécifiée est introuvable.")]
+	[Route("/GenFourn/{CodFourn}/GenFournBanque/{CodIBAN}", HttpVerbs.Delete, Summary = "Supprime une ressource GenFournBanque.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournBanque spécifiée est introuvable.")]
 	public partial class DeleteGenFournBanque : IReturnVoid
 	{
         /// <summary>
         /// Code unique.
         /// </summary>
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public string CodFourn { get; set; }
 
         /// <summary>
         /// Code IBAN.
         /// </summary>
-		[ApiMember(Description = "Code IBAN.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code IBAN.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public string CodIBAN { get; set; }
 
 	}

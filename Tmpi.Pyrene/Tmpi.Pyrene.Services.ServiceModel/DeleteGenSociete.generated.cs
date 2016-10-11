@@ -18,14 +18,14 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Supprime une ressource <see cref="GenSociete" />.
 	/// </summary>
-	[Route("/GenSociete/{CodSociete}", HttpVerbs.Delete, Summary = "Supprime une ressource 'GenSociete'.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenSociete' spécifiée est introuvable.")]
+	[Route("/GenSociete/{CodSociete}", HttpVerbs.Delete, Summary = "Supprime une ressource GenSociete.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenSociete spécifiée est introuvable.")]
 	public partial class DeleteGenSociete : IReturnVoid
 	{
         /// <summary>
         /// Code unique.
         /// </summary>
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public string CodSociete { get; set; }
 
 	}

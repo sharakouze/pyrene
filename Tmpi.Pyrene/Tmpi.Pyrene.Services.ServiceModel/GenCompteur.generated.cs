@@ -19,10 +19,10 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, nameof(TypCompteur), nameof(CleSociete), nameof(CleSecteur), nameof(CleService))]
-    [Route("/GenCompteur/{CodCompteur}", HttpVerbs.Post, Summary = "Ajoute une ressource 'GenCompteur'.")]
-    [Route("/GenCompteur/{CodCompteur}", HttpVerbs.Put, Summary = "Remplace une ressource 'GenCompteur'.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenCompteur' spécifiée est introuvable.")]
+	[CompositeIndex(true, nameof(TypCompteur), nameof(CleSocieteProprietaire), nameof(CleSecteur), nameof(CleService))]
+    [Route("/GenCompteur/{CodCompteur}", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteur.")]
+    [Route("/GenCompteur/{CodCompteur}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteur.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteur spécifiée est introuvable.")]
 	public partial class GenCompteur : IAuditable
 	{
 		/// <summary>
@@ -39,7 +39,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public string CodCompteur { get; set; }
 
 		/// <summary>
@@ -107,13 +107,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[References(typeof(GenSociete))]
         [IgnoreDataMember]
-		public int? CleSociete { get; set; }
+		public int? CleSocieteProprietaire { get; set; }
 
 		/// <summary>
 		/// Société ayant accès au compteur, ou null pour toutes les sociétés. Code unique.
 		/// </summary>
         /// <remarks>
-		/// Remplace la propriété <see cref="CleSociete" /> dans la sérialisation.
+		/// Remplace la propriété <see cref="CleSocieteProprietaire" /> dans la sérialisation.
 		/// Référence la propriété <see cref="GenSociete.CodSociete" />.
         /// </remarks>
 		[ApiMember(Description = "Société ayant accès au compteur, ou null pour toutes les sociétés. Code unique.", DataType = SwaggerDataTypes.String)]

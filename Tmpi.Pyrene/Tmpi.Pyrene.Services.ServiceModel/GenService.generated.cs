@@ -19,9 +19,9 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/GenService/{CodService}", HttpVerbs.Post, Summary = "Ajoute une ressource 'GenService'.")]
-    [Route("/GenService/{CodService}", HttpVerbs.Put, Summary = "Remplace une ressource 'GenService'.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource 'GenService' spécifiée est introuvable.")]
+    [Route("/GenService/{CodService}", HttpVerbs.Post, Summary = "Ajoute une ressource GenService.")]
+    [Route("/GenService/{CodService}", HttpVerbs.Put, Summary = "Remplace une ressource GenService.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenService spécifiée est introuvable.")]
 	public partial class GenService : IAuditable
 	{
 		/// <summary>
@@ -38,7 +38,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public string CodService { get; set; }
 
 		/// <summary>
