@@ -27,7 +27,7 @@ CREATE INDEX [IX_GenService_CleServiceParent] ON [GenService] ([CleServiceParent
 
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Service parent.',
+    @value = N'Clé du service parent.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',

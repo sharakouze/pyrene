@@ -35,11 +35,11 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int CleBanque { get; set; }
 
 		/// <summary>
-		/// Fournisseur parent.
+		/// Clé du fournisseur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Fournisseur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Clé du fournisseur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleFourn { get; set; }
 
 		/// <summary>

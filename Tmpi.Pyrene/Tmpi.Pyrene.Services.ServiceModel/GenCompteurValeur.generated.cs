@@ -35,11 +35,11 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int CleValeur { get; set; }
 
 		/// <summary>
-		/// Compteur parent.
+		/// Clé du compteur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenCompteur), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Compteur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Clé du compteur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleCompteur { get; set; }
 
 		/// <summary>
@@ -55,9 +55,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[ApiMember(Description = "Valeur du compteur.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ValCompteur { get; set; }
-
-		[Reference]
-		public List<GenCompteurValeurMachin> LstMachin { get; set; }
 
 	}
 }

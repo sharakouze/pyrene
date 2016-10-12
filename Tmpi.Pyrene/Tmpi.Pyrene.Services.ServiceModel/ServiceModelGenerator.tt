@@ -949,10 +949,10 @@ private List<Column> GetKeyColumns(Table table)
 /// </summary>
 private FKey GetParentFKey(Table table)
 {
-    // si plusieurs parents, on prend celui avec le nom le plus long
     FKey fkey = table.ForeignKeys
 		.Where(fk => table.Name.StartsWith(fk.ReferencedTable.Name))
-		.OrderByDescending(fk => fk.ReferencedTable.Name.Length)
+		.Where(fk => table.Name != fk.ReferencedTable.Name)
+		.OrderByDescending(fk => fk.ReferencedTable.Name.Length) // si plusieurs parents, on prend celui avec le nom le plus long
 		.FirstOrDefault();
 	return fkey;
 }

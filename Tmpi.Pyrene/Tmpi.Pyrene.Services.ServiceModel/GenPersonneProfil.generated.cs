@@ -19,7 +19,7 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, nameof(ClePersonne), nameof(CleSociete), nameof(CleSecteur), nameof(CleService))]
+	[CompositeIndex(true, nameof(ClePersonne), nameof(CleService))]
 	[CompositeIndex(true, nameof(CodProfil), nameof(ClePersonne))]
     [Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Post, Summary = "Ajoute une ressource GenPersonneProfil.")]
     [Route("/Personne/{ClePersonne}/Profil/{CleProfil}", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonneProfil.")]
@@ -36,11 +36,11 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int CleProfil { get; set; }
 
 		/// <summary>
-		/// Utilisateur parent.
+		/// Clé de l'utilisateur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Utilisateur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Clé de l'utilisateur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ClePersonne { get; set; }
 
 		/// <summary>
@@ -66,24 +66,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public DateTime DatModif { get; set; }
 
 		/// <summary>
-		/// Société à laquelle a accès le profil, ou null pour toutes les sociétés.
-		/// </summary>
-		[References(typeof(GenSociete))]
-		[ApiMember(Description = "Société à laquelle a accès le profil, ou null pour toutes les sociétés.", DataType = SwaggerDataTypes.Int)]
-		public int? CleSociete { get; set; }
-
-		/// <summary>
-		/// Secteur auquel a accès le profil, ou null pour tous les secteurs.
-		/// </summary>
-		[References(typeof(GenSecteur))]
-		[ApiMember(Description = "Secteur auquel a accès le profil, ou null pour tous les secteurs.", DataType = SwaggerDataTypes.Int)]
-		public int? CleSecteur { get; set; }
-
-		/// <summary>
-		/// Service auquel a accès le profil, ou null pour tous les services.
+		/// Clé du service auquel a accès le profil, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
-		[ApiMember(Description = "Service auquel a accès le profil, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
+		[ApiMember(Description = "Clé du service auquel a accès le profil, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }
 
 	}

@@ -25,13 +25,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenPersonneSignature
 	{
 		/// <summary>
-		/// Utilisateur parent.
+		/// Clé de l'utilisateur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
 		[PrimaryKey]
-		[ApiMember(Description = "Utilisateur parent.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
-		[ApiMember(Description = "Utilisateur parent.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Clé de l'utilisateur parent.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Clé de l'utilisateur parent.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int ClePersonne { get; set; }
 
 		/// <summary>

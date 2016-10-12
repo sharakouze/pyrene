@@ -55,13 +55,7 @@
     <Compile Include="AutocompleteGenMandat.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="AutocompleteGenSecteur.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="AutocompleteGenService.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AutocompleteGenSociete.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="AutocompleteGenTVA.generated.cs">
@@ -72,9 +66,6 @@
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="DeleteGenCompteurValeur.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DeleteGenCompteurValeurMachin.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="DeleteGenExercice.generated.cs">
@@ -104,22 +95,10 @@
     <Compile Include="DeleteGenPersonneSignature.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="DeleteGenSecteur.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="DeleteGenService.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="DeleteGenSociete.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="DeleteGenTVA.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenCompteurValeurMachin.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GetGenCompteurValeurMachin.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="HttpVerbs.cs" />
@@ -128,9 +107,6 @@
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="PatchGenCompteurValeur.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PatchGenCompteurValeurMachin.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="PatchGenExercice.generated.cs">
@@ -160,13 +136,7 @@
     <Compile Include="PatchGenPersonneSignature.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="PatchGenSecteur.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="PatchGenService.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PatchGenSociete.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="PatchGenTVA.generated.cs">
@@ -212,13 +182,7 @@
     <Compile Include="GenPersonneSignature.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="GenSecteur.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="GenService.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenSociete.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GenTVA.generated.cs">
@@ -257,13 +221,7 @@
     <Compile Include="GetGenPersonneSignature.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="GetGenSecteur.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="GetGenService.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GetGenSociete.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GetGenTVA.generated.cs">

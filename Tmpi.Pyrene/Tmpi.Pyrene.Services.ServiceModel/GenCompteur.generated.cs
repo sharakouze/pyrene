@@ -19,7 +19,7 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, nameof(TypCompteur), nameof(CleSocieteProprietaire), nameof(CleSecteur), nameof(CleService))]
+	[CompositeIndex(true, nameof(TypCompteur), nameof(CleService))]
     [Route("/Compteur", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteur.")]
     [Route("/Compteur/{CleCompteur}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteur.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteur spécifiée est introuvable.")]
@@ -104,24 +104,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public TypCompteur TypCompteur { get; set; }
 
 		/// <summary>
-		/// Société ayant accès au compteur, ou null pour toutes les sociétés.
-		/// </summary>
-		[References(typeof(GenSociete))]
-		[ApiMember(Description = "Société ayant accès au compteur, ou null pour toutes les sociétés.", DataType = SwaggerDataTypes.Int)]
-		public int? CleSocieteProprietaire { get; set; }
-
-		/// <summary>
-		/// Secteur ayant accès au compteur, ou null pour tous les secteurs.
-		/// </summary>
-		[References(typeof(GenSecteur))]
-		[ApiMember(Description = "Secteur ayant accès au compteur, ou null pour tous les secteurs.", DataType = SwaggerDataTypes.Int)]
-		public int? CleSecteur { get; set; }
-
-		/// <summary>
-		/// Service ayant accès au compteur, ou null pour tous les services.
+		/// Clé du service ayant accès au compteur, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
-		[ApiMember(Description = "Service ayant accès au compteur, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
+		[ApiMember(Description = "Clé du service ayant accès au compteur, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }
 
 		/// <summary>

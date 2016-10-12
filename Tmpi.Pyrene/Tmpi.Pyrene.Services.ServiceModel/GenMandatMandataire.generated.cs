@@ -19,7 +19,7 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, nameof(CleMandat), nameof(ClePersonne), nameof(CleSociete), nameof(CleSecteur), nameof(CleService))]
+	[CompositeIndex(true, nameof(CleMandat), nameof(ClePersonne), nameof(CleService))]
     [Route("/Mandat/{CleMandat}/Mandataire", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandatMandataire.")]
     [Route("/Mandat/{CleMandat}/Mandataire/{CleMandataire}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandatMandataire.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandatMandataire spécifiée est introuvable.")]
@@ -35,40 +35,26 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public int CleMandataire { get; set; }
 
 		/// <summary>
-		/// Mandat parent.
+		/// Clé du mandat parent.
 		/// </summary>
 		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Mandat parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Clé du mandat parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleMandat { get; set; }
 
 		/// <summary>
-		/// Utilisateur mandataire.
+		/// Clé de l'utilisateur mandataire.
 		/// </summary>
 		[References(typeof(GenPersonne))]
 		[Required]
-		[ApiMember(Description = "Utilisateur mandataire.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Clé de l'utilisateur mandataire.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ClePersonne { get; set; }
 
 		/// <summary>
-		/// Société ayant accès au mandat, ou null pour toutes les sociétés.
-		/// </summary>
-		[References(typeof(GenSociete))]
-		[ApiMember(Description = "Société ayant accès au mandat, ou null pour toutes les sociétés.", DataType = SwaggerDataTypes.Int)]
-		public int? CleSociete { get; set; }
-
-		/// <summary>
-		/// Secteur ayant accès au mandat, ou null pour tous les secteurs.
-		/// </summary>
-		[References(typeof(GenSecteur))]
-		[ApiMember(Description = "Secteur ayant accès au mandat, ou null pour tous les secteurs.", DataType = SwaggerDataTypes.Int)]
-		public int? CleSecteur { get; set; }
-
-		/// <summary>
-		/// Service ayant accès au mandat, ou null pour tous les services.
+		/// Clé du service ayant accès au mandat, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
-		[ApiMember(Description = "Service ayant accès au mandat, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
+		[ApiMember(Description = "Clé du service ayant accès au mandat, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }
 
 		/// <summary>

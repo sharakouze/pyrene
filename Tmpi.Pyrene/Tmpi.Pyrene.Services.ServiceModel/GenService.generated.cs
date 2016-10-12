@@ -87,13 +87,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public string CodExterne { get; set; }
 
 		/// <summary>
-		/// Secteur auquel appartient le service.
+		/// Clé du service parent.
 		/// </summary>
-		[ForeignKey(typeof(GenSecteur), OnDelete = "CASCADE")]
-		[Required]
+		[References(typeof(GenService))]
 		[Index]
-		[ApiMember(Description = "Secteur auquel appartient le service.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int CleSecteur { get; set; }
+		[ApiMember(Description = "Clé du service parent.", DataType = SwaggerDataTypes.Int)]
+		public int? CleServiceParent { get; set; }
 
 		/// <summary>
 		/// Rue.
@@ -143,6 +142,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[StringLength(100)]
 		[ApiMember(Description = "Adresse email.", DataType = SwaggerDataTypes.String)]
 		public string NumEmail { get; set; }
+
+		[Reference]
+		public List<GenService> Lst { get; set; }
 
 	}
 }

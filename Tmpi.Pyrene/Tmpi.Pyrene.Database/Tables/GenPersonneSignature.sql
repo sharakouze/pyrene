@@ -27,7 +27,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'TypMime'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Utilisateur parent.',
+    @value = N'Clé de l''utilisateur parent.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
