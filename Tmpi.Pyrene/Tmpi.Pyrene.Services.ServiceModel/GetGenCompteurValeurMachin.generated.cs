@@ -16,18 +16,30 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Retourne une ressource <see cref="GenPersonneSignature" />.
+	/// Retourne une ressource <see cref="GenCompteurValeurMachin" />.
 	/// </summary>
-	[Route("/Personne/{ClePersonne}", HttpVerbs.Get, Summary = "Retourne une ressource GenPersonneSignature.")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenPersonneSignature ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneSignature spécifiée est introuvable.")]
-	public partial class GetGenPersonneSignature : IReturn<GenPersonneSignature>
+	[Route("/Compteur/{CleCompteur}/Valeur/{CleValeur}/Machin/{CleMachin}", HttpVerbs.Get, Summary = "Retourne une ressource GenCompteurValeurMachin.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenCompteurValeurMachin ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeurMachin spécifiée est introuvable.")]
+	public partial class GetGenCompteurValeurMachin : IReturn<GenCompteurValeurMachin>
 	{
         /// <summary>
         /// Clé primaire. Immutable.
         /// </summary>
 		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
-        public int ClePersonne { get; set; }
+        public int CleCompteur { get; set; }
+
+        /// <summary>
+        /// Clé primaire. Immutable.
+        /// </summary>
+		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+        public int CleValeur { get; set; }
+
+        /// <summary>
+        /// Clé primaire. Immutable.
+        /// </summary>
+		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+        public int CleMachin { get; set; }
 
         /// <summary>
         /// Champs à retourner, ou null pour retourner tous les champs.

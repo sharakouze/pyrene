@@ -23,9 +23,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	public partial class DeleteGenService : IReturnVoid
 	{
         /// <summary>
-        /// Clé primaire.
+        /// Clé primaire. Immutable.
         /// </summary>
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
         public int CleService { get; set; }
 
 	}

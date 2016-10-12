@@ -1,6 +1,9 @@
 ﻿/* REMARQUES :
+- Sociétes et Secteurs :
+Fusion avec GenService, qui permet une hiérarchie récursive.
+
 - Profils d'utilisateurs :
-A quoi sert le lien sur Gen_SocSite ? Suppression de CleSite.
+Suppression de CleSite. (a quoi sert Gen_SocSite ?)
 
 - Compteurs :
 Gen_CptCompteur disparait et est fusionné avec Gen_Cpt_MNumero.
@@ -10,10 +13,10 @@ Le modele de numérotation est fusionné en 1 seul champ
 - Mandats :
 Suppression de CleLogiciel qu'on retrouve par déduction dans TypMandat.
 
-- Fourn :
+- Fournisseurs :
 Plusieurs contacts possibles.
-On passe d'un RIB en IBAN pour les coordonées banquaires
-Suppression de CleProprietaire
+Transformation de RIB en IBAN pour les coordonées banquaires.
+Suppression de CleProprietaire.
 
 - Exercice :
 NivExercice devient EstActif.
@@ -29,85 +32,45 @@ GO
 GO
 
 --
+-- CONSTANTES POUR LA REPRISE
+--
+
+declare @CleSecteurBase int = 1000;
+declare @CleServiceBase int = 20000;
+
+GO
+
+--
+-- DIVERS TESTS AVANT REPRISE
+--
+
+BEGIN
+	declare @MaxCleSociete int;
+	declare @MaxCleSecteur int;
+	
+	select @maxCleSociete=max(CleSociete) from $(SourceSchemaName).[Gen_SocSociete];
+	IF (@MaxCleSociete>=@CleSecteurBase) BEGIN
+		PRINT 'ERREUR: ';
+		RETURN;
+	END;
+
+	select @MaxCleSecteur=max(CleSecteur) from $(SourceSchemaName).[Gen_SocSecteur];
+	IF (@MaxCleSecteur>=20000) BEGIN
+		PRINT 'ERREUR: ';
+		RETURN;
+	END;
+END;
+
+
+GO
+
+--
 -- FONCTIONS TEMP
 --
 
-if (OBJECT_ID('[dbo].[TEMP_BBAN_TO_IBAN]')) is not null
-	drop function [dbo].[TEMP_BBAN_TO_IBAN];
-GO
-create function [dbo].[TEMP_BBAN_TO_IBAN] ( @bban varchar(30), @country char(2) )
-returns varchar(40)
-as
--- Creates an IBAN (International Bank Account Number) from a BBAN (Basic Bank Account Number) and BIC (Bank Identifier Code)
-BEGIN 
-	declare @bbanwk varchar(60), @bbannbp int, @bbanp varchar(9), @pos smallint, @mod int, @i smallint, @keyiban char(2), @iban varchar(40)
-	-- Place it at the end of BBAN
-	set @bbanwk = @bban + @country + '00'
-	-- Replace any letters with their numeric value (code ASCII - 55)
-	while isnumeric(@bbanwk+'e0') = 0
-		BEGIN
-			set @pos = (select patindex('%[^0-9]%',@bbanwk))
-			set @bbanwk = (select replace(@bbanwk,substring(@bbanwk,@pos,1),ascii(substring(@bbanwk,@pos,1))-55))
-		END
-	-- Split the BBAN into parts of 9 numbers max (because too long for SQL data type INT) and calculate MOD 97 of each part
-	-- suppose to add 1 iteration each 4 iteration, so init @i = 0 and not 1 for some case.
-	set @bbannbp = ceiling(len(@bbanwk) / 9.0) 
-	set @pos = 10
-	set @i = 0
-	set @bbanp = left(@bbanwk, 9)
-	while @i <= @bbannbp
-		BEGIN
-			set @mod = cast(@bbanp as int) % 97
-			-- Put the result at the beginning of the next group			
-			set @bbanp = cast(@mod as varchar) + substring(@bbanwk, @pos, 7)
-			set @i = @i + 1
-			set @pos = @pos + 7
-		END
-	-- IBAN key 2 characters
-	set @keyiban = right('00' + cast((98 - @mod) as varchar), 2)
-	set @iban = @country + @keyiban + @bban
-RETURN @iban
-END;
+:r TempFunctions.sql
 
 GO
-
-if (OBJECT_ID('[dbo].[TEMP_SPLIT]')) is not null
-	drop function [dbo].[TEMP_SPLIT];
-GO
-create function [dbo].[TEMP_SPLIT] ( @text varchar(8000), @separator varchar(20) = ',' )
-returns @strings table
-(
-	rownum int identity primary key,
-	column_value varchar(8000)
-)
-as
-	-- retourne une table contenant les sous-chaînes de "@text" qui sont délimitées par "@separator"
-	--
-BEGIN
-	declare @index int
-	set @index = -1
-
-	while (len(@text) > 0)
-	begin
-		set @index = charindex(@separator , @text)
-		if (@index = 0) and (len(@text) > 0)
-		begin
-			insert into @strings values (@text)
-			break
-		end
-		if (@index > 1)
-		begin
-			insert into @strings values (left(@text, @index - 1))
-			set @text = right(@text, (len(@text) - @index))
-		end
-		else
-			set @text = right(@text, (len(@text) - @index))
-	end
-	return
-END;
-
-GO
-
 
 --
 -- SOCIETES, SECTEURS et SERVICES
@@ -116,18 +79,19 @@ GO
 BEGIN TRY
 	BEGIN TRANSACTION;
 
-	SET IDENTITY_INSERT [GenSociete] ON;
+	SET IDENTITY_INSERT [GenService] ON;
 
-	merge into [GenSociete] as target
+	merge into [GenService] as target
 	using (
-		select S.CleSociete,
-			ltrim(rtrim(S.CodSociete)) as CodSociete,
-			ltrim(rtrim(S.LibSociete)) as LibSociete,
-			ltrim(rtrim(S.TxtSociete)) as TxtSociete,
+		select S.CleSociete as CleService,
+			ltrim(rtrim(S.CodSociete)) as CodService,
+			ltrim(rtrim(S.LibSociete)) as LibService,
+			ltrim(rtrim(S.TxtSociete)) as TxtService,
 			S.EstActif,
 			S.DatCreation,
 			coalesce(S.DatModif,S.DatCreation) as DatModif,
 			S.CleExterne as CodExterne,
+			cast(null as int) as CleServiceParent,
 			S.AdrRue,
 			S.AdrCode,
 			S.AdrVille as AdrCommune,
@@ -137,50 +101,16 @@ BEGIN TRY
 			S.NumEmail
 		from $(SourceSchemaName).[Gen_SocSociete] S left join $(SourceSchemaName).[Gen_Pays] P on S.ClePays=P.ClePays
 		where S.CleSociete>0
-	) as source
-	on (target.CleSociete=source.CleSociete)
-	when not matched by target
-	then -- insert new rows
-		insert (CleSociete, CodSociete, LibSociete, TxtSociete, EstActif, DatCreation, DatModif, CodExterne,
-			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail)
-		values (CleSociete, CodSociete, LibSociete, TxtSociete, EstActif, DatCreation, DatModif, CodExterne,
-			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail);
-
-	SET IDENTITY_INSERT [GenSociete] OFF;
-
-	-- ajout société par défaut si la table est vide pour des raisons d'intégrité des données
-	if not exists (select * from [GenSociete])
-	begin
-		insert into [GenSociete] (CodSociete, LibSociete, EstActif, DatCreation, DatModif)
-		values ('SOC', 'Société par défaut', 1, GETDATE(), GETDATE());
-	end;
-
-	COMMIT;
-END TRY
-BEGIN CATCH
-	SET IDENTITY_INSERT [GenSociete] OFF;
-	THROW;
-END CATCH;
-
-BEGIN TRY
-	BEGIN TRANSACTION;
-
-	declare @w_CleSocieteDef int;
-	select @w_CleSocieteDef=min(CleSociete) from [GenSociete];
-
-	SET IDENTITY_INSERT [GenSecteur] ON;
-
-	merge into [GenSecteur] as target
-	using (
-		select CleSecteur,
-			ltrim(rtrim(CodSecteur)) as CodSecteur,
-			ltrim(rtrim(LibSecteur)) as LibSecteur,
-			ltrim(rtrim(TxtSecteur)) as TxtSecteur,
+		union all
+		select CleSecteur+@CleSecteurBase as CleService,
+			ltrim(rtrim(CodSecteur)) as CodService,
+			ltrim(rtrim(LibSecteur)) as LibService,
+			ltrim(rtrim(TxtSecteur)) as TxtService,
 			EstActif,
 			DatCreation,
 			coalesce(DatModif,DatCreation) as DatModif,
 			CleExterne as CodExterne,
-			coalesce(nullif(CleSociete,0),@w_CleSocieteDef) as CleSociete,
+			nullif(CleSociete,0) as CleServiceParent,
 			AdrRue,
 			AdrCode,
 			AdrVille as AdrCommune,
@@ -190,42 +120,8 @@ BEGIN TRY
 			NumEmail
 		from $(SourceSchemaName).[Gen_SocSecteur]
 		where CleSecteur>0
-	) as source
-	on (target.CleSecteur=source.CleSecteur)
-	when not matched by target
-	then -- insert new rows
-		insert (CleSecteur, CodSecteur, LibSecteur, TxtSecteur, EstActif, DatCreation, DatModif, CodExterne,
-			CleSociete, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail)
-		values (CleSecteur, CodSecteur, LibSecteur, TxtSecteur, EstActif, DatCreation, DatModif, CodExterne,
-			CleSociete, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail);
-	
-	SET IDENTITY_INSERT [GenSecteur] OFF;
-
-	-- ajout secteur par défaut si la table est vide pour des raisons d'intégrité des données
-	if not exists (select * from [GenSecteur])
-	begin
-		insert into [GenSecteur] (CodSecteur, LibSecteur, EstActif, DatCreation, DatModif, CleSociete)
-		values ('SEC', 'Secteur par défaut', 1, GETDATE(), GETDATE(), @w_CleSocieteDef);
-	end;
-
-	COMMIT;
-END TRY
-BEGIN CATCH
-	SET IDENTITY_INSERT [GenSecteur] OFF;
-	THROW;
-END CATCH;
-
-BEGIN TRY
-	BEGIN TRANSACTION;
-
-	declare @w_CleSecteurDef int;
-	select @w_CleSecteurDef=min(CleSecteur) from [GenSecteur];
-
-	SET IDENTITY_INSERT [GenService] ON;
-
-	merge into [GenService] as target
-	using (
-		select CleService,
+		union all
+		select CleService+@CleServiceBase as CleService,
 			ltrim(rtrim(CodService)) as CodService,
 			ltrim(rtrim(LibService)) as LibService,
 			ltrim(rtrim(TxtService)) as TxtService,
@@ -233,7 +129,7 @@ BEGIN TRY
 			DatCreation,
 			coalesce(DatModif,DatCreation) as DatModif,
 			CleExterne as CodExterne,
-			coalesce(nullif(CleSecteur,0),@w_CleSecteurDef) as CleSecteur,
+			nullif(CleSecteur,0)+@CleSecteurBase as CleServiceParent,
 			AdrRue,
 			AdrCode,
 			AdrVille as AdrCommune,
@@ -248,9 +144,9 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleService, CodService, LibService, TxtService, EstActif, DatCreation, DatModif, CodExterne,
-			CleSecteur, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail)
+			CleServiceParent, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail)
 		values (CleService, CodService, LibService, TxtService, EstActif, DatCreation, DatModif, CodExterne,
-			CleSecteur, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail);
+			CleServiceParent, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail);
 	
 	SET IDENTITY_INSERT [GenService] OFF;
 
@@ -283,7 +179,7 @@ BEGIN TRY
 			DatCreation,
 			coalesce(DatModif,DatCreation) as DatModif,
 			CleExterne as CodExterne,
-			CleGenre as TypCivilite,
+			nullif(CleGenre,0) as TypCivilite,
 			NumTelep,
 			null as NumFax,
 			NumEmail
@@ -346,9 +242,7 @@ BEGIN TRY
 		select PRF.ClePersonneProfil as CleProfil,
 			PRF.ClePersonne,
 			PRF.CodProfil,
-			PRF.CleSociete,
-			PRF.CleSecteur,
-			PRF.CleService,
+			[dbo].[PrfService](PRF.CleSociete, PRF.CleSecteur, PRF.CleService) as CleService,
 			P.DatCreation,
 			coalesce(P.DatModif,P.DatCreation) as DatModif
 		from $(SourceSchemaName).[Gen_SocPersonneProfil] PRF inner join $(SourceSchemaName).[Gen_SocPersonne] P on PRF.ClePersonne=P.ClePersonne
@@ -357,8 +251,8 @@ BEGIN TRY
 	on (target.CleProfil=source.CleProfil)
 	when not matched by target
 	then -- insert new rows
-		insert (CleProfil, ClePersonne, CodProfil, CleSociete, CleSecteur, CleService, DatCreation, DatModif)
-		values (CleProfil, ClePersonne, CodProfil, CleSociete, CleSecteur, CleService, DatCreation, DatModif);
+		insert (CleProfil, ClePersonne, CodProfil, CleService, DatCreation, DatModif)
+		values (CleProfil, ClePersonne, CodProfil, CleService, DatCreation, DatModif);
 	
 	SET IDENTITY_INSERT [GenPersonneProfil] OFF;
 
@@ -392,9 +286,7 @@ BEGIN TRY
 			N.CleExterne as CodExterne,
 			N.TypCompteur, 
 			C.TypPeriodicite, 
-			null as CleSociete, 
-			coalesce(N.CleSecteur,C.CleSecteur) as CleSecteur, 
-			coalesce(N.CleService,C.CleService) as CleService, 
+			[dbo].[PrfService](null, coalesce(N.CleSecteur,C.CleSecteur), coalesce(N.CleService,C.CleService)) as CleService,
 			isnull(N.ValPrefixe1,'')
 				+isnull('{date:'+N.ValDate1+'}','')
 				+isnull(N.ValPrefixe2,'')
@@ -409,17 +301,11 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleCompteur, CodCompteur, LibCompteur, TxtCompteur, EstActif, DatCreation, DatModif, CodExterne,
-			TypCompteur, TypPeriodicite, CleSociete, CleSecteur, CleService, ValFormatNumero)
+			TypCompteur, TypPeriodicite, CleService, ValFormatNumero)
 		values (CleCompteur, CodCompteur, LibCompteur, TxtCompteur, EstActif, DatCreation, DatModif, CodExterne,
-			TypCompteur, TypPeriodicite, CleSociete, CleSecteur, CleService, ValFormatNumero);
+			TypCompteur, TypPeriodicite, CleService, ValFormatNumero);
 	
 	SET IDENTITY_INSERT [GenCompteur] OFF;
-
-	-- mise à jour eventuelle de CleSociete
-	update CPT
-	set CPT.CleSociete=SEC.CleSociete
-	from [GenCompteur] CPT inner join [GenSecteur] SEC on CPT.CleSecteur=SEC.CleSecteur
-	where CPT.CleSociete is null and CPT.CleSecteur is not null;
 
 	COMMIT;
 END TRY
@@ -506,9 +392,7 @@ BEGIN TRY
 		select CleMdtMandataire as CleMandataire,
 			CleMandat,
 			CleMandataire as ClePersonne,
-			CleSociete,
-			CleSecteur,
-			CleService,
+			[dbo].[PrfService](CleSociete, CleSecteur, CleService) as CleService,
 			EstSuspendu
 		from $(SourceSchemaName).[GenP_MdtMandataire]
 		where CleMandat>0
@@ -516,8 +400,8 @@ BEGIN TRY
 	on (target.CleMandataire=source.CleMandataire)
 	when not matched by target
 	then -- insert new rows
-		insert (CleMandataire, CleMandat, ClePersonne, CleSociete, CleSecteur, CleService, EstSuspendu)
-		values (CleMandataire, CleMandat, ClePersonne, CleSociete, CleSecteur, CleService, EstSuspendu);
+		insert (CleMandataire, CleMandat, ClePersonne, CleService, EstSuspendu)
+		values (CleMandataire, CleMandat, ClePersonne, CleService, EstSuspendu);
 	
 	SET IDENTITY_INSERT [GenMandatMandataire] OFF;
 

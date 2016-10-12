@@ -77,9 +77,6 @@
     // true pour transformer la route de la ressource, ex: GenFournContact de '/GenFournContact/' en '/GenFourn/{xxx}/Contact/'.
     bool TransformRoutePath = true;
 
-	// false pour preferer l'utilisation des contraintes d'unicité plutot que les PK pour identifier les ressources.
-    bool UsePKAsRouteId = true;
-
     // Filtre les messages générés.
     Regex PutTableFilterExclude = null;
     Regex PostTableFilterExclude = null;
@@ -240,7 +237,7 @@ namespace <#= pocoNamespace #>
 
 		string resourceName = table.ClassName;
 
-		List<Column> lstPlaceholderCols = GetRouteColumns(table, UsePKAsRouteId, TransformRoutePath);
+		List<Column> lstPlaceholderCols = GetRouteColumns(table, TransformRoutePath);
 
         bool putExcluded = PutTableFilterExclude != null && PutTableFilterExclude.IsMatch(table.ClassName);
         bool postExcluded = PostTableFilterExclude != null && PostTableFilterExclude.IsMatch(table.ClassName);
@@ -249,7 +246,7 @@ namespace <#= pocoNamespace #>
         {
             if (!postExcluded)
             {
-				string strRoute = BuildStrRoutePath(lstPlaceholderCols, !UsePKAsRouteId);
+				string strRoute = BuildStrRoutePath(lstPlaceholderCols, false);
 #>
     [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une ressource {0}.", resourceName) #>")]
 <#
@@ -363,19 +360,7 @@ namespace <#= pocoNamespace #>
 <#
             }
 
-            bool dataMemberIgnored = false;
-            if (!UsePKAsRouteId) 
-            {
-				dataMemberIgnored = (col.IsPKey || col.IsFKey);
-            }
-
-            if (dataMemberIgnored)
-            {
-#>
-        [IgnoreDataMember]
-<#
-            }
-            else if (AddApiAttributes)
+			if (AddApiAttributes)
             {
 				List<string> lstApiMemberProps = GetApiMemberProps(col, allEnums, lstInterfaces);
 				if (lstApiMemberProps.Any())
@@ -419,64 +404,6 @@ namespace <#= pocoNamespace #>
 		public <#= MakePropertiesVirtual ? "virtual " : "" #><#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
 
 <#
-			if (!UsePKAsRouteId)
-            {
-				FKey thisFkey = table.ForeignKeys.Where(fk => fk.FromColumns.Contains(col)).FirstOrDefault();
-                if (thisFkey != null)
-				{
-					Column fkRefCol = thisFkey.ReferencedColumns.Single();
-
-					List<Column> lstNewFkCols = GetBestUniqueColumns(thisFkey.ReferencedTable, UsePKAsRouteId);
-					foreach (Column fkCol in lstNewFkCols)
-                    { 
-						string format = "{0}";
-						if (!lstPlaceholderCols.Contains(fkCol))
-						{
-							format = col.PropertyName.Replace(fkRefCol.PropertyName, "{0}");
-						}
-
-						Column newCol = fkCol.Clone();
-						newCol.IsNullable = col.IsNullable;
-						string newDescription = col.Description + " " + newCol.Description;
-						newCol.Description = newDescription.Trim();
-						newCol.PropertyName = string.Format(format, newCol.PropertyName);
-
-						if (!string.IsNullOrEmpty(newCol.Description))
-                        {
-#>
-		/// <summary>
-		/// <#= newCol.Description #>
-		/// </summary>
-<#
-						}
-#>
-        /// <remarks>
-		/// Remplace la propriété <see cref="<#= col.PropertyName #>" /> dans la sérialisation.
-		/// Référence la propriété <see cref="<#= fkCol.ParentTable.ClassName #>.<#= fkCol.PropertyName #>" />.
-        /// </remarks>
-<#
-						if (AddApiAttributes)
-						{
-							List<string> lstApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
-							if (lstPlaceholderCols.Contains(fkCol))
-							{
-								lstApiMemberProps.Add("ParameterType = SwaggerParamTypes.Path");
-							}
-							if (lstApiMemberProps.Any())
-							{
-#>
-		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
-<#
-							}
-						}
-#>
-		[Ignore]
-		public <#= MakePropertiesVirtual ? "virtual " : "" #><#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
-
-<#
-					}
-				}
-            }
         } // end foreach (col)
 
         if (AddChildReferences)
@@ -883,10 +810,7 @@ private void SetColumnsDescription(Table table, string stdColFormat)
 			}
 			else if (col.PropertyName == string.Format(stdColFormat, "Cod"))
 			{
-				bool isUniqueSingleCol = table.Indices
-					.Where(idx => idx.IsUnique == true && idx.IndexColumns.Count == 1 && idx.IndexColumns.Contains(col))
-					.Any();
-				col.Description = isUniqueSingleCol ? "Code unique." : "Code.";
+				col.Description = "Code.";
 			}
 			else if (col.PropertyName == string.Format(stdColFormat, "Lib"))
 			{
@@ -904,10 +828,10 @@ private void SetColumnsDescription(Table table, string stdColFormat)
 						col.Description = "Actif ou inactif.";
 						break;
 					case "DatCreation":
-						col.Description = "Date de création.";
+						col.Description = "Date de création. Immutable.";
 						break;
 					case "DatModif":
-						col.Description = "Date de dernière modification.";
+						col.Description = "Date de dernière modification. Immutable.";
 						break;
 					case "CodExterne":
 						col.Description = "Identifiant de synchronisation externe.";
@@ -942,10 +866,24 @@ private void SetColumnsDescription(Table table, string stdColFormat)
 		{
 			col.Description += ".";
 		}
+
+		if (col.IsAutoIncrement || col.IsComputed)
+        {
+			string desc = col.Description + " Immutable.";
+			col.Description = desc.Trim();
+        }
+		bool isUniqueSingleCol = table.Indices
+			.Where(idx => idx.IsUnique == true && idx.IndexColumns.Count == 1 && idx.IndexColumns.Contains(col))
+			.Any();
+		if (isUniqueSingleCol)
+        {
+			string desc = col.Description + " Unique.";
+			col.Description = desc.Trim();
+        }
     }
 }
 
-List<string> GetApiMemberProps(Column col, List<string> lstEnums, List<string> lstInterfaces)
+private List<string> GetApiMemberProps(Column col, List<string> lstEnums, List<string> lstInterfaces)
 {
     List<string> lstApiMemberProps = new List<string>();
 
@@ -995,39 +933,21 @@ List<string> GetApiMemberProps(Column col, List<string> lstEnums, List<string> l
 }
 
 /// <summary>
-/// Cherche parmi les PK ou les contraintes uniques les meilleures colonnes pour identifier la ressource.
+/// Retourne les colonnes qui identifient la ressource.
 /// </summary>
-List<Column> GetBestUniqueColumns(Table table, bool usePK)
+private List<Column> GetKeyColumns(Table table)
 {
-	List<Column> pkCols = null;
-
 	if (table.PrimaryKey != null)
     {
-		pkCols = table.PrimaryKey.PKeyColumns;
+		return table.PrimaryKey.PKeyColumns;
     }
-
-	if (usePK)
-    {
-		return pkCols;
-    }
-	else 
-    {
-		TableIndex index = table.Indices.Where(idx => idx.IsUnique)
-			.OrderBy(idx => idx.IndexColumns.Count)
-			.FirstOrDefault();
-		if (index != null)
-		{
-			return index.IndexColumns;
-		}
-    }
-
-    return pkCols;
+	return null;
 }
 
 /// <summary>
 /// Retourne la FK pointant sur la table parent la plus proche avec un nom similaire.
 /// </summary>
-FKey GetParentFKey(Table table)
+private FKey GetParentFKey(Table table)
 {
     // si plusieurs parents, on prend celui avec le nom le plus long
     FKey fkey = table.ForeignKeys
@@ -1040,7 +960,7 @@ FKey GetParentFKey(Table table)
 /// <summary>
 /// Extraction des colonnes route path suivant les ForeignKeys/enfants
 /// </summary>
-private List<Column> GetRouteColumns(Table table, bool usePK, bool recurseParents)
+private List<Column> GetRouteColumns(Table table, bool recurseParents)
 {
 	List<Column> lstCols = new List<Column>();
 
@@ -1051,12 +971,12 @@ private List<Column> GetRouteColumns(Table table, bool usePK, bool recurseParent
 		{
 			Table parentTable = fkParent.ReferencedTable;
 
-			List<Column> lst = GetRouteColumns(parentTable, usePK, recurseParents);
+			List<Column> lst = GetRouteColumns(parentTable, recurseParents);
 			lstCols.AddRange(lst);
 		}
     }
 
-	List<Column> parentCols = GetBestUniqueColumns(table, usePK);
+	List<Column> parentCols = GetKeyColumns(table);
     if (parentCols != null)
 	{
 		foreach (Column pCol in parentCols)

@@ -78,6 +78,7 @@
     <None Include="Scripts\FullTextIndex.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
     </None>
+    <None Include="Scripts\Merge\TempFunctions.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Tmpi.Pyrene.Database.publish.xml" />
@@ -89,8 +90,6 @@
     <Build Include="Tables\GenPersonne.sql" />
     <Build Include="Tables\GenPersonneProfil.sql" />
     <Build Include="Tables\GenPersonneSignature.sql" />
-    <Build Include="Tables\GenSociete.sql" />
-    <Build Include="Tables\GenSecteur.sql" />
     <Build Include="Scripts\FullTextIndex.sql">
       <DependentUpon>Scripts\FullTextIndex.tt</DependentUpon>
     </Build>

@@ -18,15 +18,7 @@ CREATE INDEX [IX_GenPersonne_NomPersonne] ON [GenPersonne] ([NomPersonne]);
 
 GO
 
-CREATE INDEX [IX_GenSecteur_LibSecteur] ON [GenSecteur] ([LibSecteur]);
-
-GO
-
 CREATE INDEX [IX_GenService_LibService] ON [GenService] ([LibService]);
-
-GO
-
-CREATE INDEX [IX_GenSociete_LibSociete] ON [GenSociete] ([LibSociete]);
 
 GO
 

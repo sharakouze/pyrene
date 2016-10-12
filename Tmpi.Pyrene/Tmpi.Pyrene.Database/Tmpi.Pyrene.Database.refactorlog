@@ -1183,4 +1183,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="CodProfil" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="97d37151-3452-4c82-97b8-ee7760e4a960" ChangeDateTime="10/12/2016 15:22:56">
+    <Property Name="ElementName" Value="[dbo].[GenService].[CleSecteur]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GenService]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CleServiceParent" />
+  </Operation>
 </Operations>

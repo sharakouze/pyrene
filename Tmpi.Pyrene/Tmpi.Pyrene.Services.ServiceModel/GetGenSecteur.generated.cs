@@ -24,9 +24,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	public partial class GetGenSecteur : IReturn<GenSecteur>
 	{
         /// <summary>
-        /// Clé primaire.
+        /// Clé primaire. Immutable.
         /// </summary>
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
         public int CleSecteur { get; set; }
 
         /// <summary>

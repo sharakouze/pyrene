@@ -26,12 +26,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenFournBanque : IAuditable
 	{
 		/// <summary>
-		/// Clé primaire.
+		/// Clé primaire. Immutable.
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleBanque { get; set; }
 
 		/// <summary>
@@ -74,17 +74,17 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public bool EstDefaut { get; set; }
 
 		/// <summary>
-		/// Date de création.
+		/// Date de création. Immutable.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", DataType = SwaggerDataTypes.DateTime)]
+		[ApiMember(Description = "Date de création. Immutable.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification.
+		/// Date de dernière modification. Immutable.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerDataTypes.DateTime)]
+		[ApiMember(Description = "Date de dernière modification. Immutable.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime DatModif { get; set; }
 
 	}

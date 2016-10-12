@@ -16,23 +16,29 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Supprime une ressource <see cref="GenMandatMandataire" />.
+	/// Supprime une ressource <see cref="GenCompteurValeurMachin" />.
 	/// </summary>
-	[Route("/Mandat/{CleMandat}/Mandataire/{CleMandataire}", HttpVerbs.Delete, Summary = "Supprime une ressource GenMandatMandataire.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandatMandataire spécifiée est introuvable.")]
-	public partial class DeleteGenMandatMandataire : IReturnVoid
+	[Route("/Compteur/{CleCompteur}/Valeur/{CleValeur}/Machin/{CleMachin}", HttpVerbs.Delete, Summary = "Supprime une ressource GenCompteurValeurMachin.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeurMachin spécifiée est introuvable.")]
+	public partial class DeleteGenCompteurValeurMachin : IReturnVoid
 	{
         /// <summary>
         /// Clé primaire. Immutable.
         /// </summary>
 		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
-        public int CleMandat { get; set; }
+        public int CleCompteur { get; set; }
 
         /// <summary>
         /// Clé primaire. Immutable.
         /// </summary>
 		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
-        public int CleMandataire { get; set; }
+        public int CleValeur { get; set; }
+
+        /// <summary>
+        /// Clé primaire. Immutable.
+        /// </summary>
+		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+        public int CleMachin { get; set; }
 
 	}
 }

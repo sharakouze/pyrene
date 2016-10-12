@@ -16,24 +16,30 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Modifie partiellement une ressource <see cref="GenPersonneProfil" />.
+	/// Modifie partiellement une ressource <see cref="GenCompteurValeurMachin" />.
 	/// </summary>
-	[Route("/Personne/{ClePersonne}/Profil/{CleProfil}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenPersonneProfil.")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenPersonneProfil ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneProfil spécifiée est introuvable.")]
-	public partial class PatchGenPersonneProfil : IReturnVoid
+	[Route("/Compteur/{CleCompteur}/Valeur/{CleValeur}/Machin/{CleMachin}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenCompteurValeurMachin.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenCompteurValeurMachin ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeurMachin spécifiée est introuvable.")]
+	public partial class PatchGenCompteurValeurMachin : IReturnVoid
 	{
         /// <summary>
         /// Clé primaire. Immutable.
         /// </summary>
 		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
-        public int ClePersonne { get; set; }
+        public int CleCompteur { get; set; }
 
         /// <summary>
         /// Clé primaire. Immutable.
         /// </summary>
 		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
-        public int CleProfil { get; set; }
+        public int CleValeur { get; set; }
+
+        /// <summary>
+        /// Clé primaire. Immutable.
+        /// </summary>
+		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+        public int CleMachin { get; set; }
 
         /// <summary>
         /// Liste des modifications.

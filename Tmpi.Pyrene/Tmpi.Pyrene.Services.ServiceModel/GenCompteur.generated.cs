@@ -19,28 +19,28 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-	[CompositeIndex(true, nameof(TypCompteur), nameof(CleSociete), nameof(CleSecteur), nameof(CleService))]
+	[CompositeIndex(true, nameof(TypCompteur), nameof(CleSocieteProprietaire), nameof(CleSecteur), nameof(CleService))]
     [Route("/Compteur", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteur.")]
     [Route("/Compteur/{CleCompteur}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteur.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteur spécifiée est introuvable.")]
 	public partial class GenCompteur : IAuditable
 	{
 		/// <summary>
-		/// Clé primaire.
+		/// Clé primaire. Immutable.
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleCompteur { get; set; }
 
 		/// <summary>
-		/// Code unique.
+		/// Code. Unique.
 		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code. Unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodCompteur { get; set; }
 
 		/// <summary>
@@ -67,17 +67,17 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public bool EstActif { get; set; }
 
 		/// <summary>
-		/// Date de création.
+		/// Date de création. Immutable.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création.", DataType = SwaggerDataTypes.DateTime)]
+		[ApiMember(Description = "Date de création. Immutable.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification.
+		/// Date de dernière modification. Immutable.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de dernière modification.", DataType = SwaggerDataTypes.DateTime)]
+		[ApiMember(Description = "Date de dernière modification. Immutable.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime DatModif { get; set; }
 
 		/// <summary>
@@ -108,7 +108,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[References(typeof(GenSociete))]
 		[ApiMember(Description = "Société ayant accès au compteur, ou null pour toutes les sociétés.", DataType = SwaggerDataTypes.Int)]
-		public int? CleSociete { get; set; }
+		public int? CleSocieteProprietaire { get; set; }
 
 		/// <summary>
 		/// Secteur ayant accès au compteur, ou null pour tous les secteurs.

@@ -26,12 +26,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenCompteurValeur
 	{
 		/// <summary>
-		/// Clé primaire.
+		/// Clé primaire. Immutable.
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
-		[ApiMember(Description = "Clé primaire.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleValeur { get; set; }
 
 		/// <summary>
@@ -55,6 +55,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		[Required]
 		[ApiMember(Description = "Valeur du compteur.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ValCompteur { get; set; }
+
+		[Reference]
+		public List<GenCompteurValeurMachin> LstMachin { get; set; }
 
 	}
 }

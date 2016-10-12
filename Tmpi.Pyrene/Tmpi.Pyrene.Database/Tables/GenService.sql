@@ -8,7 +8,7 @@
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NOT NULL,
     [CodExterne] VARCHAR(100) NULL,
-    [CleSecteur] INT NOT NULL,
+    [CleServiceParent] INT NULL,
     [AdrRue] VARCHAR(200) NULL,
     [AdrCode] VARCHAR(10) NULL,
     [AdrCommune] VARCHAR(100) NULL,
@@ -18,19 +18,19 @@
     [NumEmail] VARCHAR(100) NULL,
     CONSTRAINT [PK_GenService] PRIMARY KEY ([CleService]),
     CONSTRAINT [UK_GenService_CodService] UNIQUE ([CodService]),
-    CONSTRAINT [FK_GenService_CleSecteur] FOREIGN KEY ([CleSecteur]) REFERENCES [GenSecteur] ([CleSecteur]) ON DELETE CASCADE,
+    CONSTRAINT [FK_GenService_CleServiceParent] FOREIGN KEY ([CleServiceParent]) REFERENCES [GenService] ([CleService]),
 );
 
 GO
 
-CREATE INDEX [IX_GenService_CleSecteur] ON [GenService] ([CleSecteur]);
+CREATE INDEX [IX_GenService_CleServiceParent] ON [GenService] ([CleServiceParent]);
 
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Secteur auquel appartient le service.',
+    @value = N'Service parent.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
     @level1name = N'GenService',
     @level2type = N'COLUMN',
-    @level2name = 'CleSecteur'
+    @level2name = 'CleServiceParent'
