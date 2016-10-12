@@ -24,9 +24,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	public partial class GetGenExercice : IReturn<GenExercice>
 	{
         /// <summary>
-        /// Clé primaire. Immutable.
+        /// CleExercice de la ressource à retourner.
         /// </summary>
-		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "CleExercice de la ressource à retourner.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
         public int CleExercice { get; set; }
 
         /// <summary>

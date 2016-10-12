@@ -24,9 +24,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	public partial class GetGenService : IReturn<GenService>
 	{
         /// <summary>
-        /// Clé primaire. Immutable.
+        /// CleService de la ressource à retourner.
         /// </summary>
-		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "CleService de la ressource à retourner.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
         public int CleService { get; set; }
 
         /// <summary>

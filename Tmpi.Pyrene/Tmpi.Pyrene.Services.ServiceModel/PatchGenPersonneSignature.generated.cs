@@ -24,15 +24,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	public partial class PatchGenPersonneSignature : IReturnVoid
 	{
         /// <summary>
-        /// Clé primaire. Immutable.
+        /// {0} de la ressource {1} à modifier.
         /// </summary>
-		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
-        public int ClePersonne { get; set; }
-
-        /// <summary>
-        /// Clé de l'utilisateur parent.
-        /// </summary>
-		[ApiMember(Description = "Clé de l'utilisateur parent.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
         public int ClePersonne { get; set; }
 
         /// <summary>

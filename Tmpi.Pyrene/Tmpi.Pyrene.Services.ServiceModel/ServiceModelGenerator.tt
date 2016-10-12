@@ -149,6 +149,10 @@
 
     foreach (Table table in allTables)
     {
+		/****************/
+		/** BEGIN POCO **/
+		/****************/
+
         manager.StartNewFile(table.ClassName + ".generated.cs");
 
 		string pocoNamespace = string.Format(NamespacePocos, fileNamespace);
@@ -453,6 +457,8 @@ namespace <#= pocoNamespace #>
 
 		string msgNamespace = string.Format(NamespaceMessages, fileNamespace);
 
+		ColumnComparer colComparer = new ColumnComparer();
+
 		/*******************/
 		/** BEGIN GETBYID **/
 		/*******************/
@@ -501,26 +507,29 @@ namespace <#= msgNamespace #>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= getTableClassName #> : IReturn<<#= table.ClassName #>>
 	{
 <#
-		foreach (Column phCol in lstPlaceholderCols)
+		foreach (Column phCol in lstPlaceholderCols.Distinct(colComparer))
 		{
-			if (!string.IsNullOrWhiteSpace(phCol.Description))
+			Column newCol = phCol.Clone();
+			newCol.Description = string.Format("{0} de la ressource à retourner.", newCol.PropertyName);
+
+			if (!string.IsNullOrWhiteSpace(newCol.Description))
             {
 #>
         /// <summary>
-        /// <#= phCol.Description #>
+        /// <#= newCol.Description #>
         /// </summary>
 <#
             }
 			if (AddApiAttributes)
             {
-				List<string> lstApiMemberProps = GetApiMemberProps(phCol, allEnums, lstInterfaces);
+				List<string> lstApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
 				lstApiMemberProps.Add("ParameterType = SwaggerParamTypes.Path");
 #>
 		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
 <#
             }
 #>
-        public <#= phCol.ProperPropertyType #> <#= phCol.PropertyName #> { get; set; }
+        public <#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
 
 <#
 		}
@@ -589,26 +598,29 @@ namespace <#= msgNamespace #>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= deleteTableClassName #> : IReturnVoid
 	{
 <#
-		foreach (Column phCol in lstPlaceholderCols)
+		foreach (Column phCol in lstPlaceholderCols.Distinct(colComparer))
 		{
-			if (!string.IsNullOrWhiteSpace(phCol.Description))
+			Column newCol = phCol.Clone();
+			newCol.Description = "{0} de la ressource {1} à supprimer.";
+
+			if (!string.IsNullOrWhiteSpace(newCol.Description))
             {
 #>
         /// <summary>
-        /// <#= phCol.Description #>
+        /// <#= newCol.Description #>
         /// </summary>
 <#
             }
 			if (AddApiAttributes)
             {
-				List<string> lstApiMemberProps = GetApiMemberProps(phCol, allEnums, lstInterfaces);
+				List<string> lstApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
 				lstApiMemberProps.Add("ParameterType = SwaggerParamTypes.Path");
 #>
 		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
 <#
             }
 #>
-        public <#= phCol.ProperPropertyType #> <#= phCol.PropertyName #> { get; set; }
+        public <#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
 
 <#
 		}
@@ -667,26 +679,29 @@ namespace <#= msgNamespace #>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= patchTableClassName #> : IReturnVoid
 	{
 <#
-		foreach (Column phCol in lstPlaceholderCols)
+		foreach (Column phCol in lstPlaceholderCols.Distinct(colComparer))
 		{
-			if (!string.IsNullOrWhiteSpace(phCol.Description))
+			Column newCol = phCol.Clone();
+			newCol.Description = "{0} de la ressource {1} à modifier.";
+
+			if (!string.IsNullOrWhiteSpace(newCol.Description))
             {
 #>
         /// <summary>
-        /// <#= phCol.Description #>
+        /// <#= newCol.Description #>
         /// </summary>
 <#
             }
 			if (AddApiAttributes)
             {
-				List<string> lstApiMemberProps = GetApiMemberProps(phCol, allEnums, lstInterfaces);
+				List<string> lstApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
 				lstApiMemberProps.Add("ParameterType = SwaggerParamTypes.Path");
 #>
 		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
 <#
             }
 #>
-        public <#= phCol.ProperPropertyType #> <#= phCol.PropertyName #> { get; set; }
+        public <#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
 
 <#
 		}
@@ -1078,5 +1093,18 @@ private string GetConnectionString(Project project, string connectionStringName,
 	}
 
     return connStr;
+}
+
+class ColumnComparer : IEqualityComparer<Column>
+{
+	public bool Equals(Column col1, Column col2)
+    {
+		return (col1.PropertyName == col2.PropertyName);
+    }
+
+	public int GetHashCode(Column col)
+    {
+        return col.PropertyName.GetHashCode();
+    }
 }
 #>

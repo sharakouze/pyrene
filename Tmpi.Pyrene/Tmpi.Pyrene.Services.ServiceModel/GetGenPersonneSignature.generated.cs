@@ -24,15 +24,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	public partial class GetGenPersonneSignature : IReturn<GenPersonneSignature>
 	{
         /// <summary>
-        /// Clé primaire. Immutable.
+        /// ClePersonne de la ressource à retourner.
         /// </summary>
-		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
-        public int ClePersonne { get; set; }
-
-        /// <summary>
-        /// Clé de l'utilisateur parent.
-        /// </summary>
-		[ApiMember(Description = "Clé de l'utilisateur parent.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "ClePersonne de la ressource à retourner.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
         public int ClePersonne { get; set; }
 
         /// <summary>

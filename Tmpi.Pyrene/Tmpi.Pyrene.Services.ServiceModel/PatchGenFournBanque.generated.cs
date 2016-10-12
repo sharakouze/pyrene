@@ -24,15 +24,15 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	public partial class PatchGenFournBanque : IReturnVoid
 	{
         /// <summary>
-        /// Clé primaire. Immutable.
+        /// {0} de la ressource {1} à modifier.
         /// </summary>
-		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
         public int CleFourn { get; set; }
 
         /// <summary>
-        /// Clé primaire. Immutable.
+        /// {0} de la ressource {1} à modifier.
         /// </summary>
-		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
         public int CleBanque { get; set; }
 
         /// <summary>
