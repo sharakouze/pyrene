@@ -43,13 +43,13 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenService>().Where<GenService>(x => x.CodService == request.CodService).Select(request.Fields);
+            var q = Db.From<GenService>().Where<GenService>(x => x.CleService == request.CleService).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenService), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenService), "request.Id"));
 			}
 
 			return entity;

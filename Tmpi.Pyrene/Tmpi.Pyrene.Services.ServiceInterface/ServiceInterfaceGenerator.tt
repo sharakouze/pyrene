@@ -193,8 +193,6 @@ namespace <#= fileNamespace #>
             }
 			else if (requestName.StartsWith("Get"))
             {
-				List<string> parts = GetRouteParts(requestClass);
-
 				var entityName = requestName.Substring(3);
 #>
 		/// <summary>
@@ -218,8 +216,10 @@ namespace <#= fileNamespace #>
             }
 
 <#
+				List<string> parts = GetRouteParts(requestClass);
+				
 				List<string> expr = new List<string>();
-				string currentTable = "";
+				string currentTable = entityName.Substring(0, 3);
 				foreach (string str in parts)
                 {
 					if (str.StartsWith("{") && str.EndsWith("}"))
@@ -245,7 +245,7 @@ namespace <#= fileNamespace #>
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= entityName #>), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= entityName #>), "request.Id"));
 			}
 
 			return entity;

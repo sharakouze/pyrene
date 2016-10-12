@@ -43,13 +43,13 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenExercice>().Where<GenExercice>(x => x.CodExercice == request.CodExercice).Select(request.Fields);
+            var q = Db.From<GenExercice>().Where<GenExercice>(x => x.CleExercice == request.CleExercice).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenExercice), "request.Id"));
 			}
 
 			return entity;

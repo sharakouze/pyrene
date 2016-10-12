@@ -43,13 +43,13 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenMandat>().Where<GenMandat>(x => x.CodMandat == request.CodMandat).Select(request.Fields);
+            var q = Db.From<GenMandat>().Where<GenMandat>(x => x.CleMandat == request.CleMandat).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandat), "request.Id"));
 			}
 
 			return entity;
@@ -75,13 +75,13 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenMandatMandataire>().Join<GenMandat>().Where<GenMandat>(x => x.CodMandat == request.CodMandat).Where<GenMandatMandataire>(x => x.ClePersonne == request.ClePersonne).Where<GenMandatMandataire>(x => x.CleSociete == request.CleSociete).Where<GenMandatMandataire>(x => x.CleSecteur == request.CleSecteur).Where<GenMandatMandataire>(x => x.CleService == request.CleService).Select(request.Fields);
+            var q = Db.From<GenMandatMandataire>().Join<GenMandat>().Where<GenMandat>(x => x.CleMandat == request.CleMandat).Where<GenMandatMandataire>(x => x.CleMandataire == request.CleMandataire).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), "request.Id"));
 			}
 
 			return entity;

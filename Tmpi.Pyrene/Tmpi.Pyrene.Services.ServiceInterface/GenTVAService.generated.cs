@@ -43,13 +43,13 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
                 }
             }
 
-            var q = Db.From<GenTVA>().Where<GenTVA>(x => x.CodTVA == request.CodTVA).Select(request.Fields);
+            var q = Db.From<GenTVA>().Where<GenTVA>(x => x.CleTVA == request.CleTVA).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenTVA), "request.Id"));
 			}
 
 			return entity;

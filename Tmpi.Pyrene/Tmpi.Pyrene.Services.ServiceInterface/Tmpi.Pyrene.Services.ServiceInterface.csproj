@@ -85,13 +85,7 @@
     <Compile Include="GenPersonneService.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="GenSecteurService.generated.cs">
-      <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="GenServiceService.generated.cs">
-      <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GenSocieteService.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GenTVAService.generated.cs">
