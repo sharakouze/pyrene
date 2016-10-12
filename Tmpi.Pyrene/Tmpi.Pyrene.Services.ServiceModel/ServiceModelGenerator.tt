@@ -246,7 +246,8 @@ namespace <#= pocoNamespace #>
         {
             if (!postExcluded)
             {
-				string strRoute = BuildStrRoutePath(lstPlaceholderCols, false);
+				bool keyIsReadonly = lstPlaceholderCols.Where(c => c.ParentTable == table).Any(c => c.IsAutoIncrement || c.IsComputed);
+				string strRoute = BuildStrRoutePath(lstPlaceholderCols, !keyIsReadonly);
 #>
     [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une ressource {0}.", resourceName) #>")]
 <#
@@ -423,7 +424,15 @@ namespace <#= pocoNamespace #>
             foreach (var obj in q)
             {
                 string propType = obj.Table.ClassName;
-                string propName = obj.Table.ClassName.Replace(table.ClassName, "");
+                string propName = "";
+				if (obj.Table.ClassName == table.ClassName)
+                {
+					propName = table.ClassName.Remove(0, 3);
+                }
+				else
+                {
+					propName = obj.Table.ClassName.Replace(table.ClassName, "");
+                }
                 if (!obj.IsUnique)
                 {
                     propType = "List<" + propType + ">";
@@ -979,23 +988,7 @@ private List<Column> GetRouteColumns(Table table, bool recurseParents)
 	List<Column> parentCols = GetKeyColumns(table);
     if (parentCols != null)
 	{
-		foreach (Column pCol in parentCols)
-        {
-			bool add = true;
-			// on ajoute pas la colonne si elle est ajouté précedement
-			FKey fkCol = table.ForeignKeys.FirstOrDefault(f => f.FromColumns.Contains(pCol));
-			if (fkCol != null)
-            {
-				if (lstCols.Select(c => c.ParentTable).Any(t => t == fkCol.ReferencedTable))
-                {
-					add = false;
-                }
-            }
-			if (add)
-            {
-				lstCols.Add(pCol);
-            }
-        }
+		lstCols.AddRange(parentCols);
     }
 
 	return lstCols;
@@ -1023,10 +1016,14 @@ private string BuildStrRoutePath(List<Column> lstCols, bool keepEnd = true)
 			currentTable = phCol.ParentTable.ClassName;
         }
 
-		if (keepEnd || (phCol.ParentTable != tbl))
+		string strCol = "{" + phCol.PropertyName + "}";
+		if (!strRoute.Contains(strCol))
         {
-			strRoute += "/";
-			strRoute += "{" + phCol.PropertyName + "}";
+			if (keepEnd || (phCol.ParentTable != tbl))
+			{
+				strRoute += "/";
+				strRoute += strCol;
+			}
         }
     }
 

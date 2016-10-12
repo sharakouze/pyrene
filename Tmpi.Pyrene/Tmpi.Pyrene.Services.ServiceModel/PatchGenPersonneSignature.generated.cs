@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Modifie partiellement une ressource <see cref="GenPersonneSignature" />.
 	/// </summary>
-	[Route("/Personne/{ClePersonne}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenPersonneSignature.")]
+	[Route("/Personne/{ClePersonne}/Signature", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenPersonneSignature.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenPersonneSignature ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneSignature spécifiée est introuvable.")]
 	public partial class PatchGenPersonneSignature : IReturnVoid
@@ -27,6 +27,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// Clé primaire. Immutable.
         /// </summary>
 		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+        public int ClePersonne { get; set; }
+
+        /// <summary>
+        /// Clé de l'utilisateur parent.
+        /// </summary>
+		[ApiMember(Description = "Clé de l'utilisateur parent.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
         public int ClePersonne { get; set; }
 
         /// <summary>

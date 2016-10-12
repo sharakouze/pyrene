@@ -144,7 +144,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public string NumEmail { get; set; }
 
 		[Reference]
-		public List<GenService> Lst { get; set; }
+		public List<GenService> LstService { get; set; }
 
 	}
 }

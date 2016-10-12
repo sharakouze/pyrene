@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Supprime une ressource <see cref="GenPersonneSignature" />.
 	/// </summary>
-	[Route("/Personne/{ClePersonne}", HttpVerbs.Delete, Summary = "Supprime une ressource GenPersonneSignature.")]
+	[Route("/Personne/{ClePersonne}/Signature", HttpVerbs.Delete, Summary = "Supprime une ressource GenPersonneSignature.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneSignature spécifiée est introuvable.")]
 	public partial class DeleteGenPersonneSignature : IReturnVoid
 	{
@@ -26,6 +26,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// Clé primaire. Immutable.
         /// </summary>
 		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+        public int ClePersonne { get; set; }
+
+        /// <summary>
+        /// Clé de l'utilisateur parent.
+        /// </summary>
+		[ApiMember(Description = "Clé de l'utilisateur parent.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
         public int ClePersonne { get; set; }
 
 	}
