@@ -250,4 +250,6 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
-/Tmpi.Pyrene/Tmpi.Pyrene.Database/Tmpi.Pyrene.Database.jfm
+
+# SSDT
+*.jfm
