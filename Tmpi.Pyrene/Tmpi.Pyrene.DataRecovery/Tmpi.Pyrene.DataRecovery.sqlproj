@@ -4,17 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Name>Tmpi.Pyrene.Database</Name>
+    <Name>Tmpi.Pyrene.DataRecovery</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
-    <ProjectGuid>{e36c2f27-7cb3-4daf-bd1d-05e4a5172e5d}</ProjectGuid>
+    <ProjectGuid>{502cc894-6ea8-4633-b637-27360403b704}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql100DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
-    <RootNamespace>Tmpi.Pyrene.Database</RootNamespace>
-    <AssemblyName>Tmpi.Pyrene.Database</AssemblyName>
-    <ModelCollation>1033,CI</ModelCollation>
+    <RootNamespace>Tmpi.Pyrene.Data</RootNamespace>
+    <AssemblyName>Tmpi.Pyrene.Data</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -24,7 +24,6 @@
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
     <GenerateCreateScript>True</GenerateCreateScript>
-    <DefaultCollation>SQL_Latin1_General_CP1_CI_AI</DefaultCollation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -36,7 +35,6 @@
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <SqlTargetName>Tmpi_Pyrene_Database</SqlTargetName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -49,7 +47,6 @@
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <SqlTargetName>Tmpi_Pyrene_Database</SqlTargetName>
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
@@ -61,40 +58,19 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="Scripts" />
-    <Folder Include="Tables" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Tables\GenExercice.sql" />
-    <Build Include="Tables\GenTVA.sql" />
-    <Build Include="Tables\GenFourn.sql" />
-    <Build Include="Tables\GenFournBanque.sql" />
-    <Build Include="Tables\GenFournContact.sql" />
-    <Build Include="Tables\GenService.sql" />
-    <Build Include="Tables\GenCompteur.sql" />
-    <Build Include="Scripts\TextIndex.sql" />
-    <None Include="Scripts\FullTextIndex.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-    </None>
+    <ProjectReference Include="..\Tmpi.Pyrene.Database\Tmpi.Pyrene.Database.sqlproj">
+      <Name>Tmpi.Pyrene.Database</Name>
+      <Project>{e36c2f27-7cb3-4daf-bd1d-05e4a5172e5d}</Project>
+      <Private>True</Private>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Tmpi.Pyrene.Database.publish.xml" />
+    <PostDeploy Include="Script_0_0.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Tables\GenCompteurValeur.sql" />
-    <Build Include="Tables\GenMandat.sql" />
-    <Build Include="Tables\GenMandatMandataire.sql" />
-    <Build Include="Tables\GenPersonne.sql" />
-    <Build Include="Tables\GenPersonneProfil.sql" />
-    <Build Include="Tables\GenPersonneSignature.sql" />
-    <Build Include="Scripts\FullTextIndex.sql">
-      <DependentUpon>Scripts\FullTextIndex.tt</DependentUpon>
-    </Build>
-  </ItemGroup>
-  <ItemGroup>
-    <RefactorLog Include="Tmpi.Pyrene.Database.refactorlog" />
-  </ItemGroup>
-  <ItemGroup>
-    <PostDeploy Include="Scripts\Script.PostDeployment1.sql" />
+    <None Include="TempFunctions.sql" />
   </ItemGroup>
 </Project>

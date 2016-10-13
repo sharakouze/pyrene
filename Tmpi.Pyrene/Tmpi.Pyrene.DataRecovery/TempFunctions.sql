@@ -59,8 +59,7 @@ returns @strings table
 	column_value varchar(8000)
 )
 as
-	-- Retourne une table contenant les sous-chaînes de "@text" qui sont délimitées par "@separator"
-	--
+	-- Retourne une table contenant les sous-chaînes de @text qui sont délimitées par @separator
 BEGIN
 	declare @index int
 	set @index = -1
@@ -81,18 +80,17 @@ BEGIN
 		else
 			set @text = right(@text, (len(@text) - @index))
 	end
-
-	return
+RETURN
 END;
 
 GO
 
-if (OBJECT_ID('[dbo].[TMP_SPLIT]')) is not null
+if (OBJECT_ID('[dbo].[TMP_SOC_TO_SERVICE]')) is not null
 BEGIN
-	drop function [dbo].[TMP_PrfService];
+	drop function [dbo].[TMP_SOC_TO_SERVICE];
 END;
 GO
-create function [dbo].[TMP_PrfService]
+create function [dbo].[TMP_SOC_TO_SERVICE]
 (
 	@CleSociete int,
 	@CleSecteur int,
@@ -100,6 +98,7 @@ create function [dbo].[TMP_PrfService]
 )
 returns int
 as
+	-- Transforme un triplet société/secteur/service avec la nouvelle notation service
 BEGIN
 	set @CleSociete=nullif(@CleSociete,0)
 	set @CleSecteur=nullif(@CleSecteur,0)
@@ -118,7 +117,7 @@ BEGIN
 	else begin
 		return @CleService+20000
 	end
-
-	return null
+return null
 END;
 
+GO

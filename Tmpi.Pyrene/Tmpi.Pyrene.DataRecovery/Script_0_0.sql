@@ -1,6 +1,6 @@
 ﻿/* REMARQUES :
 - Sociétes et Secteurs :
-Fusion avec GenService, qui permet une hiérarchie récursive.
+Fusion avec GenService, qui permet une arborescence récursive.
 
 - Profils d'utilisateurs :
 Suppression de CleSite. (a quoi sert Gen_SocSite ?)
@@ -27,7 +27,7 @@ SET NOCOUNT ON;
 
 GO
 
-:setvar SourceSchemaName "[LASAT_PYRENE2].[SA_TMPI]"
+:setvar SourceSchemaName "[CG66_PYRENE_DLB].[SA_TMPI]"
 
 GO
 
@@ -35,8 +35,8 @@ GO
 -- CONSTANTES POUR LA REPRISE
 --
 
-declare @CleSecteurBase int = 1000;
-declare @CleServiceBase int = 20000;
+:setvar CleSecteurBase "1"
+:setvar CleServiceBase "2"
 
 GO
 
@@ -48,19 +48,18 @@ BEGIN
 	declare @MaxCleSociete int;
 	declare @MaxCleSecteur int;
 	
-	select @maxCleSociete=max(CleSociete) from $(SourceSchemaName).[Gen_SocSociete];
-	IF (@MaxCleSociete>=@CleSecteurBase) BEGIN
-		PRINT 'ERREUR: ';
+	select @MaxCleSociete=max(CleSociete) from $(SourceSchemaName).[Gen_SocSociete];
+	IF (@MaxCleSociete>=$(CleSecteurBase)) BEGIN
+		PRINT 'ERREUR: La valeur maximum de [Gen_SocSociete].[CleSociete] est trop elevée. Changez la valeur de la constante CleSecteurBase pour continuer la reprise.';
 		RETURN;
 	END;
 
 	select @MaxCleSecteur=max(CleSecteur) from $(SourceSchemaName).[Gen_SocSecteur];
-	IF (@MaxCleSecteur>=20000) BEGIN
-		PRINT 'ERREUR: ';
+	IF (@MaxCleSecteur>=$(CleServiceBase)) BEGIN
+		PRINT 'ERREUR: La valeur maximum de [Gen_SocSecteur].[CleSecteur] est trop elevée. Changez la valeur de la constante CleServiceBase pour continuer la reprise.';
 		RETURN;
 	END;
 END;
-
 
 GO
 
@@ -83,7 +82,7 @@ BEGIN TRY
 
 	merge into [GenService] as target
 	using (
-		select S.CleSociete as CleService,
+		select [dbo].[TMP_SOC_TO_SERVICE](S.CleSociete, null, null) as CleService,
 			ltrim(rtrim(S.CodSociete)) as CodService,
 			ltrim(rtrim(S.LibSociete)) as LibService,
 			ltrim(rtrim(S.TxtSociete)) as TxtService,
@@ -102,7 +101,7 @@ BEGIN TRY
 		from $(SourceSchemaName).[Gen_SocSociete] S left join $(SourceSchemaName).[Gen_Pays] P on S.ClePays=P.ClePays
 		where S.CleSociete>0
 		union all
-		select CleSecteur+@CleSecteurBase as CleService,
+		select [dbo].[TMP_SOC_TO_SERVICE](null, CleSecteur, null) as CleService,
 			ltrim(rtrim(CodSecteur)) as CodService,
 			ltrim(rtrim(LibSecteur)) as LibService,
 			ltrim(rtrim(TxtSecteur)) as TxtService,
@@ -110,7 +109,7 @@ BEGIN TRY
 			DatCreation,
 			coalesce(DatModif,DatCreation) as DatModif,
 			CleExterne as CodExterne,
-			nullif(CleSociete,0) as CleServiceParent,
+			[dbo].[TMP_SOC_TO_SERVICE](CleSociete, null, null) as CleServiceParent,
 			AdrRue,
 			AdrCode,
 			AdrVille as AdrCommune,
@@ -121,7 +120,7 @@ BEGIN TRY
 		from $(SourceSchemaName).[Gen_SocSecteur]
 		where CleSecteur>0
 		union all
-		select CleService+@CleServiceBase as CleService,
+		select [dbo].[TMP_SOC_TO_SERVICE](null, null, CleService) as CleService,
 			ltrim(rtrim(CodService)) as CodService,
 			ltrim(rtrim(LibService)) as LibService,
 			ltrim(rtrim(TxtService)) as TxtService,
@@ -129,7 +128,7 @@ BEGIN TRY
 			DatCreation,
 			coalesce(DatModif,DatCreation) as DatModif,
 			CleExterne as CodExterne,
-			nullif(CleSecteur,0)+@CleSecteurBase as CleServiceParent,
+			[dbo].[TMP_SOC_TO_SERVICE](null, CleSecteur, null) as CleServiceParent,
 			AdrRue,
 			AdrCode,
 			AdrVille as AdrCommune,
@@ -154,7 +153,9 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenService] OFF;
-	THROW;
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
 END CATCH;
 
 GO
@@ -200,7 +201,9 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenPersonne] OFF;
-	THROW;
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
 END CATCH;
 
 BEGIN TRY
@@ -229,7 +232,9 @@ BEGIN TRY
 	COMMIT;
 END TRY
 BEGIN CATCH
-	THROW;
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
 END CATCH;
 
 BEGIN TRY
@@ -242,7 +247,7 @@ BEGIN TRY
 		select PRF.ClePersonneProfil as CleProfil,
 			PRF.ClePersonne,
 			PRF.CodProfil,
-			[dbo].[PrfService](PRF.CleSociete, PRF.CleSecteur, PRF.CleService) as CleService,
+			[dbo].[TMP_SOC_TO_SERVICE](PRF.CleSociete, PRF.CleSecteur, PRF.CleService) as CleService,
 			P.DatCreation,
 			coalesce(P.DatModif,P.DatCreation) as DatModif
 		from $(SourceSchemaName).[Gen_SocPersonneProfil] PRF inner join $(SourceSchemaName).[Gen_SocPersonne] P on PRF.ClePersonne=P.ClePersonne
@@ -260,7 +265,9 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenPersonneProfil] OFF;
-	THROW;
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
 END CATCH;
 
 GO
@@ -286,7 +293,7 @@ BEGIN TRY
 			N.CleExterne as CodExterne,
 			N.TypCompteur, 
 			C.TypPeriodicite, 
-			[dbo].[PrfService](null, coalesce(N.CleSecteur,C.CleSecteur), coalesce(N.CleService,C.CleService)) as CleService,
+			[dbo].[TMP_SOC_TO_SERVICE](null, coalesce(N.CleSecteur,C.CleSecteur), coalesce(N.CleService,C.CleService)) as CleService,
 			isnull(N.ValPrefixe1,'')
 				+isnull('{date:'+N.ValDate1+'}','')
 				+isnull(N.ValPrefixe2,'')
@@ -311,7 +318,9 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenCompteur] OFF;
-	THROW;
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
 END CATCH;
 
 BEGIN TRY
@@ -334,7 +343,9 @@ BEGIN TRY
 	COMMIT;
 END TRY
 BEGIN CATCH
-	THROW;
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
 END CATCH;
 
 GO
@@ -379,7 +390,9 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenMandat] OFF;
-	THROW;
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
 END CATCH;
 
 BEGIN TRY
@@ -392,7 +405,7 @@ BEGIN TRY
 		select CleMdtMandataire as CleMandataire,
 			CleMandat,
 			CleMandataire as ClePersonne,
-			[dbo].[PrfService](CleSociete, CleSecteur, CleService) as CleService,
+			[dbo].[TMP_SOC_TO_SERVICE](CleSociete, CleSecteur, CleService) as CleService,
 			EstSuspendu
 		from $(SourceSchemaName).[GenP_MdtMandataire]
 		where CleMandat>0
@@ -409,7 +422,9 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenMandatMandataire] OFF;
-	THROW;
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
 END CATCH;
 
 GO
@@ -449,7 +464,9 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenTVA] OFF;
-	THROW;
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
 END CATCH;
 
 GO
@@ -512,7 +529,9 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenFourn] OFF;
-	THROW;
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
 END CATCH;
 
 BEGIN TRY
@@ -642,7 +661,9 @@ BEGIN TRY
 	COMMIT;
 END TRY
 BEGIN CATCH
-	THROW;
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
 END CATCH;
 
 BEGIN TRY
@@ -681,7 +702,9 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenFournBanque] OFF;
-	THROW;
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
 END CATCH;
 
 GO
@@ -729,7 +752,9 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenExercice] OFF;
-	THROW;
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
 END CATCH;
 
 GO
@@ -738,5 +763,9 @@ GO
 
 -- NETTOYAGE
 
-DROP FUNCTION [dbo].[TEMP_BBAN_TO_IBAN];
-DROP FUNCTION [dbo].[TEMP_SPLIT];
+DROP FUNCTION [dbo].[TMP_BBAN_TO_IBAN];
+GO
+DROP FUNCTION [dbo].[TMP_SPLIT];
+GO
+DROP FUNCTION [dbo].[TMP_SOC_TO_SERVICE];
+GO
