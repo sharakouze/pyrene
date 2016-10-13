@@ -7,7 +7,7 @@
     <Name>Tmpi.Pyrene.DataRecovery</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
-    <ProjectGuid>{502cc894-6ea8-4633-b637-27360403b704}</ProjectGuid>
+    <ProjectGuid>{1d5bdf4c-333c-447c-add1-2ff8156ac707}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql100DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
@@ -24,7 +24,6 @@
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
     <GenerateCreateScript>True</GenerateCreateScript>
-    <GenerateSqlClrDdl>True</GenerateSqlClrDdl>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -63,17 +62,10 @@
     <Folder Include="Properties" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Tmpi.Pyrene.Database\Tmpi.Pyrene.Database.sqlproj">
-      <Name>Tmpi.Pyrene.Database</Name>
-      <Project>{e36c2f27-7cb3-4daf-bd1d-05e4a5172e5d}</Project>
-      <Private>True</Private>
-      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
-    </ProjectReference>
+    <PostDeploy Include="Script.PostDeployment1.sql" />
   </ItemGroup>
   <ItemGroup>
-    <PostDeploy Include="Script_0_0.sql" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Script1.sql" />
     <None Include="TempFunctions.sql" />
   </ItemGroup>
 </Project>

@@ -77,6 +77,7 @@ DECLARE @ErState INT;
 
 GO
 
+
 --
 -- SOCIETES, SECTEURS et SERVICES
 --
