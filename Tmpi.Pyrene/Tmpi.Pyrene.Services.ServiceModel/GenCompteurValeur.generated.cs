@@ -21,25 +21,25 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleCompteur), nameof(ValPeriode))]
     [Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteurValeur.")]
-    [Route("/Compteur/{CleCompteur}/Valeur/{CleValeur}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeur.")]
+    [Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeur.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeur spécifiée est introuvable.")]
 	public partial class GenCompteurValeur
 	{
 		/// <summary>
-		/// Clé primaire. Immutable.
+		/// Identifiant unique. Clé primaire. Immutable.
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
-		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique. Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
 		public int CleValeur { get; set; }
 
 		/// <summary>
-		/// Clé du compteur parent.
+		/// Identifiant unique du compteur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenCompteur), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Clé du compteur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Identifiant unique du compteur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique du compteur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
 		public int CleCompteur { get; set; }
 
 		/// <summary>

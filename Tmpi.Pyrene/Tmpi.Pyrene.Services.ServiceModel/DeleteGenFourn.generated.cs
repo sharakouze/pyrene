@@ -20,12 +20,12 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
 	[Route("/Fourn/{CleFourn}", HttpVerbs.Delete, Summary = "Supprime une ressource GenFourn.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFourn spécifiée est introuvable.")]
-	public partial class DeleteGenFourn : IReturnVoid
+	public partial class DeleteGenFourn : IReturnVoid, IDelete
 	{
         /// <summary>
-        /// {0} de la ressource {1} à supprimer.
+        /// Identifiant unique de la ressource à supprimer.
         /// </summary>
-		[ApiMember(Description = "{0} de la ressource {1} à supprimer.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de la ressource à supprimer.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleFourn { get; set; }
 
 	}

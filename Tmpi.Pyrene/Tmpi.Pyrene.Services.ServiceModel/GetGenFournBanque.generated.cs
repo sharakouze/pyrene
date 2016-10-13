@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource <see cref="GenFournBanque" />.
 	/// </summary>
-	[Route("/Fourn/{CleFourn}/Banque/{CleBanque}", HttpVerbs.Get, Summary = "Retourne une ressource GenFournBanque.")]
+	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Get, Summary = "Retourne une ressource GenFournBanque.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenFournBanque ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournBanque spécifiée est introuvable.")]
 	public partial class GetGenFournBanque : IReturn<GenFournBanque>
@@ -26,13 +26,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// <summary>
         /// CleFourn de la ressource à retourner.
         /// </summary>
-		[ApiMember(Description = "CleFourn de la ressource à retourner.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "CleFourn de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleFourn { get; set; }
 
         /// <summary>
         /// CleBanque de la ressource à retourner.
         /// </summary>
-		[ApiMember(Description = "CleBanque de la ressource à retourner.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "CleBanque de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleBanque { get; set; }
 
         /// <summary>

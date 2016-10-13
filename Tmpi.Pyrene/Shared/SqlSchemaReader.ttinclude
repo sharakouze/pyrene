@@ -26,6 +26,11 @@ public class Table
 	public List<Column> Columns { get; set; }
 	public List<TableIndex> Indices { get; set; }
 	public List<FKey> ForeignKeys { get; set; }
+
+	public override string ToString()
+    {
+		return Schema + "." + Name;
+    }
 }
 
 public class Tables : List<Table>
@@ -89,6 +94,11 @@ public class Column
 		};
 		return newCol;
     }
+	public override string ToString()
+    {
+		return ParentTable.ToString() + "." + Name;
+    }
+
 	public bool IsPKey
     {
 		get

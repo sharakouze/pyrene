@@ -24,35 +24,18 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenTVAService : Service
 	{
 		/// <summary>
-		/// Retourne la ressource <see cref="GenTVA" /> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="GenTVA" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenTVA" /> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public GenTVA Get(GetGenTVA request)
+		public void Delete(DeleteGenTVA request)
 		{
-            if (!request.Fields.IsNullOrEmpty())
-            {
-                var errFields = ModelDefinitionHelper.GetUndefinedFields<GenTVA>(request.Fields);
-                if (errFields.Any())
-                {
-                    string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                    throw new ArgumentException(
-                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenTVA), str));
-                }
-            }
-
-            var q = Db.From<GenTVA>().Where<GenTVA>(x => x.CleTVA == request.CleTVA).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
+			int count = Db.DeleteById<GenTVA>(request.CleTVA);
+			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenTVA), "request.Id"));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
 			}
-
-			return entity;
 		}
 
 	}

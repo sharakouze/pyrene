@@ -19,6 +19,7 @@
     - Commentaires sur les [References] ?
     - Ajout de propriétés [References] pour les FK ?
 	- ResourceName
+	- Verb interface markers (Ipost, IGet...)
 	****************/
 
 	/*********************/
@@ -81,7 +82,7 @@
     Regex PutTableFilterExclude = null;
     Regex PostTableFilterExclude = null;
 	Regex GetTableFilterExclude = null;
-	Regex DeleteTableFilterExclude = null;
+	Regex DeleteTableFilterExclude = null; //new Regex("GenCompteurValeur", RegexOptions.IgnoreCase);
 	Regex PatchTableFilterExclude = null;
 	Regex AutocompleteTableFilterExclude = null;
 
@@ -248,12 +249,12 @@ namespace <#= pocoNamespace #>
         bool putExcluded = PutTableFilterExclude != null && PutTableFilterExclude.IsMatch(table.ClassName);
         bool postExcluded = PostTableFilterExclude != null && PostTableFilterExclude.IsMatch(table.ClassName);
 
-        if (AddRouteAttributes && (!putExcluded || !postExcluded))
+        if (AddRouteAttributes)
         {
             if (!postExcluded)
             {
 				bool keyIsReadonly = lstPlaceholderCols.Where(c => c.ParentTable == table).Any(c => c.IsAutoIncrement || c.IsComputed);
-				string strRoute = BuildStrRoutePath(lstPlaceholderCols, !keyIsReadonly);
+				string strRoute = BuildStrRoutePath(lstPlaceholderCols, !keyIsReadonly, false);
 #>
     [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une ressource {0}.", resourceName) #>")]
 <#
@@ -369,35 +370,45 @@ namespace <#= pocoNamespace #>
 
 			if (AddApiAttributes)
             {
-				List<string> lstApiMemberProps = GetApiMemberProps(col, allEnums, lstInterfaces);
-				if (lstApiMemberProps.Any())
+				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(col, allEnums, lstInterfaces);
+				if (dicApiMemberProps != null)
                 {
-					if (col.IsPKey && (!putExcluded || !postExcluded))
+					if (lstPlaceholderCols.Any(c => c.PropertyName == col.PropertyName))
 					{
-						if (!postExcluded)
+						dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
+
+						if (col.IsPKey)
 						{
+							if (!putExcluded)
+							{
 #>
-		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, Verb = HttpVerbs.Post)]
+		[ApiMember(<#= string.Join(", ", dicApiMemberProps.Select(kvp => kvp.Key + " = " + kvp.Value)) #>, Verb = HttpVerbs.Put)]
 <#
+							}
 						}
-						if (!putExcluded)
+						else
 						{
+							if (!putExcluded)
+							{
 #>
-		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(<#= string.Join(", ", dicApiMemberProps.Select(kvp => kvp.Key + " = " + kvp.Value)) #>, Verb = HttpVerbs.Put)]
 <#
+							}
+							if (!postExcluded)
+							{
+#>
+		[ApiMember(<#= string.Join(", ", dicApiMemberProps.Select(kvp => kvp.Key + " = " + kvp.Value)) #>, Verb = HttpVerbs.Post)]
+<#
+							}
 						}
 					}
 					else
 					{
-						if (lstPlaceholderCols.Contains(col))
-						{
-							lstApiMemberProps.Add("ParameterType = SwaggerParamTypes.Path");
-						}
 #>
-		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
+		[ApiMember(<#= string.Join(", ", dicApiMemberProps.Select(kvp => kvp.Key + " = " + kvp.Value)) #>)]
 <#
 					}
-				}
+                }
 
                 if (allEnums.Contains(col.PropertyType))
                 {
@@ -524,10 +535,13 @@ namespace <#= msgNamespace #>
             }
 			if (AddApiAttributes)
             {
-				List<string> lstApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
-				lstApiMemberProps.Add("ParameterType = SwaggerParamTypes.Path");
+				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
+				if (dicApiMemberProps != null)
+                {
+					dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
+                }
 #>
-		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
+		[ApiMember(<#= string.Join(", ", dicApiMemberProps.Select(kvp => kvp.Key + " = " + kvp.Value)) #>)]
 <#
             }
 #>
@@ -597,13 +611,19 @@ namespace <#= msgNamespace #>
                 }
 			}
 #>
-	public <#= MakeClassesPartial ? "partial " : "" #>class <#= deleteTableClassName #> : IReturnVoid
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= deleteTableClassName #> : IReturnVoid, IDelete
 	{
 <#
-		foreach (Column phCol in lstPlaceholderCols.Distinct(colComparer))
+		Column lastCol = lstPlaceholderCols.LastOrDefault();
+		foreach (Column phCol in lstPlaceholderCols)
 		{
+			if (lastCol != null && lastCol.IsPKey && lastCol != phCol)
+            {
+				continue;
+            }
 			Column newCol = phCol.Clone();
-			newCol.Description = "{0} de la ressource {1} à supprimer.";
+			newCol.IsNullable = false;
+			newCol.Description = "Identifiant unique de la ressource à supprimer.";
 
 			if (!string.IsNullOrWhiteSpace(newCol.Description))
             {
@@ -615,10 +635,13 @@ namespace <#= msgNamespace #>
             }
 			if (AddApiAttributes)
             {
-				List<string> lstApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
-				lstApiMemberProps.Add("ParameterType = SwaggerParamTypes.Path");
+				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
+				if (dicApiMemberProps != null)
+                {
+					dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
+                }
 #>
-		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
+		[ApiMember(<#= string.Join(", ", dicApiMemberProps.Select(kvp => kvp.Key + " = " + kvp.Value)) #>)]
 <#
             }
 #>
@@ -696,10 +719,13 @@ namespace <#= msgNamespace #>
             }
 			if (AddApiAttributes)
             {
-				List<string> lstApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
-				lstApiMemberProps.Add("ParameterType = SwaggerParamTypes.Path");
+				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
+				if (dicApiMemberProps != null)
+                {
+					dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
+                }
 #>
-		[ApiMember(<#= string.Join(", ", lstApiMemberProps) #>)]
+		[ApiMember(<#= string.Join(", ", dicApiMemberProps.Select(kvp => kvp.Key + " = " + kvp.Value)) #>)]
 <#
             }
 #>
@@ -832,7 +858,7 @@ private void SetColumnsDescription(Table table, string stdColFormat)
         {
 			if (col.IsPKey)
 			{
-				col.Description = "Clé primaire.";
+				col.Description = "Identifiant unique. Clé primaire.";
 			}
 			else if (col.PropertyName == string.Format(stdColFormat, "Cod"))
 			{
@@ -857,13 +883,13 @@ private void SetColumnsDescription(Table table, string stdColFormat)
 						col.Description = "Date de création. Immutable.";
 						break;
 					case "CleCreateur":
-						col.Description = "Clé de l'utilisateur responsable de la création. Immutable.";
+						col.Description = "Identifiant unique de l'utilisateur responsable de la création. Immutable.";
 						break;
 					case "DatEdition":
 						col.Description = "Date de dernière modification. Immutable.";
 						break;
 					case "CleEditeur":
-						col.Description = "Clé de l'utilisateur responsable de la dernière modification. Immutable.";
+						col.Description = "Identifiant unique de l'utilisateur responsable de la dernière modification. Immutable.";
 						break;
 					case "CodExterne":
 						col.Description = "Identifiant de synchronisation externe.";
@@ -915,13 +941,19 @@ private void SetColumnsDescription(Table table, string stdColFormat)
     }
 }
 
-private List<string> GetApiMemberProps(Column col, List<string> lstEnums, List<string> lstInterfaces)
+private Dictionary<string, string> GetApiMemberProps(Column col, List<string> lstEnums, List<string> lstInterfaces)
 {
-    List<string> lstApiMemberProps = new List<string>();
+    if (lstInterfaces.Contains("IAuditable") &&
+		(col.PropertyName == "DatCreation" || col.PropertyName == "CleCreateur" || col.PropertyName == "DatEdition" || col.PropertyName == "CleEditeur"))
+    {
+        return null;
+    }
+
+    Dictionary<string, string> dicApiMemberProps = new Dictionary<string, string>();
 
     if (!string.IsNullOrEmpty(col.Description))
     {
-        lstApiMemberProps.Add("Description = \"" + col.Description + "\"");
+        dicApiMemberProps.Add("Description", "\"" + col.Description + "\"");
     }
                 
     string swagDataType = "";
@@ -941,29 +973,15 @@ private List<string> GetApiMemberProps(Column col, List<string> lstEnums, List<s
 
     if (!string.IsNullOrEmpty(swagDataType))
     {
-        lstApiMemberProps.Add("DataType = " + swagDataType);
+        dicApiMemberProps.Add("DataType", swagDataType);
     }
 
-    if (!col.IsPKey)
+    if (col.IsNullable == false)
     {
-        if (col.IsNullable == false && col.IsAutoIncrement == false)
-        {
-            bool required = true;
-
-            if (lstInterfaces.Contains("IAuditable") &&
-				(col.PropertyName == "DatCreation" || col.PropertyName == "CleCreateur" || col.PropertyName == "DatEdition" || col.PropertyName == "CleEditeur"))
-            {
-                required = false;
-            }
-
-            if (required)
-            {
-                lstApiMemberProps.Add("IsRequired = true");
-            }
-        }
+        dicApiMemberProps.Add("IsRequired", "true");
     }
 
-	return lstApiMemberProps;
+	return dicApiMemberProps;
 }
 
 /// <summary>
@@ -1019,7 +1037,7 @@ private List<Column> GetRouteColumns(Table table, bool recurseParents)
 	return lstCols;
 }
 
-private string BuildStrRoutePath(List<Column> lstCols, bool keepEnd = true)
+private string BuildStrRoutePath(List<Column> lstCols, bool keepEnd = true, bool removeUselessCols = true)
 {
 	string strRoute = "";
 	string currentTable = "";
@@ -1044,6 +1062,10 @@ private string BuildStrRoutePath(List<Column> lstCols, bool keepEnd = true)
 		string strCol = "{" + phCol.PropertyName + "}";
 		if (!strRoute.Contains(strCol))
         {
+			if (removeUselessCols && lastCol.IsPKey && phCol != lastCol)
+            {
+				continue;
+            }
 			if (keepEnd || (phCol.ParentTable != tbl))
 			{
 				strRoute += "/";

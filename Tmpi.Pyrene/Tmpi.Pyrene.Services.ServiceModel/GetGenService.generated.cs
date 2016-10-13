@@ -26,7 +26,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// <summary>
         /// CleService de la ressource à retourner.
         /// </summary>
-		[ApiMember(Description = "CleService de la ressource à retourner.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "CleService de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleService { get; set; }
 
         /// <summary>

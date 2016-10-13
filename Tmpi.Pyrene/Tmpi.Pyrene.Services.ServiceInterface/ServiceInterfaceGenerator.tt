@@ -31,7 +31,7 @@
 	bool SplitIntoMultipleFiles = true;
     
     // true pour créer les validors de la ValidationFeature
-    bool CreateValidators = true;
+    bool CreateValidators = false;
 
     // true pour rajouter .WithMessage() pour chaque RuleFor
     bool ValidatorsWithMessage = false;
@@ -99,11 +99,11 @@
 
             if (codeClass.Name.StartsWith("Get"))
             {
-				entityName = codeClass.Name.Substring(3);
+			//	entityName = codeClass.Name.Substring(3);
             }
             else if (codeClass.Name.StartsWith("Delete"))
             {
- 			//	entityName = codeClass.Name.Substring(6);
+ 				entityName = codeClass.Name.Substring(6);
             }
             else if (codeClass.Name.StartsWith("Patch"))
             {
@@ -256,6 +256,13 @@ namespace <#= fileNamespace #>
 			else if (requestName.StartsWith("Delete"))
             {
 				var entityName = requestName.Substring(6);
+
+				List<string> parts = GetRouteParts(requestClass);
+				string id = parts.LastOrDefault(x => x.StartsWith("{") && x.EndsWith("}"));
+				if (!string.IsNullOrEmpty(id))
+                {
+					id = id.Substring(1, id.Length - 2);
+                }
 #>
 		/// <summary>
 		/// Supprime la ressource <see cref="<#= entityName #>" /> spécifiée dans la requête.
@@ -264,11 +271,11 @@ namespace <#= fileNamespace #>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Delete(<#= requestName #> request)
 		{
-			int count = Db.DeleteById<<#= entityName #>>(request.Id);
+			int count = Db.DeleteById<<#= entityName #>>(request.<#= id #>);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= entityName #>), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= entityName #>), request.<#= id #>));
 			}
 		}
 
@@ -483,68 +490,36 @@ private List<string> GetRouteParts(CodeClass codeClass)
 
 	if (paramPath.StartsWith("\"") && paramPath.EndsWith("\""))
     {
-		paramPath = paramPath.Remove(0, 1); // Supprime le premier "
-		paramPath = paramPath.Remove(paramPath.Length - 1, 1); // Supprime le dernier "
+		paramPath = paramPath.Substring(1, paramPath.Length - 2);
     }
 
 	return paramPath.Split(new [] { '/' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 }
 
-private List<CodeProperty> GetRouteProperties(CodeClass codeClass, string verb)
+private string GetIdFromRouteParts(List<string> parts, string entityName)
 {
-	List<CodeProperty> properties = new List<CodeProperty>();
+	List<string> lstId = new List<string>();
+	string currentEntity = entityName.Substring(0, 3);
 
-	IEnumerable<CodeAttribute> routeAttributes = VisualStudioHelper.CodeModel.GetAllClassAttributes(codeClass)
-		.Where(attr => attr.FullName == "ServiceStack.RouteAttribute")
-		.ToList();
-	foreach (CodeAttribute attr in routeAttributes)
+	foreach (string str in parts)
     {
-		string[] parameters = attr.Value.Split(',');
-
-		if (!string.IsNullOrEmpty(verb))
+		if (str.StartsWith("{") && str.EndsWith("}"))
         {
-			string paramVerbs = "";
-			
-			if (parameters.Length > 1)
-			{
-				paramVerbs = parameters[1];
-			}
-			else
-			{
-				paramVerbs = parameters.Where(s => s.Trim().StartsWith("Verbs =")).SingleOrDefault();
-			}
-			if (!string.IsNullOrEmpty(paramVerbs))
+			if (currentEntity == entityName)
             {
-				bool notFound = paramVerbs.IndexOf(verb, StringComparison.OrdinalIgnoreCase) == -1;
-				if (notFound)
-                {
-					continue;
-                }
+				string propName = str.Remove(0, 1); // Supprime le premier {
+				propName = propName.Remove(propName.Length - 1, 1); // Supprime le dernier }
+				
+				lstId.Add(propName);
             }
-		}
-		
-		string paramPath = parameters[0].Trim();
-
-		if (paramPath.StartsWith("\"") && paramPath.EndsWith("\""))
-        {
-			paramPath = paramPath.Remove(0, 1); // Supprime le premier "
-			paramPath = paramPath.Remove(paramPath.Length - 1, 1); // Supprime le dernier "
         }
-
-		List<string> lstPlaceholders = paramPath.Split('/').Where(s => s.StartsWith("{") && s.EndsWith("}")).ToList();
-		IEnumerable<CodeProperty> props = VisualStudioHelper.CodeModel.GetAllProperties(codeClass);
-
-		foreach (string ph in lstPlaceholders)
-        {
-			string propName = ph;
-			propName = propName.Remove(0, 1); // Supprime le premier {
-			propName = propName.Remove(propName.Length - 1, 1); // Supprime le dernier }
-
-			var prop = props.Where(p => p.Name == propName).Single();
-			properties.Add(prop);
+		else
+		{
+			currentEntity += str;
         }
     }
 
-	return properties;
+	string id = lstId.SingleOrDefault();
+	return id ?? "";
 }
 #>

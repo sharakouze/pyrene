@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Modifie partiellement une ressource <see cref="GenFournContact" />.
 	/// </summary>
-	[Route("/Fourn/{CleFourn}/Contact/{CleContact}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenFournContact.")]
+	[Route("/Fourn/Contact/{CleContact}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenFournContact.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenFournContact ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournContact spécifiée est introuvable.")]
 	public partial class PatchGenFournContact : IReturnVoid
@@ -26,13 +26,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// <summary>
         /// {0} de la ressource {1} à modifier.
         /// </summary>
-		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleFourn { get; set; }
 
         /// <summary>
         /// {0} de la ressource {1} à modifier.
         /// </summary>
-		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleContact { get; set; }
 
         /// <summary>

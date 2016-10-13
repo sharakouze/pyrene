@@ -24,67 +24,33 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenMandatService : Service
 	{
 		/// <summary>
-		/// Retourne la ressource <see cref="GenMandat" /> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="GenMandat" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenMandat" /> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public GenMandat Get(GetGenMandat request)
+		public void Delete(DeleteGenMandat request)
 		{
-            if (!request.Fields.IsNullOrEmpty())
-            {
-                var errFields = ModelDefinitionHelper.GetUndefinedFields<GenMandat>(request.Fields);
-                if (errFields.Any())
-                {
-                    string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                    throw new ArgumentException(
-                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenMandat), str));
-                }
-            }
-
-            var q = Db.From<GenMandat>().Where<GenMandat>(x => x.CleMandat == request.CleMandat).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
+			int count = Db.DeleteById<GenMandat>(request.CleMandat);
+			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandat), "request.Id"));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.CleMandat));
 			}
-
-			return entity;
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="GenMandatMandataire" /> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="GenMandatMandataire" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenMandatMandataire" /> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public GenMandatMandataire Get(GetGenMandatMandataire request)
+		public void Delete(DeleteGenMandatMandataire request)
 		{
-            if (!request.Fields.IsNullOrEmpty())
-            {
-                var errFields = ModelDefinitionHelper.GetUndefinedFields<GenMandatMandataire>(request.Fields);
-                if (errFields.Any())
-                {
-                    string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                    throw new ArgumentException(
-                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenMandatMandataire), str));
-                }
-            }
-
-            var q = Db.From<GenMandatMandataire>().Join<GenMandat>().Where<GenMandat>(x => x.CleMandat == request.CleMandat).Where<GenMandatMandataire>(x => x.CleMandataire == request.CleMandataire).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
+			int count = Db.DeleteById<GenMandatMandataire>(request.CleMandataire);
+			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), "request.Id"));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.CleMandataire));
 			}
-
-			return entity;
 		}
 
 	}

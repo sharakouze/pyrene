@@ -49,7 +49,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'ValFormatNumero'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Clé du service ayant accès au compteur, ou null pour tous les services.',
+    @value = N'Identifiant unique du service ayant accès au compteur, ou null pour tous les services.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',

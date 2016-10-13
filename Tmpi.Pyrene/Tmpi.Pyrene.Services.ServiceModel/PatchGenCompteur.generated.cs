@@ -26,7 +26,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// <summary>
         /// {0} de la ressource {1} à modifier.
         /// </summary>
-		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleCompteur { get; set; }
 
         /// <summary>

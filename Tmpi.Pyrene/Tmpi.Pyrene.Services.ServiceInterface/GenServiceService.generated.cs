@@ -24,35 +24,18 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenServiceService : Service
 	{
 		/// <summary>
-		/// Retourne la ressource <see cref="GenService" /> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="GenService" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenService" /> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public GenService Get(GetGenService request)
+		public void Delete(DeleteGenService request)
 		{
-            if (!request.Fields.IsNullOrEmpty())
-            {
-                var errFields = ModelDefinitionHelper.GetUndefinedFields<GenService>(request.Fields);
-                if (errFields.Any())
-                {
-                    string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                    throw new ArgumentException(
-                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenService), str));
-                }
-            }
-
-            var q = Db.From<GenService>().Where<GenService>(x => x.CleService == request.CleService).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
+			int count = Db.DeleteById<GenService>(request.CleService);
+			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenService), "request.Id"));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenService), request.CleService));
 			}
-
-			return entity;
 		}
 
 	}

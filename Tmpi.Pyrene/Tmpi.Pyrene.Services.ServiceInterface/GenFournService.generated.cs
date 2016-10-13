@@ -24,100 +24,65 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenFournService : Service
 	{
 		/// <summary>
-		/// Retourne la ressource <see cref="GenFourn" /> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="GenFourn" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenFourn" /> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public GenFourn Get(GetGenFourn request)
+		public void Delete(DeleteGenFourn request)
 		{
-            if (!request.Fields.IsNullOrEmpty())
-            {
-                var errFields = ModelDefinitionHelper.GetUndefinedFields<GenFourn>(request.Fields);
-                if (errFields.Any())
-                {
-                    string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                    throw new ArgumentException(
-                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenFourn), str));
-                }
-            }
-
-            var q = Db.From<GenFourn>().Where<GenFourn>(x => x.CleFourn == request.CleFourn).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
+			int count = Db.DeleteById<GenFourn>(request.CleFourn);
+			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFourn), "request.Id"));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
 			}
-
-			return entity;
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="GenFournBanque" /> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="GenFournBanque" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenFournBanque" /> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public GenFournBanque Get(GetGenFournBanque request)
+		public void Delete(DeleteGenFournBanque request)
 		{
-            if (!request.Fields.IsNullOrEmpty())
-            {
-                var errFields = ModelDefinitionHelper.GetUndefinedFields<GenFournBanque>(request.Fields);
-                if (errFields.Any())
-                {
-                    string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                    throw new ArgumentException(
-                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenFournBanque), str));
-                }
-            }
-
-            var q = Db.From<GenFournBanque>().Join<GenFourn>().Where<GenFourn>(x => x.CleFourn == request.CleFourn).Where<GenFournBanque>(x => x.CleBanque == request.CleBanque).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
+			int count = Db.DeleteById<GenFournBanque>(request.CleBanque);
+			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), "request.Id"));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
 			}
-
-			return entity;
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="GenFournContact" /> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="GenFournContact" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenFournContact" /> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public GenFournContact Get(GetGenFournContact request)
+		public void Delete(DeleteGenFournContact request)
 		{
-            if (!request.Fields.IsNullOrEmpty())
-            {
-                var errFields = ModelDefinitionHelper.GetUndefinedFields<GenFournContact>(request.Fields);
-                if (errFields.Any())
-                {
-                    string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                    throw new ArgumentException(
-                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(GenFournContact), str));
-                }
-            }
-
-            var q = Db.From<GenFournContact>().Join<GenFourn>().Where<GenFourn>(x => x.CleFourn == request.CleFourn).Where<GenFournContact>(x => x.CleContact == request.CleContact).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
+			int count = Db.DeleteById<GenFournContact>(request.CleContact);
+			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), "request.Id"));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
 			}
-
-			return entity;
 		}
 
-	}
+        public void Put(GenFourn r)
+        {
+        }
+
+        public void Put(GenFournBanque r)
+        {
+        }
+
+        public void Post(GenFournBanque r)
+        {
+        }
+
+        public GenFourn Get(GetGenFourn r)
+        {
+            return null;
+        }
+    }
 }

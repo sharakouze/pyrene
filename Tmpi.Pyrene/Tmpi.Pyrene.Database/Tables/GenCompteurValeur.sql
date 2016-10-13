@@ -11,7 +11,7 @@
 
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Clé du compteur parent.',
+    @value = N'Identifiant unique du compteur parent.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',

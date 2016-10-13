@@ -26,12 +26,11 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenCompteur : IAuditable
 	{
 		/// <summary>
-		/// Clé primaire. Immutable.
+		/// Identifiant unique. Clé primaire. Immutable.
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
-		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique. Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
 		public int CleCompteur { get; set; }
 
 		/// <summary>
@@ -70,26 +69,22 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Date de création. Immutable.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création. Immutable.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Clé de l'utilisateur responsable de la création. Immutable.
+		/// Identifiant unique de l'utilisateur responsable de la création. Immutable.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Clé de l'utilisateur responsable de la création. Immutable.", DataType = SwaggerDataTypes.Int)]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification. Immutable.
 		/// </summary>
-		[ApiMember(Description = "Date de dernière modification. Immutable.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Clé de l'utilisateur responsable de la dernière modification. Immutable.
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification. Immutable.
 		/// </summary>
-		[ApiMember(Description = "Clé de l'utilisateur responsable de la dernière modification. Immutable.", DataType = SwaggerDataTypes.Int)]
 		public int? CleEditeur { get; set; }
 
 		/// <summary>
@@ -116,10 +111,10 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public TypCompteur TypCompteur { get; set; }
 
 		/// <summary>
-		/// Clé du service ayant accès au compteur, ou null pour tous les services.
+		/// Identifiant unique du service ayant accès au compteur, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
-		[ApiMember(Description = "Clé du service ayant accès au compteur, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
+		[ApiMember(Description = "Identifiant unique du service ayant accès au compteur, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }
 
 		/// <summary>

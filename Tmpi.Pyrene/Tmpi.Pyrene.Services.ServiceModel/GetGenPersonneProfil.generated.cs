@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource <see cref="GenPersonneProfil" />.
 	/// </summary>
-	[Route("/Personne/{ClePersonne}/Profil/{CleProfil}", HttpVerbs.Get, Summary = "Retourne une ressource GenPersonneProfil.")]
+	[Route("/Personne/Profil/{CleProfil}", HttpVerbs.Get, Summary = "Retourne une ressource GenPersonneProfil.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenPersonneProfil ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneProfil spécifiée est introuvable.")]
 	public partial class GetGenPersonneProfil : IReturn<GenPersonneProfil>
@@ -26,13 +26,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// <summary>
         /// ClePersonne de la ressource à retourner.
         /// </summary>
-		[ApiMember(Description = "ClePersonne de la ressource à retourner.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "ClePersonne de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int ClePersonne { get; set; }
 
         /// <summary>
         /// CleProfil de la ressource à retourner.
         /// </summary>
-		[ApiMember(Description = "CleProfil de la ressource à retourner.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "CleProfil de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleProfil { get; set; }
 
         /// <summary>

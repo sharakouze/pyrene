@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Modifie partiellement une ressource <see cref="GenMandatMandataire" />.
 	/// </summary>
-	[Route("/Mandat/{CleMandat}/Mandataire/{CleMandataire}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenMandatMandataire.")]
+	[Route("/Mandat/Mandataire/{CleMandataire}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenMandatMandataire.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenMandatMandataire ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandatMandataire spécifiée est introuvable.")]
 	public partial class PatchGenMandatMandataire : IReturnVoid
@@ -26,13 +26,13 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// <summary>
         /// {0} de la ressource {1} à modifier.
         /// </summary>
-		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleMandat { get; set; }
 
         /// <summary>
         /// {0} de la ressource {1} à modifier.
         /// </summary>
-		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleMandataire { get; set; }
 
         /// <summary>

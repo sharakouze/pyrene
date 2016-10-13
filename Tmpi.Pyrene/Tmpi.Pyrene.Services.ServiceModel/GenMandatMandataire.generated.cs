@@ -21,40 +21,40 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleMandat), nameof(ClePersonne), nameof(CleService))]
     [Route("/Mandat/{CleMandat}/Mandataire", HttpVerbs.Post, Summary = "Ajoute une ressource GenMandatMandataire.")]
-    [Route("/Mandat/{CleMandat}/Mandataire/{CleMandataire}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandatMandataire.")]
+    [Route("/Mandat/Mandataire/{CleMandataire}", HttpVerbs.Put, Summary = "Remplace une ressource GenMandatMandataire.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource GenMandatMandataire spécifiée est introuvable.")]
 	public partial class GenMandatMandataire : IAuditable
 	{
 		/// <summary>
-		/// Clé primaire. Immutable.
+		/// Identifiant unique. Clé primaire. Immutable.
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Post)]
-		[ApiMember(Description = "Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, Verb = HttpVerbs.Put, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique. Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
 		public int CleMandataire { get; set; }
 
 		/// <summary>
-		/// Clé du mandat parent.
+		/// Identifiant unique du mandat parent.
 		/// </summary>
 		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Clé du mandat parent.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Identifiant unique du mandat parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique du mandat parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
 		public int CleMandat { get; set; }
 
 		/// <summary>
-		/// Clé de l'utilisateur mandataire.
+		/// Identifiant unique de l'utilisateur mandataire.
 		/// </summary>
 		[References(typeof(GenPersonne))]
 		[Required]
-		[ApiMember(Description = "Clé de l'utilisateur mandataire.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Identifiant unique de l'utilisateur mandataire.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ClePersonne { get; set; }
 
 		/// <summary>
-		/// Clé du service ayant accès au mandat, ou null pour tous les services.
+		/// Identifiant unique du service ayant accès au mandat, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
-		[ApiMember(Description = "Clé du service ayant accès au mandat, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
+		[ApiMember(Description = "Identifiant unique du service ayant accès au mandat, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }
 
 		/// <summary>
@@ -68,26 +68,22 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// Date de création. Immutable.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création. Immutable.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Clé de l'utilisateur responsable de la création. Immutable.
+		/// Identifiant unique de l'utilisateur responsable de la création. Immutable.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Clé de l'utilisateur responsable de la création. Immutable.", DataType = SwaggerDataTypes.Int)]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
 		/// Date de dernière modification. Immutable.
 		/// </summary>
-		[ApiMember(Description = "Date de dernière modification. Immutable.", DataType = SwaggerDataTypes.DateTime)]
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Clé de l'utilisateur responsable de la dernière modification. Immutable.
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification. Immutable.
 		/// </summary>
-		[ApiMember(Description = "Clé de l'utilisateur responsable de la dernière modification. Immutable.", DataType = SwaggerDataTypes.Int)]
 		public int? CleEditeur { get; set; }
 
 	}
