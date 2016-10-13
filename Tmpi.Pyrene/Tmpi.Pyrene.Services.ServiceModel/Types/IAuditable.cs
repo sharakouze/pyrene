@@ -13,8 +13,18 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
         DateTime DatCreation { get; set; }
 
         /// <summary>
+        /// Obtient ou définit l'identifiant du créateur.
+        /// </summary>
+        int CleCreateur { get; set; }
+
+        /// <summary>
         /// Obtient ou définit la date de dernière modification.
         /// </summary>
-        DateTime DatModif { get; set; }
+        DateTime? DatEdition { get; set; }
+
+        /// <summary>
+        /// Obtient ou définit l'identifiant du modificateur.
+        /// </summary>
+        int? CleEditeur { get; set; }
     }
 }

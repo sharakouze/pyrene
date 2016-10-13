@@ -42,22 +42,25 @@ BEGIN
 	select @MaxCleSociete=max(CleSociete) from $(SourceSchemaName).[Gen_SocSociete];
 	IF (@MaxCleSociete>=$(CleSecteurBase)) BEGIN
 		PRINT 'ERREUR: La valeur maximum de [Gen_SocSociete].[CleSociete] est trop elevée. Changez la valeur de la constante CleSecteurBase pour continuer la reprise.';
-		RETURN;
+		SET NOEXEC ON;
 	END;
 
 	select @MaxCleSecteur=max(CleSecteur) from $(SourceSchemaName).[Gen_SocSecteur];
 	IF (@MaxCleSecteur>=$(CleServiceBase)) BEGIN
 		PRINT 'ERREUR: La valeur maximum de [Gen_SocSecteur].[CleSecteur] est trop elevée. Changez la valeur de la constante CleServiceBase pour continuer la reprise.';
-		RETURN;
+		SET NOEXEC ON;
 	END;
 END;
 
 GO
 
-
 --
 -- SOCIETES, SECTEURS et SERVICES
 --
+
+DECLARE @ErMessage VARCHAR(MAX);
+DECLARE @ErSeverity INT;
+DECLARE @ErState INT;
 
 BEGIN TRY
 	BEGIN TRANSACTION;
@@ -67,14 +70,16 @@ BEGIN TRY
 	merge into [GenService] as target
 	using (
 		select [dbo].[TMP_SOC_TO_SERVICE](S.CleSociete, null, null) as CleService,
-			ltrim(rtrim(S.CodSociete)) as CodService,
+			'SOC-'+ltrim(rtrim(S.CodSociete)) as CodService,
 			ltrim(rtrim(S.LibSociete)) as LibService,
 			ltrim(rtrim(S.TxtSociete)) as TxtService,
 			S.EstActif,
 			S.DatCreation,
-			coalesce(S.DatModif,S.DatCreation) as DatModif,
+			S.CleCreateur,
+			S.DatModif as DatEdition,
+			S.CleOperateur as CleEditeur,
 			S.CleExterne as CodExterne,
-			cast(null as int) as CleServiceParent,
+			null as CleServiceParent,
 			S.AdrRue,
 			S.AdrCode,
 			S.AdrVille as AdrCommune,
@@ -86,12 +91,14 @@ BEGIN TRY
 		where S.CleSociete>0
 		union all
 		select [dbo].[TMP_SOC_TO_SERVICE](null, CleSecteur, null) as CleService,
-			ltrim(rtrim(CodSecteur)) as CodService,
+			'SEC-'+ltrim(rtrim(CodSecteur)) as CodService,
 			ltrim(rtrim(LibSecteur)) as LibService,
 			ltrim(rtrim(TxtSecteur)) as TxtService,
 			EstActif,
 			DatCreation,
-			coalesce(DatModif,DatCreation) as DatModif,
+			CleCreateur,
+			DatModif as DatEdition,
+			CleOperateur as CleEditeur,
 			CleExterne as CodExterne,
 			[dbo].[TMP_SOC_TO_SERVICE](CleSociete, null, null) as CleServiceParent,
 			AdrRue,
@@ -105,12 +112,14 @@ BEGIN TRY
 		where CleSecteur>0
 		union all
 		select [dbo].[TMP_SOC_TO_SERVICE](null, null, CleService) as CleService,
-			ltrim(rtrim(CodService)) as CodService,
+			'SVC-'+ltrim(rtrim(CodService)) as CodService,
 			ltrim(rtrim(LibService)) as LibService,
 			ltrim(rtrim(TxtService)) as TxtService,
 			EstActif,
 			DatCreation,
-			coalesce(DatModif,DatCreation) as DatModif,
+			CleCreateur,
+			DatModif as DatEdition,
+			CleOperateur as CleEditeur,
 			CleExterne as CodExterne,
 			[dbo].[TMP_SOC_TO_SERVICE](null, CleSecteur, null) as CleServiceParent,
 			AdrRue,
@@ -126,9 +135,11 @@ BEGIN TRY
 	on (target.CleService=source.CleService)
 	when not matched by target
 	then -- insert new rows
-		insert (CleService, CodService, LibService, TxtService, EstActif, DatCreation, DatModif, CodExterne,
+		insert (CleService, CodService, LibService, TxtService, EstActif,
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
 			CleServiceParent, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail)
-		values (CleService, CodService, LibService, TxtService, EstActif, DatCreation, DatModif, CodExterne,
+		values (CleService, CodService, LibService, TxtService, EstActif, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
 			CleServiceParent, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail);
 	
 	SET IDENTITY_INSERT [GenService] OFF;
@@ -138,10 +149,9 @@ END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenService] OFF;
 	-- THROW
-	DECLARE @ErMessage VARCHAR(MAX) = ERROR_MESSAGE();
-	DECLARE @ErSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErState INT = ERROR_STATE();
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	SET NOEXEC ON;
 END CATCH;
 
 GO
@@ -149,6 +159,10 @@ GO
 --
 -- PERSONNES, SIGNATURES et PROFILS UTILISATEURS
 --
+
+DECLARE @ErMessage VARCHAR(MAX);
+DECLARE @ErSeverity INT;
+DECLARE @ErState INT;
 
 BEGIN TRY
 	BEGIN TRANSACTION;
@@ -164,7 +178,9 @@ BEGIN TRY
 			null as TxtPersonne,
 			EstActif,
 			DatCreation,
-			coalesce(DatModif,DatCreation) as DatModif,
+			CleCreateur,
+			DatModif as DatEdition,
+			CleOperateur as CleEditeur,
 			CleExterne as CodExterne,
 			nullif(CleGenre,0) as TypCivilite,
 			NumTelep,
@@ -176,9 +192,11 @@ BEGIN TRY
 	on (target.ClePersonne=source.ClePersonne)
 	when not matched by target
 	then -- insert new rows
-		insert (ClePersonne, CodPersonne, NomPersonne, PrePersonne, TxtPersonne, EstActif, DatCreation, DatModif, CodExterne,
+		insert (ClePersonne, CodPersonne, NomPersonne, PrePersonne, TxtPersonne, EstActif,
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
 			TypCivilite, NumTelep, NumFax, NumEmail)
-		values (ClePersonne, CodPersonne, NomPersonne, PrePersonne, TxtPersonne, EstActif, DatCreation, DatModif, CodExterne,
+		values (ClePersonne, CodPersonne, NomPersonne, PrePersonne, TxtPersonne, EstActif, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
 			TypCivilite, NumTelep, NumFax, NumEmail);
 	
 	SET IDENTITY_INSERT [GenPersonne] OFF;
@@ -188,10 +206,9 @@ END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenPersonne] OFF;
 	-- THROW
-	DECLARE @ErMessage VARCHAR(MAX) = ERROR_MESSAGE();
-	DECLARE @ErSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErState INT = ERROR_STATE();
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	SET NOEXEC ON;
 END CATCH;
 
 BEGIN TRY
@@ -221,10 +238,9 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	-- THROW
-	DECLARE @ErMessage VARCHAR(MAX) = ERROR_MESSAGE();
-	DECLARE @ErSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErState INT = ERROR_STATE();
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	SET NOEXEC ON;
 END CATCH;
 
 BEGIN TRY
@@ -239,15 +255,19 @@ BEGIN TRY
 			PRF.CodProfil,
 			[dbo].[TMP_SOC_TO_SERVICE](PRF.CleSociete, PRF.CleSecteur, PRF.CleService) as CleService,
 			P.DatCreation,
-			coalesce(P.DatModif,P.DatCreation) as DatModif
+			P.CleCreateur,
+			P.DatModif as DatEdition,
+			P.CleOperateur as CleEditeur
 		from $(SourceSchemaName).[Gen_SocPersonneProfil] PRF inner join $(SourceSchemaName).[Gen_SocPersonne] P on PRF.ClePersonne=P.ClePersonne
 		where PRF.ClePersonne>0
 	) as source
 	on (target.CleProfil=source.CleProfil)
 	when not matched by target
 	then -- insert new rows
-		insert (CleProfil, ClePersonne, CodProfil, CleService, DatCreation, DatModif)
-		values (CleProfil, ClePersonne, CodProfil, CleService, DatCreation, DatModif);
+		insert (CleProfil, ClePersonne, CodProfil, CleService, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur)
+		values (CleProfil, ClePersonne, CodProfil, CleService, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur);
 	
 	SET IDENTITY_INSERT [GenPersonneProfil] OFF;
 
@@ -256,10 +276,9 @@ END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenPersonneProfil] OFF;
 	-- THROW
-	DECLARE @ErMessage VARCHAR(MAX) = ERROR_MESSAGE();
-	DECLARE @ErSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErState INT = ERROR_STATE();
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	SET NOEXEC ON;
 END CATCH;
 
 GO
@@ -267,6 +286,10 @@ GO
 --
 -- COMPTEURS, MODELES DE NUMEROTATION et VALEUR DES COMPTEURS
 --
+
+DECLARE @ErMessage VARCHAR(MAX);
+DECLARE @ErSeverity INT;
+DECLARE @ErState INT;
 
 BEGIN TRY
 	BEGIN TRANSACTION;
@@ -281,27 +304,31 @@ BEGIN TRY
 			ltrim(rtrim(N.TxtMNumero)) as TxtCompteur, 
 			N.EstActif, 
 			N.DatCreation,
-			coalesce(N.DatModif,N.DatCreation) as DatModif,
+			N.CleCreateur,
+			N.DatModif as DatEdition,
+			N.CleOperateur as CleEditeur,
 			N.CleExterne as CodExterne,
 			N.TypCompteur, 
 			C.TypPeriodicite, 
 			[dbo].[TMP_SOC_TO_SERVICE](null, coalesce(N.CleSecteur,C.CleSecteur), coalesce(N.CleService,C.CleService)) as CleService,
-			isnull(N.ValPrefixe1,'')
-				+isnull('{date:'+N.ValDate1+'}','')
-				+isnull(N.ValPrefixe2,'')
+			coalesce(N.ValPrefixe1,'')
+				+coalesce('{date:'+N.ValDate1+'}','')
+				+coalesce(N.ValPrefixe2,'')
 				+'{num:'+replicate('0',N.NbrCaractere)+'}'
-				+isnull(N.ValSuffixe1,'')
-				+isnull('{date:'+N.ValDate2+'}','')
-				+isnull(N.ValSuffixe2,'') as ValFormatNumero
+				+coalesce(N.ValSuffixe1,'')
+				+coalesce('{date:'+N.ValDate2+'}','')
+				+coalesce(N.ValSuffixe2,'') as ValFormatNumero
 		from $(SourceSchemaName).[Gen_CptCompteur] C inner join $(SourceSchemaName).[Gen_Cpt_MNumero] N on C.CleCompteur=N.CleCompteur
 		where C.CleCompteur>0 and N.CleMNumero>0
 	) as source
 	on (target.CleCompteur=source.CleCompteur)
 	when not matched by target
 	then -- insert new rows
-		insert (CleCompteur, CodCompteur, LibCompteur, TxtCompteur, EstActif, DatCreation, DatModif, CodExterne,
+		insert (CleCompteur, CodCompteur, LibCompteur, TxtCompteur, EstActif, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
 			TypCompteur, TypPeriodicite, CleService, ValFormatNumero)
-		values (CleCompteur, CodCompteur, LibCompteur, TxtCompteur, EstActif, DatCreation, DatModif, CodExterne,
+		values (CleCompteur, CodCompteur, LibCompteur, TxtCompteur, EstActif, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
 			TypCompteur, TypPeriodicite, CleService, ValFormatNumero);
 	
 	SET IDENTITY_INSERT [GenCompteur] OFF;
@@ -311,10 +338,9 @@ END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenCompteur] OFF;
 	-- THROW
-	DECLARE @ErMessage VARCHAR(MAX) = ERROR_MESSAGE();
-	DECLARE @ErSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErState INT = ERROR_STATE();
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	SET NOEXEC ON;
 END CATCH;
 
 BEGIN TRY
@@ -338,10 +364,9 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	-- THROW
-	DECLARE @ErMessage VARCHAR(MAX) = ERROR_MESSAGE();
-	DECLARE @ErSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErState INT = ERROR_STATE();
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	SET NOEXEC ON;
 END CATCH;
 
 GO
@@ -349,6 +374,10 @@ GO
 --
 -- MANDATS et MANDATAIRES
 --
+
+DECLARE @ErMessage VARCHAR(MAX);
+DECLARE @ErSeverity INT;
+DECLARE @ErState INT;
 
 BEGIN TRY
 	BEGIN TRANSACTION;
@@ -363,7 +392,9 @@ BEGIN TRY
 			ltrim(rtrim(TxtMandat)) as TxtMandat,
 			EstActif,
 			DatCreation,
-			coalesce(DatModif,DatCreation) as DatModif,
+			CleCreateur,
+			DatModif as DatEdition,
+			CleOperateur as CleEditeur,
 			null as CodExterne,
 			TypMandat,
 			NivMandat,
@@ -375,9 +406,11 @@ BEGIN TRY
 	on (target.CleMandat=source.CleMandat)
 	when not matched by target
 	then -- insert new rows
-		insert (CleMandat, CodMandat, LibMandat, TxtMandat, EstActif, DatCreation, DatModif, CodExterne,
+		insert (CleMandat, CodMandat, LibMandat, TxtMandat, EstActif,
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
 			TypMandat, NivMandat, NbrSignature, TxtMessage)
-		values (CleMandat, CodMandat, LibMandat, TxtMandat, EstActif, DatCreation, DatModif, CodExterne,
+		values (CleMandat, CodMandat, LibMandat, TxtMandat, EstActif, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
 			TypMandat, NivMandat, NbrSignature, TxtMessage);
 	
 	SET IDENTITY_INSERT [GenMandat] OFF;
@@ -387,10 +420,9 @@ END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenMandat] OFF;
 	-- THROW
-	DECLARE @ErMessage VARCHAR(MAX) = ERROR_MESSAGE();
-	DECLARE @ErSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErState INT = ERROR_STATE();
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	SET NOEXEC ON;
 END CATCH;
 
 BEGIN TRY
@@ -400,19 +432,25 @@ BEGIN TRY
 
 	merge into [GenMandatMandataire] as target
 	using (
-		select CleMdtMandataire as CleMandataire,
-			CleMandat,
-			CleMandataire as ClePersonne,
-			[dbo].[TMP_SOC_TO_SERVICE](CleSociete, CleSecteur, CleService) as CleService,
-			EstSuspendu
-		from $(SourceSchemaName).[GenP_MdtMandataire]
-		where CleMandat>0
+		select MM.CleMdtMandataire as CleMandataire,
+			MM.CleMandat,
+			MM.CleMandataire as ClePersonne,
+			[dbo].[TMP_SOC_TO_SERVICE](MM.CleSociete, MM.CleSecteur, MM.CleService) as CleService,
+			MM.EstSuspendu,
+			M.DatCreation,
+			M.CleCreateur,
+			M.DatModif as DatEdition,
+			M.CleOperateur as CleEditeur
+		from $(SourceSchemaName).[GenP_MdtMandataire] MM inner join $(SourceSchemaName).[GenP_MdtMandat] M on MM.CleMandat=M.CleMandat 
+		where MM.CleMandat>0
 	) as source
 	on (target.CleMandataire=source.CleMandataire)
 	when not matched by target
 	then -- insert new rows
-		insert (CleMandataire, CleMandat, ClePersonne, CleService, EstSuspendu)
-		values (CleMandataire, CleMandat, ClePersonne, CleService, EstSuspendu);
+		insert (CleMandataire, CleMandat, ClePersonne, CleService, EstSuspendu,
+			DatCreation, CleCreateur, DatEdition, CleEditeur)
+		values (CleMandataire, CleMandat, ClePersonne, CleService, EstSuspendu,
+			DatCreation, CleCreateur, DatEdition, CleEditeur);
 	
 	SET IDENTITY_INSERT [GenMandatMandataire] OFF;
 
@@ -421,10 +459,9 @@ END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenMandatMandataire] OFF;
 	-- THROW
-	DECLARE @ErMessage VARCHAR(MAX) = ERROR_MESSAGE();
-	DECLARE @ErSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErState INT = ERROR_STATE();
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	SET NOEXEC ON;
 END CATCH;
 
 GO
@@ -432,6 +469,10 @@ GO
 --
 -- TVA
 --
+
+DECLARE @ErMessage VARCHAR(MAX);
+DECLARE @ErSeverity INT;
+DECLARE @ErState INT;
 
 BEGIN TRY
 	BEGIN TRANSACTION;
@@ -446,7 +487,9 @@ BEGIN TRY
 			ltrim(rtrim(TxtTVA)) as TxtTVA,
 			EstActif,
 			DatCreation,
-			coalesce(DatModif,DatCreation) as DatModif,
+			CleCreateur,
+			DatModif as DatEdition,
+			CleOperateur as CleEditeur,
 			CleExterne as CodExterne,
 			TauTVA
 		from $(SourceSchemaName).[Gen_DivTVA]
@@ -455,8 +498,10 @@ BEGIN TRY
 	on (target.CleTVA=source.CleTVA)
 	when not matched by target
 	then -- insert new rows
-		insert (CleTVA, CodTVA, LibTVA, TxtTVA, EstActif, DatCreation, DatModif, CodExterne, TauTVA)
-		values (CleTVA, CodTVA, LibTVA, TxtTVA, EstActif, DatCreation, DatModif, CodExterne, TauTVA);
+		insert (CleTVA, CodTVA, LibTVA, TxtTVA, EstActif, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne, TauTVA)
+		values (CleTVA, CodTVA, LibTVA, TxtTVA, EstActif, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne, TauTVA);
 	
 	SET IDENTITY_INSERT [GenTVA] OFF;
 
@@ -465,10 +510,9 @@ END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenTVA] OFF;
 	-- THROW
-	DECLARE @ErMessage VARCHAR(MAX) = ERROR_MESSAGE();
-	DECLARE @ErSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErState INT = ERROR_STATE();
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	SET NOEXEC ON;
 END CATCH;
 
 GO
@@ -476,6 +520,10 @@ GO
 --
 -- FOURNISSEURS, CONTACTS et COORDONNEES BANQUAIRES
 --
+
+DECLARE @ErMessage VARCHAR(MAX);
+DECLARE @ErSeverity INT;
+DECLARE @ErState INT;
 
 BEGIN TRY
 	BEGIN TRANSACTION;
@@ -490,7 +538,9 @@ BEGIN TRY
 			ltrim(rtrim(TxtFourn)) as TxtFourn,
 			1 as EstActif,
 			coalesce(DatSaisie,getdate()) as DatCreation,
-			coalesce(DatSaisie,getdate()) as DatModif,
+			coalesce(CleOperateur,0) as CleCreateur,
+			DatSaisie as DatEdition,
+			CleOperateur as CleEditeur,
 			null as CodExterne,
 			AdrRue,
 			AdrCode,
@@ -516,11 +566,13 @@ BEGIN TRY
 	on (target.CleFourn=source.CleFourn)
 	when not matched by target
 	then -- insert new rows
-		insert (CleFourn, CodFourn, LibFourn, TxtFourn, EstActif, DatCreation, DatModif, CodExterne,
+		insert (CleFourn, CodFourn, LibFourn, TxtFourn, EstActif, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail, CodCompta, NumClient, 
 			NumTVAIntra, MntFPort, MntFPortGratuit, MntCommandeMin, DelLivraison, DelPaiement, ValNote,
 			TypModeReglement, EstEnvoiMailBonCde)
-		values (CleFourn, CodFourn, LibFourn, TxtFourn, EstActif, DatCreation, DatModif, CodExterne,
+		values (CleFourn, CodFourn, LibFourn, TxtFourn, EstActif, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail, CodCompta, NumClient, 
 			NumTVAIntra, MntFPort, MntFPortGratuit, MntCommandeMin, DelLivraison, DelPaiement, ValNote,
 			TypModeReglement, EstEnvoiMailBonCde);
@@ -532,10 +584,9 @@ END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenFourn] OFF;
 	-- THROW
-	DECLARE @ErMessage VARCHAR(MAX) = ERROR_MESSAGE();
-	DECLARE @ErSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErState INT = ERROR_STATE();
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	SET NOEXEC ON;
 END CATCH;
 
 BEGIN TRY
@@ -573,7 +624,7 @@ BEGIN TRY
 	begin
 		delete @strings;
 		insert into @strings
-		select * from [dbo].[TEMP_SPLIT](@NomContact, ' ');
+		select * from [dbo].[TMP_SPLIT](@NomContact, ' ');
 
 		-- extraction civilité
 		declare @TypCivilite int = null;
@@ -642,11 +693,13 @@ BEGIN TRY
 	merge into [GenFournContact] as target
 	using (
 		select FC.CleFourn,
-			isnull(FC.NomContact_Clean,FC.NomContact) as NomContact,
+			coalesce(FC.NomContact_Clean,FC.NomContact) as NomContact,
 			null as PreContact,
 			null as TxtContact, 
 			coalesce(F.DatSaisie,getdate()) as DatCreation,
-			coalesce(F.DatSaisie,getdate()) as DatModif,
+			coalesce(F.CleOperateur,0) as CleCreateur,
+			F.DatSaisie as DatEdition,
+			F.CleOperateur as CleEditeur,
 			FC.NumTelep, 
 			null as NumFax, 
 			FC.NumEmail, 
@@ -657,19 +710,20 @@ BEGIN TRY
 	on (target.CleFourn=source.CleFourn and target.NomContact=source.NomContact)
 	when not matched by target
 	then -- insert new rows
-		insert (CleFourn, NomContact, PreContact, TxtContact, DatCreation, DatModif,
+		insert (CleFourn, NomContact, PreContact, TxtContact, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur,
 			NumTelep, NumFax, NumEmail, TypCivilite, LibFonction)
-		values (CleFourn, NomContact, PreContact, TxtContact, DatCreation, DatModif,
+		values (CleFourn, NomContact, PreContact, TxtContact, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur,
 			NumTelep, NumFax, NumEmail, TypCivilite, LibFonction);
 
 	COMMIT;
 END TRY
 BEGIN CATCH
 	-- THROW
-	DECLARE @ErMessage VARCHAR(MAX) = ERROR_MESSAGE();
-	DECLARE @ErSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErState INT = ERROR_STATE();
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	SET NOEXEC ON;
 END CATCH;
 
 BEGIN TRY
@@ -683,12 +737,14 @@ BEGIN TRY
 	using (
 		select FR.CleRib as CleBanque,
 			FR.CleFourn as CleFourn,
-			[dbo].[TEMP_BBAN_TO_IBAN](FR.RibBanque+FR.RibGuichet+FR.RibCompte+FR.RibCle, @CodePaysIBAN) as CodIBAN,
+			[dbo].[TMP_BBAN_TO_IBAN](FR.RibBanque+FR.RibGuichet+FR.RibCompte+FR.RibCle, @CodePaysIBAN) as CodIBAN,
 			@CodePaysIBAN as CodBIC,
 			FR.LibBanque as LibEtablissement,
 			FR.EstDefaut,
 			coalesce(F.DatSaisie,getdate()) as DatCreation,
-			coalesce(F.DatSaisie,getdate()) as DatModif
+			coalesce(F.CleOperateur,0) as CleCreateur,
+			F.DatSaisie as DatEdition,
+			F.CleOperateur as CleEditeur
 		from $(SourceSchemaName).[Gen_FouRib] FR inner join $(SourceSchemaName).[t_Fourn] F on FR.CleFourn=F.CleFourn
 		where FR.CleFourn>0
 			and FR.RibBanque is not null 
@@ -699,8 +755,10 @@ BEGIN TRY
 	on (target.CleBanque=source.CleBanque)
 	when not matched by target
 	then -- insert new rows
-		insert (CleBanque, CleFourn, CodIBAN, CodBIC, LibEtablissement, EstDefaut, DatCreation, DatModif)
-		values (CleBanque, CleFourn, CodIBAN, CodBIC, LibEtablissement, EstDefaut, DatCreation, DatModif);
+		insert (CleBanque, CleFourn, CodIBAN, CodBIC, LibEtablissement, EstDefaut, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur)
+		values (CleBanque, CleFourn, CodIBAN, CodBIC, LibEtablissement, EstDefaut, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur);
 	
 	SET IDENTITY_INSERT [GenFournBanque] OFF;
 
@@ -709,10 +767,9 @@ END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenFournBanque] OFF;
 	-- THROW
-	DECLARE @ErMessage VARCHAR(MAX) = ERROR_MESSAGE();
-	DECLARE @ErSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErState INT = ERROR_STATE();
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	SET NOEXEC ON;
 END CATCH;
 
 GO
@@ -720,6 +777,10 @@ GO
 --
 -- EXERCICES
 --
+
+DECLARE @ErMessage VARCHAR(MAX);
+DECLARE @ErSeverity INT;
+DECLARE @ErState INT;
 
 BEGIN TRY
 	BEGIN TRANSACTION;
@@ -739,7 +800,9 @@ BEGIN TRY
 				else 0
 			end as EstActif,
 			DatCreation,
-			coalesce(DatModif,DatCreation) as DatModif,
+			CleCreateur,
+			DatModif as DatEdition,
+			CleOperateur as CleEditeur,
 			CleExterne as CodExterne,
 			DatDebut,
 			DatFin
@@ -749,9 +812,11 @@ BEGIN TRY
 	on (target.CleExercice=source.CleExercice)
 	when not matched by target
 	then -- insert new rows
-		insert (CleExercice, CodExercice, LibExercice, TxtExercice, EstActif, DatCreation, DatModif, CodExterne,
+		insert (CleExercice, CodExercice, LibExercice, TxtExercice, EstActif, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
 			DatDebut, DatFin)
-		values (CleExercice, CodExercice, LibExercice, TxtExercice, EstActif, DatCreation, DatModif, CodExterne,
+		values (CleExercice, CodExercice, LibExercice, TxtExercice, EstActif, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
 			DatDebut, DatFin);
 	
 	SET IDENTITY_INSERT [GenExercice] OFF;
@@ -761,10 +826,9 @@ END TRY
 BEGIN CATCH
 	SET IDENTITY_INSERT [GenExercice] OFF;
 	-- THROW
-	DECLARE @ErMessage VARCHAR(MAX) = ERROR_MESSAGE();
-	DECLARE @ErSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErState INT = ERROR_STATE();
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	SET NOEXEC ON;
 END CATCH;
 
 GO

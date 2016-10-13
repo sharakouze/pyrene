@@ -206,7 +206,9 @@ namespace <#= pocoNamespace #>
         if (AddCustomInterfaces)
         {
             if (table.Columns.Any(c => c.PropertyName == "DatCreation" && c.ProperPropertyType == "DateTime") &&
-                table.Columns.Any(c => c.PropertyName == "DatModif" && c.ProperPropertyType == "DateTime"))
+                table.Columns.Any(c => c.PropertyName == "DatEdition" && c.ProperPropertyType == "DateTime?") &&
+				table.Columns.Any(c => c.PropertyName == "CleCreateur" && c.ProperPropertyType == "int") &&
+				table.Columns.Any(c => c.PropertyName == "CleEditeur" && c.ProperPropertyType == "int?"))
             {
                 lstInterfaces.Add("IAuditable");
             }
@@ -854,8 +856,14 @@ private void SetColumnsDescription(Table table, string stdColFormat)
 					case "DatCreation":
 						col.Description = "Date de création. Immutable.";
 						break;
-					case "DatModif":
+					case "CleCreateur":
+						col.Description = "Clé de l'utilisateur responsable de la création. Immutable.";
+						break;
+					case "DatEdition":
 						col.Description = "Date de dernière modification. Immutable.";
+						break;
+					case "CleEditeur":
+						col.Description = "Clé de l'utilisateur responsable de la dernière modification. Immutable.";
 						break;
 					case "CodExterne":
 						col.Description = "Identifiant de synchronisation externe.";
@@ -941,11 +949,13 @@ private List<string> GetApiMemberProps(Column col, List<string> lstEnums, List<s
         if (col.IsNullable == false && col.IsAutoIncrement == false)
         {
             bool required = true;
-            if (lstInterfaces.Contains("IAuditable") && (col.ProperPropertyType == "DateTime")
-                && (col.PropertyName == "DatCreation" || col.PropertyName == "DatModif"))
+
+            if (lstInterfaces.Contains("IAuditable") &&
+				(col.PropertyName == "DatCreation" || col.PropertyName == "CleCreateur" || col.PropertyName == "DatEdition" || col.PropertyName == "CleEditeur"))
             {
                 required = false;
             }
+
             if (required)
             {
                 lstApiMemberProps.Add("IsRequired = true");

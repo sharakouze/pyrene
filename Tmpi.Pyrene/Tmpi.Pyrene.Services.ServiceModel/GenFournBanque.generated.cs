@@ -81,11 +81,23 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification. Immutable.
+		/// Clé de l'utilisateur responsable de la création. Immutable.
 		/// </summary>
 		[Required]
+		[ApiMember(Description = "Clé de l'utilisateur responsable de la création. Immutable.", DataType = SwaggerDataTypes.Int)]
+		public int CleCreateur { get; set; }
+
+		/// <summary>
+		/// Date de dernière modification. Immutable.
+		/// </summary>
 		[ApiMember(Description = "Date de dernière modification. Immutable.", DataType = SwaggerDataTypes.DateTime)]
-		public DateTime DatModif { get; set; }
+		public DateTime? DatEdition { get; set; }
+
+		/// <summary>
+		/// Clé de l'utilisateur responsable de la dernière modification. Immutable.
+		/// </summary>
+		[ApiMember(Description = "Clé de l'utilisateur responsable de la dernière modification. Immutable.", DataType = SwaggerDataTypes.Int)]
+		public int? CleEditeur { get; set; }
 
 	}
 }

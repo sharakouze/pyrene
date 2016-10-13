@@ -35,7 +35,8 @@ namespace Tmpi.Pyrene.Services
                 var auditRow = row as IAuditable;
                 if (auditRow != null)
                 {
-                    auditRow.DatCreation = auditRow.DatModif = DateTime.UtcNow;
+                    auditRow.DatCreation = DateTime.UtcNow;
+                    auditRow.CleCreateur = 123;
                 }
             };
 
@@ -44,7 +45,8 @@ namespace Tmpi.Pyrene.Services
                 var auditRow = row as IAuditable;
                 if (auditRow != null)
                 {
-                    auditRow.DatModif = DateTime.UtcNow;
+                    auditRow.DatEdition = DateTime.UtcNow;
+                    auditRow.CleEditeur = 123;
                 }
             };
 
