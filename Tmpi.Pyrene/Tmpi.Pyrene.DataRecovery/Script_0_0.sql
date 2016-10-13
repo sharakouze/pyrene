@@ -71,6 +71,12 @@ GO
 
 GO
 
+DECLARE @ErMessage VARCHAR(MAX);
+DECLARE @ErSeverity INT;
+DECLARE @ErState INT;
+
+GO
+
 --
 -- SOCIETES, SECTEURS et SERVICES
 --
