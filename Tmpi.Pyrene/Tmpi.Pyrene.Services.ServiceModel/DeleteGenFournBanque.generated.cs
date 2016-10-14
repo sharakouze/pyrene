@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Supprime une ressource Banque (Fourn).
 	/// </summary>
-	/// <seealso cref="GenFournBanque" />
+	/// <seealso cref="GenFournBanque"/>
 	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Delete, Summary = "Supprime une ressource Banque (Fourn).")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource Banque (Fourn) spécifiée est introuvable.")]
 	public partial class DeleteGenFournBanque : IReturnVoid, IDelete

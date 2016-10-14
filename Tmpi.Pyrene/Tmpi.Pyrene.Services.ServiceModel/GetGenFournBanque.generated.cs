@@ -18,22 +18,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource Banque (Fourn).
 	/// </summary>
-	/// <seealso cref="GenFournBanque" />
+	/// <seealso cref="GenFournBanque"/>
 	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Get, Summary = "Retourne une ressource Banque (Fourn).")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource Banque (Fourn) ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource Banque (Fourn) spécifiée est introuvable.")]
-	public partial class GetGenFournBanque : IReturn<GenFournBanque>
+	public partial class GetGenFournBanque : IReturn<GenFournBanque>, IGet
 	{
         /// <summary>
-        /// CleFourn de la ressource à retourner.
+        /// Identifiant unique de la ressource à retourner.
         /// </summary>
-		[ApiMember(Description = "CleFourn de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public int CleFourn { get; set; }
-
-        /// <summary>
-        /// CleBanque de la ressource à retourner.
-        /// </summary>
-		[ApiMember(Description = "CleBanque de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleBanque { get; set; }
 
         /// <summary>

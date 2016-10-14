@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Modifie partiellement une ressource Mandat.
 	/// </summary>
-	/// <seealso cref="GenMandat" />
+	/// <seealso cref="GenMandat"/>
 	[Route("/Mandat/{CleMandat}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource Mandat.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource Mandat ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource Mandat spécifiée est introuvable.")]

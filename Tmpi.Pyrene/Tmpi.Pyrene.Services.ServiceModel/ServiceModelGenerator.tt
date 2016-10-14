@@ -494,7 +494,7 @@ namespace <#= msgNamespace #>
 	/// <summary>
 	/// <#= getTableClassDescription #>
 	/// </summary>
-	/// <seealso cref="<#= table.ClassName #>" />
+	/// <seealso cref="<#= table.ClassName #>"/>
 <#
             if (AddRouteAttributes)
             {
@@ -511,13 +511,18 @@ namespace <#= msgNamespace #>
                 }
 			}
 #>
-	public <#= MakeClassesPartial ? "partial " : "" #>class <#= getTableClassName #> : IReturn<<#= table.ClassName #>>
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= getTableClassName #> : IReturn<<#= table.ClassName #>>, IGet
 	{
 <#
-		foreach (Column phCol in lstPlaceholderCols.Distinct(colComparer))
+		Column lastCol = lstPlaceholderCols.LastOrDefault();
+		foreach (Column phCol in lstPlaceholderCols)
 		{
+			if (lastCol != null && lastCol.IsPKey && lastCol != phCol)
+            {
+				continue;
+            }
 			Column newCol = phCol.Clone();
-			newCol.Description = string.Format("{0} de la ressource à retourner.", newCol.PropertyName);
+			newCol.Description = "Identifiant unique de la ressource à retourner.";
 
 			if (!string.IsNullOrWhiteSpace(newCol.Description))
             {
@@ -590,7 +595,7 @@ namespace <#= msgNamespace #>
 	/// <summary>
 	/// <#= deleteTableClassDescription #>
 	/// </summary>
-	/// <seealso cref="<#= table.ClassName #>" />
+	/// <seealso cref="<#= table.ClassName #>"/>
 <#
             if (AddRouteAttributes)
             {
@@ -680,7 +685,7 @@ namespace <#= msgNamespace #>
 	/// <summary>
 	/// <#= patchTableClassDescription #>
 	/// </summary>
-	/// <seealso cref="<#= table.ClassName #>" />
+	/// <seealso cref="<#= table.ClassName #>"/>
 <#
             if (AddRouteAttributes)
             {
@@ -790,7 +795,7 @@ namespace <#= msgNamespace #>
 	/// <summary>
 	/// <#= autocompleteDescription #>
 	/// </summary>
-	/// <seealso cref="<#= table.ClassName #>" />
+	/// <seealso cref="<#= table.ClassName #>"/>
 <#
 			if (AddRouteAttributes)
             {

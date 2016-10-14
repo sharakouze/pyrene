@@ -18,22 +18,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource Contact (Fourn).
 	/// </summary>
-	/// <seealso cref="GenFournContact" />
+	/// <seealso cref="GenFournContact"/>
 	[Route("/Fourn/Contact/{CleContact}", HttpVerbs.Get, Summary = "Retourne une ressource Contact (Fourn).")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource Contact (Fourn) ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource Contact (Fourn) spécifiée est introuvable.")]
-	public partial class GetGenFournContact : IReturn<GenFournContact>
+	public partial class GetGenFournContact : IReturn<GenFournContact>, IGet
 	{
         /// <summary>
-        /// CleFourn de la ressource à retourner.
+        /// Identifiant unique de la ressource à retourner.
         /// </summary>
-		[ApiMember(Description = "CleFourn de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public int CleFourn { get; set; }
-
-        /// <summary>
-        /// CleContact de la ressource à retourner.
-        /// </summary>
-		[ApiMember(Description = "CleContact de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleContact { get; set; }
 
         /// <summary>

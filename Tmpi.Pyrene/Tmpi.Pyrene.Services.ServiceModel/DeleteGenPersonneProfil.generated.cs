@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Supprime une ressource Profil (Personne).
 	/// </summary>
-	/// <seealso cref="GenPersonneProfil" />
+	/// <seealso cref="GenPersonneProfil"/>
 	[Route("/Personne/Profil/{CleProfil}", HttpVerbs.Delete, Summary = "Supprime une ressource Profil (Personne).")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource Profil (Personne) spécifiée est introuvable.")]
 	public partial class DeleteGenPersonneProfil : IReturnVoid, IDelete

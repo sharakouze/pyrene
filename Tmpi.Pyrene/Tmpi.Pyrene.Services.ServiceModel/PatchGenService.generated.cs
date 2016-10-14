@@ -18,7 +18,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Modifie partiellement une ressource Service.
 	/// </summary>
-	/// <seealso cref="GenService" />
+	/// <seealso cref="GenService"/>
 	[Route("/Service/{CleService}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource Service.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource Service ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource Service spécifiée est introuvable.")]

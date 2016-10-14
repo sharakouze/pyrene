@@ -18,22 +18,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource Mandataire (Mandat).
 	/// </summary>
-	/// <seealso cref="GenMandatMandataire" />
+	/// <seealso cref="GenMandatMandataire"/>
 	[Route("/Mandat/Mandataire/{CleMandataire}", HttpVerbs.Get, Summary = "Retourne une ressource Mandataire (Mandat).")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource Mandataire (Mandat) ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource Mandataire (Mandat) spécifiée est introuvable.")]
-	public partial class GetGenMandatMandataire : IReturn<GenMandatMandataire>
+	public partial class GetGenMandatMandataire : IReturn<GenMandatMandataire>, IGet
 	{
         /// <summary>
-        /// CleMandat de la ressource à retourner.
+        /// Identifiant unique de la ressource à retourner.
         /// </summary>
-		[ApiMember(Description = "CleMandat de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public int CleMandat { get; set; }
-
-        /// <summary>
-        /// CleMandataire de la ressource à retourner.
-        /// </summary>
-		[ApiMember(Description = "CleMandataire de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleMandataire { get; set; }
 
         /// <summary>

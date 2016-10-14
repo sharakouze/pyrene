@@ -18,16 +18,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// <summary>
 	/// Retourne une ressource TVA.
 	/// </summary>
-	/// <seealso cref="GenTVA" />
+	/// <seealso cref="GenTVA"/>
 	[Route("/TVA/{CleTVA}", HttpVerbs.Get, Summary = "Retourne une ressource TVA.")]
     [ApiResponse(HttpStatusCode.BadRequest, "La ressource TVA ne contient pas tous les champs demandés.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource TVA spécifiée est introuvable.")]
-	public partial class GetGenTVA : IReturn<GenTVA>
+	public partial class GetGenTVA : IReturn<GenTVA>, IGet
 	{
         /// <summary>
-        /// CleTVA de la ressource à retourner.
+        /// Identifiant unique de la ressource à retourner.
         /// </summary>
-		[ApiMember(Description = "CleTVA de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de la ressource à retourner.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleTVA { get; set; }
 
         /// <summary>
