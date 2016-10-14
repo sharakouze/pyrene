@@ -16,11 +16,12 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Retourne une ressource <see cref="GenFournContact" />.
+	/// Retourne une ressource Contact (Fourn).
 	/// </summary>
-	[Route("/Fourn/Contact/{CleContact}", HttpVerbs.Get, Summary = "Retourne une ressource GenFournContact.")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenFournContact ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournContact spécifiée est introuvable.")]
+	/// <seealso cref="GenFournContact" />
+	[Route("/Fourn/Contact/{CleContact}", HttpVerbs.Get, Summary = "Retourne une ressource Contact (Fourn).")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource Contact (Fourn) ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource Contact (Fourn) spécifiée est introuvable.")]
 	public partial class GetGenFournContact : IReturn<GenFournContact>
 	{
         /// <summary>

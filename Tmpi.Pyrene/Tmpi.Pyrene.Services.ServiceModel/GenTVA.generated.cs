@@ -19,9 +19,9 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/TVA", HttpVerbs.Post, Summary = "Ajoute une ressource GenTVA.")]
-    [Route("/TVA/{CleTVA}", HttpVerbs.Put, Summary = "Remplace une ressource GenTVA.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenTVA spécifiée est introuvable.")]
+    [Route("/TVA", HttpVerbs.Post, Summary = "Ajoute une ressource TVA.")]
+    [Route("/TVA/{CleTVA}", HttpVerbs.Put, Summary = "Remplace une ressource TVA.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource TVA spécifiée est introuvable.")]
 	public partial class GenTVA : IAuditable
 	{
 		/// <summary>

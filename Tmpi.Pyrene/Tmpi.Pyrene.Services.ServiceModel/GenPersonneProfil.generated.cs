@@ -21,9 +21,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(ClePersonne), nameof(CleService))]
 	[CompositeIndex(true, nameof(CodProfil), nameof(ClePersonne))]
-    [Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Post, Summary = "Ajoute une ressource GenPersonneProfil.")]
-    [Route("/Personne/Profil/{CleProfil}", HttpVerbs.Put, Summary = "Remplace une ressource GenPersonneProfil.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneProfil spécifiée est introuvable.")]
+    [Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Post, Summary = "Ajoute une ressource Profil (Personne).")]
+    [Route("/Personne/Profil/{CleProfil}", HttpVerbs.Put, Summary = "Remplace une ressource Profil (Personne).")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource Profil (Personne) spécifiée est introuvable.")]
 	public partial class GenPersonneProfil : IAuditable
 	{
 		/// <summary>
@@ -39,7 +39,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique de l'utilisateur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
 		[ApiMember(Description = "Identifiant unique de l'utilisateur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
 		public int ClePersonne { get; set; }
 

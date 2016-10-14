@@ -16,23 +16,24 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Modifie partiellement une ressource <see cref="GenTVA" />.
+	/// Modifie partiellement une ressource TVA.
 	/// </summary>
-	[Route("/TVA/{CleTVA}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenTVA.")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenTVA ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenTVA spécifiée est introuvable.")]
-	public partial class PatchGenTVA : IReturnVoid
+	/// <seealso cref="GenTVA" />
+	[Route("/TVA/{CleTVA}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource TVA.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource TVA ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource TVA spécifiée est introuvable.")]
+	public partial class PatchGenTVA : IReturnVoid, IPatch
 	{
         /// <summary>
-        /// {0} de la ressource {1} à modifier.
+        /// Identifiant unique de la ressource à modifier.
         /// </summary>
-		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de la ressource à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleTVA { get; set; }
 
         /// <summary>
-        /// Liste des modifications.
+        /// Liste des modifications à appliquer.
         /// </summary>
-        [ApiMember(Description = "Liste des modifications.", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
+        [ApiMember(Description = "Liste des modifications à appliquer.", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
         public Patch[] Fields { get; set; }
 	}
 }

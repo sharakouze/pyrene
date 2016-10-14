@@ -20,9 +20,9 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleCompteur), nameof(ValPeriode))]
-    [Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Post, Summary = "Ajoute une ressource GenCompteurValeur.")]
-    [Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Put, Summary = "Remplace une ressource GenCompteurValeur.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenCompteurValeur spécifiée est introuvable.")]
+    [Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Post, Summary = "Ajoute une ressource Valeur (Compteur).")]
+    [Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Put, Summary = "Remplace une ressource Valeur (Compteur).")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource Valeur (Compteur) spécifiée est introuvable.")]
 	public partial class GenCompteurValeur
 	{
 		/// <summary>
@@ -38,7 +38,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[ForeignKey(typeof(GenCompteur), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du compteur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
 		[ApiMember(Description = "Identifiant unique du compteur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
 		public int CleCompteur { get; set; }
 

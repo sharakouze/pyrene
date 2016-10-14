@@ -16,10 +16,11 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Supprime une ressource <see cref="GenFourn" />.
+	/// Supprime une ressource Fourn.
 	/// </summary>
-	[Route("/Fourn/{CleFourn}", HttpVerbs.Delete, Summary = "Supprime une ressource GenFourn.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFourn spécifiée est introuvable.")]
+	/// <seealso cref="GenFourn" />
+	[Route("/Fourn/{CleFourn}", HttpVerbs.Delete, Summary = "Supprime une ressource Fourn.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource Fourn spécifiée est introuvable.")]
 	public partial class DeleteGenFourn : IReturnVoid, IDelete
 	{
         /// <summary>

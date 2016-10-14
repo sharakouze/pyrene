@@ -16,23 +16,24 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Modifie partiellement une ressource <see cref="GenPersonne" />.
+	/// Modifie partiellement une ressource Personne.
 	/// </summary>
-	[Route("/Personne/{ClePersonne}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenPersonne.")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenPersonne ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonne spécifiée est introuvable.")]
-	public partial class PatchGenPersonne : IReturnVoid
+	/// <seealso cref="GenPersonne" />
+	[Route("/Personne/{ClePersonne}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource Personne.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource Personne ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource Personne spécifiée est introuvable.")]
+	public partial class PatchGenPersonne : IReturnVoid, IPatch
 	{
         /// <summary>
-        /// {0} de la ressource {1} à modifier.
+        /// Identifiant unique de la ressource à modifier.
         /// </summary>
-		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de la ressource à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int ClePersonne { get; set; }
 
         /// <summary>
-        /// Liste des modifications.
+        /// Liste des modifications à appliquer.
         /// </summary>
-        [ApiMember(Description = "Liste des modifications.", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
+        [ApiMember(Description = "Liste des modifications à appliquer.", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
         public Patch[] Fields { get; set; }
 	}
 }

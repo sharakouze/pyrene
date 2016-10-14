@@ -16,29 +16,24 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Modifie partiellement une ressource <see cref="GenPersonneProfil" />.
+	/// Modifie partiellement une ressource Profil (Personne).
 	/// </summary>
-	[Route("/Personne/Profil/{CleProfil}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource GenPersonneProfil.")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource GenPersonneProfil ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneProfil spécifiée est introuvable.")]
-	public partial class PatchGenPersonneProfil : IReturnVoid
+	/// <seealso cref="GenPersonneProfil" />
+	[Route("/Personne/Profil/{CleProfil}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource Profil (Personne).")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource Profil (Personne) ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource Profil (Personne) spécifiée est introuvable.")]
+	public partial class PatchGenPersonneProfil : IReturnVoid, IPatch
 	{
         /// <summary>
-        /// {0} de la ressource {1} à modifier.
+        /// Identifiant unique de la ressource à modifier.
         /// </summary>
-		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public int ClePersonne { get; set; }
-
-        /// <summary>
-        /// {0} de la ressource {1} à modifier.
-        /// </summary>
-		[ApiMember(Description = "{0} de la ressource {1} à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de la ressource à modifier.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleProfil { get; set; }
 
         /// <summary>
-        /// Liste des modifications.
+        /// Liste des modifications à appliquer.
         /// </summary>
-        [ApiMember(Description = "Liste des modifications.", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
+        [ApiMember(Description = "Liste des modifications à appliquer.", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
         public Patch[] Fields { get; set; }
 	}
 }

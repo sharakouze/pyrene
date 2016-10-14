@@ -16,10 +16,11 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Supprime une ressource <see cref="GenPersonneProfil" />.
+	/// Supprime une ressource Profil (Personne).
 	/// </summary>
-	[Route("/Personne/Profil/{CleProfil}", HttpVerbs.Delete, Summary = "Supprime une ressource GenPersonneProfil.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneProfil spécifiée est introuvable.")]
+	/// <seealso cref="GenPersonneProfil" />
+	[Route("/Personne/Profil/{CleProfil}", HttpVerbs.Delete, Summary = "Supprime une ressource Profil (Personne).")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource Profil (Personne) spécifiée est introuvable.")]
 	public partial class DeleteGenPersonneProfil : IReturnVoid, IDelete
 	{
         /// <summary>

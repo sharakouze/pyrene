@@ -65,9 +65,6 @@
     <Compile Include="DeleteGenCompteur.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="DeleteGenCompteurValeur.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="DeleteGenExercice.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>

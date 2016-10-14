@@ -19,9 +19,9 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
-    [Route("/Exercice", HttpVerbs.Post, Summary = "Ajoute une ressource GenExercice.")]
-    [Route("/Exercice/{CleExercice}", HttpVerbs.Put, Summary = "Remplace une ressource GenExercice.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenExercice spécifiée est introuvable.")]
+    [Route("/Exercice", HttpVerbs.Post, Summary = "Ajoute une ressource Exercice.")]
+    [Route("/Exercice/{CleExercice}", HttpVerbs.Put, Summary = "Remplace une ressource Exercice.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource Exercice spécifiée est introuvable.")]
 	public partial class GenExercice : IAuditable
 	{
 		/// <summary>

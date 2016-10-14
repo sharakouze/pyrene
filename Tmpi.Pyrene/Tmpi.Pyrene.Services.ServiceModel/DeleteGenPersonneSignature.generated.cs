@@ -16,10 +16,11 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Supprime une ressource <see cref="GenPersonneSignature" />.
+	/// Supprime une ressource Signature (Personne).
 	/// </summary>
-	[Route("/Personne/Signature/{ClePersonne}", HttpVerbs.Delete, Summary = "Supprime une ressource GenPersonneSignature.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenPersonneSignature spécifiée est introuvable.")]
+	/// <seealso cref="GenPersonneSignature" />
+	[Route("/Personne/Signature/{ClePersonne}", HttpVerbs.Delete, Summary = "Supprime une ressource Signature (Personne).")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource Signature (Personne) spécifiée est introuvable.")]
 	public partial class DeleteGenPersonneSignature : IReturnVoid, IDelete
 	{
         /// <summary>

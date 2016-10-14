@@ -20,9 +20,9 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleFourn), nameof(NomContact))]
-    [Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Post, Summary = "Ajoute une ressource GenFournContact.")]
-    [Route("/Fourn/Contact/{CleContact}", HttpVerbs.Put, Summary = "Remplace une ressource GenFournContact.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenFournContact spécifiée est introuvable.")]
+    [Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Post, Summary = "Ajoute une ressource Contact (Fourn).")]
+    [Route("/Fourn/Contact/{CleContact}", HttpVerbs.Put, Summary = "Remplace une ressource Contact (Fourn).")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource Contact (Fourn) spécifiée est introuvable.")]
 	public partial class GenFournContact : IAuditable
 	{
 		/// <summary>
@@ -38,7 +38,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du fournisseur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
 		[ApiMember(Description = "Identifiant unique du fournisseur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
 		public int CleFourn { get; set; }
 

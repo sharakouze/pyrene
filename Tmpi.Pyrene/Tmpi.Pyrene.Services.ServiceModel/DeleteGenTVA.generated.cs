@@ -16,10 +16,11 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Supprime une ressource <see cref="GenTVA" />.
+	/// Supprime une ressource TVA.
 	/// </summary>
-	[Route("/TVA/{CleTVA}", HttpVerbs.Delete, Summary = "Supprime une ressource GenTVA.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource GenTVA spécifiée est introuvable.")]
+	/// <seealso cref="GenTVA" />
+	[Route("/TVA/{CleTVA}", HttpVerbs.Delete, Summary = "Supprime une ressource TVA.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource TVA spécifiée est introuvable.")]
 	public partial class DeleteGenTVA : IReturnVoid, IDelete
 	{
         /// <summary>
