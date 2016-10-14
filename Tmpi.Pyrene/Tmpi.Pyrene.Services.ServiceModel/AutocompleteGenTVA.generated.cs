@@ -20,7 +20,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
 	/// <seealso cref="GenTVA"/>
 	[Route("/TVA/Autocomplete/{Text}", HttpVerbs.Get, Summary = "Retourne des prédictions sur les ressources TVA.")]
-	public partial class AutocompleteGenTVA : IReturn<BasicEntity[]>
+	public partial class AutocompleteGenTVA : IReturn<BasicEntity[]>, IGet
 	{
         /// <summary>
         /// Texte à rechercher.

@@ -463,8 +463,6 @@ namespace <#= pocoNamespace #>
 
 		string msgNamespace = string.Format(NamespaceMessages, fileNamespace);
 
-		ColumnComparer colComparer = new ColumnComparer();
-
 		/*******************/
 		/** BEGIN GETBYID **/
 		/*******************/
@@ -805,7 +803,7 @@ namespace <#= msgNamespace #>
 <#
 			}
 #>
-	public <#= MakeClassesPartial ? "partial " : "" #>class <#= autocompleteClassName #> : IReturn<BasicEntity[]>
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= autocompleteClassName #> : IReturn<BasicEntity[]>, IGet
 	{
         /// <summary>
         /// <#= textPropDescription #>
@@ -1173,18 +1171,5 @@ private string GetConnectionString(Project project, string connectionStringName,
 	}
 
     return connStr;
-}
-
-class ColumnComparer : IEqualityComparer<Column>
-{
-	public bool Equals(Column col1, Column col2)
-    {
-		return (col1.PropertyName == col2.PropertyName);
-    }
-
-	public int GetHashCode(Column col)
-    {
-        return col.PropertyName.GetHashCode();
-    }
 }
 #>
