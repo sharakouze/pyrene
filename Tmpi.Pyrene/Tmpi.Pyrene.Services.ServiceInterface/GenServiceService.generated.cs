@@ -24,13 +24,40 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenServiceService : Service
 	{
 		/// <summary>
-		/// Supprime la ressource <see cref="GenService" /> spécifiée dans la requête.
+		/// 
+		/// </summary>
+		protected bool GenServiceCodServiceEstUnique(GenService model)
+		{
+            var q = Db.From<GenService>().Where(x => x.CodService == model.CodService);
+			if (model.CleService != 0)
+			{
+				q.Where(x => x.CleService != model.CleService);
+			}
+
+			return Db.Exists(q);
+		}
+
+		/// <summary>
+		/// Ajoute la ressource <see cref="GenService" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Ressource <see cref="GenService" /> ajoutée.</returns>
+		public GenService Post(GenService request)
+		{
+			var id = Db.Insert(request, selectIdentity: true);
+			request.CleService = (int)id;
+
+			return request;
+		}
+
+		/// <summary>
+		/// Remplace la ressource <see cref="GenService" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenService request)
+		public void Put(GenService request)
 		{
-			int count = Db.DeleteById<GenService>(request.CleService);
+			int count = Db.Update(request);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(

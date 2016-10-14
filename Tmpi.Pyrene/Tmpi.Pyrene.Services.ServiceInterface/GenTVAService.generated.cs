@@ -24,13 +24,40 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenTVAService : Service
 	{
 		/// <summary>
-		/// Supprime la ressource <see cref="GenTVA" /> spécifiée dans la requête.
+		/// 
+		/// </summary>
+		protected bool GenTVACodTVAEstUnique(GenTVA model)
+		{
+            var q = Db.From<GenTVA>().Where(x => x.CodTVA == model.CodTVA);
+			if (model.CleTVA != 0)
+			{
+				q.Where(x => x.CleTVA != model.CleTVA);
+			}
+
+			return Db.Exists(q);
+		}
+
+		/// <summary>
+		/// Ajoute la ressource <see cref="GenTVA" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Ressource <see cref="GenTVA" /> ajoutée.</returns>
+		public GenTVA Post(GenTVA request)
+		{
+			var id = Db.Insert(request, selectIdentity: true);
+			request.CleTVA = (int)id;
+
+			return request;
+		}
+
+		/// <summary>
+		/// Remplace la ressource <see cref="GenTVA" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenTVA request)
+		public void Put(GenTVA request)
 		{
-			int count = Db.DeleteById<GenTVA>(request.CleTVA);
+			int count = Db.Update(request);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(

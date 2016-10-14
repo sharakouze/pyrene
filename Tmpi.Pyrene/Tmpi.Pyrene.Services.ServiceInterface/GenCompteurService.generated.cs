@@ -24,18 +24,73 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenCompteurService : Service
 	{
 		/// <summary>
-		/// Supprime la ressource <see cref="GenCompteur" /> spécifiée dans la requête.
+		/// 
+		/// </summary>
+		protected bool GenCompteurTypCompteurCleServiceEstUnique(GenCompteur model)
+		{
+            var q = Db.From<GenCompteur>().Where(x => x.TypCompteur == model.TypCompteur).Where(x => x.CleService == model.CleService);
+			if (model.CleCompteur != 0)
+			{
+				q.Where(x => x.CleCompteur != model.CleCompteur);
+			}
+
+			return Db.Exists(q);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		protected bool GenCompteurCodCompteurEstUnique(GenCompteur model)
+		{
+            var q = Db.From<GenCompteur>().Where(x => x.CodCompteur == model.CodCompteur);
+			if (model.CleCompteur != 0)
+			{
+				q.Where(x => x.CleCompteur != model.CleCompteur);
+			}
+
+			return Db.Exists(q);
+		}
+
+		/// <summary>
+		/// Ajoute la ressource <see cref="GenCompteur" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Ressource <see cref="GenCompteur" /> ajoutée.</returns>
+		public GenCompteur Post(GenCompteur request)
+		{
+			var id = Db.Insert(request, selectIdentity: true);
+			request.CleCompteur = (int)id;
+
+			return request;
+		}
+
+		/// <summary>
+		/// Remplace la ressource <see cref="GenCompteur" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenCompteur request)
+		public void Put(GenCompteur request)
 		{
-			int count = Db.DeleteById<GenCompteur>(request.CleCompteur);
+			int count = Db.Update(request);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
 					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenCompteur), request.CleCompteur));
 			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		protected bool GenCompteurValeurCleCompteurValPeriodeEstUnique(GenCompteurValeur model)
+		{
+            var q = Db.From<GenCompteurValeur>().Where(x => x.CleCompteur == model.CleCompteur).Where(x => x.ValPeriode == model.ValPeriode);
+			if (model.CleValeur != 0)
+			{
+				q.Where(x => x.CleValeur != model.CleValeur);
+			}
+
+			return Db.Exists(q);
 		}
 
 	}

@@ -76,7 +76,7 @@
 	var dic = new Dictionary<string, List<CodeClass>>();
 
     // get all class items from the code model
-    List<CodeClass> allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(srcProject.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementClass, false)
+    List<CodeClass> allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(srcProject.CodeModel.CodeElements, vsCMElement.vsCMElementClass, false)
 		.OfType<CodeClass>()
 		.OrderBy(c => c.Name)
 		.ToList();
@@ -99,7 +99,7 @@
 
             if (codeClass.Name.StartsWith("Get"))
             {
-			//	entityName = codeClass.Name.Substring(3);
+				entityName = codeClass.Name.Substring(3);
             }
             else if (codeClass.Name.StartsWith("Delete"))
             {
@@ -107,7 +107,7 @@
             }
             else if (codeClass.Name.StartsWith("Patch"))
             {
-            //    entityName = codeClass.Name.Substring(5);
+                entityName = codeClass.Name.Substring(5);
             }
             else if (codeClass.Name.StartsWith("Autocomplete"))
             {
@@ -119,7 +119,7 @@
             }
 			else
 			{
-			//	entityName = codeClass.Name;
+				entityName = codeClass.Name;
 			}
 
 			if (!string.IsNullOrEmpty(entityName))
@@ -131,7 +131,7 @@
 				}
 				else
 				{
-					dic.Add(entityName, new List<EnvDTE.CodeClass>(new[] { codeClass } ));
+					dic.Add(entityName, new List<CodeClass>(new[] { codeClass } ));
 				}
 			}
         }
@@ -161,18 +161,45 @@ namespace <#= fileNamespace #>
 <#
 		foreach (CodeClass requestClass in kvp.Value)
         {
-            string requestName = requestClass.Name;
-
-			if (requestName.StartsWith("Autocomplete"))
+			CodeProperty pkProp = GetPrimaryKeyProperty(requestClass);
+			if (pkProp == null)
             {
-				var entityName = requestName.Substring(12);
+				continue;
+            }
+
+			List<CodeProperty[]> lstIdxProps = GetUniqueProperties(requestClass);
+			foreach (CodeProperty[] lstProps in lstIdxProps)
+            {
+				List<string> whereExpr = new List<string>();
+				whereExpr.AddRange(lstProps.Select(p => string.Format(".Where(x => x.{0} == model.{0})", p.Name)));
+#>
+		/// <summary>
+		/// 
+		/// </summary>
+		protected bool <#= requestClass.Name #><#= string.Join("", lstProps.Select(p => p.Name)) #>EstUnique(<#= requestClass.Name #> model)
+		{
+            var q = Db.From<<#= requestClass.Name #>>()<#= string.Join("", whereExpr) #>;
+			if (model.<#= pkProp.Name #> != 0)
+			{
+				q.Where(x => x.<#= pkProp.Name #> != model.<#= pkProp.Name #>);
+			}
+
+			return Db.Exists(q);
+		}
+
+<#
+            }
+
+			if (requestClass.Name.StartsWith("Autocomplete"))
+            {
+				var entityName = requestClass.Name.Substring(12);
 #>
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns></returns>
-		public List<BasicEntity> Get(<#= requestName #> request)
+		public List<BasicEntity> Get(<#= requestClass.Name #> request)
 		{
 			if (string.IsNullOrWhiteSpace(request.Text))
 			{
@@ -191,9 +218,10 @@ namespace <#= fileNamespace #>
 
 <#
             }
-			else if (requestName.StartsWith("Get"))
+			else if (requestClass.Name.StartsWith("Get"))
             {
-				var entityName = requestName.Substring(3);
+				var entityName = requestClass.Name.Substring(3);
+
 #>
 		/// <summary>
 		/// Retourne la ressource <see cref="<#= entityName #>" /> spécifiée dans la requête.
@@ -202,7 +230,7 @@ namespace <#= fileNamespace #>
 		/// <returns>Ressource <see cref="<#= entityName #>" /> trouvée.</returns>
 		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public <#= entityName #> Get(<#= requestName #> request)
+		public <#= entityName #> Get(<#= requestClass.Name #> request)
 		{
             if (!request.Fields.IsNullOrEmpty())
             {
@@ -215,37 +243,13 @@ namespace <#= fileNamespace #>
                 }
             }
 
-<#
-				List<string> parts = GetRouteParts(requestClass);
-				
-				List<string> expr = new List<string>();
-				string currentTable = entityName.Substring(0, 3);
-				foreach (string str in parts)
-                {
-					if (str.StartsWith("{") && str.EndsWith("}"))
-                    {
-						string propName = str.Remove(0, 1); // Supprime le premier {
-						propName = propName.Remove(propName.Length - 1, 1); // Supprime le dernier }
-
-						expr.Add(string.Format(".Where<{0}>(x => x.{1} == request.{1})", currentTable, propName));
-                    }
-					else
-                    {
-						currentTable += str;
-						if (currentTable != entityName)
-                        {
-							expr.Add(string.Format(".Join<{0}>()", currentTable));
-                        }
-                    }
-                }
-#>
-            var q = Db.From<<#= entityName #>>()<#= string.Join("", expr) #>.Select(request.Fields);
+            var q = Db.From<<#= entityName #>>().Where(x => x.<#= pkProp.Name #> == request.<#= pkProp.Name #>).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= entityName #>), "request.Id"));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= entityName #>), request.<#= pkProp.Name #>));
 			}
 
 			return entity;
@@ -253,37 +257,30 @@ namespace <#= fileNamespace #>
 
 <#
             }
-			else if (requestName.StartsWith("Delete"))
+			else if (requestClass.Name.StartsWith("Delete"))
             {
-				var entityName = requestName.Substring(6);
-
-				List<string> parts = GetRouteParts(requestClass);
-				string id = parts.LastOrDefault(x => x.StartsWith("{") && x.EndsWith("}"));
-				if (!string.IsNullOrEmpty(id))
-                {
-					id = id.Substring(1, id.Length - 2);
-                }
+				var entityName = requestClass.Name.Substring(6);
 #>
 		/// <summary>
 		/// Supprime la ressource <see cref="<#= entityName #>" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(<#= requestName #> request)
+		public void Delete(<#= requestClass.Name #> request)
 		{
-			int count = Db.DeleteById<<#= entityName #>>(request.<#= id #>);
+			int count = Db.DeleteById<<#= entityName #>>(request.<#= pkProp.Name #>);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= entityName #>), request.<#= id #>));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= entityName #>), request.<#= pkProp.Name #>));
 			}
 		}
 
 <#
             }
-			else if (requestName.StartsWith("Patch"))
+			else if (requestClass.Name.StartsWith("Patch"))
             {
-				var entityName = requestName.Substring(5);
+				var entityName = requestClass.Name.Substring(5);
 #>
 		/// <summary>
 		/// Met à jour la ressource <see cref="<#= entityName #>" /> spécifiée dans la requête.
@@ -292,7 +289,7 @@ namespace <#= fileNamespace #>
 		/// <exception cref="ArgumentNullException"></exception>
 		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Patch(<#= requestName #> request)
+		public void Patch(<#= requestClass.Name #> request)
 		{
 			if (request.Fields.IsNullOrEmpty())
 			{
@@ -312,21 +309,21 @@ namespace <#= fileNamespace #>
 			var entity = new <#= entityName #>();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
 
-			var q = Db.From<<#= entityName #>>().Where(x => x.Id == request.Id).Update(patchDic.Keys);
+			var q = Db.From<<#= entityName #>>().Where(x => x.<#= pkProp.Name #> == request.<#= pkProp.Name #>).Update(patchDic.Keys);
 
 			int count = Db.UpdateOnly(entity, q);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= entityName #>), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= entityName #>), request.<#= pkProp.Name #>));
 			}
 		}
 
 <#
 			}
-			else if (requestName.StartsWith("Find"))
+			else if (requestClass.Name.StartsWith("Find"))
             {
-				var entityName = requestName.Substring(4);
+				var entityName = requestClass.Name.Substring(4);
 #>
 		/// <summary>
 		/// Met à jour la ressource <see cref="<#= entityName #>" /> spécifiée dans la requête.
@@ -334,41 +331,41 @@ namespace <#= fileNamespace #>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public List<<#= entityName #>> Get(<#= requestName #> request)
+		public List<<#= entityName #>> Get(<#= requestClass.Name #> request)
 		{
             return null;
 		}
 
 <#
 			}
-			else if (requestName == kvp.Key)
+			else if (requestClass.Name == kvp.Key)
             {
 #>
 		/// <summary>
-		/// Ajoute la ressource <see cref="<#= requestName #>" /> spécifiée dans la requête.
+		/// Ajoute la ressource <see cref="<#= requestClass.Name #>" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="<#= requestName #>" /> ajoutée.</returns>
-		public <#= requestName #> Post(<#= requestName #> request)
+		/// <returns>Ressource <see cref="<#= requestClass.Name #>" /> ajoutée.</returns>
+		public <#= requestClass.Name #> Post(<#= requestClass.Name #> request)
 		{
 			var id = Db.Insert(request, selectIdentity: true);
-			request.Id = (int)id;
+			request.<#= pkProp.Name #> = (int)id;
 
 			return request;
 		}
 
 		/// <summary>
-		/// Remplace la ressource <see cref="<#= requestName #>" /> spécifiée dans la requête.
+		/// Remplace la ressource <see cref="<#= requestClass.Name #>" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Put(<#= requestName #> request)
+		public void Put(<#= requestClass.Name #> request)
 		{
 			int count = Db.Update(request);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= requestName #>), request.Id));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= requestClass.Name #>), request.<#= pkProp.Name #>));
 			}
 		}
 
@@ -383,13 +380,11 @@ namespace <#= fileNamespace #>
 
         if (CreateValidators)
         {
-            foreach (EnvDTE.CodeClass requestClass in kvp.Value)
+            foreach (CodeClass requestClass in kvp.Value)
             {
-                string requestName = requestClass.Name;
-
-                if (requestName == kvp.Key)
+                if (requestClass.Name == kvp.Key)
                 {
-                    manager.StartNewFile(requestName + "Validator.generated.cs");
+                    manager.StartNewFile(requestClass.Name + "Validator.generated.cs");
 #>
 using ServiceStack.FluentValidation;
 using <#= sourceNamespace #>;
@@ -398,14 +393,14 @@ using <#= sourceNamespace #>.Types;
 namespace <#= fileNamespace #>
 {
     /// <summary>
-    /// Validation pour la requête <see cref="<#= requestName #>"/>.
+    /// Validation pour la requête <see cref="<#= requestClass.Name #>"/>.
     /// </summary>
-    public <#= MakeClassesPartial ? "partial " : "" #>class <#= requestName #>Validator : AbstractValidator<<#= requestName #>>
+    public <#= MakeClassesPartial ? "partial " : "" #>class <#= requestClass.Name #>Validator : AbstractValidator<<#= requestClass.Name #>>
     {
         /// <summary>
-        /// Initialise une nouvelle instance de la classe <see cref="<#= requestName #>Validator" />.
+        /// Initialise une nouvelle instance de la classe <see cref="<#= requestClass.Name #>Validator" />.
         /// </summary>
-        public <#= requestName #>Validator()
+        public <#= requestClass.Name #>Validator()
         {
 <#
                     var allPropsAttributes = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(requestClass);
@@ -420,7 +415,7 @@ namespace <#= fileNamespace #>
                                 string str = ".NotEmpty()";
                                 if (ValidatorsWithMessage)
                                 {
-                                    str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_NotEmpty)", requestName, prop.Key.Name);
+                                    str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_NotEmpty)", requestClass.Name, prop.Key.Name);
                                 }
                                 lstValidation.Add(str);
                             }
@@ -433,7 +428,7 @@ namespace <#= fileNamespace #>
                             string str = string.Format(".Length({0}, {1})", min, max);
                             if (ValidatorsWithMessage)
                             {
-                                str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_Length, {2}, {3})", requestName, prop.Key.Name, min, max);
+                                str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_Length, {2}, {3})", requestClass.Name, prop.Key.Name, min, max);
                             }
                             lstValidation.Add(str);
                         }
@@ -477,6 +472,34 @@ namespace <#= fileNamespace #>
 	manager.Process(SplitIntoMultipleFiles);
 #>
 <#+
+private string ToProperType(CodeTypeRef type, params string[] namespaces)
+{
+	if (type == null)
+    {
+		return "";
+    }
+
+	string str = type.AsString;
+	if (namespaces != null)
+    {
+		foreach (string ns in namespaces)
+        {
+			str = str.Replace(ns + ".", "");
+        }
+    }
+	return str;
+}
+
+private string ToCamelCase(string str)
+{
+	if (string.IsNullOrEmpty(str))
+    {
+		return "";
+	}
+
+	return str.Substring(0, 1).ToLower() + str.Substring(1);
+}
+
 private List<string> GetRouteParts(CodeClass codeClass)
 {
 	IEnumerable<CodeAttribute> routeAttributes = VisualStudioHelper.CodeModel.GetAllClassAttributes(codeClass)
@@ -521,5 +544,101 @@ private string GetIdFromRouteParts(List<string> parts, string entityName)
 
 	string id = lstId.SingleOrDefault();
 	return id ?? "";
+}
+
+private CodeProperty GetPrimaryKeyProperty(CodeClass codeClass)
+{
+	IEnumerable<CodeProperty> allProperties = VisualStudioHelper.CodeModel.GetAllProperties(codeClass);
+	foreach (CodeProperty property in allProperties)
+    {
+		bool isPk = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(property.Attributes, vsCMElement.vsCMElementAttribute, false)
+			.OfType<CodeAttribute>()
+			.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.PrimaryKeyAttribute")
+			.Any();
+		if (isPk)
+        {
+			return property;
+        }
+    }
+
+	return null;
+}
+
+private List<CodeProperty[]> GetUniqueProperties(CodeClass codeClass)
+{
+	List<CodeProperty[]> lstIdxProps = new List<CodeProperty[]>();
+
+	IEnumerable<CodeProperty> allProperties = VisualStudioHelper.CodeModel.GetAllProperties(codeClass);
+
+	// [CompositeIndex(true, ...)]
+	IEnumerable<CodeAttribute> compositeIdxAttrs = VisualStudioHelper.CodeModel.GetAllClassAttributes(codeClass)
+		.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.CompositeIndexAttribute")
+		.ToList();
+	foreach (CodeAttribute idxAttr in compositeIdxAttrs)
+    {
+		List<string> parameters = idxAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
+		
+		string str1 = parameters.SingleOrDefault(p => p.StartsWith("Unique"));
+		if (string.IsNullOrEmpty(str1))
+        {
+			str1 = parameters.FirstOrDefault();
+        }
+		bool unique = false;
+		bool.TryParse(str1, out unique);
+		if (unique)
+        {
+			List<CodeProperty> lstProps = new List<CodeProperty>();
+			foreach (string par in parameters)
+            {
+				string strParam = "";
+				if (par.StartsWith("nameof(") && par.EndsWith(")"))
+                {
+					strParam = par.Substring(7, par.Length - 8);
+                }
+				else if (par.StartsWith("\"") && par.EndsWith("\""))
+                {
+					strParam = par.Substring(1, par.Length - 2);
+				}
+
+				if (!string.IsNullOrEmpty(strParam))
+                {
+    				CodeProperty prop = allProperties.SingleOrDefault(p => p.Name == strParam);
+					if (prop != null)
+                    {
+						lstProps.Add(prop);
+                    }
+                }
+			}
+
+			lstIdxProps.Add(lstProps.ToArray());
+        }
+    }
+	
+	// [Index(true)]
+	foreach (CodeProperty property in allProperties)
+    {
+		IEnumerable<CodeAttribute> idxAttrs = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(property.Attributes, vsCMElement.vsCMElementAttribute, false)
+			.OfType<CodeAttribute>()
+			.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.IndexAttribute")
+			.ToList();
+		foreach (CodeAttribute idxAttr in idxAttrs)
+        {
+			List<string> parameters = idxAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
+
+			string str1 = parameters.SingleOrDefault(p => p.StartsWith("Unique"));
+			if (string.IsNullOrEmpty(str1))
+			{
+				str1 = parameters.FirstOrDefault();
+			}
+			bool unique = false;
+			bool.TryParse(str1, out unique);
+			if (unique)
+			{
+				lstIdxProps.Add(new [] { property });
+            }
+        }
+    }
+
+	return lstIdxProps;
 }
 #>

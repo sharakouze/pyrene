@@ -24,13 +24,40 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenFournService : Service
 	{
 		/// <summary>
-		/// Supprime la ressource <see cref="GenFourn" /> spécifiée dans la requête.
+		/// 
+		/// </summary>
+		protected bool GenFournCodFournEstUnique(GenFourn model)
+		{
+            var q = Db.From<GenFourn>().Where(x => x.CodFourn == model.CodFourn);
+			if (model.CleFourn != 0)
+			{
+				q.Where(x => x.CleFourn != model.CleFourn);
+			}
+
+			return Db.Exists(q);
+		}
+
+		/// <summary>
+		/// Ajoute la ressource <see cref="GenFourn" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Ressource <see cref="GenFourn" /> ajoutée.</returns>
+		public GenFourn Post(GenFourn request)
+		{
+			var id = Db.Insert(request, selectIdentity: true);
+			request.CleFourn = (int)id;
+
+			return request;
+		}
+
+		/// <summary>
+		/// Remplace la ressource <see cref="GenFourn" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenFourn request)
+		public void Put(GenFourn request)
 		{
-			int count = Db.DeleteById<GenFourn>(request.CleFourn);
+			int count = Db.Update(request);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
@@ -39,50 +66,32 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="GenFournBanque" /> spécifiée dans la requête.
+		/// 
 		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenFournBanque request)
+		protected bool GenFournBanqueCleFournCodIBANEstUnique(GenFournBanque model)
 		{
-			int count = Db.DeleteById<GenFournBanque>(request.CleBanque);
-			if (count == 0)
+            var q = Db.From<GenFournBanque>().Where(x => x.CleFourn == model.CleFourn).Where(x => x.CodIBAN == model.CodIBAN);
+			if (model.CleBanque != 0)
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
+				q.Where(x => x.CleBanque != model.CleBanque);
 			}
+
+			return Db.Exists(q);
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="GenFournContact" /> spécifiée dans la requête.
+		/// 
 		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenFournContact request)
+		protected bool GenFournContactCleFournNomContactEstUnique(GenFournContact model)
 		{
-			int count = Db.DeleteById<GenFournContact>(request.CleContact);
-			if (count == 0)
+            var q = Db.From<GenFournContact>().Where(x => x.CleFourn == model.CleFourn).Where(x => x.NomContact == model.NomContact);
+			if (model.CleContact != 0)
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
+				q.Where(x => x.CleContact != model.CleContact);
 			}
+
+			return Db.Exists(q);
 		}
 
-        public void Put(GenFourn r)
-        {
-        }
-
-        public void Put(GenFournBanque r)
-        {
-        }
-
-        public void Post(GenFournBanque r)
-        {
-        }
-
-        public GenFourn Get(GetGenFourn r)
-        {
-            return null;
-        }
-    }
+	}
 }

@@ -24,13 +24,40 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenPersonneService : Service
 	{
 		/// <summary>
-		/// Supprime la ressource <see cref="GenPersonne" /> spécifiée dans la requête.
+		/// 
+		/// </summary>
+		protected bool GenPersonneCodPersonneEstUnique(GenPersonne model)
+		{
+            var q = Db.From<GenPersonne>().Where(x => x.CodPersonne == model.CodPersonne);
+			if (model.ClePersonne != 0)
+			{
+				q.Where(x => x.ClePersonne != model.ClePersonne);
+			}
+
+			return Db.Exists(q);
+		}
+
+		/// <summary>
+		/// Ajoute la ressource <see cref="GenPersonne" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Ressource <see cref="GenPersonne" /> ajoutée.</returns>
+		public GenPersonne Post(GenPersonne request)
+		{
+			var id = Db.Insert(request, selectIdentity: true);
+			request.ClePersonne = (int)id;
+
+			return request;
+		}
+
+		/// <summary>
+		/// Remplace la ressource <see cref="GenPersonne" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenPersonne request)
+		public void Put(GenPersonne request)
 		{
-			int count = Db.DeleteById<GenPersonne>(request.ClePersonne);
+			int count = Db.Update(request);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
@@ -39,33 +66,31 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="GenPersonneProfil" /> spécifiée dans la requête.
+		/// 
 		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenPersonneProfil request)
+		protected bool GenPersonneProfilClePersonneCleServiceEstUnique(GenPersonneProfil model)
 		{
-			int count = Db.DeleteById<GenPersonneProfil>(request.CleProfil);
-			if (count == 0)
+            var q = Db.From<GenPersonneProfil>().Where(x => x.ClePersonne == model.ClePersonne).Where(x => x.CleService == model.CleService);
+			if (model.CleProfil != 0)
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonneProfil), request.CleProfil));
+				q.Where(x => x.CleProfil != model.CleProfil);
 			}
+
+			return Db.Exists(q);
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="GenPersonneSignature" /> spécifiée dans la requête.
+		/// 
 		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenPersonneSignature request)
+		protected bool GenPersonneProfilCodProfilClePersonneEstUnique(GenPersonneProfil model)
 		{
-			int count = Db.DeleteById<GenPersonneSignature>(request.ClePersonne);
-			if (count == 0)
+            var q = Db.From<GenPersonneProfil>().Where(x => x.CodProfil == model.CodProfil).Where(x => x.ClePersonne == model.ClePersonne);
+			if (model.CleProfil != 0)
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenPersonneSignature), request.ClePersonne));
+				q.Where(x => x.CleProfil != model.CleProfil);
 			}
+
+			return Db.Exists(q);
 		}
 
 	}

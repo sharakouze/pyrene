@@ -24,13 +24,54 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenMandatService : Service
 	{
 		/// <summary>
-		/// Supprime la ressource <see cref="GenMandat" /> spécifiée dans la requête.
+		/// 
+		/// </summary>
+		protected bool GenMandatTypMandatNivMandatEstUnique(GenMandat model)
+		{
+            var q = Db.From<GenMandat>().Where(x => x.TypMandat == model.TypMandat).Where(x => x.NivMandat == model.NivMandat);
+			if (model.CleMandat != 0)
+			{
+				q.Where(x => x.CleMandat != model.CleMandat);
+			}
+
+			return Db.Exists(q);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		protected bool GenMandatCodMandatEstUnique(GenMandat model)
+		{
+            var q = Db.From<GenMandat>().Where(x => x.CodMandat == model.CodMandat);
+			if (model.CleMandat != 0)
+			{
+				q.Where(x => x.CleMandat != model.CleMandat);
+			}
+
+			return Db.Exists(q);
+		}
+
+		/// <summary>
+		/// Ajoute la ressource <see cref="GenMandat" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Ressource <see cref="GenMandat" /> ajoutée.</returns>
+		public GenMandat Post(GenMandat request)
+		{
+			var id = Db.Insert(request, selectIdentity: true);
+			request.CleMandat = (int)id;
+
+			return request;
+		}
+
+		/// <summary>
+		/// Remplace la ressource <see cref="GenMandat" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenMandat request)
+		public void Put(GenMandat request)
 		{
-			int count = Db.DeleteById<GenMandat>(request.CleMandat);
+			int count = Db.Update(request);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
@@ -39,18 +80,17 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="GenMandatMandataire" /> spécifiée dans la requête.
+		/// 
 		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenMandatMandataire request)
+		protected bool GenMandatMandataireCleMandatClePersonneCleServiceEstUnique(GenMandatMandataire model)
 		{
-			int count = Db.DeleteById<GenMandatMandataire>(request.CleMandataire);
-			if (count == 0)
+            var q = Db.From<GenMandatMandataire>().Where(x => x.CleMandat == model.CleMandat).Where(x => x.ClePersonne == model.ClePersonne).Where(x => x.CleService == model.CleService);
+			if (model.CleMandataire != 0)
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.CleMandataire));
+				q.Where(x => x.CleMandataire != model.CleMandataire);
 			}
+
+			return Db.Exists(q);
 		}
 
 	}

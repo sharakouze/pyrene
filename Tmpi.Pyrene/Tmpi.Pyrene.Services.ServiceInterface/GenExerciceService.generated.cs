@@ -24,13 +24,40 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenExerciceService : Service
 	{
 		/// <summary>
-		/// Supprime la ressource <see cref="GenExercice" /> spécifiée dans la requête.
+		/// 
+		/// </summary>
+		protected bool GenExerciceCodExerciceEstUnique(GenExercice model)
+		{
+            var q = Db.From<GenExercice>().Where(x => x.CodExercice == model.CodExercice);
+			if (model.CleExercice != 0)
+			{
+				q.Where(x => x.CleExercice != model.CleExercice);
+			}
+
+			return Db.Exists(q);
+		}
+
+		/// <summary>
+		/// Ajoute la ressource <see cref="GenExercice" /> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Ressource <see cref="GenExercice" /> ajoutée.</returns>
+		public GenExercice Post(GenExercice request)
+		{
+			var id = Db.Insert(request, selectIdentity: true);
+			request.CleExercice = (int)id;
+
+			return request;
+		}
+
+		/// <summary>
+		/// Remplace la ressource <see cref="GenExercice" /> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenExercice request)
+		public void Put(GenExercice request)
 		{
-			int count = Db.DeleteById<GenExercice>(request.CleExercice);
+			int count = Db.Update(request);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
