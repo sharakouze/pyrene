@@ -19,7 +19,7 @@ using Tmpi.Pyrene.Infrastructure;
 namespace Tmpi.Pyrene.Services.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur les ressources <see cref="GenExercice" />.
+	/// Service qui traite les requêtes sur les ressources <see cref="GenExercice"/>.
 	/// </summary>
 	public partial class GenExerciceService : Service
 	{
@@ -38,10 +38,10 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute la ressource <see cref="GenExercice" /> spécifiée dans la requête.
+		/// Ajoute la ressource <see cref="GenExercice"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenExercice" /> ajoutée.</returns>
+		/// <returns>Ressource <see cref="GenExercice"/> ajoutée.</returns>
 		public GenExercice Post(GenExercice request)
 		{
 			var id = Db.Insert(request, selectIdentity: true);
@@ -51,7 +51,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
-		/// Remplace la ressource <see cref="GenExercice" /> spécifiée dans la requête.
+		/// Remplace la ressource <see cref="GenExercice"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>

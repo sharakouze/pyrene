@@ -19,7 +19,7 @@ using Tmpi.Pyrene.Infrastructure;
 namespace Tmpi.Pyrene.Services.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur les ressources <see cref="GenTVA" />.
+	/// Service qui traite les requêtes sur les ressources <see cref="GenTVA"/>.
 	/// </summary>
 	public partial class GenTVAService : Service
 	{
@@ -38,10 +38,10 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute la ressource <see cref="GenTVA" /> spécifiée dans la requête.
+		/// Ajoute la ressource <see cref="GenTVA"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenTVA" /> ajoutée.</returns>
+		/// <returns>Ressource <see cref="GenTVA"/> ajoutée.</returns>
 		public GenTVA Post(GenTVA request)
 		{
 			var id = Db.Insert(request, selectIdentity: true);
@@ -51,7 +51,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
-		/// Remplace la ressource <see cref="GenTVA" /> spécifiée dans la requête.
+		/// Remplace la ressource <see cref="GenTVA"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>

@@ -9,3 +9,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ServiceStack;
+using ServiceStack.OrmLite;
+using Tmpi.Pyrene.Services.ServiceModel;
+using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.Infrastructure;
+
+namespace Tmpi.Pyrene.Services.ServiceInterface
+{
+}

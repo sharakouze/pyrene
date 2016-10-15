@@ -9,6 +9,7 @@
 
 #pragma warning disable 1591
 
+using System.Collections.Generic;
 using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
@@ -16,11 +17,11 @@ using Tmpi.Pyrene.Services.ServiceModel.Types;
 namespace Tmpi.Pyrene.Services.ServiceModel
 {
 	/// <summary>
-	/// Retourne des prédictions sur les ressources Compteur.
+	/// Retourne le résultat d'une recherche sur les ressources Exercice.
 	/// </summary>
-	/// <seealso cref="GenCompteur"/>
-	[Route("/Compteur/Autocomplete/{Text}", HttpVerbs.Get, Summary = "Retourne des prédictions sur les ressources Compteur.")]
-	public partial class AutocompleteGenCompteur : IReturn<BasicEntity[]>, IGet
+	/// <seealso cref="GenExercice"/>
+	[Route("/Exercice/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les ressources Exercice.")]
+	public partial class SearchGenExercice : IReturn<List<BasicEntity>>, IGet
 	{
         /// <summary>
         /// Texte à rechercher.
@@ -29,9 +30,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         public string Text { get; set; }
 
         /// <summary>
-        /// Nombre maximum de prédictions à retourner.
+        /// Nombre maximum de résultats à retourner.
         /// </summary>
-        [ApiMember(Description = "Nombre maximum de prédictions à retourner.", DataType = SwaggerDataTypes.Int)]
+        [ApiMember(Description = "Nombre maximum de résultats à retourner.", DataType = SwaggerDataTypes.Int)]
         public int Max { get; set; }
 	}
 }

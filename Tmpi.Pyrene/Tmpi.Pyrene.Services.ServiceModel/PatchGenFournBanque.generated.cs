@@ -9,6 +9,7 @@
 
 #pragma warning disable 1591
 
+using System.Collections.Generic;
 using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
@@ -34,6 +35,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// Liste des modifications à appliquer.
         /// </summary>
         [ApiMember(Description = "Liste des modifications à appliquer.", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
-        public Patch[] Fields { get; set; }
+        public List<Patch> Fields { get; set; }
 	}
 }

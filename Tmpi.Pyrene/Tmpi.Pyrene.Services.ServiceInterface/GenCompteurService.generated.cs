@@ -19,14 +19,25 @@ using Tmpi.Pyrene.Infrastructure;
 namespace Tmpi.Pyrene.Services.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur les ressources <see cref="GenCompteur" />.
+	/// Service qui traite les requêtes sur les ressources <see cref="GenCompteur"/>.
 	/// </summary>
 	public partial class GenCompteurService : Service
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		protected bool GenCompteurTypCompteurCleServiceEstUnique(GenCompteur model)
+        public GenCompteur Get(GetGenCompteur r)
+        {
+            return null;
+        }
+        public void Patch(PatchGenCompteur r)
+        {
+        }
+        public BasicEntity[] Get(SearchGenCompteur r)
+        {
+            return null;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        protected bool GenCompteurTypCompteurCleServiceEstUnique(GenCompteur model)
 		{
             var q = Db.From<GenCompteur>().Where(x => x.TypCompteur == model.TypCompteur).Where(x => x.CleService == model.CleService);
 			if (model.CleCompteur != 0)
@@ -52,10 +63,10 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute la ressource <see cref="GenCompteur" /> spécifiée dans la requête.
+		/// Ajoute la ressource <see cref="GenCompteur"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenCompteur" /> ajoutée.</returns>
+		/// <returns>Ressource <see cref="GenCompteur"/> ajoutée.</returns>
 		public GenCompteur Post(GenCompteur request)
 		{
 			var id = Db.Insert(request, selectIdentity: true);
@@ -65,7 +76,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		}
 
 		/// <summary>
-		/// Remplace la ressource <see cref="GenCompteur" /> spécifiée dans la requête.
+		/// Remplace la ressource <see cref="GenCompteur"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>

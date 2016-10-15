@@ -83,7 +83,7 @@
 	Regex GetTableFilterExclude = null;
 	Regex DeleteTableFilterExclude = new Regex("GenCompteurValeur", RegexOptions.IgnoreCase);
 	Regex PatchTableFilterExclude = null;
-	Regex AutocompleteTableFilterExclude = null;
+	Regex SearchTableFilterExclude = null;
 
     // Si non null, méthode appliquée sur la collection des tables
     Action<Tables> TweakSchema = (tables) =>
@@ -463,9 +463,9 @@ namespace <#= pocoNamespace #>
 
 		string msgNamespace = string.Format(NamespaceMessages, fileNamespace);
 
-		/*******************/
-		/** BEGIN GETBYID **/
-		/*******************/
+		/********************/
+		/** BEGIN GET BYID **/
+		/********************/
 
 		bool getExcluded = GetTableFilterExclude != null && GetTableFilterExclude.IsMatch(table.ClassName);
 		if (!getExcluded)
@@ -476,6 +476,7 @@ namespace <#= pocoNamespace #>
 
 			manager.StartNewFile(getTableClassName + ".generated.cs");
 #>
+using System.Collections.Generic;
 using System.Net;
 using ServiceStack;
 <#
@@ -558,16 +559,16 @@ namespace <#= msgNamespace #>
 <#
                 }
 #>
-        public string[] Fields { get; set; }
+        public List<string> Fields { get; set; }
 	}
 }
 <#
 			manager.EndBlock(); // end newfile
 		}
 
-		/**********************/
-		/** BEGIN DELETEBYID **/
-		/**********************/
+		/***********************/
+		/** BEGIN DELETE BYID **/
+		/***********************/
 
 		bool deleteExcluded = DeleteTableFilterExclude != null && DeleteTableFilterExclude.IsMatch(table.ClassName);
 		if (!deleteExcluded)
@@ -654,9 +655,9 @@ namespace <#= msgNamespace #>
 			manager.EndBlock(); // end newfile
 		}
 
-		/*********************/
-		/** BEGIN PATCHBYID **/
-		/*********************/
+		/**********************/
+		/** BEGIN PATCH BYID **/
+		/**********************/
 
 		bool patchExcluded = PatchTableFilterExclude != null && PatchTableFilterExclude.IsMatch(table.ClassName);
 		if (!patchExcluded)
@@ -667,6 +668,7 @@ namespace <#= msgNamespace #>
 
 			manager.StartNewFile(patchTableClassName + ".generated.cs");
 #>
+using System.Collections.Generic;
 using System.Net;
 using ServiceStack;
 <#
@@ -749,7 +751,7 @@ namespace <#= msgNamespace #>
 <#
                 }
 #>
-        public Patch[] Fields { get; set; }
+        public List<Patch> Fields { get; set; }
 	}
 }
 <#
@@ -757,26 +759,28 @@ namespace <#= msgNamespace #>
 		}
 
 		string stdColFormat = GetStandardColumnFormat(table);
+		bool hasPK = (table.PrimaryKey != null);
 		bool hasCodObjet = table.Columns.Any(c => c.PropertyType == "string" && c.PropertyName == string.Format(stdColFormat, "Cod"));
 		bool hasLibObjet = table.Columns.Any(c => c.PropertyType == "string" && c.PropertyName == string.Format(stdColFormat, "Lib"));
 		bool hasEstActif = table.Columns.Any(c => c.PropertyType == "bool" && c.PropertyName == "EstActif");
 
-		if (hasCodObjet && hasLibObjet && hasEstActif)
+		if (hasPK && hasCodObjet && hasLibObjet && hasEstActif)
         {
 			/************************/
 			/** BEGIN AUTOCOMPLETE **/
 			/************************/
 
-			bool autocompleteExcluded = AutocompleteTableFilterExclude != null && AutocompleteTableFilterExclude.IsMatch(table.ClassName);
-			if (!autocompleteExcluded)
+			bool searchExcluded = SearchTableFilterExclude != null && SearchTableFilterExclude.IsMatch(table.ClassName);
+			if (!searchExcluded)
 			{
-				var autocompleteClassName = "Autocomplete" + table.ClassName;
-				var autocompleteDescription = string.Format("Retourne des prédictions sur les ressources {0}.", resourceName);
+				var searchClassName = "Search" + table.ClassName;
+				var searchDescription = string.Format("Retourne le résultat d'une recherche sur les ressources {0}.", resourceName);
 				var textPropDescription = "Texte à rechercher.";
-				var maxPropDescription = "Nombre maximum de prédictions à retourner.";
+				var maxPropDescription = "Nombre maximum de résultats à retourner.";
 
-				manager.StartNewFile(autocompleteClassName + ".generated.cs");
+				manager.StartNewFile(searchClassName + ".generated.cs");
 #>
+using System.Collections.Generic;
 using System.Net;
 using ServiceStack;
 <#
@@ -791,7 +795,7 @@ using <#= pocoNamespace #>;
 namespace <#= msgNamespace #>
 {
 	/// <summary>
-	/// <#= autocompleteDescription #>
+	/// <#= searchDescription #>
 	/// </summary>
 	/// <seealso cref="<#= table.ClassName #>"/>
 <#
@@ -799,11 +803,11 @@ namespace <#= msgNamespace #>
             {
 				string strRouteBase = GetStrRoutePath(lstPlaceholderCols, false);
 #>
-	[Route("<#= strRouteBase #>/Autocomplete/{Text}", HttpVerbs.Get, Summary = "<#= autocompleteDescription #>")]
+	[Route("<#= strRouteBase #>/Recherche/{Text}", HttpVerbs.Get, Summary = "<#= searchDescription #>")]
 <#
 			}
 #>
-	public <#= MakeClassesPartial ? "partial " : "" #>class <#= autocompleteClassName #> : IReturn<BasicEntity[]>, IGet
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= searchClassName #> : IReturn<List<BasicEntity>>, IGet
 	{
         /// <summary>
         /// <#= textPropDescription #>
