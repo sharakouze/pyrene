@@ -19,6 +19,7 @@
     - Commentaires sur les [References] ?
     - Ajout de propriétés [References] pour les FK ?
 	- Verb interface markers (Ipost, IGet...)
+	- Possibilité d'avoir 0 PK ?
 	****************/
 
 	/*********************/

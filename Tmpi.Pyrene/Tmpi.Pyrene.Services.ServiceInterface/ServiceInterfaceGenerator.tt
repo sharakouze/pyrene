@@ -103,9 +103,9 @@
         {
             entityName = codeClass.Name.Substring(5);
         }
-        else if (codeClass.Name.StartsWith("Autocomplete"))
+        else if (codeClass.Name.StartsWith("Search"))
         {
-        //    entityName = codeClass.Name.Substring(12);
+			entityName = codeClass.Name.Substring(6);
         }
         else if (codeClass.Name.StartsWith("Find"))
         {
@@ -117,6 +117,7 @@
 		}
 
 		string codeClassName = codeClass.Name;
+
 		List<CodeAttribute> lstRouteAttrs = VisualStudioHelper.CodeModel.GetAllClassAttributes(codeClass)
 			.Where(attr => attr.FullName == "ServiceStack.RouteAttribute")
 			.ToList();
