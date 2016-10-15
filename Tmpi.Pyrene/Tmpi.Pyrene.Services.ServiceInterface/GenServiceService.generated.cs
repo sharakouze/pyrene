@@ -24,7 +24,22 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenServiceService : Service
 	{
 		/// <summary>
-		/// 
+		/// Supprime la ressource <see cref="GenService"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
+		public void Delete(DeleteGenService request)
+		{
+			int count = Db.DeleteById<GenService>(request.CleService);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenService), request.CleService));
+			}
+		}
+
+		/// <summary>
+		/// Teste l'unicité d'un <see cref="GenService"/>.
 		/// </summary>
 		protected bool GenServiceCodServiceEstUnique(GenService model)
 		{
@@ -44,7 +59,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <returns>Ressource <see cref="GenService"/> ajoutée.</returns>
 		public GenService Post(GenService request)
 		{
-			var id = Db.Insert(request, selectIdentity: true);
+			long id = Db.Insert(request, selectIdentity: true);
 			request.CleService = (int)id;
 
 			return request;
@@ -63,6 +78,82 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 				throw HttpError.NotFound(
 					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenService), request.CleService));
 			}
+		}
+
+		/// <summary>
+		/// Retourne la ressource <see cref="GenService"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Ressource <see cref="GenService"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
+		public GenService Get(GetGenService request)
+		{
+            ModelDefinitionHelper.UndefinedFields<GenService>(request.Fields);
+
+            var q = Db.From<GenService>().Where(x => x.CleService == request.CleService).Select(request.Fields);
+
+			var entity = Db.Single(q);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenService), request.CleService));
+			}
+
+			return entity;
+		}
+
+		/// <summary>
+		/// Met à jour la ressource <see cref="GenService"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
+		public void Patch(PatchGenService request)
+		{
+			if (request.Fields.IsNullOrEmpty())
+			{
+				throw new ArgumentNullException(nameof(request.Fields));
+			}
+
+            var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
+
+            ModelDefinitionHelper.UndefinedFields<GenService>(patchDic.Keys);
+
+			var entity = new GenService();
+			PatchHelper.PopulateFromPatch(entity, patchDic);
+
+			var q = Db.From<GenService>().Where(x => x.CleService == request.CleService).Update(patchDic.Keys);
+
+			int count = Db.UpdateOnly(entity, q);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenService), request.CleService));
+			}
+		}
+
+		/// <summary>
+		/// Retourne le résultat d'une recherche.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns></returns>
+		public List<BasicEntity> Get(SearchGenService request)
+		{
+			if (string.IsNullOrWhiteSpace(request.Text))
+			{
+				return null;
+			}
+
+            var q = Db.From<GenService>().Where(x => x.LibService.Contains(request.Text));
+            if (request.Max > 0)
+            {
+                q = q.Limit(request.Max);
+            }
+
+            var items = Db.Select<BasicEntity>(q);
+            return items;
 		}
 
 	}

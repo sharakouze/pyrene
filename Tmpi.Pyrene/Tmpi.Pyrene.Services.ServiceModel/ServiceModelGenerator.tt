@@ -477,7 +477,6 @@ namespace <#= pocoNamespace #>
 
 			manager.StartNewFile(getTableClassName + ".generated.cs");
 #>
-using System.Collections.Generic;
 using System.Net;
 using ServiceStack;
 <#
@@ -560,7 +559,7 @@ namespace <#= msgNamespace #>
 <#
                 }
 #>
-        public List<string> Fields { get; set; }
+        public string[] Fields { get; set; }
 	}
 }
 <#
@@ -669,7 +668,6 @@ namespace <#= msgNamespace #>
 
 			manager.StartNewFile(patchTableClassName + ".generated.cs");
 #>
-using System.Collections.Generic;
 using System.Net;
 using ServiceStack;
 <#
@@ -752,7 +750,7 @@ namespace <#= msgNamespace #>
 <#
                 }
 #>
-        public List<Patch> Fields { get; set; }
+        public Patch[] Fields { get; set; }
 	}
 }
 <#

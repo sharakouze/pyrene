@@ -73,6 +73,9 @@
     <Compile Include="GenCompteurService.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="GenCompteurValeurValidator.generated.cs">
+      <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="GenCompteurValidator.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
@@ -82,10 +85,19 @@
     <Compile Include="GenExerciceValidator.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="GenFournBanqueValidator.generated.cs">
+      <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenFournContactValidator.generated.cs">
+      <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="GenFournService.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GenFournValidator.generated.cs">
+      <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenMandatMandataireValidator.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GenMandatService.generated.cs">
@@ -94,7 +106,13 @@
     <Compile Include="GenMandatValidator.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="GenPersonneProfilValidator.generated.cs">
+      <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="GenPersonneService.generated.cs">
+      <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GenPersonneSignatureValidator.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GenPersonneValidator.generated.cs">

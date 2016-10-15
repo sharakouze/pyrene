@@ -9,27 +9,3 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using ServiceStack;
-using ServiceStack.OrmLite;
-using Tmpi.Pyrene.Services.ServiceModel;
-using Tmpi.Pyrene.Services.ServiceModel.Types;
-using Tmpi.Pyrene.Infrastructure;
-
-namespace Tmpi.Pyrene.Services.ServiceInterface
-{
-	/// <summary>
-	/// Service qui traite les requêtes sur les ressources <see cref="GenCompteur"/>.
-	/// </summary>
-	public partial class GenCompteurService : Service
-	{
-		/// <summary>
-		/// Supprime la ressource <see cref="GenCompteur"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenCompteur request)
-		{
-			int count = Db.DeleteById<GenCompteur>(request.

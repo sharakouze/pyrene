@@ -24,7 +24,22 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	public partial class GenTVAService : Service
 	{
 		/// <summary>
-		/// 
+		/// Supprime la ressource <see cref="GenTVA"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
+		public void Delete(DeleteGenTVA request)
+		{
+			int count = Db.DeleteById<GenTVA>(request.CleTVA);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
+			}
+		}
+
+		/// <summary>
+		/// Teste l'unicité d'un <see cref="GenTVA"/>.
 		/// </summary>
 		protected bool GenTVACodTVAEstUnique(GenTVA model)
 		{
@@ -44,7 +59,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <returns>Ressource <see cref="GenTVA"/> ajoutée.</returns>
 		public GenTVA Post(GenTVA request)
 		{
-			var id = Db.Insert(request, selectIdentity: true);
+			long id = Db.Insert(request, selectIdentity: true);
 			request.CleTVA = (int)id;
 
 			return request;
@@ -63,6 +78,82 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 				throw HttpError.NotFound(
 					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
 			}
+		}
+
+		/// <summary>
+		/// Retourne la ressource <see cref="GenTVA"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Ressource <see cref="GenTVA"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
+		public GenTVA Get(GetGenTVA request)
+		{
+            ModelDefinitionHelper.UndefinedFields<GenTVA>(request.Fields);
+
+            var q = Db.From<GenTVA>().Where(x => x.CleTVA == request.CleTVA).Select(request.Fields);
+
+			var entity = Db.Single(q);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
+			}
+
+			return entity;
+		}
+
+		/// <summary>
+		/// Met à jour la ressource <see cref="GenTVA"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
+		public void Patch(PatchGenTVA request)
+		{
+			if (request.Fields.IsNullOrEmpty())
+			{
+				throw new ArgumentNullException(nameof(request.Fields));
+			}
+
+            var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
+
+            ModelDefinitionHelper.UndefinedFields<GenTVA>(patchDic.Keys);
+
+			var entity = new GenTVA();
+			PatchHelper.PopulateFromPatch(entity, patchDic);
+
+			var q = Db.From<GenTVA>().Where(x => x.CleTVA == request.CleTVA).Update(patchDic.Keys);
+
+			int count = Db.UpdateOnly(entity, q);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
+			}
+		}
+
+		/// <summary>
+		/// Retourne le résultat d'une recherche.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns></returns>
+		public List<BasicEntity> Get(SearchGenTVA request)
+		{
+			if (string.IsNullOrWhiteSpace(request.Text))
+			{
+				return null;
+			}
+
+            var q = Db.From<GenTVA>().Where(x => x.LibTVA.Contains(request.Text));
+            if (request.Max > 0)
+            {
+                q = q.Limit(request.Max);
+            }
+
+            var items = Db.Select<BasicEntity>(q);
+            return items;
 		}
 
 	}

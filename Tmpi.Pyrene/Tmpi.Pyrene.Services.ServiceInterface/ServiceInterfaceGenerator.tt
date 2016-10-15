@@ -1,4 +1,4 @@
-﻿<#@ template language="C#" hostspecific="true" #>
+﻿<#@ template language="C#" hostspecific="true" debug="true" #>
 <#@ output extension=".cs" #>
 <#@ assembly name="EnvDTE.dll" #>
 <#@ assembly name="System.Core.dll" #>
@@ -90,48 +90,43 @@
 			continue;
         }
 
-		string entityName = null;
+		string pocoClassName = null;
         if (codeClass.Name.StartsWith("Get"))
         {
-			entityName = codeClass.Name.Substring(3);
+			pocoClassName = codeClass.Name.Substring(3);
         }
         else if (codeClass.Name.StartsWith("Delete"))
         {
- 			entityName = codeClass.Name.Substring(6);
+ 			pocoClassName = codeClass.Name.Substring(6);
         }
         else if (codeClass.Name.StartsWith("Patch"))
         {
-            entityName = codeClass.Name.Substring(5);
+            pocoClassName = codeClass.Name.Substring(5);
         }
         else if (codeClass.Name.StartsWith("Search"))
         {
-			entityName = codeClass.Name.Substring(6);
-        }
-        else if (codeClass.Name.StartsWith("Find"))
-        {
-        //    entityName = codeClass.Name.Substring(4);
+			pocoClassName = codeClass.Name.Substring(6);
         }
 		else
 		{
-			entityName = codeClass.Name;
+			pocoClassName = codeClass.Name;
 		}
-
-		string codeClassName = codeClass.Name;
 
 		List<CodeAttribute> lstRouteAttrs = VisualStudioHelper.CodeModel.GetAllClassAttributes(codeClass)
 			.Where(attr => attr.FullName == "ServiceStack.RouteAttribute")
 			.ToList();
-		if (lstRouteAttrs.Any() && !string.IsNullOrEmpty(entityName))
+		if (lstRouteAttrs.Any() && !string.IsNullOrEmpty(pocoClassName))
         {
-			List<RequestItem> items = dicRequest.Where(kvp => entityName.StartsWith(kvp.Key)).Select(kvp => kvp.Value).SingleOrDefault();
+			List<RequestItem> items = dicRequest.Where(kvp => pocoClassName.StartsWith(kvp.Key)).Select(kvp => kvp.Value).SingleOrDefault();
 			if (items == null)
 			{
 				items = new List<RequestItem>();
-				dicRequest.Add(entityName, items);
+				dicRequest.Add(pocoClassName, items);
 			}
 
 			RequestItem item = new RequestItem();
 			item.RequestClass = codeClass;
+			item.PocoClass = allClasses.SingleOrDefault(c => c.Name == pocoClassName);
 			foreach (CodeAttribute routeAttr in lstRouteAttrs)
 			{
 				item.LstRouteParts.Add(GetRouteParts(routeAttr));
@@ -164,21 +159,28 @@ namespace <#= fileNamespace #>
 <#
 		foreach (RequestItem item in kvp.Value)
         {
-			CodeProperty pkProp = GetPrimaryKeyProperty(item.RequestClass);
+			string requestClassName = item.RequestClass.Name;
+			string pocoClassName = item.PocoClass.Name;
+
+			CodeProperty pkProp = GetPrimaryKeyProperty(item.PocoClass);
 			if (pkProp != null)
             {
-			List<CodeProperty[]> lstIdxProps = GetUniqueProperties(item.RequestClass);
-			foreach (CodeProperty[] lstProps in lstIdxProps)
-            {
-				List<string> whereExpr = new List<string>();
-				whereExpr.AddRange(lstProps.Select(p => string.Format(".Where(x => x.{0} == model.{0})", p.Name)));
+				/*************/
+				/** UNICITE **/
+				/*************/
+
+				List<CodeProperty[]> lstIdxProps = GetUniqueProperties(item.RequestClass);
+				foreach (CodeProperty[] lstProps in lstIdxProps)
+				{
+					List<string> whereExpr = new List<string>();
+					whereExpr.AddRange(lstProps.Select(p => string.Format(".Where(x => x.{0} == model.{0})", p.Name)));
 #>
 		/// <summary>
-		/// 
+		/// Teste l'unicité d'un <see cref="<#= pocoClassName #>"/>.
 		/// </summary>
-		protected bool <#= item.RequestClass.Name #><#= string.Join("", lstProps.Select(p => p.Name)) #>EstUnique(<#= item.RequestClass.Name #> model)
+		protected bool <#= requestClassName #><#= string.Join("", lstProps.Select(p => p.Name)) #>EstUnique(<#= requestClassName #> model)
 		{
-            var q = Db.From<<#= item.RequestClass.Name #>>()<#= string.Join("", whereExpr) #>;
+            var q = Db.From<<#= requestClassName #>>()<#= string.Join("", whereExpr) #>;
 			if (model.<#= pkProp.Name #> != 0)
 			{
 				q.Where(x => x.<#= pkProp.Name #> != model.<#= pkProp.Name #>);
@@ -188,26 +190,122 @@ namespace <#= fileNamespace #>
 		}
 
 <#
-            }
-            }
+				}
 
-			if (item.RequestClass.Name.StartsWith("Autocomplete"))
-            {
-				var entityName = item.RequestClass.Name.Substring(12);
+				if (requestClassName.StartsWith("Get"))
+				{
+					/**************/
+					/** GET BYID **/
+					/**************/
 #>
 		/// <summary>
-		/// 
+		/// Retourne la ressource <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Ressource <see cref="<#= pocoClassName #>"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
+		public <#= pocoClassName #> Get(<#= requestClassName #> request)
+		{
+            ModelDefinitionHelper.UndefinedFields<<#= pocoClassName #>>(request.Fields);
+
+            var q = Db.From<<#= pocoClassName #>>().Where(x => x.<#= pkProp.Name #> == request.<#= pkProp.Name #>).Select(request.Fields);
+
+			var entity = Db.Single(q);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+			}
+
+			return entity;
+		}
+
+<#
+				}
+				else if (requestClassName.StartsWith("Delete"))
+				{
+					/*****************/
+					/** DELETE BYID **/
+					/*****************/
+#>
+		/// <summary>
+		/// Supprime la ressource <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
+		public void Delete(<#= requestClassName #> request)
+		{
+			int count = Db.DeleteById<<#= pocoClassName #>>(request.<#= pkProp.Name #>);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+			}
+		}
+
+<#
+				}
+				else if (requestClassName.StartsWith("Patch"))
+				{
+					/****************/
+					/** PATCH BYID **/
+					/****************/
+#>
+		/// <summary>
+		/// Met à jour la ressource <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
+		public void Patch(<#= requestClassName #> request)
+		{
+			if (request.Fields.IsNullOrEmpty())
+			{
+				throw new ArgumentNullException(nameof(request.Fields));
+			}
+
+            var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
+
+            ModelDefinitionHelper.UndefinedFields<<#= pocoClassName #>>(patchDic.Keys);
+
+			var entity = new <#= pocoClassName #>();
+			PatchHelper.PopulateFromPatch(entity, patchDic);
+
+			var q = Db.From<<#= pocoClassName #>>().Where(x => x.<#= pkProp.Name #> == request.<#= pkProp.Name #>).Update(patchDic.Keys);
+
+			int count = Db.UpdateOnly(entity, q);
+			if (count == 0)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+			}
+		}
+
+<#
+				}
+            }
+
+			if (requestClassName.StartsWith("Search"))
+            {
+#>
+		/// <summary>
+		/// Retourne le résultat d'une recherche.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns></returns>
-		public List<BasicEntity> Get(<#= item.RequestClass.Name #> request)
+		public List<BasicEntity> Get(<#= requestClassName #> request)
 		{
 			if (string.IsNullOrWhiteSpace(request.Text))
 			{
 				return null;
 			}
 
-            var q = Db.From<<#= entityName #>>().Where(x => x.LibObjet.Contains(request.Text));
+<#
+				string suffix = pocoClassName.Substring(3);
+#>
+            var q = Db.From<<#= pocoClassName #>>().Where(x => x.Lib<#= suffix #>.Contains(request.Text));
             if (request.Max > 0)
             {
                 q = q.Limit(request.Max);
@@ -219,158 +317,34 @@ namespace <#= fileNamespace #>
 
 <#
             }
-			else if (item.RequestClass.Name.StartsWith("Get"))
-            {
-				var entityName = item.RequestClass.Name.Substring(3);
-
-#>
-		/// <summary>
-		/// Retourne la ressource <see cref="<#= entityName #>"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="<#= entityName #>"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public <#= entityName #> Get(<#= item.RequestClass.Name #> request)
-		{
-            if (!request.Fields.IsNullOrEmpty())
-            {
-                var errFields = ModelDefinitionHelper.GetUndefinedFields<<#= entityName #>>(request.Fields);
-                if (errFields.Any())
-                {
-                    string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                    throw new ArgumentException(
-                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(<#= entityName #>), str));
-                }
-            }
-
-            var q = Db.From<<#= entityName #>>().Where(x => x.<#= pkProp.Name #> == request.<#= pkProp.Name #>).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= entityName #>), request.<#= pkProp.Name #>));
-			}
-
-			return entity;
-		}
-
-<#
-            }
-			else if (item.RequestClass.Name.StartsWith("Delete"))
-            {
-				/****************/
-				/** DELETEBYID **/
-				/****************/
-
-				var entityName = item.RequestClass.Name.Substring(6);
-#>
-		/// <summary>
-		/// Supprime la ressource <see cref="<#= entityName #>"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Delete(<#= item.RequestClass.Name #> request)
-		{
-			int count = Db.DeleteById<<#= entityName #>>(request.<#= pkProp.Name #>);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= entityName #>), request.<#= pkProp.Name #>));
-			}
-		}
-
-<#
-            }
-			else if (item.RequestClass.Name.StartsWith("Patch"))
-            {
-				var entityName = item.RequestClass.Name.Substring(5);
-#>
-		/// <summary>
-		/// Met à jour la ressource <see cref="<#= entityName #>"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Patch(<#= item.RequestClass.Name #> request)
-		{
-			if (request.Fields.IsNullOrEmpty())
-			{
-				throw new ArgumentNullException(nameof(request.Fields));
-			}
-
-            var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
-
-            var errFields = ModelDefinitionHelper.GetUndefinedFields<<#= entityName #>>(patchDic.Keys);
-            if (errFields.Any())
-            {
-                string str = string.Join(", ", errFields.Select(f => "'" + f + "'"));
-                throw new ArgumentException(
-                    string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(<#= entityName #>), str));
-            }
-
-			var entity = new <#= entityName #>();
-			PatchHelper.PopulateFromPatch(entity, patchDic);
-
-			var q = Db.From<<#= entityName #>>().Where(x => x.<#= pkProp.Name #> == request.<#= pkProp.Name #>).Update(patchDic.Keys);
-
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= entityName #>), request.<#= pkProp.Name #>));
-			}
-		}
-
-<#
-			}
-			else if (item.RequestClass.Name.StartsWith("Find"))
-            {
-				var entityName = item.RequestClass.Name.Substring(4);
-#>
-		/// <summary>
-		/// Met à jour la ressource <see cref="<#= entityName #>"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public List<<#= entityName #>> Get(<#= item.RequestClass.Name #> request)
-		{
-            return null;
-		}
-
-<#
-			}
-			else if (item.RequestClass.Name == kvp.Key)
+			else if (requestClassName.StartsWith(kvp.Key))
             {
 #>
 		/// <summary>
-		/// Ajoute la ressource <see cref="<#= item.RequestClass.Name #>"/> spécifiée dans la requête.
+		/// Ajoute la ressource <see cref="<#= requestClassName #>"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="<#= item.RequestClass.Name #>"/> ajoutée.</returns>
-		public <#= item.RequestClass.Name #> Post(<#= item.RequestClass.Name #> request)
+		/// <returns>Ressource <see cref="<#= requestClassName #>"/> ajoutée.</returns>
+		public <#= requestClassName #> Post(<#= requestClassName #> request)
 		{
-			var id = Db.Insert(request, selectIdentity: true);
+			long id = Db.Insert(request, selectIdentity: true);
 			request.<#= pkProp.Name #> = (int)id;
 
 			return request;
 		}
 
 		/// <summary>
-		/// Remplace la ressource <see cref="<#= item.RequestClass.Name #>"/> spécifiée dans la requête.
+		/// Remplace la ressource <see cref="<#= requestClassName #>"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
-		public void Put(<#= item.RequestClass.Name #> request)
+		public void Put(<#= requestClassName #> request)
 		{
 			int count = Db.Update(request);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= item.RequestClass.Name #>), request.<#= pkProp.Name #>));
+					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= requestClassName #>), request.<#= pkProp.Name #>));
 			}
 		}
 
@@ -387,9 +361,10 @@ namespace <#= fileNamespace #>
         {
             foreach (RequestItem item in kvp.Value)
             {
-                if (item.RequestClass.Name == kvp.Key)
+                if (item.RequestClass == item.PocoClass)
                 {
-                    manager.StartNewFile(item.RequestClass.Name + "Validator.generated.cs");
+					string pocoClassName = item.PocoClass.Name;
+                    manager.StartNewFile(pocoClassName + "Validator.generated.cs");
 #>
 using ServiceStack.FluentValidation;
 using <#= sourceNamespace #>;
@@ -398,14 +373,14 @@ using <#= sourceNamespace #>.Types;
 namespace <#= fileNamespace #>
 {
     /// <summary>
-    /// Validation pour la requête <see cref="<#= item.RequestClass.Name #>"/>.
+    /// Validation pour la requête <see cref="<#= pocoClassName #>"/>.
     /// </summary>
-    public <#= MakeClassesPartial ? "partial " : "" #>class <#= item.RequestClass.Name #>Validator : AbstractValidator<<#= item.RequestClass.Name #>>
+    public <#= MakeClassesPartial ? "partial " : "" #>class <#= pocoClassName #>Validator : AbstractValidator<<#= pocoClassName #>>
     {
         /// <summary>
-        /// Initialise une nouvelle instance de la classe <see cref="<#= item.RequestClass.Name #>Validator" />.
+        /// Initialise une nouvelle instance de la classe <see cref="<#= pocoClassName #>Validator" />.
         /// </summary>
-        public <#= item.RequestClass.Name #>Validator()
+        public <#= pocoClassName #>Validator()
         {
 <#
                     var allPropsAttributes = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(item.RequestClass);
@@ -420,7 +395,7 @@ namespace <#= fileNamespace #>
                                 string str = ".NotEmpty()";
                                 if (ValidatorsWithMessage)
                                 {
-                                    str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_NotEmpty)", item.RequestClass.Name, prop.Key.Name);
+                                    str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_NotEmpty)", pocoClassName, prop.Key.Name);
                                 }
                                 lstValidation.Add(str);
                             }
@@ -433,7 +408,7 @@ namespace <#= fileNamespace #>
                             string str = string.Format(".Length({0}, {1})", min, max);
                             if (ValidatorsWithMessage)
                             {
-                                str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_Length, {2}, {3})", item.RequestClass.Name, prop.Key.Name, min, max);
+                                str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_Length, {2}, {3})", pocoClassName, prop.Key.Name, min, max);
                             }
                             lstValidation.Add(str);
                         }
@@ -486,6 +461,8 @@ class RequestItem
 		
 	public List<List<string>> LstRouteParts { get; set; }
 
+	public CodeClass PocoClass { get; set; }
+
 	public CodeClass RequestClass { get; set; }
 }
 
@@ -531,16 +508,16 @@ private List<string> GetRouteParts(CodeAttribute routeAttr)
 	return paramPath.Split(new [] { '/' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 }
 
-private string GetIdFromRouteParts(List<string> parts, string entityName)
+private string GetIdFromRouteParts(List<string> parts, string pocoClassName)
 {
 	List<string> lstId = new List<string>();
-	string currentEntity = entityName.Substring(0, 3);
+	string currentEntity = pocoClassName.Substring(0, 3);
 
 	foreach (string str in parts)
     {
 		if (str.StartsWith("{") && str.EndsWith("}"))
         {
-			if (currentEntity == entityName)
+			if (currentEntity == pocoClassName)
             {
 				string propName = str.Remove(0, 1); // Supprime le premier {
 				propName = propName.Remove(propName.Length - 1, 1); // Supprime le dernier }

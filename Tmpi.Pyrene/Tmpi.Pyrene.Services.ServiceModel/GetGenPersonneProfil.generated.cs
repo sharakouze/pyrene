@@ -9,7 +9,6 @@
 
 #pragma warning disable 1591
 
-using System.Collections.Generic;
 using System.Net;
 using ServiceStack;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
@@ -35,6 +34,6 @@ namespace Tmpi.Pyrene.Services.ServiceModel
         /// Champs à retourner, ou null pour retourner tous les champs.
         /// </summary>
         [ApiMember(Description = "Champs à retourner, ou null pour retourner tous les champs.", DataType = SwaggerDataTypes.ArrayOfString)]
-        public List<string> Fields { get; set; }
+        public string[] Fields { get; set; }
 	}
 }

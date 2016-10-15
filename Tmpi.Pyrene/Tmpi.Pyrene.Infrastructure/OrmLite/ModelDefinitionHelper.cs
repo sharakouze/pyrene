@@ -9,17 +9,19 @@ namespace Tmpi.Pyrene.Infrastructure
 {
     public static class ModelDefinitionHelper
     {
-        public static IEnumerable<string> GetUndefinedFields<T>(IEnumerable<string> fields)
+        public static void UndefinedFields<T>(IEnumerable<string> fields)
         {
             var modelDef = typeof(T).GetModelMetadata();
             if (modelDef != null)
             {
                 var lst = fields.Where(f => !modelDef.FieldDefinitions.Select(fd => fd.Name).Contains(f, StringComparer.OrdinalIgnoreCase));
-
-                return lst;
+                if (lst.Any())
+                {
+                    string str = string.Join(", ", lst.Select(f => "'" + f + "'"));
+                    throw new ArgumentException(
+                        string.Format(ServicesErrorMessages.ResourceFieldsNotFound, nameof(T), str));
+                }
             }
-
-            return null;
         }
     }
 }
