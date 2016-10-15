@@ -81,7 +81,7 @@
     Regex PutTableFilterExclude = null;
     Regex PostTableFilterExclude = null;
 	Regex GetTableFilterExclude = null;
-	Regex DeleteTableFilterExclude = new Regex("GenCompteurValeur", RegexOptions.IgnoreCase);
+	Regex DeleteTableFilterExclude = null;
 	Regex PatchTableFilterExclude = null;
 	Regex SearchTableFilterExclude = null;
 
