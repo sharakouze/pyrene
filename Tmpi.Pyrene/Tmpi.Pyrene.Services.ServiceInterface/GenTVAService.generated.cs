@@ -23,6 +23,8 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	/// </summary>
 	public partial class GenTVAService : Service
 	{
+		private static readonly object _syncLock = new object();
+
 		/// <summary>
 		/// Supprime la ressource <see cref="GenTVA"/> spécifiée dans la requête.
 		/// </summary>
@@ -41,13 +43,38 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <summary>
 		/// Teste l'unicité d'un <see cref="GenTVA"/>.
 		/// </summary>
-		protected bool GenTVACodTVAEstUnique(GenTVA model)
+		protected bool GenTVACodTVAEstUnique(GenTVA model, IEnumerable<string> fields = null)
 		{
-            var q = Db.From<GenTVA>().Where(x => x.CodTVA == model.CodTVA);
+			var q = Db.From<GenTVA>();
+
+			if (fields != null)
+			{
+				var uniqueFields = new[] { nameof(GenTVA.CodTVA) };
+				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+				{
+					q = q.Join<GenTVA>((t1, t2) => t2.CleTVA == model.CleTVA, Db.JoinAlias("t2"));
+
+					if (!fields.Contains(nameof(GenTVA.CodTVA), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenTVA, GenTVA>((t1, t2) => t1.CodTVA == t2.CodTVA);
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+			
+			if (fields == null || fields.Contains(nameof(GenTVA.CodTVA), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.CodTVA == model.CodTVA);
+			}
+
 			if (model.CleTVA != 0)
 			{
 				q.Where(x => x.CleTVA != model.CleTVA);
 			}
+
 
 			return Db.Exists(q);
 		}

@@ -23,6 +23,8 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	/// </summary>
 	public partial class GenCompteurService : Service
 	{
+		private static readonly object _syncLock = new object();
+
 		/// <summary>
 		/// Supprime la ressource <see cref="GenCompteur"/> spécifiée dans la requête.
 		/// </summary>
@@ -56,13 +58,46 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <summary>
 		/// Teste l'unicité d'un <see cref="GenCompteur"/>.
 		/// </summary>
-		protected bool GenCompteurTypCompteurCleServiceEstUnique(GenCompteur model)
+		protected bool GenCompteurTypCompteurCleServiceEstUnique(GenCompteur model, IEnumerable<string> fields = null)
 		{
-            var q = Db.From<GenCompteur>().Where(x => x.TypCompteur == model.TypCompteur).Where(x => x.CleService == model.CleService);
+			var q = Db.From<GenCompteur>();
+
+			if (fields != null)
+			{
+				var uniqueFields = new[] { nameof(GenCompteur.TypCompteur), nameof(GenCompteur.CleService) };
+				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+				{
+					q = q.Join<GenCompteur>((t1, t2) => t2.CleCompteur == model.CleCompteur, Db.JoinAlias("t2"));
+
+					if (!fields.Contains(nameof(GenCompteur.TypCompteur), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenCompteur, GenCompteur>((t1, t2) => t1.TypCompteur == t2.TypCompteur);
+					}
+					if (!fields.Contains(nameof(GenCompteur.CleService), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenCompteur, GenCompteur>((t1, t2) => t1.CleService == t2.CleService);
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+			
+			if (fields == null || fields.Contains(nameof(GenCompteur.TypCompteur), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.TypCompteur == model.TypCompteur);
+			}
+			if (fields == null || fields.Contains(nameof(GenCompteur.CleService), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.CleService == model.CleService);
+			}
+
 			if (model.CleCompteur != 0)
 			{
 				q.Where(x => x.CleCompteur != model.CleCompteur);
 			}
+
 
 			return Db.Exists(q);
 		}
@@ -70,13 +105,38 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <summary>
 		/// Teste l'unicité d'un <see cref="GenCompteur"/>.
 		/// </summary>
-		protected bool GenCompteurCodCompteurEstUnique(GenCompteur model)
+		protected bool GenCompteurCodCompteurEstUnique(GenCompteur model, IEnumerable<string> fields = null)
 		{
-            var q = Db.From<GenCompteur>().Where(x => x.CodCompteur == model.CodCompteur);
+			var q = Db.From<GenCompteur>();
+
+			if (fields != null)
+			{
+				var uniqueFields = new[] { nameof(GenCompteur.CodCompteur) };
+				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+				{
+					q = q.Join<GenCompteur>((t1, t2) => t2.CleCompteur == model.CleCompteur, Db.JoinAlias("t2"));
+
+					if (!fields.Contains(nameof(GenCompteur.CodCompteur), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenCompteur, GenCompteur>((t1, t2) => t1.CodCompteur == t2.CodCompteur);
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+			
+			if (fields == null || fields.Contains(nameof(GenCompteur.CodCompteur), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.CodCompteur == model.CodCompteur);
+			}
+
 			if (model.CleCompteur != 0)
 			{
 				q.Where(x => x.CleCompteur != model.CleCompteur);
 			}
+
 
 			return Db.Exists(q);
 		}
@@ -101,7 +161,8 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Put(GenCompteur request)
 		{
-			int count = Db.Update(request);
+            GenCompteurTypCompteurCleServiceEstUnique(request, new[] { "typcompteur" });
+            int count = Db.Update(request);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
@@ -112,13 +173,46 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <summary>
 		/// Teste l'unicité d'un <see cref="GenCompteurValeur"/>.
 		/// </summary>
-		protected bool GenCompteurValeurCleCompteurValPeriodeEstUnique(GenCompteurValeur model)
+		protected bool GenCompteurValeurCleCompteurValPeriodeEstUnique(GenCompteurValeur model, IEnumerable<string> fields = null)
 		{
-            var q = Db.From<GenCompteurValeur>().Where(x => x.CleCompteur == model.CleCompteur).Where(x => x.ValPeriode == model.ValPeriode);
+			var q = Db.From<GenCompteurValeur>();
+
+			if (fields != null)
+			{
+				var uniqueFields = new[] { nameof(GenCompteurValeur.CleCompteur), nameof(GenCompteurValeur.ValPeriode) };
+				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+				{
+					q = q.Join<GenCompteurValeur>((t1, t2) => t2.CleValeur == model.CleValeur, Db.JoinAlias("t2"));
+
+					if (!fields.Contains(nameof(GenCompteurValeur.CleCompteur), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenCompteurValeur, GenCompteurValeur>((t1, t2) => t1.CleCompteur == t2.CleCompteur);
+					}
+					if (!fields.Contains(nameof(GenCompteurValeur.ValPeriode), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenCompteurValeur, GenCompteurValeur>((t1, t2) => t1.ValPeriode == t2.ValPeriode);
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+			
+			if (fields == null || fields.Contains(nameof(GenCompteurValeur.CleCompteur), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.CleCompteur == model.CleCompteur);
+			}
+			if (fields == null || fields.Contains(nameof(GenCompteurValeur.ValPeriode), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.ValPeriode == model.ValPeriode);
+			}
+
 			if (model.CleValeur != 0)
 			{
 				q.Where(x => x.CleValeur != model.CleValeur);
 			}
+
 
 			return Db.Exists(q);
 		}

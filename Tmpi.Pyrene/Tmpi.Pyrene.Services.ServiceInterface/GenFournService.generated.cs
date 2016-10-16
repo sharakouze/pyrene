@@ -23,6 +23,8 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	/// </summary>
 	public partial class GenFournService : Service
 	{
+		private static readonly object _syncLock = new object();
+
 		/// <summary>
 		/// Supprime la ressource <see cref="GenFourn"/> spécifiée dans la requête.
 		/// </summary>
@@ -71,13 +73,38 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <summary>
 		/// Teste l'unicité d'un <see cref="GenFourn"/>.
 		/// </summary>
-		protected bool GenFournCodFournEstUnique(GenFourn model)
+		protected bool GenFournCodFournEstUnique(GenFourn model, IEnumerable<string> fields = null)
 		{
-            var q = Db.From<GenFourn>().Where(x => x.CodFourn == model.CodFourn);
+			var q = Db.From<GenFourn>();
+
+			if (fields != null)
+			{
+				var uniqueFields = new[] { nameof(GenFourn.CodFourn) };
+				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+				{
+					q = q.Join<GenFourn>((t1, t2) => t2.CleFourn == model.CleFourn, Db.JoinAlias("t2"));
+
+					if (!fields.Contains(nameof(GenFourn.CodFourn), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenFourn, GenFourn>((t1, t2) => t1.CodFourn == t2.CodFourn);
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+			
+			if (fields == null || fields.Contains(nameof(GenFourn.CodFourn), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.CodFourn == model.CodFourn);
+			}
+
 			if (model.CleFourn != 0)
 			{
 				q.Where(x => x.CleFourn != model.CleFourn);
 			}
+
 
 			return Db.Exists(q);
 		}
@@ -113,13 +140,46 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <summary>
 		/// Teste l'unicité d'un <see cref="GenFournBanque"/>.
 		/// </summary>
-		protected bool GenFournBanqueCleFournCodIBANEstUnique(GenFournBanque model)
+		protected bool GenFournBanqueCleFournCodIBANEstUnique(GenFournBanque model, IEnumerable<string> fields = null)
 		{
-            var q = Db.From<GenFournBanque>().Where(x => x.CleFourn == model.CleFourn).Where(x => x.CodIBAN == model.CodIBAN);
+			var q = Db.From<GenFournBanque>();
+
+			if (fields != null)
+			{
+				var uniqueFields = new[] { nameof(GenFournBanque.CleFourn), nameof(GenFournBanque.CodIBAN) };
+				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+				{
+					q = q.Join<GenFournBanque>((t1, t2) => t2.CleBanque == model.CleBanque, Db.JoinAlias("t2"));
+
+					if (!fields.Contains(nameof(GenFournBanque.CleFourn), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenFournBanque, GenFournBanque>((t1, t2) => t1.CleFourn == t2.CleFourn);
+					}
+					if (!fields.Contains(nameof(GenFournBanque.CodIBAN), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenFournBanque, GenFournBanque>((t1, t2) => t1.CodIBAN == t2.CodIBAN);
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+			
+			if (fields == null || fields.Contains(nameof(GenFournBanque.CleFourn), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.CleFourn == model.CleFourn);
+			}
+			if (fields == null || fields.Contains(nameof(GenFournBanque.CodIBAN), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.CodIBAN == model.CodIBAN);
+			}
+
 			if (model.CleBanque != 0)
 			{
 				q.Where(x => x.CleBanque != model.CleBanque);
 			}
+
 
 			return Db.Exists(q);
 		}
@@ -155,13 +215,46 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <summary>
 		/// Teste l'unicité d'un <see cref="GenFournContact"/>.
 		/// </summary>
-		protected bool GenFournContactCleFournNomContactEstUnique(GenFournContact model)
+		protected bool GenFournContactCleFournNomContactEstUnique(GenFournContact model, IEnumerable<string> fields = null)
 		{
-            var q = Db.From<GenFournContact>().Where(x => x.CleFourn == model.CleFourn).Where(x => x.NomContact == model.NomContact);
+			var q = Db.From<GenFournContact>();
+
+			if (fields != null)
+			{
+				var uniqueFields = new[] { nameof(GenFournContact.CleFourn), nameof(GenFournContact.NomContact) };
+				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+				{
+					q = q.Join<GenFournContact>((t1, t2) => t2.CleContact == model.CleContact, Db.JoinAlias("t2"));
+
+					if (!fields.Contains(nameof(GenFournContact.CleFourn), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenFournContact, GenFournContact>((t1, t2) => t1.CleFourn == t2.CleFourn);
+					}
+					if (!fields.Contains(nameof(GenFournContact.NomContact), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenFournContact, GenFournContact>((t1, t2) => t1.NomContact == t2.NomContact);
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+			
+			if (fields == null || fields.Contains(nameof(GenFournContact.CleFourn), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.CleFourn == model.CleFourn);
+			}
+			if (fields == null || fields.Contains(nameof(GenFournContact.NomContact), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.NomContact == model.NomContact);
+			}
+
 			if (model.CleContact != 0)
 			{
 				q.Where(x => x.CleContact != model.CleContact);
 			}
+
 
 			return Db.Exists(q);
 		}

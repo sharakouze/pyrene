@@ -23,6 +23,8 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	/// </summary>
 	public partial class GenMandatService : Service
 	{
+		private static readonly object _syncLock = new object();
+
 		/// <summary>
 		/// Supprime la ressource <see cref="GenMandat"/> spécifiée dans la requête.
 		/// </summary>
@@ -56,13 +58,46 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <summary>
 		/// Teste l'unicité d'un <see cref="GenMandat"/>.
 		/// </summary>
-		protected bool GenMandatTypMandatNivMandatEstUnique(GenMandat model)
+		protected bool GenMandatTypMandatNivMandatEstUnique(GenMandat model, IEnumerable<string> fields = null)
 		{
-            var q = Db.From<GenMandat>().Where(x => x.TypMandat == model.TypMandat).Where(x => x.NivMandat == model.NivMandat);
+			var q = Db.From<GenMandat>();
+
+			if (fields != null)
+			{
+				var uniqueFields = new[] { nameof(GenMandat.TypMandat), nameof(GenMandat.NivMandat) };
+				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+				{
+					q = q.Join<GenMandat>((t1, t2) => t2.CleMandat == model.CleMandat, Db.JoinAlias("t2"));
+
+					if (!fields.Contains(nameof(GenMandat.TypMandat), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenMandat, GenMandat>((t1, t2) => t1.TypMandat == t2.TypMandat);
+					}
+					if (!fields.Contains(nameof(GenMandat.NivMandat), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenMandat, GenMandat>((t1, t2) => t1.NivMandat == t2.NivMandat);
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+			
+			if (fields == null || fields.Contains(nameof(GenMandat.TypMandat), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.TypMandat == model.TypMandat);
+			}
+			if (fields == null || fields.Contains(nameof(GenMandat.NivMandat), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.NivMandat == model.NivMandat);
+			}
+
 			if (model.CleMandat != 0)
 			{
 				q.Where(x => x.CleMandat != model.CleMandat);
 			}
+
 
 			return Db.Exists(q);
 		}
@@ -70,13 +105,38 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <summary>
 		/// Teste l'unicité d'un <see cref="GenMandat"/>.
 		/// </summary>
-		protected bool GenMandatCodMandatEstUnique(GenMandat model)
+		protected bool GenMandatCodMandatEstUnique(GenMandat model, IEnumerable<string> fields = null)
 		{
-            var q = Db.From<GenMandat>().Where(x => x.CodMandat == model.CodMandat);
+			var q = Db.From<GenMandat>();
+
+			if (fields != null)
+			{
+				var uniqueFields = new[] { nameof(GenMandat.CodMandat) };
+				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+				{
+					q = q.Join<GenMandat>((t1, t2) => t2.CleMandat == model.CleMandat, Db.JoinAlias("t2"));
+
+					if (!fields.Contains(nameof(GenMandat.CodMandat), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenMandat, GenMandat>((t1, t2) => t1.CodMandat == t2.CodMandat);
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+			
+			if (fields == null || fields.Contains(nameof(GenMandat.CodMandat), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.CodMandat == model.CodMandat);
+			}
+
 			if (model.CleMandat != 0)
 			{
 				q.Where(x => x.CleMandat != model.CleMandat);
 			}
+
 
 			return Db.Exists(q);
 		}
@@ -112,13 +172,54 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <summary>
 		/// Teste l'unicité d'un <see cref="GenMandatMandataire"/>.
 		/// </summary>
-		protected bool GenMandatMandataireCleMandatClePersonneCleServiceEstUnique(GenMandatMandataire model)
+		protected bool GenMandatMandataireCleMandatClePersonneCleServiceEstUnique(GenMandatMandataire model, IEnumerable<string> fields = null)
 		{
-            var q = Db.From<GenMandatMandataire>().Where(x => x.CleMandat == model.CleMandat).Where(x => x.ClePersonne == model.ClePersonne).Where(x => x.CleService == model.CleService);
+			var q = Db.From<GenMandatMandataire>();
+
+			if (fields != null)
+			{
+				var uniqueFields = new[] { nameof(GenMandatMandataire.CleMandat), nameof(GenMandatMandataire.ClePersonne), nameof(GenMandatMandataire.CleService) };
+				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+				{
+					q = q.Join<GenMandatMandataire>((t1, t2) => t2.CleMandataire == model.CleMandataire, Db.JoinAlias("t2"));
+
+					if (!fields.Contains(nameof(GenMandatMandataire.CleMandat), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenMandatMandataire, GenMandatMandataire>((t1, t2) => t1.CleMandat == t2.CleMandat);
+					}
+					if (!fields.Contains(nameof(GenMandatMandataire.ClePersonne), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenMandatMandataire, GenMandatMandataire>((t1, t2) => t1.ClePersonne == t2.ClePersonne);
+					}
+					if (!fields.Contains(nameof(GenMandatMandataire.CleService), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenMandatMandataire, GenMandatMandataire>((t1, t2) => t1.CleService == t2.CleService);
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+			
+			if (fields == null || fields.Contains(nameof(GenMandatMandataire.CleMandat), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.CleMandat == model.CleMandat);
+			}
+			if (fields == null || fields.Contains(nameof(GenMandatMandataire.ClePersonne), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.ClePersonne == model.ClePersonne);
+			}
+			if (fields == null || fields.Contains(nameof(GenMandatMandataire.CleService), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.CleService == model.CleService);
+			}
+
 			if (model.CleMandataire != 0)
 			{
 				q.Where(x => x.CleMandataire != model.CleMandataire);
 			}
+
 
 			return Db.Exists(q);
 		}

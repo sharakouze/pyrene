@@ -23,6 +23,8 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 	/// </summary>
 	public partial class GenServiceService : Service
 	{
+		private static readonly object _syncLock = new object();
+
 		/// <summary>
 		/// Supprime la ressource <see cref="GenService"/> spécifiée dans la requête.
 		/// </summary>
@@ -41,13 +43,38 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <summary>
 		/// Teste l'unicité d'un <see cref="GenService"/>.
 		/// </summary>
-		protected bool GenServiceCodServiceEstUnique(GenService model)
+		protected bool GenServiceCodServiceEstUnique(GenService model, IEnumerable<string> fields = null)
 		{
-            var q = Db.From<GenService>().Where(x => x.CodService == model.CodService);
+			var q = Db.From<GenService>();
+
+			if (fields != null)
+			{
+				var uniqueFields = new[] { nameof(GenService.CodService) };
+				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+				{
+					q = q.Join<GenService>((t1, t2) => t2.CleService == model.CleService, Db.JoinAlias("t2"));
+
+					if (!fields.Contains(nameof(GenService.CodService), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<GenService, GenService>((t1, t2) => t1.CodService == t2.CodService);
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+			
+			if (fields == null || fields.Contains(nameof(GenService.CodService), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.CodService == model.CodService);
+			}
+
 			if (model.CleService != 0)
 			{
 				q.Where(x => x.CleService != model.CleService);
 			}
+
 
 			return Db.Exists(q);
 		}

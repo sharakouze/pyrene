@@ -156,6 +156,8 @@ namespace <#= fileNamespace #>
 	/// </summary>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= serviceClassName #> : Service
 	{
+		private static readonly object _syncLock = new object();
+
 <#
 		foreach (RequestItem item in kvp.Value)
         {
@@ -172,19 +174,56 @@ namespace <#= fileNamespace #>
 				List<CodeProperty[]> lstIdxProps = GetUniqueProperties(item.RequestClass);
 				foreach (CodeProperty[] lstProps in lstIdxProps)
 				{
-					List<string> whereExpr = new List<string>();
-					whereExpr.AddRange(lstProps.Select(p => string.Format(".Where(x => x.{0} == model.{0})", p.Name)));
 #>
 		/// <summary>
 		/// Teste l'unicité d'un <see cref="<#= pocoClassName #>"/>.
 		/// </summary>
-		protected bool <#= requestClassName #><#= string.Join("", lstProps.Select(p => p.Name)) #>EstUnique(<#= requestClassName #> model)
+		protected bool <#= requestClassName #><#= string.Join("", lstProps.Select(p => p.Name)) #>EstUnique(<#= requestClassName #> model, IEnumerable<string> fields = null)
 		{
-            var q = Db.From<<#= requestClassName #>>()<#= string.Join("", whereExpr) #>;
+			var q = Db.From<<#= requestClassName #>>();
+
+			if (fields != null)
+			{
+				var uniqueFields = new[] { <#= string.Join(", ", lstProps.Select(p => "nameof(" + requestClassName + "." + p.Name + ")")) #> };
+				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+				{
+					q = q.Join<<#= requestClassName #>>((t1, t2) => t2.<#= pkProp.Name #> == model.<#= pkProp.Name #>, Db.JoinAlias("t2"));
+
+<#
+					foreach (CodeProperty prop in lstProps)
+                    {
+#>
+					if (!fields.Contains(nameof(<#= requestClassName #>.<#= prop.Name #>), StringComparer.OrdinalIgnoreCase))
+					{
+						q = q.And<<#= requestClassName #>, <#= requestClassName #>>((t1, t2) => t1.<#= prop.Name #> == t2.<#= prop.Name #>);
+					}
+<#
+                    }
+#>
+				}
+				else
+				{
+					return true;
+				}
+			}
+			
+<#
+					foreach (CodeProperty prop in lstProps)
+                    {
+#>
+			if (fields == null || fields.Contains(nameof(<#= requestClassName #>.<#= prop.Name #>), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(x => x.<#= prop.Name #> == model.<#= prop.Name #>);
+			}
+<#
+                    }
+#>
+
 			if (model.<#= pkProp.Name #> != 0)
 			{
 				q.Where(x => x.<#= pkProp.Name #> != model.<#= pkProp.Name #>);
 			}
+
 
 			return Db.Exists(q);
 		}
