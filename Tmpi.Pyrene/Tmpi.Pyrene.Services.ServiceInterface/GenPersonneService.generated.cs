@@ -10,11 +10,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.Services.ServiceModel;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 using Tmpi.Pyrene.Infrastructure;
+using Tmpi.Pyrene.Infrastructure.Linq;
 
 namespace Tmpi.Pyrene.Services.ServiceInterface
 {
@@ -70,43 +72,31 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			}
 		}
 
-		/// <summary>
+        /// <summary>
 		/// Teste l'unicité d'un <see cref="GenPersonne"/>.
-		/// </summary>
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="fields"></param>
+        /// <returns></returns>
 		protected bool GenPersonneCodPersonneEstUnique(GenPersonne model, IEnumerable<string> fields = null)
 		{
 			var q = Db.From<GenPersonne>();
 
-			if (fields != null)
-			{
-				var uniqueFields = new[] { nameof(GenPersonne.CodPersonne) };
-				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
-				{
-					q = q.Join<GenPersonne>((t1, t2) => t2.ClePersonne == model.ClePersonne, Db.JoinAlias("t2"));
-
-					if (!fields.Contains(nameof(GenPersonne.CodPersonne), StringComparer.OrdinalIgnoreCase))
-					{
-						q = q.And<GenPersonne, GenPersonne>((t1, t2) => t1.CodPersonne == t2.CodPersonne);
-					}
-				}
-				else
-				{
-					return true;
-				}
-			}
-			
 			if (fields == null || fields.Contains(nameof(GenPersonne.CodPersonne), StringComparer.OrdinalIgnoreCase))
 			{
-				q.Where(x => x.CodPersonne == model.CodPersonne);
+				q.Where(t1 => t1.CodPersonne == model.CodPersonne);
+			}
+			else
+			{
+				return true;
 			}
 
 			if (model.ClePersonne != 0)
 			{
-				q.Where(x => x.ClePersonne != model.ClePersonne);
+				q.Where(t1 => t1.ClePersonne != model.ClePersonne);
 			}
 
-
-			return Db.Exists(q);
+			return !Db.Exists(q);
 		}
 
 		/// <summary>
@@ -137,9 +127,12 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			}
 		}
 
-		/// <summary>
+        /// <summary>
 		/// Teste l'unicité d'un <see cref="GenPersonneProfil"/>.
-		/// </summary>
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="fields"></param>
+        /// <returns></returns>
 		protected bool GenPersonneProfilClePersonneCleServiceEstUnique(GenPersonneProfil model, IEnumerable<string> fields = null)
 		{
 			var q = Db.From<GenPersonneProfil>();
@@ -149,16 +142,22 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 				var uniqueFields = new[] { nameof(GenPersonneProfil.ClePersonne), nameof(GenPersonneProfil.CleService) };
 				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
 				{
-					q = q.Join<GenPersonneProfil>((t1, t2) => t2.CleProfil == model.CleProfil, Db.JoinAlias("t2"));
+					// INNER JOIN GenPersonneProfil t2 ON t2.CleProfil=xxx [...]
+					Expression<Func<GenPersonneProfil, GenPersonneProfil, bool>> joinExpr = (t1, t2)
+						=> (t2.CleProfil == model.CleProfil);
 
 					if (!fields.Contains(nameof(GenPersonneProfil.ClePersonne), StringComparer.OrdinalIgnoreCase))
 					{
-						q = q.And<GenPersonneProfil, GenPersonneProfil>((t1, t2) => t1.ClePersonne == t2.ClePersonne);
+						// [...] AND t1.ClePersonne=t2.ClePersonne
+						joinExpr = joinExpr.And((t1, t2) => t1.ClePersonne == t2.ClePersonne);
 					}
 					if (!fields.Contains(nameof(GenPersonneProfil.CleService), StringComparer.OrdinalIgnoreCase))
 					{
-						q = q.And<GenPersonneProfil, GenPersonneProfil>((t1, t2) => t1.CleService == t2.CleService);
+						// [...] AND t1.CleService=t2.CleService
+						joinExpr = joinExpr.And((t1, t2) => t1.CleService == t2.CleService);
 					}
+
+					q = q.Join<GenPersonneProfil>(joinExpr, Db.JoinAlias("t2"));
 				}
 				else
 				{
@@ -168,25 +167,27 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			
 			if (fields == null || fields.Contains(nameof(GenPersonneProfil.ClePersonne), StringComparer.OrdinalIgnoreCase))
 			{
-				q.Where(x => x.ClePersonne == model.ClePersonne);
+				q.Where(t1 => t1.ClePersonne == model.ClePersonne);
 			}
 			if (fields == null || fields.Contains(nameof(GenPersonneProfil.CleService), StringComparer.OrdinalIgnoreCase))
 			{
-				q.Where(x => x.CleService == model.CleService);
+				q.Where(t1 => t1.CleService == model.CleService);
 			}
 
 			if (model.CleProfil != 0)
 			{
-				q.Where(x => x.CleProfil != model.CleProfil);
+				q.Where(t1 => t1.CleProfil != model.CleProfil);
 			}
 
-
-			return Db.Exists(q);
+			return !Db.Exists(q);
 		}
 
-		/// <summary>
+        /// <summary>
 		/// Teste l'unicité d'un <see cref="GenPersonneProfil"/>.
-		/// </summary>
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="fields"></param>
+        /// <returns></returns>
 		protected bool GenPersonneProfilCodProfilClePersonneEstUnique(GenPersonneProfil model, IEnumerable<string> fields = null)
 		{
 			var q = Db.From<GenPersonneProfil>();
@@ -196,16 +197,22 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 				var uniqueFields = new[] { nameof(GenPersonneProfil.CodProfil), nameof(GenPersonneProfil.ClePersonne) };
 				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
 				{
-					q = q.Join<GenPersonneProfil>((t1, t2) => t2.CleProfil == model.CleProfil, Db.JoinAlias("t2"));
+					// INNER JOIN GenPersonneProfil t2 ON t2.CleProfil=xxx [...]
+					Expression<Func<GenPersonneProfil, GenPersonneProfil, bool>> joinExpr = (t1, t2)
+						=> (t2.CleProfil == model.CleProfil);
 
 					if (!fields.Contains(nameof(GenPersonneProfil.CodProfil), StringComparer.OrdinalIgnoreCase))
 					{
-						q = q.And<GenPersonneProfil, GenPersonneProfil>((t1, t2) => t1.CodProfil == t2.CodProfil);
+						// [...] AND t1.CodProfil=t2.CodProfil
+						joinExpr = joinExpr.And((t1, t2) => t1.CodProfil == t2.CodProfil);
 					}
 					if (!fields.Contains(nameof(GenPersonneProfil.ClePersonne), StringComparer.OrdinalIgnoreCase))
 					{
-						q = q.And<GenPersonneProfil, GenPersonneProfil>((t1, t2) => t1.ClePersonne == t2.ClePersonne);
+						// [...] AND t1.ClePersonne=t2.ClePersonne
+						joinExpr = joinExpr.And((t1, t2) => t1.ClePersonne == t2.ClePersonne);
 					}
+
+					q = q.Join<GenPersonneProfil>(joinExpr, Db.JoinAlias("t2"));
 				}
 				else
 				{
@@ -215,20 +222,19 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			
 			if (fields == null || fields.Contains(nameof(GenPersonneProfil.CodProfil), StringComparer.OrdinalIgnoreCase))
 			{
-				q.Where(x => x.CodProfil == model.CodProfil);
+				q.Where(t1 => t1.CodProfil == model.CodProfil);
 			}
 			if (fields == null || fields.Contains(nameof(GenPersonneProfil.ClePersonne), StringComparer.OrdinalIgnoreCase))
 			{
-				q.Where(x => x.ClePersonne == model.ClePersonne);
+				q.Where(t1 => t1.ClePersonne == model.ClePersonne);
 			}
 
 			if (model.CleProfil != 0)
 			{
-				q.Where(x => x.CleProfil != model.CleProfil);
+				q.Where(t1 => t1.CleProfil != model.CleProfil);
 			}
 
-
-			return Db.Exists(q);
+			return !Db.Exists(q);
 		}
 
 		/// <summary>

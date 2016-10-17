@@ -10,11 +10,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.Services.ServiceModel;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 using Tmpi.Pyrene.Infrastructure;
+using Tmpi.Pyrene.Infrastructure.Linq;
 
 namespace Tmpi.Pyrene.Services.ServiceInterface
 {
@@ -40,43 +42,31 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			}
 		}
 
-		/// <summary>
+        /// <summary>
 		/// Teste l'unicité d'un <see cref="GenService"/>.
-		/// </summary>
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="fields"></param>
+        /// <returns></returns>
 		protected bool GenServiceCodServiceEstUnique(GenService model, IEnumerable<string> fields = null)
 		{
 			var q = Db.From<GenService>();
 
-			if (fields != null)
-			{
-				var uniqueFields = new[] { nameof(GenService.CodService) };
-				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
-				{
-					q = q.Join<GenService>((t1, t2) => t2.CleService == model.CleService, Db.JoinAlias("t2"));
-
-					if (!fields.Contains(nameof(GenService.CodService), StringComparer.OrdinalIgnoreCase))
-					{
-						q = q.And<GenService, GenService>((t1, t2) => t1.CodService == t2.CodService);
-					}
-				}
-				else
-				{
-					return true;
-				}
-			}
-			
 			if (fields == null || fields.Contains(nameof(GenService.CodService), StringComparer.OrdinalIgnoreCase))
 			{
-				q.Where(x => x.CodService == model.CodService);
+				q.Where(t1 => t1.CodService == model.CodService);
+			}
+			else
+			{
+				return true;
 			}
 
 			if (model.CleService != 0)
 			{
-				q.Where(x => x.CleService != model.CleService);
+				q.Where(t1 => t1.CleService != model.CleService);
 			}
 
-
-			return Db.Exists(q);
+			return !Db.Exists(q);
 		}
 
 		/// <summary>

@@ -10,11 +10,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.Services.ServiceModel;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 using Tmpi.Pyrene.Infrastructure;
+using Tmpi.Pyrene.Infrastructure.Linq;
 
 namespace Tmpi.Pyrene.Services.ServiceInterface
 {
@@ -40,43 +42,31 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			}
 		}
 
-		/// <summary>
+        /// <summary>
 		/// Teste l'unicité d'un <see cref="GenExercice"/>.
-		/// </summary>
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="fields"></param>
+        /// <returns></returns>
 		protected bool GenExerciceCodExerciceEstUnique(GenExercice model, IEnumerable<string> fields = null)
 		{
 			var q = Db.From<GenExercice>();
 
-			if (fields != null)
-			{
-				var uniqueFields = new[] { nameof(GenExercice.CodExercice) };
-				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
-				{
-					q = q.Join<GenExercice>((t1, t2) => t2.CleExercice == model.CleExercice, Db.JoinAlias("t2"));
-
-					if (!fields.Contains(nameof(GenExercice.CodExercice), StringComparer.OrdinalIgnoreCase))
-					{
-						q = q.And<GenExercice, GenExercice>((t1, t2) => t1.CodExercice == t2.CodExercice);
-					}
-				}
-				else
-				{
-					return true;
-				}
-			}
-			
 			if (fields == null || fields.Contains(nameof(GenExercice.CodExercice), StringComparer.OrdinalIgnoreCase))
 			{
-				q.Where(x => x.CodExercice == model.CodExercice);
+				q.Where(t1 => t1.CodExercice == model.CodExercice);
+			}
+			else
+			{
+				return true;
 			}
 
 			if (model.CleExercice != 0)
 			{
-				q.Where(x => x.CleExercice != model.CleExercice);
+				q.Where(t1 => t1.CleExercice != model.CleExercice);
 			}
 
-
-			return Db.Exists(q);
+			return !Db.Exists(q);
 		}
 
 		/// <summary>

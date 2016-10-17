@@ -10,11 +10,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.Services.ServiceModel;
 using Tmpi.Pyrene.Services.ServiceModel.Types;
 using Tmpi.Pyrene.Infrastructure;
+using Tmpi.Pyrene.Infrastructure.Linq;
 
 namespace Tmpi.Pyrene.Services.ServiceInterface
 {
@@ -40,43 +42,31 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			}
 		}
 
-		/// <summary>
+        /// <summary>
 		/// Teste l'unicité d'un <see cref="GenTVA"/>.
-		/// </summary>
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="fields"></param>
+        /// <returns></returns>
 		protected bool GenTVACodTVAEstUnique(GenTVA model, IEnumerable<string> fields = null)
 		{
 			var q = Db.From<GenTVA>();
 
-			if (fields != null)
-			{
-				var uniqueFields = new[] { nameof(GenTVA.CodTVA) };
-				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
-				{
-					q = q.Join<GenTVA>((t1, t2) => t2.CleTVA == model.CleTVA, Db.JoinAlias("t2"));
-
-					if (!fields.Contains(nameof(GenTVA.CodTVA), StringComparer.OrdinalIgnoreCase))
-					{
-						q = q.And<GenTVA, GenTVA>((t1, t2) => t1.CodTVA == t2.CodTVA);
-					}
-				}
-				else
-				{
-					return true;
-				}
-			}
-			
 			if (fields == null || fields.Contains(nameof(GenTVA.CodTVA), StringComparer.OrdinalIgnoreCase))
 			{
-				q.Where(x => x.CodTVA == model.CodTVA);
+				q.Where(t1 => t1.CodTVA == model.CodTVA);
+			}
+			else
+			{
+				return true;
 			}
 
 			if (model.CleTVA != 0)
 			{
-				q.Where(x => x.CleTVA != model.CleTVA);
+				q.Where(t1 => t1.CleTVA != model.CleTVA);
 			}
 
-
-			return Db.Exists(q);
+			return !Db.Exists(q);
 		}
 
 		/// <summary>

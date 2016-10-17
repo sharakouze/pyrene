@@ -143,11 +143,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using <#= sourceNamespace #>;
 using <#= sourceNamespace #>.Types;
 using Tmpi.Pyrene.Infrastructure;
+using Tmpi.Pyrene.Infrastructure.Linq;
 
 namespace <#= fileNamespace #>
 {
@@ -175,19 +177,28 @@ namespace <#= fileNamespace #>
 				foreach (CodeProperty[] lstProps in lstIdxProps)
 				{
 #>
-		/// <summary>
+        /// <summary>
 		/// Teste l'unicité d'un <see cref="<#= pocoClassName #>"/>.
-		/// </summary>
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="fields"></param>
+        /// <returns></returns>
 		protected bool <#= requestClassName #><#= string.Join("", lstProps.Select(p => p.Name)) #>EstUnique(<#= requestClassName #> model, IEnumerable<string> fields = null)
 		{
 			var q = Db.From<<#= requestClassName #>>();
 
+<#
+					if (lstProps.Length > 1)
+                    {
+#>
 			if (fields != null)
 			{
 				var uniqueFields = new[] { <#= string.Join(", ", lstProps.Select(p => "nameof(" + requestClassName + "." + p.Name + ")")) #> };
 				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
 				{
-					q = q.Join<<#= requestClassName #>>((t1, t2) => t2.<#= pkProp.Name #> == model.<#= pkProp.Name #>, Db.JoinAlias("t2"));
+					// INNER JOIN <#= requestClassName #> t2 ON t2.<#= pkProp.Name #>=xxx [...]
+					Expression<Func<<#= requestClassName #>, <#= requestClassName #>, bool>> joinExpr = (t1, t2)
+						=> (t2.<#= pkProp.Name #> == model.<#= pkProp.Name #>);
 
 <#
 					foreach (CodeProperty prop in lstProps)
@@ -195,11 +206,14 @@ namespace <#= fileNamespace #>
 #>
 					if (!fields.Contains(nameof(<#= requestClassName #>.<#= prop.Name #>), StringComparer.OrdinalIgnoreCase))
 					{
-						q = q.And<<#= requestClassName #>, <#= requestClassName #>>((t1, t2) => t1.<#= prop.Name #> == t2.<#= prop.Name #>);
+						// [...] AND t1.<#= prop.Name #>=t2.<#= prop.Name #>
+						joinExpr = joinExpr.And((t1, t2) => t1.<#= prop.Name #> == t2.<#= prop.Name #>);
 					}
 <#
                     }
 #>
+
+					q = q.Join<<#= requestClassName #>>(joinExpr, Db.JoinAlias("t2"));
 				}
 				else
 				{
@@ -208,24 +222,33 @@ namespace <#= fileNamespace #>
 			}
 			
 <#
+                    }
 					foreach (CodeProperty prop in lstProps)
                     {
 #>
 			if (fields == null || fields.Contains(nameof(<#= requestClassName #>.<#= prop.Name #>), StringComparer.OrdinalIgnoreCase))
 			{
-				q.Where(x => x.<#= prop.Name #> == model.<#= prop.Name #>);
+				q.Where(t1 => t1.<#= prop.Name #> == model.<#= prop.Name #>);
 			}
 <#
+						if (lstProps.Length == 1)
+                        {
+#>
+			else
+			{
+				return true;
+			}
+<#
+                        }
                     }
 #>
 
 			if (model.<#= pkProp.Name #> != 0)
 			{
-				q.Where(x => x.<#= pkProp.Name #> != model.<#= pkProp.Name #>);
+				q.Where(t1 => t1.<#= pkProp.Name #> != model.<#= pkProp.Name #>);
 			}
 
-
-			return Db.Exists(q);
+			return !Db.Exists(q);
 		}
 
 <#
