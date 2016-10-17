@@ -492,25 +492,8 @@ namespace <#= fileNamespace #>
                 if (item.RequestClass == item.PocoClass)
                 {
 					string pocoClassName = item.PocoClass.Name;
-                    manager.StartNewFile(pocoClassName + "Validator.generated.cs");
-#>
-using ServiceStack.FluentValidation;
-using <#= sourceNamespace #>;
-using <#= sourceNamespace #>.Types;
+					var dicValidation = new Dictionary<string, List<string>>();
 
-namespace <#= fileNamespace #>
-{
-    /// <summary>
-    /// Validation pour la requête <see cref="<#= pocoClassName #>"/>.
-    /// </summary>
-    public <#= MakeClassesPartial ? "partial " : "" #>class <#= pocoClassName #>Validator : AbstractValidator<<#= pocoClassName #>>
-    {
-        /// <summary>
-        /// Initialise une nouvelle instance de la classe <see cref="<#= pocoClassName #>Validator" />.
-        /// </summary>
-        public <#= pocoClassName #>Validator()
-        {
-<#
                     var allPropsAttributes = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(item.RequestClass);
                     foreach (var prop in allPropsAttributes)
                     {
@@ -546,19 +529,46 @@ namespace <#= fileNamespace #>
                             lstValidation.Add(".EmailAddress()");
                         }
 
-                        if (lstValidation.Any())
+						if (lstValidation.Any())
+                        {
+							dicValidation.Add(prop.Key.Name, lstValidation);
+                        }
+					}
+
+					if (dicValidation.Any())
+                    {
+						manager.StartNewFile(pocoClassName + "Validator.generated.cs");
+#>
+using ServiceStack.FluentValidation;
+using <#= sourceNamespace #>;
+using <#= sourceNamespace #>.Types;
+
+namespace <#= fileNamespace #>
+{
+    /// <summary>
+    /// Validation pour la requête <see cref="<#= pocoClassName #>"/>.
+    /// </summary>
+    public <#= MakeClassesPartial ? "partial " : "" #>class <#= pocoClassName #>Validator : AbstractValidator<<#= pocoClassName #>>
+    {
+        /// <summary>
+        /// Initialise une nouvelle instance de la classe <see cref="<#= pocoClassName #>Validator" />.
+        /// </summary>
+        public <#= pocoClassName #>Validator()
+        {
+<#
+						foreach (var kvp2 in dicValidation)
                         {
 #>
-            RuleFor(x => x.<#= prop.Key.Name #>)
+            RuleFor(x => x.<#= kvp2.Key #>)
 <#
-                            for (int i = 0; i < lstValidation.Count; i++)
+                            for (int i = 0; i < kvp2.Value.Count; i++)
                             {
 #>
-                <#= lstValidation[i] #><#= i == lstValidation.Count - 1 ? ";" : "" #>
+                <#= kvp2.Value[i] #><#= i == kvp2.Value.Count - 1 ? ";" : "" #>
 <#
-                            } // end foreach
-                        } // end if
-                    } // end foreach
+                            }
+                        }
+               
 #>
 
             SetRules();
@@ -572,9 +582,10 @@ namespace <#= fileNamespace #>
 }
 <#
                     manager.EndBlock(); // end newfile
+                    } 
                 }
             } // end foreach
-        } // end if
+        }
     } // end forach
 
 	manager.Process(SplitIntoMultipleFiles);

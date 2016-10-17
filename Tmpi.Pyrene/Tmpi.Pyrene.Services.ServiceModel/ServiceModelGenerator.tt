@@ -18,7 +18,6 @@
     - Alternative a TransformRoutePath avec des const
     - Commentaires sur les [References] ?
     - Ajout de propriétés [References] pour les FK ?
-	- Verb interface markers (Ipost, IGet...)
 	- Possibilité d'avoir 0 PK ?
 	****************/
 
@@ -40,7 +39,7 @@
     // Namespace des fichiers générés.
 	// {0} = DefaultNamespace du projet/répertoire courant.
     string NamespacePocos = "{0}.Types";
-    string NamespaceMessages = "{0}";
+    string NamespaceMessages = "{0}.Messages";
 
     // true pour générer des classes partial.
     bool MakeClassesPartial = true;
@@ -127,7 +126,7 @@
     // Get a reference to the project of this t4 template
     Project project = VisualStudioHelper.CurrentProject;
 	
-	string fileNamespace = VisualStudioHelper.CurrentFileNamespace;
+	string t4fileNamespace = VisualStudioHelper.CurrentFileNamespace;
 
 	// Contient tous les enums du projet
     List<string> allEnums = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, vsCMElement.vsCMElementEnum, false)
@@ -154,9 +153,11 @@
 		/** BEGIN POCO **/
 		/****************/
 
-        manager.StartNewFile(table.ClassName + ".generated.cs");
+		string pocoNamespace = string.Format(NamespacePocos, t4fileNamespace);
 
-		string pocoNamespace = string.Format(NamespacePocos, fileNamespace);
+		string fileName = GetGeneratedFilename(table.ClassName, pocoNamespace, t4fileNamespace);
+        manager.StartNewFile(fileName + ".generated.cs");
+
 #>
 using System;
 using System.Collections.Generic;
@@ -263,7 +264,7 @@ namespace <#= pocoNamespace #>
             {
 				string strRoute = GetStrRoutePath(lstPlaceholderCols);
 #>
-    [Route("<#= strRoute #>", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une ressource {0}.", resourceName) #>")]
+    [Route("<#= strRoute #>", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une ressource {0} à partir de son id.", resourceName) #>")]
 <#
             }
 
@@ -282,7 +283,7 @@ namespace <#= pocoNamespace #>
         }
 		
 #>
-	public <#= MakeClassesPartial ? "partial " : "" #>class <#= table.ClassName #><#= lstInterfaces.Any() ? " : " + string.Join(",\r\n\t\t", lstInterfaces) : "" #>
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= table.ClassName #><#= lstInterfaces.Any() ? " : " + string.Join(", ", lstInterfaces) : "" #>
 	{
 <#
         foreach (Column col in table.Columns)
@@ -468,7 +469,7 @@ namespace <#= pocoNamespace #>
 <#
         manager.EndBlock(); // end newfile
 
-		string msgNamespace = string.Format(NamespaceMessages, fileNamespace);
+		string msgNamespace = string.Format(NamespaceMessages, t4fileNamespace);
 
 		/********************/
 		/** BEGIN GET BYID **/
@@ -478,10 +479,11 @@ namespace <#= pocoNamespace #>
 		if (!getExcluded)
 		{
 			string getTableClassName = "Get" + table.ClassName;
-			string getTableClassDescription = string.Format("Retourne une ressource {0}.", resourceName);
+			string getTableClassDescription = string.Format("Retourne une ressource {0} à partir de son id.", resourceName);
 			string fieldsPropDescription = "Champs à retourner, ou null pour retourner tous les champs.";
 
-			manager.StartNewFile(getTableClassName + ".generated.cs");
+			fileName = GetGeneratedFilename(getTableClassName, msgNamespace, t4fileNamespace);
+			manager.StartNewFile(fileName + ".generated.cs");
 #>
 using System.Net;
 using ServiceStack;
@@ -580,9 +582,10 @@ namespace <#= msgNamespace #>
 		if (!deleteExcluded)
 		{
 			string deleteTableClassName = "Delete" + table.ClassName;
-			string deleteTableClassDescription = string.Format("Supprime une ressource {0}.", resourceName);
+			string deleteTableClassDescription = string.Format("Supprime une ressource {0} à partir de son id.", resourceName);
 
-			manager.StartNewFile(deleteTableClassName + ".generated.cs");
+			fileName = GetGeneratedFilename(deleteTableClassName, msgNamespace, t4fileNamespace);
+			manager.StartNewFile(fileName + ".generated.cs");
 #>
 using System.Net;
 using ServiceStack;
@@ -669,10 +672,11 @@ namespace <#= msgNamespace #>
 		if (!patchExcluded)
 		{
 			string patchTableClassName = "Patch" + table.ClassName;
-			string patchTableClassDescription = string.Format("Modifie partiellement une ressource {0}.", resourceName);
+			string patchTableClassDescription = string.Format("Modifie partiellement une ressource {0} à partir de son id.", resourceName);
 			string fieldsPropDescription = "Liste des modifications à appliquer.";
 
-			manager.StartNewFile(patchTableClassName + ".generated.cs");
+			fileName = GetGeneratedFilename(patchTableClassName, msgNamespace, t4fileNamespace);
+			manager.StartNewFile(fileName + ".generated.cs");
 #>
 using System.Net;
 using ServiceStack;
@@ -784,7 +788,8 @@ namespace <#= msgNamespace #>
 				var textPropDescription = "Texte à rechercher.";
 				var maxPropDescription = "Nombre maximum de résultats à retourner.";
 
-				manager.StartNewFile(searchClassName + ".generated.cs");
+				fileName = GetGeneratedFilename(searchClassName, msgNamespace, t4fileNamespace);
+				manager.StartNewFile(fileName + ".generated.cs");
 #>
 using System.Collections.Generic;
 using System.Net;
@@ -851,6 +856,25 @@ namespace <#= msgNamespace #>
     manager.Process(SplitIntoMultipleFiles);
 #>
 <#+
+private string GetGeneratedFilename(string filename, string fileNamespace, string t4Namespace)
+{
+	if (fileNamespace == t4Namespace)
+    {
+		return filename;
+    }
+
+	string str = fileNamespace.Replace(t4Namespace, "");
+	if (str.StartsWith("."))
+    {
+		str = str.Remove(0, 1);
+    }
+	if (!str.EndsWith("."))
+    {
+		str = str + ".";
+    }
+	return str + filename;
+}
+
 /// <summary>
 /// Retourne une chaine qui représente le format que doit avoir une colonne standard (CodObjet, LibObjet, TxtObjet...) dans une table.
 /// Exemple : GenService => "{0}Service" ; GenPersonneProfil => "{0}Profil" ...
