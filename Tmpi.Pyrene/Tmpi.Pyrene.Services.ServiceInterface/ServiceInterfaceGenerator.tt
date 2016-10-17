@@ -6,8 +6,8 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="System.Linq" #>
-<#@ include file="$(SolutionDir)Shared\MultipleOutputHelper.ttinclude" #>
-<#@ include file="$(SolutionDir)Shared\VisualStudioHelper.ttinclude" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\VisualStudioHelper.ttinclude" #>
 <#
 	/***** TODO *****
 	- Trace des fields introuvables dans Get et Patch
@@ -73,7 +73,7 @@
 <#
 	manager.EndBlock(); // end header
 
-	var dicRequest = new Dictionary<string, List<RequestItem>>();
+	Dictionary<string, List<RequestItem>> dicRequest = new Dictionary<string, List<RequestItem>>();
 
     // get all class items from the code model
     List<CodeClass> allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(srcProject.CodeModel.CodeElements, vsCMElement.vsCMElementClass, false)
@@ -146,7 +146,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using ServiceStack;
 using ServiceStack.OrmLite;
-using <#= sourceNamespace #>;
+using <#= sourceNamespace #>.Messages;
 using <#= sourceNamespace #>.Types;
 using Tmpi.Pyrene.Infrastructure;
 using Tmpi.Pyrene.Infrastructure.Linq;
@@ -161,25 +161,27 @@ namespace <#= fileNamespace #>
 		private static readonly object _syncLock = new object();
 
 <#
+		Dictionary<string, List<string>> dicPocoUnicityMethods = new Dictionary<string, List<string>>();
+
 		foreach (RequestItem item in kvp.Value)
         {
 			string requestClassName = item.RequestClass.Name;
 			string pocoClassName = item.PocoClass.Name;
-
-			var lstUnicityMethods = new List<Tuple<string, string>>();
-
 			CodeProperty pkProp = GetPrimaryKeyProperty(item.PocoClass);
-			if (pkProp != null)
+
+			if (!dicPocoUnicityMethods.ContainsKey(pocoClassName) && (pkProp != null))
             {
 				/*************/
 				/** UNICITE **/
 				/*************/
 
-				List<CodeProperty[]> lstIdxProps = GetUniqueProperties(item.RequestClass);
+				dicPocoUnicityMethods.Add(pocoClassName, new List<string>());
+
+				List<CodeProperty[]> lstIdxProps = GetUniqueProperties(item.PocoClass);
 				foreach (CodeProperty[] lstProps in lstIdxProps)
 				{
-					string methodName = requestClassName + string.Join("", lstProps.Select(p => p.Name)) + "EstUnique";
-					lstUnicityMethods.Add(Tuple.Create(requestClassName, methodName));
+					string methodName = pocoClassName + "_" + string.Join("_", lstProps.Select(p => p.Name)) + "_EstUnique";
+					dicPocoUnicityMethods[pocoClassName].Add(methodName);
 #>
         /// <summary>
 		/// Teste l'unicité d'un <see cref="<#= pocoClassName #>"/>.
@@ -187,9 +189,9 @@ namespace <#= fileNamespace #>
         /// <param name="model"></param>
         /// <param name="fields"></param>
         /// <returns></returns>
-		protected bool <#= methodName #>(<#= requestClassName #> model, IEnumerable<string> fields = null)
+		protected bool <#= methodName #>(<#= pocoClassName #> model, IEnumerable<string> fields = null)
 		{
-			var q = Db.From<<#= requestClassName #>>();
+			var q = Db.From<<#= pocoClassName #>>();
 
 <#
 					if (lstProps.Length > 1)
@@ -197,27 +199,27 @@ namespace <#= fileNamespace #>
 #>
 			if (fields != null)
 			{
-				var uniqueFields = new[] { <#= string.Join(", ", lstProps.Select(p => "nameof(" + requestClassName + "." + p.Name + ")")) #> };
+				var uniqueFields = new[] { <#= string.Join(", ", lstProps.Select(p => "nameof(" + pocoClassName + "." + p.Name + ")")) #> };
 				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
 				{
-					// INNER JOIN <#= requestClassName #> t2 ON t2.<#= pkProp.Name #>=xxx [...]
-					Expression<Func<<#= requestClassName #>, <#= requestClassName #>, bool>> joinExpr = (t1, t2)
+					// INNER JOIN <#= pocoClassName #> t2 ON t2.<#= pkProp.Name #>=xxx [...]
+					Expression<Func<<#= pocoClassName #>, <#= pocoClassName #>, bool>> joinExpr = (t1, t2)
 						=> (t2.<#= pkProp.Name #> == model.<#= pkProp.Name #>);
 
 <#
-					foreach (CodeProperty prop in lstProps)
-                    {
+						foreach (CodeProperty prop in lstProps)
+						{
 #>
-					if (!fields.Contains(nameof(<#= requestClassName #>.<#= prop.Name #>), StringComparer.OrdinalIgnoreCase))
+					if (!fields.Contains(nameof(<#= pocoClassName #>.<#= prop.Name #>), StringComparer.OrdinalIgnoreCase))
 					{
 						// [...] AND t1.<#= prop.Name #>=t2.<#= prop.Name #>
 						joinExpr = joinExpr.And((t1, t2) => t1.<#= prop.Name #> == t2.<#= prop.Name #>);
 					}
 <#
-                    }
+						}
 #>
 
-					q = q.Join<<#= requestClassName #>>(joinExpr, Db.JoinAlias("t2"));
+					q = q.Join<<#= pocoClassName #>>(joinExpr, Db.JoinAlias("t2"));
 				}
 				else
 				{
@@ -230,7 +232,7 @@ namespace <#= fileNamespace #>
 					foreach (CodeProperty prop in lstProps)
                     {
 #>
-			if (fields == null || fields.Contains(nameof(<#= requestClassName #>.<#= prop.Name #>), StringComparer.OrdinalIgnoreCase))
+			if (fields == null || fields.Contains(nameof(<#= pocoClassName #>.<#= prop.Name #>), StringComparer.OrdinalIgnoreCase))
 			{
 				q.Where(t1 => t1.<#= prop.Name #> == model.<#= prop.Name #>);
 			}
@@ -257,7 +259,10 @@ namespace <#= fileNamespace #>
 
 <#
 				}
+            }
 
+			if (pkProp != null)
+            {
 				if (requestClassName.StartsWith("Get"))
 				{
 					/**************/
@@ -270,7 +275,7 @@ namespace <#= fileNamespace #>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Ressource <see cref="<#= pocoClassName #>"/> trouvée.</returns>
 		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		public <#= pocoClassName #> Get(<#= requestClassName #> request)
 		{
             ModelDefinitionHelper.UndefinedFields<<#= pocoClassName #>>(request.Fields);
@@ -299,7 +304,7 @@ namespace <#= fileNamespace #>
 		/// Supprime la ressource <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		public void Delete(<#= requestClassName #> request)
 		{
 			int count = Db.DeleteById<<#= pocoClassName #>>(request.<#= pkProp.Name #>);
@@ -324,7 +329,8 @@ namespace <#= fileNamespace #>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(<#= requestClassName #> request)
 		{
 			if (request.Fields.IsNullOrEmpty())
@@ -341,31 +347,30 @@ namespace <#= fileNamespace #>
 
 			var q = Db.From<<#= pocoClassName #>>().Where(x => x.<#= pkProp.Name #> == request.<#= pkProp.Name #>).Update(patchDic.Keys);
 
-			using (var tran = Db.OpenTransaction())
+			lock (_syncLock)
 			{
 <# 
 				int i = 1;
-				foreach (var meth in lstUnicityMethods.Where(u => u.Item1 == requestClassName))
+				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == pocoClassName).SelectMany(k => k.Value))
                 {
 #>
-				bool unique<#= i.ToString() #> = <#= meth.Item2 #>(request);
+				bool unique<#= i.ToString() #> = <#= meth #>(entity, patchDic.Keys);
 				if (!unique<#= i.ToString() #>)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(<#= requestClassName #>)));
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(<#= pocoClassName #>)));
 				}
 <# 
 					i++;
                 }
 #>
+
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
 						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
 				}
-
-				tran.Commit();
 			}
 		}
 
@@ -411,16 +416,17 @@ namespace <#= fileNamespace #>
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Ressource <see cref="<#= requestClassName #>"/> ajoutée.</returns>
+		/// <exception cref="HttpError.Conflict"></exception>
 		public <#= requestClassName #> Post(<#= requestClassName #> request)
 		{
-			using (var tran = Db.OpenTransaction())
+			lock (_syncLock)
 			{
 <# 
 				int i1 = 1;
-				foreach (var meth in lstUnicityMethods.Where(u => u.Item1 == requestClassName))
+				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == requestClassName).SelectMany(k => k.Value))
                 {
 #>
-				bool unique<#= i1.ToString() #> = <#= meth.Item2 #>(request);
+				bool unique<#= i1.ToString() #> = <#= meth #>(request);
 				if (!unique<#= i1.ToString() #>)
 				{
 					throw HttpError.Conflict(
@@ -434,8 +440,6 @@ namespace <#= fileNamespace #>
 				long id = Db.Insert(request, selectIdentity: true);
 				request.<#= pkProp.Name #> = (int)id;
 
-				tran.Commit();
-
 				return request;
 			}
 		}
@@ -444,17 +448,18 @@ namespace <#= fileNamespace #>
 		/// Remplace la ressource <see cref="<#= requestClassName #>"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.Conflict"></exception>
 		public void Put(<#= requestClassName #> request)
 		{
-			using (var tran = Db.OpenTransaction())
+			lock (_syncLock)
 			{
 <# 
 				int i2 = 1;
-				foreach (var meth in lstUnicityMethods.Where(u => u.Item1 == requestClassName))
+				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == requestClassName).SelectMany(k => k.Value))
                 {
 #>
-				bool unique<#= i2.ToString() #> = <#= meth.Item2 #>(request);
+				bool unique<#= i2.ToString() #> = <#= meth #>(request);
 				if (!unique<#= i2.ToString() #>)
 				{
 					throw HttpError.Conflict(
@@ -471,8 +476,6 @@ namespace <#= fileNamespace #>
 					throw HttpError.NotFound(
 						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(<#= requestClassName #>), request.<#= pkProp.Name #>));
 				}
-
-				tran.Commit();
 			}
 		}
 
@@ -492,7 +495,7 @@ namespace <#= fileNamespace #>
                 if (item.RequestClass == item.PocoClass)
                 {
 					string pocoClassName = item.PocoClass.Name;
-					var dicValidation = new Dictionary<string, List<string>>();
+					Dictionary<string, List<string>> dicValidation = new Dictionary<string, List<string>>();
 
                     var allPropsAttributes = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(item.RequestClass);
                     foreach (var prop in allPropsAttributes)

@@ -43,7 +43,7 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="BasicEntity.cs" />
+    <Compile Include="Messages\BasicEntity.cs" />
     <Compile Include="HttpVerbs.cs" />
     <Compile Include="Messages.DeleteGenCompteur.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
@@ -250,9 +250,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Messages\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
