@@ -166,6 +166,8 @@ namespace <#= fileNamespace #>
 			string requestClassName = item.RequestClass.Name;
 			string pocoClassName = item.PocoClass.Name;
 
+			var lstUnicityMethods = new List<Tuple<string, string>>();
+
 			CodeProperty pkProp = GetPrimaryKeyProperty(item.PocoClass);
 			if (pkProp != null)
             {
@@ -176,6 +178,8 @@ namespace <#= fileNamespace #>
 				List<CodeProperty[]> lstIdxProps = GetUniqueProperties(item.RequestClass);
 				foreach (CodeProperty[] lstProps in lstIdxProps)
 				{
+					string methodName = requestClassName + string.Join("", lstProps.Select(p => p.Name)) + "EstUnique";
+					lstUnicityMethods.Add(Tuple.Create(requestClassName, methodName));
 #>
         /// <summary>
 		/// Teste l'unicité d'un <see cref="<#= pocoClassName #>"/>.
@@ -183,7 +187,7 @@ namespace <#= fileNamespace #>
         /// <param name="model"></param>
         /// <param name="fields"></param>
         /// <returns></returns>
-		protected bool <#= requestClassName #><#= string.Join("", lstProps.Select(p => p.Name)) #>EstUnique(<#= requestClassName #> model, IEnumerable<string> fields = null)
+		protected bool <#= methodName #>(<#= requestClassName #> model, IEnumerable<string> fields = null)
 		{
 			var q = Db.From<<#= requestClassName #>>();
 
@@ -277,7 +281,7 @@ namespace <#= fileNamespace #>
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
 			}
 
 			return entity;
@@ -302,7 +306,7 @@ namespace <#= fileNamespace #>
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
 			}
 		}
 
@@ -337,11 +341,31 @@ namespace <#= fileNamespace #>
 
 			var q = Db.From<<#= pocoClassName #>>().Where(x => x.<#= pkProp.Name #> == request.<#= pkProp.Name #>).Update(patchDic.Keys);
 
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+<# 
+				int i = 1;
+				foreach (var meth in lstUnicityMethods.Where(u => u.Item1 == requestClassName))
+                {
+#>
+				bool unique<#= i.ToString() #> = <#= meth.Item2 #>(request);
+				if (!unique<#= i.ToString() #>)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(<#= requestClassName #>)));
+				}
+<# 
+					i++;
+                }
+#>
+				int count = Db.UpdateOnly(entity, q);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+				}
+
+				tran.Commit();
 			}
 		}
 
@@ -389,10 +413,31 @@ namespace <#= fileNamespace #>
 		/// <returns>Ressource <see cref="<#= requestClassName #>"/> ajoutée.</returns>
 		public <#= requestClassName #> Post(<#= requestClassName #> request)
 		{
-			long id = Db.Insert(request, selectIdentity: true);
-			request.<#= pkProp.Name #> = (int)id;
+			using (var tran = Db.OpenTransaction())
+			{
+<# 
+				int i1 = 1;
+				foreach (var meth in lstUnicityMethods.Where(u => u.Item1 == requestClassName))
+                {
+#>
+				bool unique<#= i1.ToString() #> = <#= meth.Item2 #>(request);
+				if (!unique<#= i1.ToString() #>)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(<#= requestClassName #>)));
+				}
+<# 
+					i1++;
+                }
+#>
 
-			return request;
+				long id = Db.Insert(request, selectIdentity: true);
+				request.<#= pkProp.Name #> = (int)id;
+
+				tran.Commit();
+
+				return request;
+			}
 		}
 
 		/// <summary>
@@ -402,11 +447,32 @@ namespace <#= fileNamespace #>
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Put(<#= requestClassName #> request)
 		{
-			int count = Db.Update(request);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(<#= requestClassName #>), request.<#= pkProp.Name #>));
+<# 
+				int i2 = 1;
+				foreach (var meth in lstUnicityMethods.Where(u => u.Item1 == requestClassName))
+                {
+#>
+				bool unique<#= i2.ToString() #> = <#= meth.Item2 #>(request);
+				if (!unique<#= i2.ToString() #>)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(<#= requestClassName #>)));
+				}
+<# 
+					i2++;
+                }
+#>
+
+				int count = Db.Update(request);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(<#= requestClassName #>), request.<#= pkProp.Name #>));
+				}
+
+				tran.Commit();
 			}
 		}
 

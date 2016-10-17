@@ -20,8 +20,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
 	/// <seealso cref="GenCompteurValeur"/>
 	[Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource Valeur (Compteur).")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource Valeur (Compteur) ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource Valeur (Compteur) spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
 	public partial class PatchGenCompteurValeur : IReturnVoid, IPatch
 	{
         /// <summary>

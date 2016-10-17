@@ -21,7 +21,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
     [Route("/Exercice", HttpVerbs.Post, Summary = "Ajoute une ressource Exercice.")]
     [Route("/Exercice/{CleExercice}", HttpVerbs.Put, Summary = "Remplace une ressource Exercice.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource Exercice spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
 	public partial class GenExercice : IAuditable
 	{
 		/// <summary>

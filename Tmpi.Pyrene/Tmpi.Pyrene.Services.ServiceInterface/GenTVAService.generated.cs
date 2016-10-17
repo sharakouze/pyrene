@@ -38,7 +38,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
 			}
 		}
 
@@ -76,10 +76,22 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <returns>Ressource <see cref="GenTVA"/> ajoutée.</returns>
 		public GenTVA Post(GenTVA request)
 		{
-			long id = Db.Insert(request, selectIdentity: true);
-			request.CleTVA = (int)id;
+			using (var tran = Db.OpenTransaction())
+			{
+				bool unique1 = GenTVACodTVAEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenTVA)));
+				}
 
-			return request;
+				long id = Db.Insert(request, selectIdentity: true);
+				request.CleTVA = (int)id;
+
+				tran.Commit();
+
+				return request;
+			}
 		}
 
 		/// <summary>
@@ -89,11 +101,23 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Put(GenTVA request)
 		{
-			int count = Db.Update(request);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
+				bool unique1 = GenTVACodTVAEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenTVA)));
+				}
+
+				int count = Db.Update(request);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
+				}
+
+				tran.Commit();
 			}
 		}
 
@@ -114,7 +138,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
 			}
 
 			return entity;
@@ -143,11 +167,16 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
 			var q = Db.From<GenTVA>().Where(x => x.CleTVA == request.CleTVA).Update(patchDic.Keys);
 
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
+				int count = Db.UpdateOnly(entity, q);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
+				}
+
+				tran.Commit();
 			}
 		}
 

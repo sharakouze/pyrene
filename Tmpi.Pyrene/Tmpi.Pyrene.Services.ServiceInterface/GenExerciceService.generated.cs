@@ -38,7 +38,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.CleExercice));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.CleExercice));
 			}
 		}
 
@@ -76,10 +76,22 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <returns>Ressource <see cref="GenExercice"/> ajoutée.</returns>
 		public GenExercice Post(GenExercice request)
 		{
-			long id = Db.Insert(request, selectIdentity: true);
-			request.CleExercice = (int)id;
+			using (var tran = Db.OpenTransaction())
+			{
+				bool unique1 = GenExerciceCodExerciceEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenExercice)));
+				}
 
-			return request;
+				long id = Db.Insert(request, selectIdentity: true);
+				request.CleExercice = (int)id;
+
+				tran.Commit();
+
+				return request;
+			}
 		}
 
 		/// <summary>
@@ -89,11 +101,23 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Put(GenExercice request)
 		{
-			int count = Db.Update(request);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.CleExercice));
+				bool unique1 = GenExerciceCodExerciceEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenExercice)));
+				}
+
+				int count = Db.Update(request);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.CleExercice));
+				}
+
+				tran.Commit();
 			}
 		}
 
@@ -114,7 +138,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.CleExercice));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.CleExercice));
 			}
 
 			return entity;
@@ -143,11 +167,16 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
 			var q = Db.From<GenExercice>().Where(x => x.CleExercice == request.CleExercice).Update(patchDic.Keys);
 
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.CleExercice));
+				int count = Db.UpdateOnly(entity, q);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.CleExercice));
+				}
+
+				tran.Commit();
 			}
 		}
 

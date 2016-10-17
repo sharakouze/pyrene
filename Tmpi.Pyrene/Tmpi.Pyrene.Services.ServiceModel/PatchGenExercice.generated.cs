@@ -20,8 +20,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
 	/// <seealso cref="GenExercice"/>
 	[Route("/Exercice/{CleExercice}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource Exercice.")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource Exercice ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource Exercice spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
 	public partial class PatchGenExercice : IReturnVoid, IPatch
 	{
         /// <summary>

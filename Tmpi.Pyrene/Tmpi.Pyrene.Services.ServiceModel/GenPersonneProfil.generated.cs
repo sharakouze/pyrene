@@ -23,7 +23,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	[CompositeIndex(true, nameof(CodProfil), nameof(ClePersonne))]
     [Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Post, Summary = "Ajoute une ressource Profil (Personne).")]
     [Route("/Personne/Profil/{CleProfil}", HttpVerbs.Put, Summary = "Remplace une ressource Profil (Personne).")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource Profil (Personne) spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
 	public partial class GenPersonneProfil : IAuditable
 	{
 		/// <summary>

@@ -38,7 +38,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenCompteur), request.CleCompteur));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenCompteur), request.CleCompteur));
 			}
 		}
 
@@ -53,7 +53,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenCompteurValeur), request.CleValeur));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenCompteurValeur), request.CleValeur));
 			}
 		}
 
@@ -146,10 +146,28 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <returns>Ressource <see cref="GenCompteur"/> ajoutée.</returns>
 		public GenCompteur Post(GenCompteur request)
 		{
-			long id = Db.Insert(request, selectIdentity: true);
-			request.CleCompteur = (int)id;
+			using (var tran = Db.OpenTransaction())
+			{
+				bool unique1 = GenCompteurTypCompteurCleServiceEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenCompteur)));
+				}
+				bool unique2 = GenCompteurCodCompteurEstUnique(request);
+				if (!unique2)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenCompteur)));
+				}
 
-			return request;
+				long id = Db.Insert(request, selectIdentity: true);
+				request.CleCompteur = (int)id;
+
+				tran.Commit();
+
+				return request;
+			}
 		}
 
 		/// <summary>
@@ -159,11 +177,29 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Put(GenCompteur request)
 		{
-			int count = Db.Update(request);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenCompteur), request.CleCompteur));
+				bool unique1 = GenCompteurTypCompteurCleServiceEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenCompteur)));
+				}
+				bool unique2 = GenCompteurCodCompteurEstUnique(request);
+				if (!unique2)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenCompteur)));
+				}
+
+				int count = Db.Update(request);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenCompteur), request.CleCompteur));
+				}
+
+				tran.Commit();
 			}
 		}
 
@@ -229,10 +265,22 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <returns>Ressource <see cref="GenCompteurValeur"/> ajoutée.</returns>
 		public GenCompteurValeur Post(GenCompteurValeur request)
 		{
-			long id = Db.Insert(request, selectIdentity: true);
-			request.CleValeur = (int)id;
+			using (var tran = Db.OpenTransaction())
+			{
+				bool unique1 = GenCompteurValeurCleCompteurValPeriodeEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenCompteurValeur)));
+				}
 
-			return request;
+				long id = Db.Insert(request, selectIdentity: true);
+				request.CleValeur = (int)id;
+
+				tran.Commit();
+
+				return request;
+			}
 		}
 
 		/// <summary>
@@ -242,11 +290,23 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Put(GenCompteurValeur request)
 		{
-			int count = Db.Update(request);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenCompteurValeur), request.CleValeur));
+				bool unique1 = GenCompteurValeurCleCompteurValPeriodeEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenCompteurValeur)));
+				}
+
+				int count = Db.Update(request);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenCompteurValeur), request.CleValeur));
+				}
+
+				tran.Commit();
 			}
 		}
 
@@ -267,7 +327,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenCompteur), request.CleCompteur));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenCompteur), request.CleCompteur));
 			}
 
 			return entity;
@@ -290,7 +350,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenCompteurValeur), request.CleValeur));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenCompteurValeur), request.CleValeur));
 			}
 
 			return entity;
@@ -319,11 +379,16 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
 			var q = Db.From<GenCompteur>().Where(x => x.CleCompteur == request.CleCompteur).Update(patchDic.Keys);
 
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenCompteur), request.CleCompteur));
+				int count = Db.UpdateOnly(entity, q);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenCompteur), request.CleCompteur));
+				}
+
+				tran.Commit();
 			}
 		}
 
@@ -350,11 +415,16 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
 			var q = Db.From<GenCompteurValeur>().Where(x => x.CleValeur == request.CleValeur).Update(patchDic.Keys);
 
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenCompteurValeur), request.CleValeur));
+				int count = Db.UpdateOnly(entity, q);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenCompteurValeur), request.CleValeur));
+				}
+
+				tran.Commit();
 			}
 		}
 

@@ -269,8 +269,14 @@ namespace <#= pocoNamespace #>
 
             if (AddApiAttributes)
             {
+				if (!putExcluded)
+				{
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= resourceName #> spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+<#
+                }
+#>
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
 <#
             }
         }
@@ -504,8 +510,8 @@ namespace <#= msgNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource <#= resourceName #> ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= resourceName #> spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
 <#
                 }
 			}
@@ -605,7 +611,7 @@ namespace <#= msgNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= resourceName #> spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
 <#
                 }
 			}
@@ -695,8 +701,9 @@ namespace <#= msgNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource <#= resourceName #> ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource <#= resourceName #> spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
 <#
                 }
 			}

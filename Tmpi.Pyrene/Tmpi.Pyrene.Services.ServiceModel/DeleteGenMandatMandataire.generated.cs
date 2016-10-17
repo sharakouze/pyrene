@@ -20,7 +20,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
 	/// <seealso cref="GenMandatMandataire"/>
 	[Route("/Mandat/Mandataire/{CleMandataire}", HttpVerbs.Delete, Summary = "Supprime une ressource Mandataire (Mandat).")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource Mandataire (Mandat) spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
 	public partial class DeleteGenMandatMandataire : IReturnVoid, IDelete
 	{
         /// <summary>

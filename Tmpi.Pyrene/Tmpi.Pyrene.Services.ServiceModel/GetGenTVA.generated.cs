@@ -20,8 +20,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
 	/// <seealso cref="GenTVA"/>
 	[Route("/TVA/{CleTVA}", HttpVerbs.Get, Summary = "Retourne une ressource TVA.")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource TVA ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource TVA spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
 	public partial class GetGenTVA : IReturn<GenTVA>, IGet
 	{
         /// <summary>

@@ -20,7 +20,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel
 	/// </summary>
 	/// <seealso cref="GenExercice"/>
 	[Route("/Exercice/{CleExercice}", HttpVerbs.Delete, Summary = "Supprime une ressource Exercice.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource Exercice spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
 	public partial class DeleteGenExercice : IReturnVoid, IDelete
 	{
         /// <summary>

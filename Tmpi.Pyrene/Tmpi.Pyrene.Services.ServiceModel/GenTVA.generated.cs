@@ -21,7 +21,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
     [Route("/TVA", HttpVerbs.Post, Summary = "Ajoute une ressource TVA.")]
     [Route("/TVA/{CleTVA}", HttpVerbs.Put, Summary = "Remplace une ressource TVA.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource TVA spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
 	public partial class GenTVA : IAuditable
 	{
 		/// <summary>

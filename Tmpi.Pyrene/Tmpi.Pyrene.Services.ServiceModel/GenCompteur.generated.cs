@@ -22,7 +22,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	[CompositeIndex(true, nameof(TypCompteur), nameof(CleService))]
     [Route("/Compteur", HttpVerbs.Post, Summary = "Ajoute une ressource Compteur.")]
     [Route("/Compteur/{CleCompteur}", HttpVerbs.Put, Summary = "Remplace une ressource Compteur.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource Compteur spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
 	public partial class GenCompteur : IAuditable
 	{
 		/// <summary>

@@ -22,7 +22,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	[CompositeIndex(true, nameof(CleCompteur), nameof(ValPeriode))]
     [Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Post, Summary = "Ajoute une ressource Valeur (Compteur).")]
     [Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Put, Summary = "Remplace une ressource Valeur (Compteur).")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource Valeur (Compteur) spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
 	public partial class GenCompteurValeur
 	{
 		/// <summary>

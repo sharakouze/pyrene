@@ -38,7 +38,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
 			}
 		}
 
@@ -53,7 +53,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
 			}
 		}
 
@@ -68,7 +68,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
 			}
 		}
 
@@ -106,10 +106,22 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <returns>Ressource <see cref="GenFourn"/> ajoutée.</returns>
 		public GenFourn Post(GenFourn request)
 		{
-			long id = Db.Insert(request, selectIdentity: true);
-			request.CleFourn = (int)id;
+			using (var tran = Db.OpenTransaction())
+			{
+				bool unique1 = GenFournCodFournEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFourn)));
+				}
 
-			return request;
+				long id = Db.Insert(request, selectIdentity: true);
+				request.CleFourn = (int)id;
+
+				tran.Commit();
+
+				return request;
+			}
 		}
 
 		/// <summary>
@@ -119,11 +131,23 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Put(GenFourn request)
 		{
-			int count = Db.Update(request);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
+				bool unique1 = GenFournCodFournEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFourn)));
+				}
+
+				int count = Db.Update(request);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
+				}
+
+				tran.Commit();
 			}
 		}
 
@@ -189,10 +213,22 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <returns>Ressource <see cref="GenFournBanque"/> ajoutée.</returns>
 		public GenFournBanque Post(GenFournBanque request)
 		{
-			long id = Db.Insert(request, selectIdentity: true);
-			request.CleBanque = (int)id;
+			using (var tran = Db.OpenTransaction())
+			{
+				bool unique1 = GenFournBanqueCleFournCodIBANEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFournBanque)));
+				}
 
-			return request;
+				long id = Db.Insert(request, selectIdentity: true);
+				request.CleBanque = (int)id;
+
+				tran.Commit();
+
+				return request;
+			}
 		}
 
 		/// <summary>
@@ -202,11 +238,23 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Put(GenFournBanque request)
 		{
-			int count = Db.Update(request);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
+				bool unique1 = GenFournBanqueCleFournCodIBANEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFournBanque)));
+				}
+
+				int count = Db.Update(request);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
+				}
+
+				tran.Commit();
 			}
 		}
 
@@ -272,10 +320,22 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <returns>Ressource <see cref="GenFournContact"/> ajoutée.</returns>
 		public GenFournContact Post(GenFournContact request)
 		{
-			long id = Db.Insert(request, selectIdentity: true);
-			request.CleContact = (int)id;
+			using (var tran = Db.OpenTransaction())
+			{
+				bool unique1 = GenFournContactCleFournNomContactEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFournContact)));
+				}
 
-			return request;
+				long id = Db.Insert(request, selectIdentity: true);
+				request.CleContact = (int)id;
+
+				tran.Commit();
+
+				return request;
+			}
 		}
 
 		/// <summary>
@@ -285,11 +345,23 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Put(GenFournContact request)
 		{
-			int count = Db.Update(request);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
+				bool unique1 = GenFournContactCleFournNomContactEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFournContact)));
+				}
+
+				int count = Db.Update(request);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
+				}
+
+				tran.Commit();
 			}
 		}
 
@@ -310,7 +382,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
 			}
 
 			return entity;
@@ -333,7 +405,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
 			}
 
 			return entity;
@@ -356,7 +428,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
 			}
 
 			return entity;
@@ -385,11 +457,16 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
 			var q = Db.From<GenFourn>().Where(x => x.CleFourn == request.CleFourn).Update(patchDic.Keys);
 
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
+				int count = Db.UpdateOnly(entity, q);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
+				}
+
+				tran.Commit();
 			}
 		}
 
@@ -416,11 +493,16 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
 			var q = Db.From<GenFournBanque>().Where(x => x.CleBanque == request.CleBanque).Update(patchDic.Keys);
 
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
+				int count = Db.UpdateOnly(entity, q);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
+				}
+
+				tran.Commit();
 			}
 		}
 
@@ -447,11 +529,16 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
 			var q = Db.From<GenFournContact>().Where(x => x.CleContact == request.CleContact).Update(patchDic.Keys);
 
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
+				int count = Db.UpdateOnly(entity, q);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
+				}
+
+				tran.Commit();
 			}
 		}
 

@@ -38,7 +38,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.CleMandat));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.CleMandat));
 			}
 		}
 
@@ -53,7 +53,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.CleMandataire));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.CleMandataire));
 			}
 		}
 
@@ -146,10 +146,28 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <returns>Ressource <see cref="GenMandat"/> ajoutée.</returns>
 		public GenMandat Post(GenMandat request)
 		{
-			long id = Db.Insert(request, selectIdentity: true);
-			request.CleMandat = (int)id;
+			using (var tran = Db.OpenTransaction())
+			{
+				bool unique1 = GenMandatTypMandatNivMandatEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenMandat)));
+				}
+				bool unique2 = GenMandatCodMandatEstUnique(request);
+				if (!unique2)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenMandat)));
+				}
 
-			return request;
+				long id = Db.Insert(request, selectIdentity: true);
+				request.CleMandat = (int)id;
+
+				tran.Commit();
+
+				return request;
+			}
 		}
 
 		/// <summary>
@@ -159,11 +177,29 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Put(GenMandat request)
 		{
-			int count = Db.Update(request);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.CleMandat));
+				bool unique1 = GenMandatTypMandatNivMandatEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenMandat)));
+				}
+				bool unique2 = GenMandatCodMandatEstUnique(request);
+				if (!unique2)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenMandat)));
+				}
+
+				int count = Db.Update(request);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.CleMandat));
+				}
+
+				tran.Commit();
 			}
 		}
 
@@ -238,10 +274,22 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <returns>Ressource <see cref="GenMandatMandataire"/> ajoutée.</returns>
 		public GenMandatMandataire Post(GenMandatMandataire request)
 		{
-			long id = Db.Insert(request, selectIdentity: true);
-			request.CleMandataire = (int)id;
+			using (var tran = Db.OpenTransaction())
+			{
+				bool unique1 = GenMandatMandataireCleMandatClePersonneCleServiceEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenMandatMandataire)));
+				}
 
-			return request;
+				long id = Db.Insert(request, selectIdentity: true);
+				request.CleMandataire = (int)id;
+
+				tran.Commit();
+
+				return request;
+			}
 		}
 
 		/// <summary>
@@ -251,11 +299,23 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 		/// <exception cref="HttpError">La ressource spécifiée est introuvable.</exception>
 		public void Put(GenMandatMandataire request)
 		{
-			int count = Db.Update(request);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.CleMandataire));
+				bool unique1 = GenMandatMandataireCleMandatClePersonneCleServiceEstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenMandatMandataire)));
+				}
+
+				int count = Db.Update(request);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.CleMandataire));
+				}
+
+				tran.Commit();
 			}
 		}
 
@@ -276,7 +336,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.CleMandat));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.CleMandat));
 			}
 
 			return entity;
@@ -299,7 +359,7 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.CleMandataire));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.CleMandataire));
 			}
 
 			return entity;
@@ -328,11 +388,16 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
 			var q = Db.From<GenMandat>().Where(x => x.CleMandat == request.CleMandat).Update(patchDic.Keys);
 
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.CleMandat));
+				int count = Db.UpdateOnly(entity, q);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.CleMandat));
+				}
+
+				tran.Commit();
 			}
 		}
 
@@ -359,11 +424,16 @@ namespace Tmpi.Pyrene.Services.ServiceInterface
 
 			var q = Db.From<GenMandatMandataire>().Where(x => x.CleMandataire == request.CleMandataire).Update(patchDic.Keys);
 
-			int count = Db.UpdateOnly(entity, q);
-			if (count == 0)
+			using (var tran = Db.OpenTransaction())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServicesErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.CleMandataire));
+				int count = Db.UpdateOnly(entity, q);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.CleMandataire));
+				}
+
+				tran.Commit();
 			}
 		}
 

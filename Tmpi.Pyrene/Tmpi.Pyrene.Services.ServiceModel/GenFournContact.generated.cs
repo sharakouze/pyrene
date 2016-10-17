@@ -22,7 +22,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	[CompositeIndex(true, nameof(CleFourn), nameof(NomContact))]
     [Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Post, Summary = "Ajoute une ressource Contact (Fourn).")]
     [Route("/Fourn/Contact/{CleContact}", HttpVerbs.Put, Summary = "Remplace une ressource Contact (Fourn).")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource Contact (Fourn) spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
 	public partial class GenFournContact : IAuditable
 	{
 		/// <summary>

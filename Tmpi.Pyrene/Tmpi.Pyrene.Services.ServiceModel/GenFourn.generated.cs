@@ -21,7 +21,8 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 {
     [Route("/Fourn", HttpVerbs.Post, Summary = "Ajoute une ressource Fourn.")]
     [Route("/Fourn/{CleFourn}", HttpVerbs.Put, Summary = "Remplace une ressource Fourn.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource Fourn spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
 	public partial class GenFourn : IAuditable
 	{
 		/// <summary>
