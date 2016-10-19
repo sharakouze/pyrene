@@ -17,7 +17,7 @@
 
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Identifiant unique de l''utilisateur parent.',
+    @value = N'Identifiant unique de l''utilisateur parent',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -26,7 +26,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = 'ClePersonne'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Identifiant unique du service auquel a accès le profil, ou null pour tous les services.',
+    @value = N'Identifiant unique du service auquel a accès le profil, ou null pour tous les services',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',

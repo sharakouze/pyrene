@@ -27,71 +27,71 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenFournBanque : IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique. Clé primaire. Immutable.
+		/// Identifiant unique ; clé primaire (immutable)
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique. Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
 		public int CleBanque { get; set; }
 
 		/// <summary>
-		/// Identifiant unique du fournisseur parent.
+		/// Identifiant unique du fournisseur parent
 		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du fournisseur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Identifiant unique du fournisseur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
 		public int CleFourn { get; set; }
 
 		/// <summary>
-		/// Code IBAN.
+		/// Code IBAN
 		/// </summary>
 		[StringLength(34)]
 		[Required]
-		[ApiMember(Description = "Code IBAN.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code IBAN", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodIBAN { get; set; }
 
 		/// <summary>
-		/// Code BIC.
+		/// Code BIC
 		/// </summary>
 		[StringLength(11)]
 		[Required]
-		[ApiMember(Description = "Code BIC.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code BIC", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodBIC { get; set; }
 
 		/// <summary>
-		/// Nom de l'établissement bancaire.
+		/// Nom de l'établissement bancaire
 		/// </summary>
 		[StringLength(200)]
 		[Required]
-		[ApiMember(Description = "Nom de l'établissement bancaire.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Nom de l'établissement bancaire", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string LibEtablissement { get; set; }
 
 		/// <summary>
-		/// Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur.
+		/// Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur.", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
+		[ApiMember(Description = "Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
 		public bool EstDefaut { get; set; }
 
 		/// <summary>
-		/// Date de création. Immutable.
+		/// Date de création (immutable)
 		/// </summary>
 		[Required]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la création. Immutable.
+		/// Identifiant unique de l'utilisateur responsable de la création (immutable)
 		/// </summary>
 		[Required]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification. Immutable.
+		/// Date de dernière modification (immutable)
 		/// </summary>
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la dernière modification. Immutable.
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)
 		/// </summary>
 		public int? CleEditeur { get; set; }
 

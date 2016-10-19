@@ -11,7 +11,7 @@
 
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Identifiant unique du compteur parent.',
+    @value = N'Identifiant unique du compteur parent',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -20,7 +20,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = 'CleCompteur'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Valeur de la période.',
+    @value = N'Valeur de la période',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -29,7 +29,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'ValPeriode'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Valeur du compteur.',
+    @value = N'Valeur du compteur',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',

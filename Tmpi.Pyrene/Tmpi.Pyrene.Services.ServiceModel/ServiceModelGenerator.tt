@@ -897,76 +897,78 @@ private void SetColumnsDescription(Table table, string stdColFormat)
         {
 			if (col.IsPKey)
 			{
-				col.Description = "Identifiant unique. Clé primaire.";
+				col.Description = "Identifiant unique ; clé primaire";
 			}
 			else if (col.PropertyName == string.Format(stdColFormat, "Cod"))
 			{
-				col.Description = "Code.";
+				col.Description = "Code";
 			}
 			else if (col.PropertyName == string.Format(stdColFormat, "Lib"))
 			{
-				col.Description = "Désignation.";
+				col.Description = "Désignation";
 			}
 			else if (col.PropertyName == string.Format(stdColFormat, "Txt"))
 			{
-				col.Description = "Commentaire ou description.";
+				col.Description = "Commentaire ou description";
 			}
 			else
 			{
 				switch (col.PropertyName)
 				{
 					case "EstActif":
-						col.Description = "Actif ou inactif.";
+						col.Description = "Actif ou inactif";
 						break;
 					case "DatCreation":
-						col.Description = "Date de création. Immutable.";
+						col.Description = "Date de création (immutable)";
 						break;
 					case "CleCreateur":
-						col.Description = "Identifiant unique de l'utilisateur responsable de la création. Immutable.";
+						col.Description = "Identifiant unique de l'utilisateur responsable de la création (immutable)";
 						break;
 					case "DatEdition":
-						col.Description = "Date de dernière modification. Immutable.";
+						col.Description = "Date de dernière modification (immutable)";
 						break;
 					case "CleEditeur":
-						col.Description = "Identifiant unique de l'utilisateur responsable de la dernière modification. Immutable.";
+						col.Description = "Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)";
 						break;
 					case "CodExterne":
-						col.Description = "Identifiant de synchronisation externe.";
+						col.Description = "Identifiant de synchronisation externe";
 						break;
 
 					case "NumTelep":
-						col.Description = "Numéro de téléphone.";
+						col.Description = "Numéro de téléphone";
 						break;
 					case "NumFax":
-						col.Description = "Numéro de fax.";
+						col.Description = "Numéro de fax";
 						break;
 					case "NumEmail":
-						col.Description = "Adresse email.";
+						col.Description = "Adresse email";
 						break;
 
 					case "AdrRue":
-						col.Description = "Rue.";
+						col.Description = "Rue";
 						break;
 					case "AdrCode":
-						col.Description = "Code postal.";
+						col.Description = "Code postal";
 						break;
 					case "AdrCommune":
-						col.Description = "Ville ou commune.";
+						col.Description = "Ville ou commune";
 						break;
 					case "AdrPays":
-						col.Description = "Pays.";
+						col.Description = "Pays";
 						break;
 				}
 			}
         }
+		/*
 		else if (!col.Description.EndsWith("."))
 		{
 			col.Description += ".";
 		}
+		*/
 
 		if (col.IsAutoIncrement || col.IsComputed)
         {
-			string desc = col.Description + " Immutable.";
+			string desc = col.Description + " (immutable)";
 			col.Description = desc.Trim();
         }
 		bool isUniqueSingleCol = table.Indices
@@ -974,7 +976,7 @@ private void SetColumnsDescription(Table table, string stdColFormat)
 			.Any();
 		if (isUniqueSingleCol)
         {
-			string desc = col.Description + " Unique.";
+			string desc = col.Description + " (unique)";
 			col.Description = desc.Trim();
         }
     }

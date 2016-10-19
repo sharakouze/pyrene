@@ -27,62 +27,62 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenMandatMandataire : IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique. Clé primaire. Immutable.
+		/// Identifiant unique ; clé primaire (immutable)
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique. Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
 		public int CleMandataire { get; set; }
 
 		/// <summary>
-		/// Identifiant unique du mandat parent.
+		/// Identifiant unique du mandat parent
 		/// </summary>
 		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du mandat parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Identifiant unique du mandat parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
 		public int CleMandat { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur mandataire.
+		/// Identifiant unique de l'utilisateur mandataire
 		/// </summary>
 		[References(typeof(GenPersonne))]
 		[Required]
-		[ApiMember(Description = "Identifiant unique de l'utilisateur mandataire.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Identifiant unique de l'utilisateur mandataire", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ClePersonne { get; set; }
 
 		/// <summary>
-		/// Identifiant unique du service ayant accès au mandat, ou null pour tous les services.
+		/// Identifiant unique du service ayant accès au mandat, ou null pour tous les services
 		/// </summary>
 		[References(typeof(GenService))]
-		[ApiMember(Description = "Identifiant unique du service ayant accès au mandat, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
+		[ApiMember(Description = "Identifiant unique du service ayant accès au mandat, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }
 
 		/// <summary>
-		/// Si true, le mandat est suspendu.
+		/// Si true, le mandat est suspendu
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Si true, le mandat est suspendu.", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
+		[ApiMember(Description = "Si true, le mandat est suspendu", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
 		public bool EstSuspendu { get; set; }
 
 		/// <summary>
-		/// Date de création. Immutable.
+		/// Date de création (immutable)
 		/// </summary>
 		[Required]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la création. Immutable.
+		/// Identifiant unique de l'utilisateur responsable de la création (immutable)
 		/// </summary>
 		[Required]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification. Immutable.
+		/// Date de dernière modification (immutable)
 		/// </summary>
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la dernière modification. Immutable.
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)
 		/// </summary>
 		public int? CleEditeur { get; set; }
 

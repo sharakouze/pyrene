@@ -27,98 +27,98 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenFournContact : IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique. Clé primaire. Immutable.
+		/// Identifiant unique ; clé primaire (immutable)
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique. Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
 		public int CleContact { get; set; }
 
 		/// <summary>
-		/// Identifiant unique du fournisseur parent.
+		/// Identifiant unique du fournisseur parent
 		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du fournisseur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Identifiant unique du fournisseur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
 		public int CleFourn { get; set; }
 
 		/// <summary>
-		/// Nom de famille.
+		/// Nom de famille
 		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[ApiMember(Description = "Nom de famille.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Nom de famille", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string NomContact { get; set; }
 
 		/// <summary>
-		/// Prénom.
+		/// Prénom
 		/// </summary>
 		[StringLength(100)]
-		[ApiMember(Description = "Prénom.", DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Prénom", DataType = SwaggerDataTypes.String)]
 		public string PreContact { get; set; }
 
 		/// <summary>
-		/// Commentaire ou description.
+		/// Commentaire ou description
 		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
 		public string TxtContact { get; set; }
 
 		/// <summary>
-		/// Date de création. Immutable.
+		/// Date de création (immutable)
 		/// </summary>
 		[Required]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la création. Immutable.
+		/// Identifiant unique de l'utilisateur responsable de la création (immutable)
 		/// </summary>
 		[Required]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification. Immutable.
+		/// Date de dernière modification (immutable)
 		/// </summary>
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la dernière modification. Immutable.
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)
 		/// </summary>
 		public int? CleEditeur { get; set; }
 
 		/// <summary>
-		/// Numéro de téléphone.
+		/// Numéro de téléphone
 		/// </summary>
 		[StringLength(25)]
-		[ApiMember(Description = "Numéro de téléphone.", DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Numéro de téléphone", DataType = SwaggerDataTypes.String)]
 		public string NumTelep { get; set; }
 
 		/// <summary>
-		/// Numéro de fax.
+		/// Numéro de fax
 		/// </summary>
 		[StringLength(25)]
-		[ApiMember(Description = "Numéro de fax.", DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Numéro de fax", DataType = SwaggerDataTypes.String)]
 		public string NumFax { get; set; }
 
 		/// <summary>
-		/// Adresse email.
+		/// Adresse email
 		/// </summary>
 		[StringLength(100)]
-		[ApiMember(Description = "Adresse email.", DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Adresse email", DataType = SwaggerDataTypes.String)]
 		public string NumEmail { get; set; }
 
 		/// <summary>
-		/// Titre de civilité.
+		/// Titre de civilité
 		/// </summary>
-		[ApiMember(Description = "Titre de civilité.")]
+		[ApiMember(Description = "Titre de civilité")]
 		[ApiAllowableValues(nameof(TypCivilite), typeof(TypCivilite))]
 		public TypCivilite? TypCivilite { get; set; }
 
 		/// <summary>
-		/// Fonction ou poste du contact chez le fournisseur.
+		/// Fonction ou poste du contact chez le fournisseur
 		/// </summary>
 		[StringLength(100)]
-		[ApiMember(Description = "Fonction ou poste du contact chez le fournisseur.", DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Fonction ou poste du contact chez le fournisseur", DataType = SwaggerDataTypes.String)]
 		public string LibFonction { get; set; }
 
 	}

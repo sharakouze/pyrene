@@ -22,7 +22,7 @@
 GO
 
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Périodicité.',
+    @value = N'Périodicité',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -31,7 +31,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'TypPeriodicite'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Type de compteur.',
+    @value = N'Type de compteur',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -40,7 +40,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'TypCompteur'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Format du modèle de numérotation.',
+    @value = N'Format du modèle de numérotation',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -49,7 +49,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'ValFormatNumero'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Identifiant unique du service ayant accès au compteur, ou null pour tous les services.',
+    @value = N'Identifiant unique du service ayant accès au compteur, ou null pour tous les services',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',

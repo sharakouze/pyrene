@@ -17,7 +17,7 @@
 
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Identifiant unique du fournisseur parent.',
+    @value = N'Identifiant unique du fournisseur parent',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -26,7 +26,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = 'CleFourn'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Nom de l''établissement bancaire.',
+    @value = N'Nom de l''établissement bancaire',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -35,7 +35,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'LibEtablissement'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur.',
+    @value = N'Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -44,7 +44,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'EstDefaut'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Code IBAN.',
+    @value = N'Code IBAN',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -53,7 +53,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'CodIBAN'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Code BIC.',
+    @value = N'Code BIC',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',

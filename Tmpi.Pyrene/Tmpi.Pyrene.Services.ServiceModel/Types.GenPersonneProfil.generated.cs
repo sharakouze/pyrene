@@ -28,56 +28,56 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenPersonneProfil : IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique. Clé primaire. Immutable.
+		/// Identifiant unique ; clé primaire (immutable)
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique. Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
 		public int CleProfil { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur parent.
+		/// Identifiant unique de l'utilisateur parent
 		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique de l'utilisateur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Identifiant unique de l'utilisateur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
 		public int ClePersonne { get; set; }
 
 		/// <summary>
-		/// Code.
+		/// Code
 		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[ApiMember(Description = "Code.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodProfil { get; set; }
 
 		/// <summary>
-		/// Date de création. Immutable.
+		/// Date de création (immutable)
 		/// </summary>
 		[Required]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la création. Immutable.
+		/// Identifiant unique de l'utilisateur responsable de la création (immutable)
 		/// </summary>
 		[Required]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification. Immutable.
+		/// Date de dernière modification (immutable)
 		/// </summary>
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la dernière modification. Immutable.
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)
 		/// </summary>
 		public int? CleEditeur { get; set; }
 
 		/// <summary>
-		/// Identifiant unique du service auquel a accès le profil, ou null pour tous les services.
+		/// Identifiant unique du service auquel a accès le profil, ou null pour tous les services
 		/// </summary>
 		[References(typeof(GenService))]
-		[ApiMember(Description = "Identifiant unique du service auquel a accès le profil, ou null pour tous les services.", DataType = SwaggerDataTypes.Int)]
+		[ApiMember(Description = "Identifiant unique du service auquel a accès le profil, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }
 
 	}

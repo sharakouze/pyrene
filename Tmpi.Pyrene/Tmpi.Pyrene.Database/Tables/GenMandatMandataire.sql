@@ -18,7 +18,7 @@
 
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Identifiant unique du mandat parent.',
+    @value = N'Identifiant unique du mandat parent',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -27,7 +27,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = 'CleMandat'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Identifiant unique de l''utilisateur mandataire.',
+    @value = N'Identifiant unique de l''utilisateur mandataire',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -36,7 +36,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = 'ClePersonne'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Identifiant unique du service ayant accès au mandat, ou null pour tous les services.',
+    @value = N'Identifiant unique du service ayant accès au mandat, ou null pour tous les services',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -45,7 +45,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = 'CleService'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Si true, le mandat est suspendu.',
+    @value = N'Si true, le mandat est suspendu',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',

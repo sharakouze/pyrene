@@ -26,27 +26,27 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenPersonneSignature
 	{
 		/// <summary>
-		/// Identifiant unique de l'utilisateur parent.
+		/// Identifiant unique de l'utilisateur parent
 		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique de l'utilisateur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique de l'utilisateur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
 		public int ClePersonne { get; set; }
 
 		/// <summary>
-		/// Image de la signature.
+		/// Image de la signature
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Image de la signature.", DataType = SwaggerDataTypes.File, IsRequired = true)]
+		[ApiMember(Description = "Image de la signature", DataType = SwaggerDataTypes.File, IsRequired = true)]
 		public byte[] ImgSignature { get; set; }
 
 		/// <summary>
-		/// Type MIME de l'image.
+		/// Type MIME de l'image
 		/// </summary>
 		[StringLength(255)]
 		[Required]
-		[ApiMember(Description = "Type MIME de l'image.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Type MIME de l'image", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string TypMime { get; set; }
 
 	}

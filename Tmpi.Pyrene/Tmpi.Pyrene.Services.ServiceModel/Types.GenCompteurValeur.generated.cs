@@ -27,33 +27,33 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenCompteurValeur
 	{
 		/// <summary>
-		/// Identifiant unique. Clé primaire. Immutable.
+		/// Identifiant unique ; clé primaire (immutable)
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique. Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
 		public int CleValeur { get; set; }
 
 		/// <summary>
-		/// Identifiant unique du compteur parent.
+		/// Identifiant unique du compteur parent
 		/// </summary>
 		[ForeignKey(typeof(GenCompteur), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du compteur parent.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Identifiant unique du compteur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
 		public int CleCompteur { get; set; }
 
 		/// <summary>
-		/// Valeur de la période.
+		/// Valeur de la période
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Valeur de la période.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Valeur de la période", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ValPeriode { get; set; }
 
 		/// <summary>
-		/// Valeur du compteur.
+		/// Valeur du compteur
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Valeur du compteur.", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Valeur du compteur", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ValCompteur { get; set; }
 
 	}

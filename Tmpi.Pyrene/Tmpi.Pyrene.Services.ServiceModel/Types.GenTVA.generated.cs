@@ -26,80 +26,80 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
 	public partial class GenTVA : IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique. Clé primaire. Immutable.
+		/// Identifiant unique ; clé primaire (immutable)
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique. Clé primaire. Immutable.", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
 		public int CleTVA { get; set; }
 
 		/// <summary>
-		/// Code. Unique.
+		/// Code (unique)
 		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code. Unique.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Code (unique)", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string CodTVA { get; set; }
 
 		/// <summary>
-		/// Désignation.
+		/// Désignation
 		/// </summary>
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "Désignation.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		[ApiMember(Description = "Désignation", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string LibTVA { get; set; }
 
 		/// <summary>
-		/// Commentaire ou description.
+		/// Commentaire ou description
 		/// </summary>
 		[StringLength(500)]
-		[ApiMember(Description = "Commentaire ou description.", DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
 		public string TxtTVA { get; set; }
 
 		/// <summary>
-		/// Actif ou inactif.
+		/// Actif ou inactif
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Actif ou inactif.", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
+		[ApiMember(Description = "Actif ou inactif", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
 		public bool EstActif { get; set; }
 
 		/// <summary>
-		/// Date de création. Immutable.
+		/// Date de création (immutable)
 		/// </summary>
 		[Required]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la création. Immutable.
+		/// Identifiant unique de l'utilisateur responsable de la création (immutable)
 		/// </summary>
 		[Required]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification. Immutable.
+		/// Date de dernière modification (immutable)
 		/// </summary>
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la dernière modification. Immutable.
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)
 		/// </summary>
 		public int? CleEditeur { get; set; }
 
 		/// <summary>
-		/// Identifiant de synchronisation externe.
+		/// Identifiant de synchronisation externe
 		/// </summary>
 		[StringLength(100)]
-		[ApiMember(Description = "Identifiant de synchronisation externe.", DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "Identifiant de synchronisation externe", DataType = SwaggerDataTypes.String)]
 		public string CodExterne { get; set; }
 
 		/// <summary>
-		/// Taux de TVA.
+		/// Taux de TVA
 		/// </summary>
 		[DecimalLength(5, 2)]
 		[Required]
-		[ApiMember(Description = "Taux de TVA.", DataType = SwaggerDataTypes.Decimal, IsRequired = true)]
+		[ApiMember(Description = "Taux de TVA", DataType = SwaggerDataTypes.Decimal, IsRequired = true)]
 		public decimal TauTVA { get; set; }
 
 	}
