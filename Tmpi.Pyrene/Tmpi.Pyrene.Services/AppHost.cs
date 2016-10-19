@@ -72,7 +72,7 @@ namespace Tmpi.Pyrene.Services
         {
             ConnectionStringSettings settings = null;
 
-            string connectionStringName = ConfigurationManager.AppSettings["DbConnection.ConnectionStringName"];
+            string connectionStringName = ConfigurationManager.AppSettings["OrmLiteConfig.ConnectionStringName"];
             if (string.IsNullOrWhiteSpace(connectionStringName))
             {
                 int count = ConfigurationManager.ConnectionStrings.Count;
@@ -97,7 +97,7 @@ namespace Tmpi.Pyrene.Services
             //SqlServerDialect.Provider.RegisterConverter<short>(new SqlServerSmallintConverter());
 
             int commandTimeout = 30;
-            int.TryParse(ConfigurationManager.AppSettings["OrmLite.CommandTimeout"], out commandTimeout);
+            int.TryParse(ConfigurationManager.AppSettings["OrmLiteConfig.CommandTimeout"], out commandTimeout);
             OrmLiteConfig.CommandTimeout = commandTimeout;
 
             OrmLiteConfig.InsertFilter = (dbCmd, row) =>
@@ -164,7 +164,7 @@ namespace Tmpi.Pyrene.Services
             {
                 Plugins.Add(new SwaggerFeature
                 {
-                    RouteSummary = SwaggerRoutes.GetRouteSummary()
+                    RouteSummary = SwaggerConfig.GetRouteSummary()
                 });
             }
         }

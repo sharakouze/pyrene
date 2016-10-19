@@ -2,7 +2,7 @@
 
 namespace Tmpi.Pyrene.Services
 {
-    internal static class SwaggerRoutes
+    internal static class SwaggerConfig
     {
         public static Dictionary<string, string> GetRouteSummary()
         {
@@ -14,7 +14,7 @@ namespace Tmpi.Pyrene.Services
                 { "/Mandat", "Mandats" },
                 { "/Personne", "Utilisateurs" },
                 { "/Service", "Services" },
-                { "/TVA", "TVA" },
+                { "/TVA", "Taux de TVA" },
             };
         }
     }
