@@ -1,6 +1,6 @@
 ﻿using ServiceStack;
 
-namespace Tmpi.Pyrene.Services.ServiceModel
+namespace Tmpi.Pyrene.Services.ServiceModel.Messages
 {
     public class Patch
     {

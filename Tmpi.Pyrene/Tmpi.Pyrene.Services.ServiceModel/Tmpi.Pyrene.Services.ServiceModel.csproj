@@ -180,7 +180,7 @@
     <Compile Include="Messages.SearchGenTVA.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Patch.cs" />
+    <Compile Include="Messages\Patch.cs" />
     <Compile Include="ServiceModelGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
