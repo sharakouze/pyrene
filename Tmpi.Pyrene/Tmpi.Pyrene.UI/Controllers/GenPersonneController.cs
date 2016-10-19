@@ -1,16 +1,23 @@
-﻿using System;
+﻿using ServiceStack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Tmpi.Pyrene.Services.ServiceModel.Messages;
 
 namespace Tmpi.Pyrene.UI.Controllers
 {
     public class GenPersonneController : Controller
     {
+        private readonly IServiceClient _client = ServiceClientFactory.Create();
+
         // GET: GenPersonne
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
+            var r = await _client.GetAsync(new GetGenPersonne() { ClePersonne = 1, Fields= new string[] { } });
+
             return View();
         }
 

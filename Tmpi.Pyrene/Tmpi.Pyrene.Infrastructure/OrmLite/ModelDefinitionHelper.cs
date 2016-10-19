@@ -11,6 +11,10 @@ namespace Tmpi.Pyrene.Infrastructure
     {
         public static void UndefinedFields<T>(IEnumerable<string> fields)
         {
+            if (fields == null)
+            {
+                return;
+            }
             var modelDef = typeof(T).GetModelMetadata();
             if (modelDef != null)
             {

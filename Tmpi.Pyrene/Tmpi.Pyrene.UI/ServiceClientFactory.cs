@@ -1,4 +1,5 @@
 ﻿using ServiceStack;
+using System.Configuration;
 
 namespace Tmpi.Pyrene.UI
 {
@@ -6,7 +7,8 @@ namespace Tmpi.Pyrene.UI
     {
         public static IServiceClient Create()
         {
-            return new JsonHttpClient();
+            string uri = ConfigurationManager.AppSettings["ServiceUrl"];
+            return new JsonHttpClient(uri);
         }
     }
 }

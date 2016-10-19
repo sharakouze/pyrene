@@ -1,0 +1,111 @@
+﻿@model IEnumerable<Tmpi.Pyrene.Services.ServiceModel.Types.GenPersonne>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ClePersonne)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CodPersonne)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NomPersonne)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PrePersonne)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TxtPersonne)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EstActif)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DatCreation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CleCreateur)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DatEdition)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CleEditeur)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CodExterne)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumTelep)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumFax)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumEmail)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClePersonne)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CodPersonne)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NomPersonne)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PrePersonne)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TxtPersonne)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EstActif)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DatCreation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CleCreateur)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DatEdition)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CleEditeur)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CodExterne)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumTelep)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumFax)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumEmail)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
+}
+
+</table>
