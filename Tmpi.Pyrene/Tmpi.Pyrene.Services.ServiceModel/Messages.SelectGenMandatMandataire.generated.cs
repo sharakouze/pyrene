@@ -14,12 +14,12 @@ using ServiceStack;
 namespace Tmpi.Pyrene.Services.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne les ressources Mandataire (Mandat).
+	/// Retourne une collection des ressources Mandataire (Mandat).
 	/// </summary>
 	/// <seealso cref="GenMandatMandataire"/>
-	[Route("/Mandat/{CleMandat}/Mandataire", HttpVerbs.Get, Summary = "Retourne les ressources Mandataire (Mandat).")]
+	[Route("/Mandat/{CleMandat}/Mandataire", HttpVerbs.Get, Summary = "Retourne une collection des ressources Mandataire (Mandat).")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
-	public partial class SelectGenMandatMandataire : IReturn<List<GenMandatMandataire>>, IGet
+	public partial class SelectGenMandatMandataire : IReturn<SelectGenMandatMandataireResponse>, IGet
 	{
         /// <summary>
         /// Identifiant unique du mandat parent
@@ -32,5 +32,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Messages
 		public int? Take { get; set; }
 
 		public string[] Sort { get; set; }
+	}
+
+	public partial class SelectGenMandatMandataireResponse
+	{
 	}
 }

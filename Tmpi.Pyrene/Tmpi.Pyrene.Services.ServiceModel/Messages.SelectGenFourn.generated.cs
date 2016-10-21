@@ -14,17 +14,21 @@ using ServiceStack;
 namespace Tmpi.Pyrene.Services.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne les ressources Fourn.
+	/// Retourne une collection des ressources Fourn.
 	/// </summary>
 	/// <seealso cref="GenFourn"/>
-	[Route("/Fourn", HttpVerbs.Get, Summary = "Retourne les ressources Fourn.")]
+	[Route("/Fourn", HttpVerbs.Get, Summary = "Retourne une collection des ressources Fourn.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
-	public partial class SelectGenFourn : IReturn<List<GenFourn>>, IGet
+	public partial class SelectGenFourn : IReturn<SelectGenFournResponse>, IGet
 	{
 		public int? Skip { get; set; }
 
 		public int? Take { get; set; }
 
 		public string[] Sort { get; set; }
+	}
+
+	public partial class SelectGenFournResponse
+	{
 	}
 }

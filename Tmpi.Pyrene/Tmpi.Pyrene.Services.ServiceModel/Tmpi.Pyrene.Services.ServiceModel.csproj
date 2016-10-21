@@ -43,6 +43,33 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Messages.DeleteGenPersonne.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages.DeleteGenPersonneProfil.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages.DeleteGenPersonneSignature.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages.GetGenPersonne.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages.GetGenPersonneProfil.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages.GetGenPersonneSignature.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages.PatchGenPersonne.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages.PatchGenPersonneProfil.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Messages.PatchGenPersonneSignature.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="Messages.SelectGenCompteur.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
@@ -108,15 +135,6 @@
     <Compile Include="Messages.DeleteGenMandatMandataire.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.DeleteGenPersonne.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Messages.DeleteGenPersonneProfil.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Messages.DeleteGenPersonneSignature.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="Messages.DeleteGenService.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
@@ -147,15 +165,6 @@
     <Compile Include="Messages.GetGenMandatMandataire.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.GetGenPersonne.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Messages.GetGenPersonneProfil.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Messages.GetGenPersonneSignature.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="Messages.GetGenService.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
@@ -184,15 +193,6 @@
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Messages.PatchGenMandatMandataire.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Messages.PatchGenPersonne.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Messages.PatchGenPersonneProfil.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Messages.PatchGenPersonneSignature.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Messages.PatchGenService.generated.cs">

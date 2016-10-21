@@ -14,12 +14,12 @@ using ServiceStack;
 namespace Tmpi.Pyrene.Services.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne les ressources Valeur (Compteur).
+	/// Retourne une collection des ressources Valeur (Compteur).
 	/// </summary>
 	/// <seealso cref="GenCompteurValeur"/>
-	[Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Get, Summary = "Retourne les ressources Valeur (Compteur).")]
+	[Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Get, Summary = "Retourne une collection des ressources Valeur (Compteur).")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
-	public partial class SelectGenCompteurValeur : IReturn<List<GenCompteurValeur>>, IGet
+	public partial class SelectGenCompteurValeur : IReturn<SelectGenCompteurValeurResponse>, IGet
 	{
         /// <summary>
         /// Identifiant unique du compteur parent
@@ -32,5 +32,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Messages
 		public int? Take { get; set; }
 
 		public string[] Sort { get; set; }
+	}
+
+	public partial class SelectGenCompteurValeurResponse
+	{
 	}
 }

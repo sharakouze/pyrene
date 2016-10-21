@@ -14,12 +14,12 @@ using ServiceStack;
 namespace Tmpi.Pyrene.Services.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne les ressources Contact (Fourn).
+	/// Retourne une collection des ressources Contact (Fourn).
 	/// </summary>
 	/// <seealso cref="GenFournContact"/>
-	[Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Get, Summary = "Retourne les ressources Contact (Fourn).")]
+	[Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Get, Summary = "Retourne une collection des ressources Contact (Fourn).")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
-	public partial class SelectGenFournContact : IReturn<List<GenFournContact>>, IGet
+	public partial class SelectGenFournContact : IReturn<SelectGenFournContactResponse>, IGet
 	{
         /// <summary>
         /// Identifiant unique du fournisseur parent
@@ -32,5 +32,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Messages
 		public int? Take { get; set; }
 
 		public string[] Sort { get; set; }
+	}
+
+	public partial class SelectGenFournContactResponse
+	{
 	}
 }

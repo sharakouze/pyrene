@@ -14,17 +14,21 @@ using ServiceStack;
 namespace Tmpi.Pyrene.Services.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne les ressources TVA.
+	/// Retourne une collection des ressources TVA.
 	/// </summary>
 	/// <seealso cref="GenTVA"/>
-	[Route("/TVA", HttpVerbs.Get, Summary = "Retourne les ressources TVA.")]
+	[Route("/TVA", HttpVerbs.Get, Summary = "Retourne une collection des ressources TVA.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
-	public partial class SelectGenTVA : IReturn<List<GenTVA>>, IGet
+	public partial class SelectGenTVA : IReturn<SelectGenTVAResponse>, IGet
 	{
 		public int? Skip { get; set; }
 
 		public int? Take { get; set; }
 
 		public string[] Sort { get; set; }
+	}
+
+	public partial class SelectGenTVAResponse
+	{
 	}
 }

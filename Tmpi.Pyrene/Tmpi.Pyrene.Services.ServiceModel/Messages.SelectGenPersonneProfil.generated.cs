@@ -14,12 +14,12 @@ using ServiceStack;
 namespace Tmpi.Pyrene.Services.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne les ressources Profil (Personne).
+	/// Retourne une collection des ressources Profil (Personne).
 	/// </summary>
 	/// <seealso cref="GenPersonneProfil"/>
-	[Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Get, Summary = "Retourne les ressources Profil (Personne).")]
+	[Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Get, Summary = "Retourne une collection des ressources Profil (Personne).")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
-	public partial class SelectGenPersonneProfil : IReturn<List<GenPersonneProfil>>, IGet
+	public partial class SelectGenPersonneProfil : IReturn<SelectGenPersonneProfilResponse>, IGet
 	{
         /// <summary>
         /// Identifiant unique de l'utilisateur parent
@@ -32,5 +32,9 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Messages
 		public int? Take { get; set; }
 
 		public string[] Sort { get; set; }
+	}
+
+	public partial class SelectGenPersonneProfilResponse
+	{
 	}
 }

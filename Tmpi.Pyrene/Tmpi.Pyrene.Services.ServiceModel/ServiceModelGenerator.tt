@@ -74,10 +74,10 @@
     // true pour transformer la route de la ressource, ex: GenFournContact de '/GenFournContact/' en '/GenFourn/{xxx}/Contact/'.
     bool TransformRoutePath = true;
 
-    // Filtre les messages générés.
-	Regex TableFilterExclude = null;
+    // Filtre globalement les messages générés.
+	Regex MsgTableFilterExclude = null;
 
-    // Filtre les messages générés.
+    // Filtre les messages générés par type de message.
     Regex PutTableFilterExclude = null;
     Regex PostTableFilterExclude = null;
 	Regex GetTableFilterExclude = null;
@@ -150,11 +150,7 @@
 
     foreach (Table table in allTables)
     {
-	    bool tableExcluded = TableFilterExclude != null && TableFilterExclude.IsMatch(table.ClassName);
-		if (tableExcluded)
-        {
-			continue;
-        }
+	    bool msgExcluded = MsgTableFilterExclude != null && MsgTableFilterExclude.IsMatch(table.ClassName);
 
 		/****************/
 		/** BEGIN POCO **/
@@ -257,7 +253,7 @@ namespace <#= pocoNamespace #>
         bool putExcluded = PutTableFilterExclude != null && PutTableFilterExclude.IsMatch(table.ClassName);
         bool postExcluded = PostTableFilterExclude != null && PostTableFilterExclude.IsMatch(table.ClassName);
 
-        if (AddRouteAttributes)
+        if (!msgExcluded && AddRouteAttributes)
         {
             if (!postExcluded)
             {
@@ -288,11 +284,13 @@ namespace <#= pocoNamespace #>
 <#
             }
         }
-		
-		List<string> pocoInterfaces = new List<string>();
-		pocoInterfaces.Add("IReturn<" + table.ClassName + ">");
-		pocoInterfaces.AddRange(lstInterfaces);
 
+		List<string> pocoInterfaces = new List<string>();
+		if (!msgExcluded)
+        {
+			pocoInterfaces.Add("IReturn<" + table.ClassName + ">");
+        }
+		pocoInterfaces.AddRange(lstInterfaces);
 #>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= table.ClassName #><#= pocoInterfaces.Any() ? " : " + string.Join(", ", pocoInterfaces) : "" #>
 	{
@@ -480,6 +478,11 @@ namespace <#= pocoNamespace #>
 <#
         manager.EndBlock(); // end newfile
 
+		if (msgExcluded)
+        {
+			continue;
+        }
+
 		string msgNamespace = string.Format(NamespaceMessages, t4fileNamespace);
 
 		/******************/
@@ -490,7 +493,7 @@ namespace <#= pocoNamespace #>
 		if (!selectExcluded)
 		{
 			string selectTableClassName = "Select" + table.ClassName;
-			string selectTableClassDescription = string.Format("Retourne les ressources {0}.", resourceName);
+			string selectTableClassDescription = string.Format("Retourne une collection des ressources {0}.", resourceName);
 
 			fileName = GetGeneratedFilename(selectTableClassName, msgNamespace, t4fileNamespace);
 			manager.StartNewFile(fileName + ".generated.cs");
@@ -518,7 +521,7 @@ namespace <#= msgNamespace #>
                 }
 			}
 #>
-	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #> : IReturn<List<<#= table.ClassName #>>>, IGet
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #> : IReturn<<#= selectTableClassName #>Response>, IGet
 	{
 <#
 			Column lastCol = lstPlaceholderCols.LastOrDefault();
@@ -565,6 +568,10 @@ namespace <#= msgNamespace #>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int? Take { get; set; }
 
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string[] Sort { get; set; }
+	}
+
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #>Response
+	{
 	}
 }
 <#
