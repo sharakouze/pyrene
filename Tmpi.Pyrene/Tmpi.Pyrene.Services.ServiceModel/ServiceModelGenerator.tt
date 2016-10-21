@@ -32,10 +32,6 @@
 	// schema a extraire ou vide pour tous les schémas
 	string SchemaName = "";
 
-    // if true: Changes the classname to singular or plural.
-    bool MakeSingular = false;
-    bool MakePlural = false;
-
     // Namespace des fichiers générés.
 	// {0} = DefaultNamespace du projet/répertoire courant.
     string NamespacePocos = "{0}.Types";
@@ -45,7 +41,8 @@
     bool MakeClassesPartial = true;
 
     // true pour générer des propriétés virtual.
-    bool MakePropertiesVirtual = false;
+    bool MakePocoPropertiesVirtual = false;
+    bool MakeMessagePropertiesVirtual = false;
 
     // true pour générer chaque classe dans un fichier séparé.
     bool SplitIntoMultipleFiles = true;
@@ -78,12 +75,16 @@
     bool TransformRoutePath = true;
 
     // Filtre les messages générés.
+	Regex TableFilterExclude = null;
+
+    // Filtre les messages générés.
     Regex PutTableFilterExclude = null;
     Regex PostTableFilterExclude = null;
 	Regex GetTableFilterExclude = null;
 	Regex DeleteTableFilterExclude = null;
 	Regex PatchTableFilterExclude = null;
 	Regex SearchTableFilterExclude = null;
+	Regex SelectTableFilterExclude = null;
 
     // Si non null, méthode appliquée sur la collection des tables
     Action<Tables> TweakSchema = (tables) =>
@@ -141,7 +142,7 @@
     }
 	
     // Read schema
-    Tables allTables = LoadTables(ConnectionString, SchemaName, false, MakeSingular, MakePlural);
+    Tables allTables = LoadTables(ConnectionString, SchemaName, false);
     if (TweakSchema != null)
     {
         TweakSchema(allTables);
@@ -149,6 +150,12 @@
 
     foreach (Table table in allTables)
     {
+	    bool tableExcluded = TableFilterExclude != null && TableFilterExclude.IsMatch(table.ClassName);
+		if (tableExcluded)
+        {
+			continue;
+        }
+
 		/****************/
 		/** BEGIN POCO **/
 		/****************/
@@ -282,8 +289,12 @@ namespace <#= pocoNamespace #>
             }
         }
 		
+		List<string> pocoInterfaces = new List<string>();
+		pocoInterfaces.Add("IReturn<" + table.ClassName + ">");
+		pocoInterfaces.AddRange(lstInterfaces);
+
 #>
-	public <#= MakeClassesPartial ? "partial " : "" #>class <#= table.ClassName #><#= lstInterfaces.Any() ? " : " + string.Join(", ", lstInterfaces) : "" #>
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= table.ClassName #><#= pocoInterfaces.Any() ? " : " + string.Join(", ", pocoInterfaces) : "" #>
 	{
 <#
         foreach (Column col in table.Columns)
@@ -420,7 +431,7 @@ namespace <#= pocoNamespace #>
 
             }
 #>
-		public <#= MakePropertiesVirtual ? "virtual " : "" #><#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
+		public <#= MakePocoPropertiesVirtual ? "virtual " : "" #><#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
 
 <#
         } // end foreach (col)
@@ -458,7 +469,7 @@ namespace <#= pocoNamespace #>
                 }
 #>
 		[Reference]
-		public <#= MakePropertiesVirtual ? "virtual " : "" #><#= propType #> <#= propName #> { get; set; }
+		public <#= MakePocoPropertiesVirtual ? "virtual " : "" #><#= propType #> <#= propName #> { get; set; }
 
 <#
             }
@@ -470,6 +481,94 @@ namespace <#= pocoNamespace #>
         manager.EndBlock(); // end newfile
 
 		string msgNamespace = string.Format(NamespaceMessages, t4fileNamespace);
+
+		/******************/
+		/** BEGIN SELECT **/
+		/******************/
+
+		bool selectExcluded = SelectTableFilterExclude != null && SelectTableFilterExclude.IsMatch(table.ClassName);
+		if (!selectExcluded)
+		{
+			string selectTableClassName = "Select" + table.ClassName;
+			string selectTableClassDescription = string.Format("Retourne les ressources {0}.", resourceName);
+
+			fileName = GetGeneratedFilename(selectTableClassName, msgNamespace, t4fileNamespace);
+			manager.StartNewFile(fileName + ".generated.cs");
+#>
+using ServiceStack;
+
+namespace <#= msgNamespace #>
+{
+	/// <summary>
+	/// <#= selectTableClassDescription #>
+	/// </summary>
+	/// <seealso cref="<#= table.ClassName #>"/>
+<#
+            if (AddRouteAttributes)
+            {
+				string strRoute = GetStrRoutePath(lstPlaceholderCols, false, false);
+#>
+	[Route("<#= strRoute #>", HttpVerbs.Get, Summary = "<#= selectTableClassDescription #>")]
+<#
+			    if (AddApiAttributes)
+                {
+#>
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+<#
+                }
+			}
+#>
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #> : IReturn<List<<#= table.ClassName #>>>, IGet
+	{
+<#
+			Column lastCol = lstPlaceholderCols.LastOrDefault();
+            foreach (Column phCol in lstPlaceholderCols)
+            {
+				if (lastCol != null && lastCol.IsPKey && lastCol == phCol)
+				{
+					continue; // on ne prend que les colonnes foreign key
+				}
+				Column newCol = phCol.Clone();
+				Column refCol = table.Columns.First(c => c.PropertyName == phCol.PropertyName);
+				if (refCol != null)
+                {
+					newCol.Description = refCol.Description;
+                }
+
+				if (!string.IsNullOrWhiteSpace(newCol.Description))
+				{
+#>
+        /// <summary>
+        /// <#= newCol.Description #>
+        /// </summary>
+<#
+				}
+				if (AddApiAttributes)
+				{
+					Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
+					if (dicApiMemberProps != null)
+					{
+						dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
+#>
+		[ApiMember(<#= string.Join(", ", dicApiMemberProps.Select(kvp => kvp.Key + " = " + kvp.Value)) #>)]
+<#
+					}
+				}
+#>
+		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #><#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
+
+<#
+            }
+#>
+		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int? Skip { get; set; }
+
+		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int? Take { get; set; }
+
+		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string[] Sort { get; set; }
+	}
+}
+<#
+        }
 
 		/********************/
 		/** BEGIN GET BYID **/
@@ -526,7 +625,7 @@ namespace <#= msgNamespace #>
 		{
 			if (lastCol != null && lastCol.IsPKey && lastCol != phCol)
             {
-				continue;
+				continue; // on ignore les colonnes qui ne sont pas la PK de la ressource
             }
 			Column newCol = phCol.Clone();
 			newCol.Description = "Identifiant unique de la ressource à retourner.";
@@ -551,7 +650,7 @@ namespace <#= msgNamespace #>
                 }
             }
 #>
-        public <#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
+        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #><#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
 
 <#
 		}
@@ -567,7 +666,7 @@ namespace <#= msgNamespace #>
 <#
                 }
 #>
-        public string[] Fields { get; set; }
+        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string[] Fields { get; set; }
 	}
 }
 <#
@@ -627,7 +726,7 @@ namespace <#= msgNamespace #>
 		{
 			if (lastCol != null && lastCol.IsPKey && lastCol != phCol)
             {
-				continue;
+				continue; // on ignore les colonnes qui ne sont pas la PK de la ressource
             }
 			Column newCol = phCol.Clone();
 			newCol.IsNullable = false;
@@ -653,7 +752,7 @@ namespace <#= msgNamespace #>
                 }
             }
 #>
-        public <#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
+        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #><#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
 
 <#
 		}
@@ -720,7 +819,7 @@ namespace <#= msgNamespace #>
 		{
 			if (lastCol != null && lastCol.IsPKey && lastCol != phCol)
             {
-				continue;
+				continue; // on ignore les colonnes qui ne sont pas la PK de la ressource
             }
 			Column newCol = phCol.Clone();
 			newCol.Description = "Identifiant unique de la ressource à modifier.";
@@ -745,7 +844,7 @@ namespace <#= msgNamespace #>
                 }
             }
 #>
-        public <#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
+        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #><#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
 
 <#
 		}
@@ -761,7 +860,7 @@ namespace <#= msgNamespace #>
 <#
                 }
 #>
-        public Patch[] Fields { get; set; }
+        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>Patch[] Fields { get; set; }
 	}
 }
 <#
@@ -831,7 +930,7 @@ namespace <#= msgNamespace #>
 <#
                 }
 #>
-        public string Text { get; set; }
+        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string Text { get; set; }
 
         /// <summary>
         /// <#= maxPropDescription #>
@@ -844,7 +943,7 @@ namespace <#= msgNamespace #>
 <#
                 }
 #>
-        public int Max { get; set; }
+        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int Max { get; set; }
 	}
 }
 <#

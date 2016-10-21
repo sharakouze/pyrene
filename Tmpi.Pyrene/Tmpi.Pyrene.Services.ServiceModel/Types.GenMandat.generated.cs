@@ -24,7 +24,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
     [Route("/Mandat/{CleMandat}", HttpVerbs.Put, Summary = "Remplace une ressource Mandat à partir de son id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
     [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
-	public partial class GenMandat : IAuditable
+	public partial class GenMandat : IReturn<GenMandat>, IAuditable
 	{
 		/// <summary>
 		/// Identifiant unique ; clé primaire (immutable)

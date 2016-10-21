@@ -23,7 +23,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
     [Route("/Personne/Signature/{ClePersonne}", HttpVerbs.Put, Summary = "Remplace une ressource Signature (Personne) à partir de son id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
     [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
-	public partial class GenPersonneSignature
+	public partial class GenPersonneSignature : IReturn<GenPersonneSignature>
 	{
 		/// <summary>
 		/// Identifiant unique de l'utilisateur parent

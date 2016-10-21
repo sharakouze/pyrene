@@ -24,7 +24,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
     [Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Put, Summary = "Remplace une ressource Valeur (Compteur) à partir de son id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
     [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
-	public partial class GenCompteurValeur
+	public partial class GenCompteurValeur : IReturn<GenCompteurValeur>
 	{
 		/// <summary>
 		/// Identifiant unique ; clé primaire (immutable)

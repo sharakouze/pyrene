@@ -24,7 +24,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
     [Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Put, Summary = "Remplace une ressource Banque (Fourn) à partir de son id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
     [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
-	public partial class GenFournBanque : IAuditable
+	public partial class GenFournBanque : IReturn<GenFournBanque>, IAuditable
 	{
 		/// <summary>
 		/// Identifiant unique ; clé primaire (immutable)

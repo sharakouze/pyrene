@@ -23,7 +23,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
     [Route("/TVA/{CleTVA}", HttpVerbs.Put, Summary = "Remplace une ressource TVA à partir de son id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
     [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
-	public partial class GenTVA : IAuditable
+	public partial class GenTVA : IReturn<GenTVA>, IAuditable
 	{
 		/// <summary>
 		/// Identifiant unique ; clé primaire (immutable)

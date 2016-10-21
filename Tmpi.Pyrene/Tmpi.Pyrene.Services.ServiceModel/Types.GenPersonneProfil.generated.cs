@@ -25,7 +25,7 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Types
     [Route("/Personne/Profil/{CleProfil}", HttpVerbs.Put, Summary = "Remplace une ressource Profil (Personne) à partir de son id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
     [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
-	public partial class GenPersonneProfil : IAuditable
+	public partial class GenPersonneProfil : IReturn<GenPersonneProfil>, IAuditable
 	{
 		/// <summary>
 		/// Identifiant unique ; clé primaire (immutable)
