@@ -121,6 +121,13 @@
 
 #pragma warning disable 1591
 
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Runtime.Serialization;
+using ServiceStack;
+using ServiceStack.DataAnnotations;
+using ServiceStack.Model;
 <#
 	manager.EndBlock(); // end header
     
@@ -157,18 +164,10 @@
 		/****************/
 
 		string pocoNamespace = string.Format(NamespacePocos, t4fileNamespace);
-
-		string fileName = GetGeneratedFilename(table.ClassName, pocoNamespace, t4fileNamespace);
-        manager.StartNewFile(fileName + ".generated.cs");
+		string pocoFileName = GetGeneratedFilename(table.ClassName, pocoNamespace, t4fileNamespace);
+        manager.StartNewFile(pocoFileName + ".generated.cs");
 
 #>
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Runtime.Serialization;
-using ServiceStack;
-using ServiceStack.DataAnnotations;
-using ServiceStack.Model;
 
 namespace <#= pocoNamespace #>
 {
@@ -476,7 +475,7 @@ namespace <#= pocoNamespace #>
 	}
 }
 <#
-        manager.EndBlock(); // end newfile
+		manager.EndBlock(); // end newfile (poco)
 
 		if (msgExcluded)
         {
@@ -484,7 +483,20 @@ namespace <#= pocoNamespace #>
         }
 
 		string msgNamespace = string.Format(NamespaceMessages, t4fileNamespace);
+		string msgFileName = GetGeneratedFilename(table.ClassName, msgNamespace, t4fileNamespace);
+		manager.StartNewFile(msgFileName + ".generated.cs");
 
+		if (pocoNamespace != msgNamespace)
+        {
+#>
+using <#= pocoNamespace #>;
+<#
+		}
+#>
+
+namespace <#= msgNamespace #>
+{
+<#
 		/******************/
 		/** BEGIN SELECT **/
 		/******************/
@@ -495,13 +507,7 @@ namespace <#= pocoNamespace #>
 			string selectTableClassName = "Select" + table.ClassName;
 			string selectTableClassDescription = string.Format("Retourne une collection des ressources {0}.", resourceName);
 
-			fileName = GetGeneratedFilename(selectTableClassName, msgNamespace, t4fileNamespace);
-			manager.StartNewFile(fileName + ".generated.cs");
 #>
-using ServiceStack;
-
-namespace <#= msgNamespace #>
-{
 	/// <summary>
 	/// <#= selectTableClassDescription #>
 	/// </summary>
@@ -573,7 +579,7 @@ namespace <#= msgNamespace #>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #>Response
 	{
 	}
-}
+
 <#
         }
 
@@ -587,23 +593,7 @@ namespace <#= msgNamespace #>
 			string getTableClassName = "Get" + table.ClassName;
 			string getTableClassDescription = string.Format("Retourne une ressource {0} à partir de son id.", resourceName);
 			string fieldsPropDescription = "Champs à retourner, ou null pour retourner tous les champs.";
-
-			fileName = GetGeneratedFilename(getTableClassName, msgNamespace, t4fileNamespace);
-			manager.StartNewFile(fileName + ".generated.cs");
 #>
-using System.Net;
-using ServiceStack;
-<#
-			if (pocoNamespace != msgNamespace)
-            {
-#>
-using <#= pocoNamespace #>;
-<#
-			}
-#>
-
-namespace <#= msgNamespace #>
-{
 	/// <summary>
 	/// <#= getTableClassDescription #>
 	/// </summary>
@@ -675,9 +665,8 @@ namespace <#= msgNamespace #>
 #>
         public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string[] Fields { get; set; }
 	}
-}
+
 <#
-			manager.EndBlock(); // end newfile
 		}
 
 		/***********************/
@@ -689,23 +678,7 @@ namespace <#= msgNamespace #>
 		{
 			string deleteTableClassName = "Delete" + table.ClassName;
 			string deleteTableClassDescription = string.Format("Supprime une ressource {0} à partir de son id.", resourceName);
-
-			fileName = GetGeneratedFilename(deleteTableClassName, msgNamespace, t4fileNamespace);
-			manager.StartNewFile(fileName + ".generated.cs");
 #>
-using System.Net;
-using ServiceStack;
-<#
-			if (pocoNamespace != msgNamespace)
-            {
-#>
-using <#= pocoNamespace #>;
-<#
-			}
-#>
-
-namespace <#= msgNamespace #>
-{
 	/// <summary>
 	/// <#= deleteTableClassDescription #>
 	/// </summary>
@@ -765,9 +738,8 @@ namespace <#= msgNamespace #>
 		}
 #>
 	}
-}
+
 <#
-			manager.EndBlock(); // end newfile
 		}
 
 		/**********************/
@@ -780,23 +752,7 @@ namespace <#= msgNamespace #>
 			string patchTableClassName = "Patch" + table.ClassName;
 			string patchTableClassDescription = string.Format("Modifie partiellement une ressource {0} à partir de son id.", resourceName);
 			string fieldsPropDescription = "Liste des modifications à appliquer.";
-
-			fileName = GetGeneratedFilename(patchTableClassName, msgNamespace, t4fileNamespace);
-			manager.StartNewFile(fileName + ".generated.cs");
 #>
-using System.Net;
-using ServiceStack;
-<#
-			if (pocoNamespace != msgNamespace)
-            {
-#>
-using <#= pocoNamespace #>;
-<#
-			}
-#>
-
-namespace <#= msgNamespace #>
-{
 	/// <summary>
 	/// <#= patchTableClassDescription #>
 	/// </summary>
@@ -869,9 +825,8 @@ namespace <#= msgNamespace #>
 #>
         public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>Patch[] Fields { get; set; }
 	}
-}
+
 <#
-			manager.EndBlock(); // end newfile
 		}
 
 		string stdColFormat = GetStandardColumnFormat(table);
@@ -893,24 +848,7 @@ namespace <#= msgNamespace #>
 				var searchDescription = string.Format("Retourne le résultat d'une recherche sur les ressources {0}.", resourceName);
 				var textPropDescription = "Texte à rechercher.";
 				var maxPropDescription = "Nombre maximum de résultats à retourner.";
-
-				fileName = GetGeneratedFilename(searchClassName, msgNamespace, t4fileNamespace);
-				manager.StartNewFile(fileName + ".generated.cs");
 #>
-using System.Collections.Generic;
-using System.Net;
-using ServiceStack;
-<#
-			if (pocoNamespace != msgNamespace)
-            {
-#>
-using <#= pocoNamespace #>;
-<#
-			}
-#>
-
-namespace <#= msgNamespace #>
-{
 	/// <summary>
 	/// <#= searchDescription #>
 	/// </summary>
@@ -952,12 +890,18 @@ namespace <#= msgNamespace #>
 #>
         public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int Max { get; set; }
 	}
-}
+
 <#
-				manager.EndBlock(); // end newfile
             }
         }
+#>
+}
+<#
+		manager.EndBlock(); // end newfile (msg)
     } // end foreach (table)
+
+	//manager.StartFooter();
+	//manager.EndBlock(); // end footer
 	
     manager.Process(SplitIntoMultipleFiles);
 #>
