@@ -107,13 +107,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Tmpi.Pyrene.Services.ServiceInterface\Tmpi.Pyrene.Services.ServiceInterface.csproj">
+    <ProjectReference Include="..\..\Tmpi.Pyrene.Services.ServiceInterface\Tmpi.Pyrene.ServiceInterface.csproj">
       <Project>{813f65d3-22f1-41db-84fc-7cfffbead768}</Project>
-      <Name>Tmpi.Pyrene.Services.ServiceInterface</Name>
+      <Name>Tmpi.Pyrene.ServiceInterface</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Tmpi.Pyrene.Services.ServiceModel\Tmpi.Pyrene.Services.ServiceModel.csproj">
+    <ProjectReference Include="..\..\Tmpi.Pyrene.Services.ServiceModel\Tmpi.Pyrene.ServiceModel.csproj">
       <Project>{e515a547-3e09-4f2e-b1f0-09d3e16fb36a}</Project>
-      <Name>Tmpi.Pyrene.Services.ServiceModel</Name>
+      <Name>Tmpi.Pyrene.ServiceModel</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
