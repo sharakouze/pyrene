@@ -19,11 +19,10 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    [Route("/Personne/{ClePersonne}/Signature", HttpVerbs.Post, Summary = "Ajoute une ressource Signature (Personne).")]
-    [Route("/Personne/Signature/{ClePersonne}", HttpVerbs.Put, Summary = "Remplace une ressource Signature (Personne) à partir de son id.")]
+    [Route("/Personne/{ClePersonne}/Signature", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Signature (Personne) à partir de son id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
     [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
-	public partial class GenPersonneSignature : IReturn<GenPersonneSignature>
+	public partial class GenPersonneSignature : IReturn<GenPersonneSignature>, IPost
 	{
 		/// <summary>
 		/// Identifiant unique de l'utilisateur parent
@@ -31,7 +30,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique de l'utilisateur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique de l'utilisateur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int ClePersonne { get; set; }
 
 		/// <summary>

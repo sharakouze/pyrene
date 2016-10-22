@@ -19,18 +19,17 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    [Route("/TVA", HttpVerbs.Post, Summary = "Ajoute une ressource TVA.")]
-    [Route("/TVA/{CleTVA}", HttpVerbs.Put, Summary = "Remplace une ressource TVA à partir de son id.")]
+    [Route("/TVA", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource TVA à partir de son id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
     [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
-	public partial class GenTVA : IReturn<GenTVA>, IAuditable
+	public partial class GenTVA : IReturn<GenTVA>, IPost, IAuditable
 	{
 		/// <summary>
 		/// Identifiant unique ; clé primaire (immutable)
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleTVA { get; set; }
 
 		/// <summary>

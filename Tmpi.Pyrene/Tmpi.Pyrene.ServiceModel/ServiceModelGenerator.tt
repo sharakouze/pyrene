@@ -78,7 +78,6 @@
 	Regex MsgTableFilterExclude = null;
 
     // Filtre les messages générés par type de message.
-    Regex PutTableFilterExclude = null;
     Regex PostTableFilterExclude = null;
 	Regex GetTableFilterExclude = null;
 	Regex DeleteTableFilterExclude = null;
@@ -249,36 +248,21 @@ namespace <#= pocoNamespace #>
 
 		string resourceName = GetResourceName(lstPlaceholderCols);
 
-        bool putExcluded = PutTableFilterExclude != null && PutTableFilterExclude.IsMatch(table.ClassName);
-        bool postExcluded = PostTableFilterExclude != null && PostTableFilterExclude.IsMatch(table.ClassName);
-
         if (!msgExcluded && AddRouteAttributes)
         {
+			bool postExcluded = PostTableFilterExclude != null && PostTableFilterExclude.IsMatch(table.ClassName);
             if (!postExcluded)
             {
-				bool keyIsReadonly = lstPlaceholderCols.Where(c => c.ParentTable == table).Any(c => c.IsAutoIncrement || c.IsComputed);
-				string strRoute = GetStrRoutePath(lstPlaceholderCols, !keyIsReadonly, false);
+				string strRoute = GetStrRoutePath(lstPlaceholderCols, false, false);
 #>
-    [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute une ressource {0}.", resourceName) #>")]
-<#
-            }
-            if (!putExcluded)
-            {
-				string strRoute = GetStrRoutePath(lstPlaceholderCols);
-#>
-    [Route("<#= strRoute #>", HttpVerbs.Put, Summary = "<#= string.Format("Remplace une ressource {0} à partir de son id.", resourceName) #>")]
+    [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute ou remplace une ressource {0} à partir de son id.", resourceName) #>")]
 <#
             }
 
             if (AddApiAttributes)
             {
-				if (!putExcluded)
-				{
 #>
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
-<#
-                }
-#>
     [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
 <#
             }
@@ -288,6 +272,7 @@ namespace <#= pocoNamespace #>
 		if (!msgExcluded)
         {
 			pocoInterfaces.Add("IReturn<" + table.ClassName + ">");
+			pocoInterfaces.Add("IPost");
         }
 		pocoInterfaces.AddRange(lstInterfaces);
 #>
@@ -390,33 +375,14 @@ namespace <#= pocoNamespace #>
                 {
 					if (lstPlaceholderCols.Any(c => c.PropertyName == col.PropertyName))
 					{
-						dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
-
-						if (col.IsPKey)
-						{
-							if (!putExcluded)
-							{
-#>
-		[ApiMember(<#= string.Join(", ", dicApiMemberProps.Select(kvp => kvp.Key + " = " + kvp.Value)) #>, Verb = HttpVerbs.Put)]
-<#
-							}
-						}
-						else
-						{
-							if (!postExcluded)
-							{
-#>
-		[ApiMember(<#= string.Join(", ", dicApiMemberProps.Select(kvp => kvp.Key + " = " + kvp.Value)) #>, Verb = HttpVerbs.Post)]
-<#
-							}
-						}
+						if (!col.IsPKey || col.IsFKey)
+                        {
+							dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
+                        }
 					}
-					else
-					{
 #>
 		[ApiMember(<#= string.Join(", ", dicApiMemberProps.Select(kvp => kvp.Key + " = " + kvp.Value)) #>)]
 <#
-					}
                 }
 
                 if (allEnums.Contains(col.PropertyType))

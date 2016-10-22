@@ -19,18 +19,17 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    [Route("/Fourn", HttpVerbs.Post, Summary = "Ajoute une ressource Fourn.")]
-    [Route("/Fourn/{CleFourn}", HttpVerbs.Put, Summary = "Remplace une ressource Fourn à partir de son id.")]
+    [Route("/Fourn", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Fourn à partir de son id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
     [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
-	public partial class GenFourn : IReturn<GenFourn>, IAuditable
+	public partial class GenFourn : IReturn<GenFourn>, IPost, IAuditable
 	{
 		/// <summary>
 		/// Identifiant unique ; clé primaire (immutable)
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleFourn { get; set; }
 
 		/// <summary>

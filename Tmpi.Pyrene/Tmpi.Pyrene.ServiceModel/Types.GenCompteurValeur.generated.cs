@@ -20,18 +20,17 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleCompteur), nameof(ValPeriode))]
-    [Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Post, Summary = "Ajoute une ressource Valeur (Compteur).")]
-    [Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Put, Summary = "Remplace une ressource Valeur (Compteur) à partir de son id.")]
+    [Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Valeur (Compteur) à partir de son id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
     [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
-	public partial class GenCompteurValeur : IReturn<GenCompteurValeur>
+	public partial class GenCompteurValeur : IReturn<GenCompteurValeur>, IPost
 	{
 		/// <summary>
 		/// Identifiant unique ; clé primaire (immutable)
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleValeur { get; set; }
 
 		/// <summary>
@@ -39,7 +38,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// </summary>
 		[ForeignKey(typeof(GenCompteur), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du compteur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Identifiant unique du compteur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleCompteur { get; set; }
 
 		/// <summary>

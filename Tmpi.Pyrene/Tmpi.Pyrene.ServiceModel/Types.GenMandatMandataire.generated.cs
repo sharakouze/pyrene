@@ -20,18 +20,17 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleMandat), nameof(ClePersonne), nameof(CleService))]
-    [Route("/Mandat/{CleMandat}/Mandataire", HttpVerbs.Post, Summary = "Ajoute une ressource Mandataire (Mandat).")]
-    [Route("/Mandat/Mandataire/{CleMandataire}", HttpVerbs.Put, Summary = "Remplace une ressource Mandataire (Mandat) à partir de son id.")]
+    [Route("/Mandat/{CleMandat}/Mandataire", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Mandataire (Mandat) à partir de son id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
     [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
-	public partial class GenMandatMandataire : IReturn<GenMandatMandataire>, IAuditable
+	public partial class GenMandatMandataire : IReturn<GenMandatMandataire>, IPost, IAuditable
 	{
 		/// <summary>
 		/// Identifiant unique ; clé primaire (immutable)
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleMandataire { get; set; }
 
 		/// <summary>
@@ -39,7 +38,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// </summary>
 		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du mandat parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Identifiant unique du mandat parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleMandat { get; set; }
 
 		/// <summary>

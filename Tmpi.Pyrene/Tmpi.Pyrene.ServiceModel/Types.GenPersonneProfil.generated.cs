@@ -21,18 +21,17 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(ClePersonne), nameof(CleService))]
 	[CompositeIndex(true, nameof(CodProfil), nameof(ClePersonne))]
-    [Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Post, Summary = "Ajoute une ressource Profil (Personne).")]
-    [Route("/Personne/Profil/{CleProfil}", HttpVerbs.Put, Summary = "Remplace une ressource Profil (Personne) à partir de son id.")]
+    [Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Profil (Personne) à partir de son id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
     [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
-	public partial class GenPersonneProfil : IReturn<GenPersonneProfil>, IAuditable
+	public partial class GenPersonneProfil : IReturn<GenPersonneProfil>, IPost, IAuditable
 	{
 		/// <summary>
 		/// Identifiant unique ; clé primaire (immutable)
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleProfil { get; set; }
 
 		/// <summary>
@@ -40,7 +39,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique de l'utilisateur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Identifiant unique de l'utilisateur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int ClePersonne { get; set; }
 
 		/// <summary>

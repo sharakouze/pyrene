@@ -20,18 +20,17 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleFourn), nameof(CodIBAN))]
-    [Route("/Fourn/{CleFourn}/Banque", HttpVerbs.Post, Summary = "Ajoute une ressource Banque (Fourn).")]
-    [Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Put, Summary = "Remplace une ressource Banque (Fourn) à partir de son id.")]
+    [Route("/Fourn/{CleFourn}/Banque", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Banque (Fourn) à partir de son id.")]
     [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
     [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
-	public partial class GenFournBanque : IReturn<GenFournBanque>, IAuditable
+	public partial class GenFournBanque : IReturn<GenFournBanque>, IPost, IAuditable
 	{
 		/// <summary>
 		/// Identifiant unique ; clé primaire (immutable)
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Put)]
+		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleBanque { get; set; }
 
 		/// <summary>
@@ -39,7 +38,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du fournisseur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path, Verb = HttpVerbs.Post)]
+		[ApiMember(Description = "Identifiant unique du fournisseur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleFourn { get; set; }
 
 		/// <summary>
