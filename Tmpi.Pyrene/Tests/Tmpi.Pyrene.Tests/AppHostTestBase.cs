@@ -3,10 +3,10 @@ using ServiceStack.Data;
 using ServiceStack.OrmLite;
 using ServiceStack.Testing;
 using System;
-using Tmpi.Pyrene.Services.ServiceInterface;
-using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.ServiceInterface;
+using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace Tmpi.Pyrene.Services.Tests
+namespace Tmpi.Pyrene.Tests
 {
     public abstract class AppHostTestBase : IDisposable
     {

@@ -107,6 +107,10 @@
         {
 			pocoClassName = codeClass.Name.Substring(6);
         }
+        else if (codeClass.Name.StartsWith("Select"))
+        {
+			//pocoClassName = codeClass.Name.Substring(6);
+        }
 		else
 		{
 			pocoClassName = codeClass.Name;

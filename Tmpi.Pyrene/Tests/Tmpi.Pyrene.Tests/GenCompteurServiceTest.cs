@@ -1,8 +1,8 @@
-﻿using Tmpi.Pyrene.Services.ServiceInterface;
-using Tmpi.Pyrene.Services.ServiceModel;
+﻿using Tmpi.Pyrene.ServiceInterface;
+using Tmpi.Pyrene.ServiceModel;
 using Xunit;
 
-namespace Tmpi.Pyrene.Services.Tests
+namespace Tmpi.Pyrene.Tests
 {
     public class GenCompteurServiceTest : AppHostTestBase
     {

@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
 
-namespace Tmpi.Pyrene.Services
+namespace Tmpi.Pyrene
 {
     public class Global : System.Web.HttpApplication
     {

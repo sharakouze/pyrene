@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Tmpi.Pyrene.Services
+namespace Tmpi.Pyrene
 {
     internal static class SwaggerConfig
     {

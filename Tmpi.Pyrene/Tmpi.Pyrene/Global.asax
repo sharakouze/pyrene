@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="Tmpi.Pyrene.Services.Global" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="Tmpi.Pyrene.Global" Language="C#" %>

@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
-using Tmpi.Pyrene.Services.ServiceInterface;
+using Tmpi.Pyrene.ServiceInterface;
 
-namespace Tmpi.Pyrene.Services
+namespace Tmpi.Pyrene
 {
     internal static class Licenses
     {

@@ -8,10 +8,10 @@
 //------------------------------------------------------------------------------
 
 using ServiceStack.FluentValidation;
-using Tmpi.Pyrene.Services.ServiceModel;
-using Tmpi.Pyrene.Services.ServiceModel.Types;
+using Tmpi.Pyrene.ServiceModel;
+using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace Tmpi.Pyrene.Services.ServiceInterface
+namespace Tmpi.Pyrene.ServiceInterface
 {
     /// <summary>
     /// Validation pour la requête <see cref="GenMandat"/>.
