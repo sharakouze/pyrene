@@ -35,8 +35,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Messages
 		public string[] Sort { get; set; }
 	}
 
+    /// <summary>
+    /// Réponse à la requête <see cref="SelectGenTVA"/>.
+    /// </summary>
 	public partial class SelectGenTVAResponse
 	{
+		public ResponseStatus ResponseStatus { get; set; }
+
+		public int TotalCount { get; set; }
+
+		public List<GenTVA> Results { get; set; }
 	}
 
 	/// <summary>

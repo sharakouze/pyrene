@@ -41,8 +41,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Messages
 		public string[] Sort { get; set; }
 	}
 
+    /// <summary>
+    /// Réponse à la requête <see cref="SelectGenFournContact"/>.
+    /// </summary>
 	public partial class SelectGenFournContactResponse
 	{
+		public ResponseStatus ResponseStatus { get; set; }
+
+		public int TotalCount { get; set; }
+
+		public List<GenFournContact> Results { get; set; }
 	}
 
 	/// <summary>

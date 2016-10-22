@@ -41,8 +41,16 @@ namespace Tmpi.Pyrene.Services.ServiceModel.Messages
 		public string[] Sort { get; set; }
 	}
 
+    /// <summary>
+    /// Réponse à la requête <see cref="SelectGenCompteurValeur"/>.
+    /// </summary>
 	public partial class SelectGenCompteurValeurResponse
 	{
+		public ResponseStatus ResponseStatus { get; set; }
+
+		public int TotalCount { get; set; }
+
+		public List<GenCompteurValeur> Results { get; set; }
 	}
 
 	/// <summary>
