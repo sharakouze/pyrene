@@ -15,7 +15,6 @@
 <#
 	/***** TODO *****
 	- DefaultAttribute
-    - Alternative a TransformRoutePath avec des const
     - Commentaires sur les [References] ?
     - Ajout de propriétés [References] pour les FK ?
 	- Possibilité d'avoir 0 PK ?
