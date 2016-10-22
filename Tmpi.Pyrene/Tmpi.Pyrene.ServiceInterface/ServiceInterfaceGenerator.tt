@@ -416,70 +416,48 @@ namespace <#= fileNamespace #>
             {
 #>
 		/// <summary>
-		/// Ajoute la ressource <see cref="<#= requestClassName #>"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="<#= requestClassName #>"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Ressource <see cref="<#= requestClassName #>"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public <#= requestClassName #> Post(<#= requestClassName #> request)
 		{
 			lock (_syncLock)
 			{
 <# 
-				int i1 = 1;
+				int i = 1;
 				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == requestClassName).SelectMany(k => k.Value))
                 {
 #>
-				bool unique<#= i1.ToString() #> = <#= meth #>(request);
-				if (!unique<#= i1.ToString() #>)
+				bool unique<#= i.ToString() #> = <#= meth #>(request);
+				if (!unique<#= i.ToString() #>)
 				{
 					throw HttpError.Conflict(
 						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(<#= requestClassName #>)));
 				}
 <# 
-					i1++;
+					i++;
                 }
 #>
 
-				long id = Db.Insert(request, selectIdentity: true);
-				request.<#= pkProp.Name #> = (int)id;
+				if (request.<#= pkProp.Name #> == 0)
+				{
+					long id = Db.Insert(request, selectIdentity: true);
+					request.<#= pkProp.Name #> = (int)id;
+				}
+				else
+				{
+					int count = Db.Update(request);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(<#= requestClassName #>), request.<#= pkProp.Name #>));
+					}
+				}
 
 				return request;
-			}
-		}
-
-		/// <summary>
-		/// Remplace la ressource <see cref="<#= requestClassName #>"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Put(<#= requestClassName #> request)
-		{
-			lock (_syncLock)
-			{
-<# 
-				int i2 = 1;
-				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == requestClassName).SelectMany(k => k.Value))
-                {
-#>
-				bool unique<#= i2.ToString() #> = <#= meth #>(request);
-				if (!unique<#= i2.ToString() #>)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(<#= requestClassName #>)));
-				}
-<# 
-					i2++;
-                }
-#>
-
-				int count = Db.Update(request);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(<#= requestClassName #>), request.<#= pkProp.Name #>));
-				}
 			}
 		}
 

@@ -19,9 +19,9 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    [Route("/Personne/{ClePersonne}/Signature", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Signature (Personne) à partir de son id.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
+    [Route("/Personne/{ClePersonne}/Signature", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Signature (Personne) à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
 	public partial class GenPersonneSignature : IReturn<GenPersonneSignature>, IPost
 	{
 		/// <summary>

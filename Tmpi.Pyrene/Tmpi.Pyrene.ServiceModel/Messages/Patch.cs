@@ -2,18 +2,21 @@
 
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
+    /// <summary>
+    /// Représente une instruction de modification partielle.
+    /// </summary>
     public class Patch
     {
         /// <summary>
-        /// Champ à modifier.
+        /// Champ à modifier
         /// </summary>
-        [ApiMember(Description = "Champ à modifier.", DataType = SwaggerDataTypes.String, IsRequired = true)]
+        [ApiMember(Description = "Champ à modifier", DataType = SwaggerDataTypes.String, IsRequired = true)]
         public string Field { get; set; }
 
         /// <summary>
-        /// Valeur du champ.
+        /// Valeur du champ
         /// </summary>
-        [ApiMember(Description = "Valeur du champ.", IsRequired = true)]
+        [ApiMember(Description = "Valeur du champ", IsRequired = true)]
         public object Value { get; set; }
     }
 }

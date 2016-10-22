@@ -195,10 +195,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute la ressource <see cref="GenCompteur"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="GenCompteur"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Ressource <see cref="GenCompteur"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public GenCompteur Post(GenCompteur request)
 		{
@@ -217,50 +218,31 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenCompteur)));
 				}
 
-				long id = Db.Insert(request, selectIdentity: true);
-				request.CleCompteur = (int)id;
+				if (request.CleCompteur == 0)
+				{
+					long id = Db.Insert(request, selectIdentity: true);
+					request.CleCompteur = (int)id;
+				}
+				else
+				{
+					int count = Db.Update(request);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenCompteur), request.CleCompteur));
+					}
+				}
 
 				return request;
 			}
 		}
 
 		/// <summary>
-		/// Remplace la ressource <see cref="GenCompteur"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Put(GenCompteur request)
-		{
-			lock (_syncLock)
-			{
-				bool unique1 = GenCompteur_TypCompteur_CleService_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenCompteur)));
-				}
-				bool unique2 = GenCompteur_CodCompteur_EstUnique(request);
-				if (!unique2)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenCompteur)));
-				}
-
-				int count = Db.Update(request);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenCompteur), request.CleCompteur));
-				}
-			}
-		}
-
-		/// <summary>
-		/// Ajoute la ressource <see cref="GenCompteurValeur"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="GenCompteurValeur"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Ressource <see cref="GenCompteurValeur"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public GenCompteurValeur Post(GenCompteurValeur request)
 		{
@@ -273,36 +255,22 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenCompteurValeur)));
 				}
 
-				long id = Db.Insert(request, selectIdentity: true);
-				request.CleValeur = (int)id;
+				if (request.CleValeur == 0)
+				{
+					long id = Db.Insert(request, selectIdentity: true);
+					request.CleValeur = (int)id;
+				}
+				else
+				{
+					int count = Db.Update(request);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenCompteurValeur), request.CleValeur));
+					}
+				}
 
 				return request;
-			}
-		}
-
-		/// <summary>
-		/// Remplace la ressource <see cref="GenCompteurValeur"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Put(GenCompteurValeur request)
-		{
-			lock (_syncLock)
-			{
-				bool unique1 = GenCompteurValeur_CleCompteur_ValPeriode_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenCompteurValeur)));
-				}
-
-				int count = Db.Update(request);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenCompteurValeur), request.CleValeur));
-				}
 			}
 		}
 

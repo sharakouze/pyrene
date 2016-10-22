@@ -204,10 +204,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute la ressource <see cref="GenMandat"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="GenMandat"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Ressource <see cref="GenMandat"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public GenMandat Post(GenMandat request)
 		{
@@ -226,50 +227,31 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenMandat)));
 				}
 
-				long id = Db.Insert(request, selectIdentity: true);
-				request.CleMandat = (int)id;
+				if (request.CleMandat == 0)
+				{
+					long id = Db.Insert(request, selectIdentity: true);
+					request.CleMandat = (int)id;
+				}
+				else
+				{
+					int count = Db.Update(request);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.CleMandat));
+					}
+				}
 
 				return request;
 			}
 		}
 
 		/// <summary>
-		/// Remplace la ressource <see cref="GenMandat"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Put(GenMandat request)
-		{
-			lock (_syncLock)
-			{
-				bool unique1 = GenMandat_TypMandat_NivMandat_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenMandat)));
-				}
-				bool unique2 = GenMandat_CodMandat_EstUnique(request);
-				if (!unique2)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenMandat)));
-				}
-
-				int count = Db.Update(request);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenMandat), request.CleMandat));
-				}
-			}
-		}
-
-		/// <summary>
-		/// Ajoute la ressource <see cref="GenMandatMandataire"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="GenMandatMandataire"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Ressource <see cref="GenMandatMandataire"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public GenMandatMandataire Post(GenMandatMandataire request)
 		{
@@ -282,36 +264,22 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenMandatMandataire)));
 				}
 
-				long id = Db.Insert(request, selectIdentity: true);
-				request.CleMandataire = (int)id;
+				if (request.CleMandataire == 0)
+				{
+					long id = Db.Insert(request, selectIdentity: true);
+					request.CleMandataire = (int)id;
+				}
+				else
+				{
+					int count = Db.Update(request);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.CleMandataire));
+					}
+				}
 
 				return request;
-			}
-		}
-
-		/// <summary>
-		/// Remplace la ressource <see cref="GenMandatMandataire"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Put(GenMandatMandataire request)
-		{
-			lock (_syncLock)
-			{
-				bool unique1 = GenMandatMandataire_CleMandat_ClePersonne_CleService_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenMandatMandataire)));
-				}
-
-				int count = Db.Update(request);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenMandatMandataire), request.CleMandataire));
-				}
 			}
 		}
 

@@ -210,10 +210,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute la ressource <see cref="GenFourn"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="GenFourn"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Ressource <see cref="GenFourn"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public GenFourn Post(GenFourn request)
 		{
@@ -226,44 +227,31 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFourn)));
 				}
 
-				long id = Db.Insert(request, selectIdentity: true);
-				request.CleFourn = (int)id;
+				if (request.CleFourn == 0)
+				{
+					long id = Db.Insert(request, selectIdentity: true);
+					request.CleFourn = (int)id;
+				}
+				else
+				{
+					int count = Db.Update(request);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
+					}
+				}
 
 				return request;
 			}
 		}
 
 		/// <summary>
-		/// Remplace la ressource <see cref="GenFourn"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Put(GenFourn request)
-		{
-			lock (_syncLock)
-			{
-				bool unique1 = GenFourn_CodFourn_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFourn)));
-				}
-
-				int count = Db.Update(request);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
-				}
-			}
-		}
-
-		/// <summary>
-		/// Ajoute la ressource <see cref="GenFournBanque"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="GenFournBanque"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Ressource <see cref="GenFournBanque"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public GenFournBanque Post(GenFournBanque request)
 		{
@@ -276,44 +264,31 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFournBanque)));
 				}
 
-				long id = Db.Insert(request, selectIdentity: true);
-				request.CleBanque = (int)id;
+				if (request.CleBanque == 0)
+				{
+					long id = Db.Insert(request, selectIdentity: true);
+					request.CleBanque = (int)id;
+				}
+				else
+				{
+					int count = Db.Update(request);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
+					}
+				}
 
 				return request;
 			}
 		}
 
 		/// <summary>
-		/// Remplace la ressource <see cref="GenFournBanque"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Put(GenFournBanque request)
-		{
-			lock (_syncLock)
-			{
-				bool unique1 = GenFournBanque_CleFourn_CodIBAN_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFournBanque)));
-				}
-
-				int count = Db.Update(request);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
-				}
-			}
-		}
-
-		/// <summary>
-		/// Ajoute la ressource <see cref="GenFournContact"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="GenFournContact"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Ressource <see cref="GenFournContact"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public GenFournContact Post(GenFournContact request)
 		{
@@ -326,36 +301,22 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFournContact)));
 				}
 
-				long id = Db.Insert(request, selectIdentity: true);
-				request.CleContact = (int)id;
+				if (request.CleContact == 0)
+				{
+					long id = Db.Insert(request, selectIdentity: true);
+					request.CleContact = (int)id;
+				}
+				else
+				{
+					int count = Db.Update(request);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
+					}
+				}
 
 				return request;
-			}
-		}
-
-		/// <summary>
-		/// Remplace la ressource <see cref="GenFournContact"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Put(GenFournContact request)
-		{
-			lock (_syncLock)
-			{
-				bool unique1 = GenFournContact_CleFourn_NomContact_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFournContact)));
-				}
-
-				int count = Db.Update(request);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
-				}
 			}
 		}
 

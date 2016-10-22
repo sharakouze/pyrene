@@ -70,10 +70,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute la ressource <see cref="GenTVA"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="GenTVA"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Ressource <see cref="GenTVA"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public GenTVA Post(GenTVA request)
 		{
@@ -86,36 +87,22 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenTVA)));
 				}
 
-				long id = Db.Insert(request, selectIdentity: true);
-				request.CleTVA = (int)id;
+				if (request.CleTVA == 0)
+				{
+					long id = Db.Insert(request, selectIdentity: true);
+					request.CleTVA = (int)id;
+				}
+				else
+				{
+					int count = Db.Update(request);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
+					}
+				}
 
 				return request;
-			}
-		}
-
-		/// <summary>
-		/// Remplace la ressource <see cref="GenTVA"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Put(GenTVA request)
-		{
-			lock (_syncLock)
-			{
-				bool unique1 = GenTVA_CodTVA_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenTVA)));
-				}
-
-				int count = Db.Update(request);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenTVA), request.CleTVA));
-				}
 			}
 		}
 

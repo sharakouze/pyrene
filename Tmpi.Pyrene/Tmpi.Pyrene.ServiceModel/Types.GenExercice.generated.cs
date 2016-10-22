@@ -19,17 +19,17 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    [Route("/Exercice", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Exercice à partir de son id.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
+    [Route("/Exercice", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Exercice à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
 	public partial class GenExercice : IReturn<GenExercice>, IPost, IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique ; clé primaire (immutable)
+		/// Identifiant unique (immutable)
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleExercice { get; set; }
 
 		/// <summary>

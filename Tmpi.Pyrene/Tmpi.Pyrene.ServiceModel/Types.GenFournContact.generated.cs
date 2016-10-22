@@ -20,17 +20,17 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleFourn), nameof(NomContact))]
-    [Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Contact (Fourn) à partir de son id.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
+    [Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Contact (Fourn) à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
 	public partial class GenFournContact : IReturn<GenFournContact>, IPost, IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique ; clé primaire (immutable)
+		/// Identifiant unique (immutable)
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
-		[ApiMember(Description = "Identifiant unique ; clé primaire (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleContact { get; set; }
 
 		/// <summary>

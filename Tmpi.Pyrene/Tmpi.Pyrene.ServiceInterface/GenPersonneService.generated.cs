@@ -210,10 +210,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute la ressource <see cref="GenPersonne"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="GenPersonne"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Ressource <see cref="GenPersonne"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public GenPersonne Post(GenPersonne request)
 		{
@@ -226,44 +227,31 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenPersonne)));
 				}
 
-				long id = Db.Insert(request, selectIdentity: true);
-				request.ClePersonne = (int)id;
+				if (request.ClePersonne == 0)
+				{
+					long id = Db.Insert(request, selectIdentity: true);
+					request.ClePersonne = (int)id;
+				}
+				else
+				{
+					int count = Db.Update(request);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenPersonne), request.ClePersonne));
+					}
+				}
 
 				return request;
 			}
 		}
 
 		/// <summary>
-		/// Remplace la ressource <see cref="GenPersonne"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Put(GenPersonne request)
-		{
-			lock (_syncLock)
-			{
-				bool unique1 = GenPersonne_CodPersonne_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenPersonne)));
-				}
-
-				int count = Db.Update(request);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenPersonne), request.ClePersonne));
-				}
-			}
-		}
-
-		/// <summary>
-		/// Ajoute la ressource <see cref="GenPersonneProfil"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="GenPersonneProfil"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Ressource <see cref="GenPersonneProfil"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public GenPersonneProfil Post(GenPersonneProfil request)
 		{
@@ -282,80 +270,53 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenPersonneProfil)));
 				}
 
-				long id = Db.Insert(request, selectIdentity: true);
-				request.CleProfil = (int)id;
+				if (request.CleProfil == 0)
+				{
+					long id = Db.Insert(request, selectIdentity: true);
+					request.CleProfil = (int)id;
+				}
+				else
+				{
+					int count = Db.Update(request);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenPersonneProfil), request.CleProfil));
+					}
+				}
 
 				return request;
 			}
 		}
 
 		/// <summary>
-		/// Remplace la ressource <see cref="GenPersonneProfil"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Put(GenPersonneProfil request)
-		{
-			lock (_syncLock)
-			{
-				bool unique1 = GenPersonneProfil_ClePersonne_CleService_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenPersonneProfil)));
-				}
-				bool unique2 = GenPersonneProfil_CodProfil_ClePersonne_EstUnique(request);
-				if (!unique2)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenPersonneProfil)));
-				}
-
-				int count = Db.Update(request);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenPersonneProfil), request.CleProfil));
-				}
-			}
-		}
-
-		/// <summary>
-		/// Ajoute la ressource <see cref="GenPersonneSignature"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="GenPersonneSignature"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns>Ressource <see cref="GenPersonneSignature"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public GenPersonneSignature Post(GenPersonneSignature request)
 		{
 			lock (_syncLock)
 			{
 
-				long id = Db.Insert(request, selectIdentity: true);
-				request.ClePersonne = (int)id;
+				if (request.ClePersonne == 0)
+				{
+					long id = Db.Insert(request, selectIdentity: true);
+					request.ClePersonne = (int)id;
+				}
+				else
+				{
+					int count = Db.Update(request);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenPersonneSignature), request.ClePersonne));
+					}
+				}
 
 				return request;
-			}
-		}
-
-		/// <summary>
-		/// Remplace la ressource <see cref="GenPersonneSignature"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Put(GenPersonneSignature request)
-		{
-			lock (_syncLock)
-			{
-
-				int count = Db.Update(request);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenPersonneSignature), request.ClePersonne));
-				}
 			}
 		}
 

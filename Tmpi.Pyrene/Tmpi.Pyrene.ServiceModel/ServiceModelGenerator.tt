@@ -254,15 +254,15 @@ namespace <#= pocoNamespace #>
             {
 				string strRoute = GetStrRoutePath(lstPlaceholderCols, false, false);
 #>
-    [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute ou remplace une ressource {0} à partir de son id.", resourceName) #>")]
+    [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute ou remplace une ressource {0} à partir de son id", resourceName) #>")]
 <#
             }
 
             if (AddApiAttributes)
             {
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
 <#
             }
         }
@@ -470,7 +470,7 @@ namespace <#= msgNamespace #>
 		if (!selectExcluded)
 		{
 			string selectTableClassName = "Select" + table.ClassName;
-			string selectTableClassDescription = string.Format("Retourne une collection des ressources {0}.", resourceName);
+			string selectTableClassDescription = string.Format("Retourne une collection des ressources {0}", resourceName);
 
 #>
 	/// <summary>
@@ -487,7 +487,7 @@ namespace <#= msgNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
 <#
                 }
 			}
@@ -564,8 +564,8 @@ namespace <#= msgNamespace #>
 		if (!getExcluded)
 		{
 			string getTableClassName = "Get" + table.ClassName;
-			string getTableClassDescription = string.Format("Retourne une ressource {0} à partir de son id.", resourceName);
-			string fieldsPropDescription = "Champs à retourner, ou null pour retourner tous les champs.";
+			string getTableClassDescription = string.Format("Retourne une ressource {0} à partir de son id", resourceName);
+			string fieldsPropDescription = "Champs à retourner, ou null pour retourner tous les champs";
 #>
 	/// <summary>
 	/// <#= getTableClassDescription #>
@@ -581,8 +581,8 @@ namespace <#= msgNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
 <#
                 }
 			}
@@ -598,7 +598,7 @@ namespace <#= msgNamespace #>
 				continue; // on ignore les colonnes qui ne sont pas la PK de la ressource
             }
 			Column newCol = phCol.Clone();
-			newCol.Description = "Identifiant unique de la ressource à retourner.";
+			newCol.Description = "Identifiant unique de la ressource à retourner";
 
 			if (!string.IsNullOrWhiteSpace(newCol.Description))
             {
@@ -650,7 +650,7 @@ namespace <#= msgNamespace #>
 		if (!deleteExcluded)
 		{
 			string deleteTableClassName = "Delete" + table.ClassName;
-			string deleteTableClassDescription = string.Format("Supprime une ressource {0} à partir de son id.", resourceName);
+			string deleteTableClassDescription = string.Format("Supprime une ressource {0} à partir de son id", resourceName);
 #>
 	/// <summary>
 	/// <#= deleteTableClassDescription #>
@@ -666,7 +666,7 @@ namespace <#= msgNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
 <#
                 }
 			}
@@ -683,7 +683,7 @@ namespace <#= msgNamespace #>
             }
 			Column newCol = phCol.Clone();
 			newCol.IsNullable = false;
-			newCol.Description = "Identifiant unique de la ressource à supprimer.";
+			newCol.Description = "Identifiant unique de la ressource à supprimer";
 
 			if (!string.IsNullOrWhiteSpace(newCol.Description))
             {
@@ -723,8 +723,8 @@ namespace <#= msgNamespace #>
 		if (!patchExcluded)
 		{
 			string patchTableClassName = "Patch" + table.ClassName;
-			string patchTableClassDescription = string.Format("Modifie partiellement une ressource {0} à partir de son id.", resourceName);
-			string fieldsPropDescription = "Liste des modifications à appliquer.";
+			string patchTableClassDescription = string.Format("Modifie partiellement une ressource {0} à partir de son id", resourceName);
+			string fieldsPropDescription = "Liste des modifications à appliquer";
 #>
 	/// <summary>
 	/// <#= patchTableClassDescription #>
@@ -740,9 +740,9 @@ namespace <#= msgNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés.")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable.")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon.")]
+    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
 <#
                 }
 			}
@@ -758,7 +758,7 @@ namespace <#= msgNamespace #>
 				continue; // on ignore les colonnes qui ne sont pas la PK de la ressource
             }
 			Column newCol = phCol.Clone();
-			newCol.Description = "Identifiant unique de la ressource à modifier.";
+			newCol.Description = "Identifiant unique de la ressource à modifier";
 
 			if (!string.IsNullOrWhiteSpace(newCol.Description))
             {
@@ -818,9 +818,9 @@ namespace <#= msgNamespace #>
 			if (!searchExcluded)
 			{
 				var searchClassName = "Search" + table.ClassName;
-				var searchDescription = string.Format("Retourne le résultat d'une recherche sur les ressources {0}.", resourceName);
-				var textPropDescription = "Texte à rechercher.";
-				var maxPropDescription = "Nombre maximum de résultats à retourner.";
+				var searchDescription = string.Format("Retourne le résultat d'une recherche sur les ressources {0}", resourceName);
+				var textPropDescription = "Texte à rechercher";
+				var maxPropDescription = "Nombre maximum de résultats à retourner";
 #>
 	/// <summary>
 	/// <#= searchDescription #>
@@ -920,7 +920,7 @@ private void SetColumnsDescription(Table table, string stdColFormat)
         {
 			if (col.IsPKey)
 			{
-				col.Description = "Identifiant unique ; clé primaire";
+				col.Description = "Identifiant unique";
 			}
 			else if (col.PropertyName == string.Format(stdColFormat, "Cod"))
 			{
