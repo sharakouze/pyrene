@@ -28,10 +28,22 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class SelectGenExercice : IReturn<SelectGenExerciceResponse>, IGet, IPagination
 	{
+        /// <summary>
+        /// Nombre d'éléments à ignorer avant de retourner les éléments restants.
+        /// </summary>
+		[ApiMember(Description = "Nombre d'éléments à ignorer avant de retourner les éléments restants", DataType = SwaggerDataTypes.Int)]
 		public int? Skip { get; set; }
 
+        /// <summary>
+        /// Nombre d'éléments à retourner.
+        /// </summary>
+		[ApiMember(Description = "Nombre d'éléments à retourner", DataType = SwaggerDataTypes.Int)]
 		public int? Take { get; set; }
 
+        /// <summary>
+        /// Tri.
+        /// </summary>
+		[ApiMember(Description = "Tri", DataType = SwaggerDataTypes.ArrayOfString)]
 		public string[] Sort { get; set; }
 	}
 

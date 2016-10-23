@@ -34,10 +34,22 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 		[ApiMember(Description = "Identifiant unique du mandat parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleMandat { get; set; }
 
+        /// <summary>
+        /// Nombre d'éléments à ignorer avant de retourner les éléments restants.
+        /// </summary>
+		[ApiMember(Description = "Nombre d'éléments à ignorer avant de retourner les éléments restants", DataType = SwaggerDataTypes.Int)]
 		public int? Skip { get; set; }
 
+        /// <summary>
+        /// Nombre d'éléments à retourner.
+        /// </summary>
+		[ApiMember(Description = "Nombre d'éléments à retourner", DataType = SwaggerDataTypes.Int)]
 		public int? Take { get; set; }
 
+        /// <summary>
+        /// Tri.
+        /// </summary>
+		[ApiMember(Description = "Tri", DataType = SwaggerDataTypes.ArrayOfString)]
 		public string[] Sort { get; set; }
 	}
 

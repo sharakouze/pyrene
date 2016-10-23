@@ -471,6 +471,9 @@ namespace <#= msgNamespace #>
 		{
 			string selectTableClassName = "Select" + table.ClassName;
 			string selectTableClassDescription = string.Format("Retourne une collection des entités {0}", resourceName);
+			string skipPropDescription = "Nombre d'éléments à ignorer avant de retourner les éléments restants";
+			string takePropDescription = "Nombre d'éléments à retourner";
+			string sortPropDescription = "Tri";
 
 #>
 	/// <summary>
@@ -533,16 +536,50 @@ namespace <#= msgNamespace #>
 
 <#
             }
+
+#>
+        /// <summary>
+        /// <#= FormatXmlDocSummary(skipPropDescription) #>
+        /// </summary>
+<#
+			if (AddApiAttributes)
+            {
+#>
+		[ApiMember(Description = "<#= skipPropDescription #>", DataType = SwaggerDataTypes.Int)]
+<#
+            }
 #>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int? Skip { get; set; }
 
+        /// <summary>
+        /// <#= FormatXmlDocSummary(takePropDescription) #>
+        /// </summary>
+<#
+			if (AddApiAttributes)
+            {
+#>
+		[ApiMember(Description = "<#= takePropDescription #>", DataType = SwaggerDataTypes.Int)]
+<#
+            }
+#>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int? Take { get; set; }
 
+        /// <summary>
+        /// <#= FormatXmlDocSummary(sortPropDescription) #>
+        /// </summary>
+<#
+			if (AddApiAttributes)
+            {
+#>
+		[ApiMember(Description = "<#= sortPropDescription #>", DataType = SwaggerDataTypes.ArrayOfString)]
+<#
+            }
+#>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string[] Sort { get; set; }
 	}
 
     /// <summary>
-    /// Réponse à la requête <see cref="<#= selectTableClassName #>"/>.
+    /// <#= FormatXmlDocSummary("Réponse à la requête <see cref=\"" + selectTableClassName + "\"/>.") #>
     /// </summary>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #>Response
 	{
