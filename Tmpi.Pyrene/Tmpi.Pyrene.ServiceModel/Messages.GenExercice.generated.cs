@@ -21,12 +21,12 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne une collection des ressources Exercice
+	/// Retourne une collection des entités Exercice.
 	/// </summary>
 	/// <seealso cref="GenExercice"/>
-	[Route("/Exercice", HttpVerbs.Get, Summary = "Retourne une collection des ressources Exercice")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-	public partial class SelectGenExercice : IReturn<SelectGenExerciceResponse>, IGet
+	[Route("/Exercice", HttpVerbs.Get, Summary = "Retourne une collection des entités Exercice")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	public partial class SelectGenExercice : IReturn<SelectGenExerciceResponse>, IGet, IPagination
 	{
 		public int? Skip { get; set; }
 
@@ -48,81 +48,81 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne une ressource Exercice à partir de son id
+	/// Retourne une entité Exercice à partir de son id.
 	/// </summary>
 	/// <seealso cref="GenExercice"/>
-	[Route("/Exercice/{CleExercice}", HttpVerbs.Get, Summary = "Retourne une ressource Exercice à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
+	[Route("/Exercice/{CleExercice}", HttpVerbs.Get, Summary = "Retourne une entité Exercice à partir de son id")]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class GetGenExercice : IReturn<GenExercice>, IGet
 	{
         /// <summary>
-        /// Identifiant unique de la ressource à retourner
+        /// Identifiant unique de l'entité à retourner.
         /// </summary>
-		[ApiMember(Description = "Identifiant unique de la ressource à retourner", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de l'entité à retourner", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleExercice { get; set; }
 
         /// <summary>
-        /// Champs à retourner, ou null pour retourner tous les champs
+        /// Champs à retourner, ou null pour retourner tous les champs.
         /// </summary>
         [ApiMember(Description = "Champs à retourner, ou null pour retourner tous les champs", DataType = SwaggerDataTypes.ArrayOfString)]
         public string[] Fields { get; set; }
 	}
 
 	/// <summary>
-	/// Supprime une ressource Exercice à partir de son id
+	/// Supprime une entité Exercice à partir de son id.
 	/// </summary>
 	/// <seealso cref="GenExercice"/>
-	[Route("/Exercice/{CleExercice}", HttpVerbs.Delete, Summary = "Supprime une ressource Exercice à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
+	[Route("/Exercice/{CleExercice}", HttpVerbs.Delete, Summary = "Supprime une entité Exercice à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class DeleteGenExercice : IReturnVoid, IDelete
 	{
         /// <summary>
-        /// Identifiant unique de la ressource à supprimer
+        /// Identifiant unique de l'entité à supprimer.
         /// </summary>
-		[ApiMember(Description = "Identifiant unique de la ressource à supprimer", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de l'entité à supprimer", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleExercice { get; set; }
 
 	}
 
 	/// <summary>
-	/// Modifie partiellement une ressource Exercice à partir de son id
+	/// Modifie partiellement une entité Exercice à partir de son id.
 	/// </summary>
 	/// <seealso cref="GenExercice"/>
-	[Route("/Exercice/{CleExercice}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource Exercice à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+	[Route("/Exercice/{CleExercice}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Exercice à partir de son id")]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class PatchGenExercice : IReturnVoid, IPatch
 	{
         /// <summary>
-        /// Identifiant unique de la ressource à modifier
+        /// Identifiant unique de l'entité à modifier.
         /// </summary>
-		[ApiMember(Description = "Identifiant unique de la ressource à modifier", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de l'entité à modifier", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleExercice { get; set; }
 
         /// <summary>
-        /// Liste des modifications à appliquer
+        /// Liste des modifications à appliquer.
         /// </summary>
         [ApiMember(Description = "Liste des modifications à appliquer", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
         public Patch[] Fields { get; set; }
 	}
 
 	/// <summary>
-	/// Retourne le résultat d'une recherche sur les ressources Exercice
+	/// Retourne le résultat d'une recherche sur les entités Exercice.
 	/// </summary>
 	/// <seealso cref="GenExercice"/>
-	[Route("/Exercice/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les ressources Exercice")]
-	public partial class SearchGenExercice : IReturn<List<BasicEntity>>, IGet
+	[Route("/Exercice/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Exercice")]
+	public partial class SearchGenExercice : IReturn<List<BaseEntity>>, IGet
 	{
         /// <summary>
-        /// Texte à rechercher
+        /// Texte à rechercher.
         /// </summary>
         [ApiMember(Description = "Texte à rechercher", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public string Text { get; set; }
 
         /// <summary>
-        /// Nombre maximum de résultats à retourner
+        /// Nombre maximum de résultats à retourner.
         /// </summary>
         [ApiMember(Description = "Nombre maximum de résultats à retourner", DataType = SwaggerDataTypes.Int)]
         public int Max { get; set; }

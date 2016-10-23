@@ -82,8 +82,9 @@
     <Compile Include="Messages.GenTVA.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages\BasicEntity.cs" />
+    <Compile Include="Messages\BaseEntity.cs" />
     <Compile Include="HttpVerbs.cs" />
+    <Compile Include="Messages\IPagination.cs" />
     <Compile Include="Messages\Patch.cs" />
     <Compile Include="ServiceModelGenerator.cs">
       <AutoGen>True</AutoGen>

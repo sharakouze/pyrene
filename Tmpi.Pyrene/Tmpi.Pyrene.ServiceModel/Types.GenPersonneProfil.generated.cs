@@ -21,13 +21,13 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(ClePersonne), nameof(CleService))]
 	[CompositeIndex(true, nameof(CodProfil), nameof(ClePersonne))]
-    [Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Profil (Personne) à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+    [Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Profil (Personne) à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class GenPersonneProfil : IReturn<GenPersonneProfil>, IPost, IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique (immutable)
+		/// Identifiant unique (immutable).
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
@@ -35,7 +35,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleProfil { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur parent
+		/// Identifiant unique de l'utilisateur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
@@ -43,7 +43,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int ClePersonne { get; set; }
 
 		/// <summary>
-		/// Code
+		/// Code.
 		/// </summary>
 		[StringLength(100)]
 		[Required]
@@ -51,29 +51,29 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public string CodProfil { get; set; }
 
 		/// <summary>
-		/// Date de création (immutable)
+		/// Date de création (immutable).
 		/// </summary>
 		[Required]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la création (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la création (immutable).
 		/// </summary>
 		[Required]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification (immutable)
+		/// Date de dernière modification (immutable).
 		/// </summary>
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable).
 		/// </summary>
 		public int? CleEditeur { get; set; }
 
 		/// <summary>
-		/// Identifiant unique du service auquel a accès le profil, ou null pour tous les services
+		/// Identifiant unique du service auquel a accès le profil, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
 		[ApiMember(Description = "Identifiant unique du service auquel a accès le profil, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]

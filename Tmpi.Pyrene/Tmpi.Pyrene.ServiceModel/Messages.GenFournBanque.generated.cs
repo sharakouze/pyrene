@@ -21,15 +21,15 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne une collection des ressources Banque (Fourn)
+	/// Retourne une collection des entités Banque (Fourn).
 	/// </summary>
 	/// <seealso cref="GenFournBanque"/>
-	[Route("/Fourn/{CleFourn}/Banque", HttpVerbs.Get, Summary = "Retourne une collection des ressources Banque (Fourn)")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-	public partial class SelectGenFournBanque : IReturn<SelectGenFournBanqueResponse>, IGet
+	[Route("/Fourn/{CleFourn}/Banque", HttpVerbs.Get, Summary = "Retourne une collection des entités Banque (Fourn)")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	public partial class SelectGenFournBanque : IReturn<SelectGenFournBanqueResponse>, IGet, IPagination
 	{
         /// <summary>
-        /// Identifiant unique du fournisseur parent
+        /// Identifiant unique du fournisseur parent.
         /// </summary>
 		[ApiMember(Description = "Identifiant unique du fournisseur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CleFourn { get; set; }
@@ -54,61 +54,61 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne une ressource Banque (Fourn) à partir de son id
+	/// Retourne une entité Banque (Fourn) à partir de son id.
 	/// </summary>
 	/// <seealso cref="GenFournBanque"/>
-	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Get, Summary = "Retourne une ressource Banque (Fourn) à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
+	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Get, Summary = "Retourne une entité Banque (Fourn) à partir de son id")]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class GetGenFournBanque : IReturn<GenFournBanque>, IGet
 	{
         /// <summary>
-        /// Identifiant unique de la ressource à retourner
+        /// Identifiant unique de l'entité à retourner.
         /// </summary>
-		[ApiMember(Description = "Identifiant unique de la ressource à retourner", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de l'entité à retourner", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleBanque { get; set; }
 
         /// <summary>
-        /// Champs à retourner, ou null pour retourner tous les champs
+        /// Champs à retourner, ou null pour retourner tous les champs.
         /// </summary>
         [ApiMember(Description = "Champs à retourner, ou null pour retourner tous les champs", DataType = SwaggerDataTypes.ArrayOfString)]
         public string[] Fields { get; set; }
 	}
 
 	/// <summary>
-	/// Supprime une ressource Banque (Fourn) à partir de son id
+	/// Supprime une entité Banque (Fourn) à partir de son id.
 	/// </summary>
 	/// <seealso cref="GenFournBanque"/>
-	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Delete, Summary = "Supprime une ressource Banque (Fourn) à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
+	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Delete, Summary = "Supprime une entité Banque (Fourn) à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class DeleteGenFournBanque : IReturnVoid, IDelete
 	{
         /// <summary>
-        /// Identifiant unique de la ressource à supprimer
+        /// Identifiant unique de l'entité à supprimer.
         /// </summary>
-		[ApiMember(Description = "Identifiant unique de la ressource à supprimer", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de l'entité à supprimer", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleBanque { get; set; }
 
 	}
 
 	/// <summary>
-	/// Modifie partiellement une ressource Banque (Fourn) à partir de son id
+	/// Modifie partiellement une entité Banque (Fourn) à partir de son id.
 	/// </summary>
 	/// <seealso cref="GenFournBanque"/>
-	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource Banque (Fourn) à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Banque (Fourn) à partir de son id")]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class PatchGenFournBanque : IReturnVoid, IPatch
 	{
         /// <summary>
-        /// Identifiant unique de la ressource à modifier
+        /// Identifiant unique de l'entité à modifier.
         /// </summary>
-		[ApiMember(Description = "Identifiant unique de la ressource à modifier", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de l'entité à modifier", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int CleBanque { get; set; }
 
         /// <summary>
-        /// Liste des modifications à appliquer
+        /// Liste des modifications à appliquer.
         /// </summary>
         [ApiMember(Description = "Liste des modifications à appliquer", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
         public Patch[] Fields { get; set; }

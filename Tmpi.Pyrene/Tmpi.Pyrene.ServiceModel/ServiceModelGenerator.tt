@@ -70,7 +70,7 @@
     // true pour ajouter l'attribut [Route(...)] sur les classes générées.
     bool AddRouteAttributes = true;
 
-    // true pour transformer la route de la ressource, ex: GenFournContact de '/GenFournContact/' en '/GenFourn/{xxx}/Contact/'.
+    // true pour transformer la route de l'entité, ex: GenFournContact de '/GenFournContact/' en '/GenFourn/{xxx}/Contact/'.
     bool TransformRoutePath = true;
 
     // Filtre globalement les messages générés.
@@ -254,15 +254,15 @@ namespace <#= pocoNamespace #>
             {
 				string strRoute = GetStrRoutePath(lstPlaceholderCols, false, false);
 #>
-    [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute ou remplace une ressource {0} à partir de son id", resourceName) #>")]
+    [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute ou remplace une entité {0} à partir de son id", resourceName) #>")]
 <#
             }
 
             if (AddApiAttributes)
             {
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 <#
             }
         }
@@ -284,7 +284,7 @@ namespace <#= pocoNamespace #>
             {
 #>
 		/// <summary>
-		/// <#= col.Description #>
+		/// <#= FormatXmlDocSummary(col.Description) #>
 		/// </summary>
 <#
 			}
@@ -470,11 +470,11 @@ namespace <#= msgNamespace #>
 		if (!selectExcluded)
 		{
 			string selectTableClassName = "Select" + table.ClassName;
-			string selectTableClassDescription = string.Format("Retourne une collection des ressources {0}", resourceName);
+			string selectTableClassDescription = string.Format("Retourne une collection des entités {0}", resourceName);
 
 #>
 	/// <summary>
-	/// <#= selectTableClassDescription #>
+	/// <#= FormatXmlDocSummary(selectTableClassDescription) #>
 	/// </summary>
 	/// <seealso cref="<#= table.ClassName #>"/>
 <#
@@ -487,12 +487,12 @@ namespace <#= msgNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 <#
                 }
 			}
 #>
-	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #> : IReturn<<#= selectTableClassName #>Response>, IGet
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #> : IReturn<<#= selectTableClassName #>Response>, IGet, IPagination
 	{
 <#
 			Column lastCol = lstPlaceholderCols.LastOrDefault();
@@ -513,7 +513,7 @@ namespace <#= msgNamespace #>
 				{
 #>
         /// <summary>
-        /// <#= newCol.Description #>
+        /// <#= FormatXmlDocSummary(newCol.Description) #>
         /// </summary>
 <#
 				}
@@ -564,11 +564,11 @@ namespace <#= msgNamespace #>
 		if (!getExcluded)
 		{
 			string getTableClassName = "Get" + table.ClassName;
-			string getTableClassDescription = string.Format("Retourne une ressource {0} à partir de son id", resourceName);
+			string getTableClassDescription = string.Format("Retourne une entité {0} à partir de son id", resourceName);
 			string fieldsPropDescription = "Champs à retourner, ou null pour retourner tous les champs";
 #>
 	/// <summary>
-	/// <#= getTableClassDescription #>
+	/// <#= FormatXmlDocSummary(getTableClassDescription) #>
 	/// </summary>
 	/// <seealso cref="<#= table.ClassName #>"/>
 <#
@@ -581,8 +581,8 @@ namespace <#= msgNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 <#
                 }
 			}
@@ -595,16 +595,16 @@ namespace <#= msgNamespace #>
 		{
 			if (lastCol != null && lastCol.IsPKey && lastCol != phCol)
             {
-				continue; // on ignore les colonnes qui ne sont pas la PK de la ressource
+				continue; // on ignore les colonnes qui ne sont pas la PK de l'entité
             }
 			Column newCol = phCol.Clone();
-			newCol.Description = "Identifiant unique de la ressource à retourner";
+			newCol.Description = "Identifiant unique de l'entité à retourner";
 
 			if (!string.IsNullOrWhiteSpace(newCol.Description))
             {
 #>
         /// <summary>
-        /// <#= newCol.Description #>
+        /// <#= FormatXmlDocSummary(newCol.Description) #>
         /// </summary>
 <#
             }
@@ -626,7 +626,7 @@ namespace <#= msgNamespace #>
 		}
 #>
         /// <summary>
-        /// <#= fieldsPropDescription #>
+        /// <#= FormatXmlDocSummary(fieldsPropDescription) #>
         /// </summary>
 <#
 			    if (AddApiAttributes)
@@ -650,10 +650,10 @@ namespace <#= msgNamespace #>
 		if (!deleteExcluded)
 		{
 			string deleteTableClassName = "Delete" + table.ClassName;
-			string deleteTableClassDescription = string.Format("Supprime une ressource {0} à partir de son id", resourceName);
+			string deleteTableClassDescription = string.Format("Supprime une entité {0} à partir de son id", resourceName);
 #>
 	/// <summary>
-	/// <#= deleteTableClassDescription #>
+	/// <#= FormatXmlDocSummary(deleteTableClassDescription) #>
 	/// </summary>
 	/// <seealso cref="<#= table.ClassName #>"/>
 <#
@@ -666,7 +666,7 @@ namespace <#= msgNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 <#
                 }
 			}
@@ -679,17 +679,17 @@ namespace <#= msgNamespace #>
 		{
 			if (lastCol != null && lastCol.IsPKey && lastCol != phCol)
             {
-				continue; // on ignore les colonnes qui ne sont pas la PK de la ressource
+				continue; // on ignore les colonnes qui ne sont pas la PK de l'entité
             }
 			Column newCol = phCol.Clone();
 			newCol.IsNullable = false;
-			newCol.Description = "Identifiant unique de la ressource à supprimer";
+			newCol.Description = "Identifiant unique de l'entité à supprimer";
 
 			if (!string.IsNullOrWhiteSpace(newCol.Description))
             {
 #>
         /// <summary>
-        /// <#= newCol.Description #>
+        /// <#= FormatXmlDocSummary(newCol.Description) #>
         /// </summary>
 <#
             }
@@ -723,11 +723,11 @@ namespace <#= msgNamespace #>
 		if (!patchExcluded)
 		{
 			string patchTableClassName = "Patch" + table.ClassName;
-			string patchTableClassDescription = string.Format("Modifie partiellement une ressource {0} à partir de son id", resourceName);
+			string patchTableClassDescription = string.Format("Modifie partiellement une entité {0} à partir de son id", resourceName);
 			string fieldsPropDescription = "Liste des modifications à appliquer";
 #>
 	/// <summary>
-	/// <#= patchTableClassDescription #>
+	/// <#= FormatXmlDocSummary(patchTableClassDescription) #>
 	/// </summary>
 	/// <seealso cref="<#= table.ClassName #>"/>
 <#
@@ -740,9 +740,9 @@ namespace <#= msgNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 <#
                 }
 			}
@@ -755,16 +755,16 @@ namespace <#= msgNamespace #>
 		{
 			if (lastCol != null && lastCol.IsPKey && lastCol != phCol)
             {
-				continue; // on ignore les colonnes qui ne sont pas la PK de la ressource
+				continue; // on ignore les colonnes qui ne sont pas la PK de l'entité
             }
 			Column newCol = phCol.Clone();
-			newCol.Description = "Identifiant unique de la ressource à modifier";
+			newCol.Description = "Identifiant unique de l'entité à modifier";
 
 			if (!string.IsNullOrWhiteSpace(newCol.Description))
             {
 #>
         /// <summary>
-        /// <#= newCol.Description #>
+        /// <#= FormatXmlDocSummary(newCol.Description) #>
         /// </summary>
 <#
             }
@@ -786,7 +786,7 @@ namespace <#= msgNamespace #>
 		}
 #>
         /// <summary>
-        /// <#= fieldsPropDescription #>
+        /// <#= FormatXmlDocSummary(fieldsPropDescription) #>
         /// </summary>
 <#
 			    if (AddApiAttributes)
@@ -818,12 +818,12 @@ namespace <#= msgNamespace #>
 			if (!searchExcluded)
 			{
 				var searchClassName = "Search" + table.ClassName;
-				var searchDescription = string.Format("Retourne le résultat d'une recherche sur les ressources {0}", resourceName);
+				var searchDescription = string.Format("Retourne le résultat d'une recherche sur les entités {0}", resourceName);
 				var textPropDescription = "Texte à rechercher";
 				var maxPropDescription = "Nombre maximum de résultats à retourner";
 #>
 	/// <summary>
-	/// <#= searchDescription #>
+	/// <#= FormatXmlDocSummary(searchDescription) #>
 	/// </summary>
 	/// <seealso cref="<#= table.ClassName #>"/>
 <#
@@ -835,10 +835,10 @@ namespace <#= msgNamespace #>
 <#
 			}
 #>
-	public <#= MakeClassesPartial ? "partial " : "" #>class <#= searchClassName #> : IReturn<List<BasicEntity>>, IGet
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= searchClassName #> : IReturn<List<BaseEntity>>, IGet
 	{
         /// <summary>
-        /// <#= textPropDescription #>
+        /// <#= FormatXmlDocSummary(textPropDescription) #>
         /// </summary>
 <#
 			    if (AddApiAttributes)
@@ -851,7 +851,7 @@ namespace <#= msgNamespace #>
         public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string Text { get; set; }
 
         /// <summary>
-        /// <#= maxPropDescription #>
+        /// <#= FormatXmlDocSummary(maxPropDescription) #>
         /// </summary>
 <#
 			    if (AddApiAttributes)
@@ -879,6 +879,19 @@ namespace <#= msgNamespace #>
     manager.Process(SplitIntoMultipleFiles);
 #>
 <#+
+private string FormatXmlDocSummary(string str)
+{
+	if (string.IsNullOrEmpty(str))
+    {
+		return string.Empty;
+    }
+	if (!str.EndsWith("."))
+    {
+		return str.Trim() + "."; 
+    }
+	return str;
+}
+
 private string GetGeneratedFilename(string filename, string fileNamespace, string t4Namespace)
 {
 	if (fileNamespace == t4Namespace)
@@ -1017,7 +1030,12 @@ private Dictionary<string, string> GetApiMemberProps(Column col, List<string> ls
 
     if (!string.IsNullOrEmpty(col.Description))
     {
-        dicApiMemberProps.Add("Description", "\"" + col.Description + "\"");
+		string str = col.Description;
+		if (str.EndsWith(".") && !str.EndsWith("..."))
+        {
+			str = str.Remove(str.Length - 1, 1);
+        }
+        dicApiMemberProps.Add("Description", "\"" + str + "\"");
     }
                 
     string swagDataType = "";
@@ -1049,7 +1067,7 @@ private Dictionary<string, string> GetApiMemberProps(Column col, List<string> ls
 }
 
 /// <summary>
-/// Retourne les colonnes qui identifient la ressource.
+/// Retourne les colonnes qui identifient l'entité.
 /// </summary>
 private List<Column> GetKeyColumns(Table table)
 {

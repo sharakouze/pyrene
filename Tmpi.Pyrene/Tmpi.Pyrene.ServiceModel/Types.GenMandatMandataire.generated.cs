@@ -20,13 +20,13 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleMandat), nameof(ClePersonne), nameof(CleService))]
-    [Route("/Mandat/{CleMandat}/Mandataire", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Mandataire (Mandat) à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+    [Route("/Mandat/{CleMandat}/Mandataire", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Mandataire (Mandat) à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class GenMandatMandataire : IReturn<GenMandatMandataire>, IPost, IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique (immutable)
+		/// Identifiant unique (immutable).
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
@@ -34,7 +34,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleMandataire { get; set; }
 
 		/// <summary>
-		/// Identifiant unique du mandat parent
+		/// Identifiant unique du mandat parent.
 		/// </summary>
 		[ForeignKey(typeof(GenMandat), OnDelete = "CASCADE")]
 		[Required]
@@ -42,7 +42,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleMandat { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur mandataire
+		/// Identifiant unique de l'utilisateur mandataire.
 		/// </summary>
 		[References(typeof(GenPersonne))]
 		[Required]
@@ -50,38 +50,38 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int ClePersonne { get; set; }
 
 		/// <summary>
-		/// Identifiant unique du service ayant accès au mandat, ou null pour tous les services
+		/// Identifiant unique du service ayant accès au mandat, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
 		[ApiMember(Description = "Identifiant unique du service ayant accès au mandat, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }
 
 		/// <summary>
-		/// Si true, le mandat est suspendu
+		/// Si true, le mandat est suspendu.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Si true, le mandat est suspendu", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
 		public bool EstSuspendu { get; set; }
 
 		/// <summary>
-		/// Date de création (immutable)
+		/// Date de création (immutable).
 		/// </summary>
 		[Required]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la création (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la création (immutable).
 		/// </summary>
 		[Required]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification (immutable)
+		/// Date de dernière modification (immutable).
 		/// </summary>
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable).
 		/// </summary>
 		public int? CleEditeur { get; set; }
 

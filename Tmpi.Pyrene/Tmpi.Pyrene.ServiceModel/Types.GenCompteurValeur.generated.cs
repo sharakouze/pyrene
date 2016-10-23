@@ -20,13 +20,13 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleCompteur), nameof(ValPeriode))]
-    [Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Valeur (Compteur) à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+    [Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Valeur (Compteur) à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class GenCompteurValeur : IReturn<GenCompteurValeur>, IPost
 	{
 		/// <summary>
-		/// Identifiant unique (immutable)
+		/// Identifiant unique (immutable).
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
@@ -34,7 +34,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleValeur { get; set; }
 
 		/// <summary>
-		/// Identifiant unique du compteur parent
+		/// Identifiant unique du compteur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenCompteur), OnDelete = "CASCADE")]
 		[Required]
@@ -42,14 +42,14 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleCompteur { get; set; }
 
 		/// <summary>
-		/// Valeur de la période
+		/// Valeur de la période.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Valeur de la période", DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int ValPeriode { get; set; }
 
 		/// <summary>
-		/// Valeur du compteur
+		/// Valeur du compteur.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Valeur du compteur", DataType = SwaggerDataTypes.Int, IsRequired = true)]

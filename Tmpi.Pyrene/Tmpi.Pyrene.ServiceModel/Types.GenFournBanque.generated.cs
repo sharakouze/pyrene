@@ -20,13 +20,13 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleFourn), nameof(CodIBAN))]
-    [Route("/Fourn/{CleFourn}/Banque", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Banque (Fourn) à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+    [Route("/Fourn/{CleFourn}/Banque", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Banque (Fourn) à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class GenFournBanque : IReturn<GenFournBanque>, IPost, IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique (immutable)
+		/// Identifiant unique (immutable).
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
@@ -34,7 +34,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleBanque { get; set; }
 
 		/// <summary>
-		/// Identifiant unique du fournisseur parent
+		/// Identifiant unique du fournisseur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
@@ -42,7 +42,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleFourn { get; set; }
 
 		/// <summary>
-		/// Code IBAN
+		/// Code IBAN.
 		/// </summary>
 		[StringLength(34)]
 		[Required]
@@ -50,7 +50,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public string CodIBAN { get; set; }
 
 		/// <summary>
-		/// Code BIC
+		/// Code BIC.
 		/// </summary>
 		[StringLength(11)]
 		[Required]
@@ -58,7 +58,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public string CodBIC { get; set; }
 
 		/// <summary>
-		/// Nom de l'établissement bancaire
+		/// Nom de l'établissement bancaire.
 		/// </summary>
 		[StringLength(200)]
 		[Required]
@@ -66,31 +66,31 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public string LibEtablissement { get; set; }
 
 		/// <summary>
-		/// Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur
+		/// Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
 		public bool EstDefaut { get; set; }
 
 		/// <summary>
-		/// Date de création (immutable)
+		/// Date de création (immutable).
 		/// </summary>
 		[Required]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la création (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la création (immutable).
 		/// </summary>
 		[Required]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification (immutable)
+		/// Date de dernière modification (immutable).
 		/// </summary>
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable).
 		/// </summary>
 		public int? CleEditeur { get; set; }
 

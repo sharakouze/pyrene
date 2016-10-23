@@ -19,13 +19,13 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    [Route("/Personne/{ClePersonne}/Signature", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Signature (Personne) à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+    [Route("/Personne/{ClePersonne}/Signature", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Signature (Personne) à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class GenPersonneSignature : IReturn<GenPersonneSignature>, IPost
 	{
 		/// <summary>
-		/// Identifiant unique de l'utilisateur parent
+		/// Identifiant unique de l'utilisateur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenPersonne), OnDelete = "CASCADE")]
 		[Required]
@@ -34,14 +34,14 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int ClePersonne { get; set; }
 
 		/// <summary>
-		/// Image de la signature
+		/// Image de la signature.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Image de la signature", DataType = SwaggerDataTypes.File, IsRequired = true)]
 		public byte[] ImgSignature { get; set; }
 
 		/// <summary>
-		/// Type MIME de l'image
+		/// Type MIME de l'image.
 		/// </summary>
 		[StringLength(255)]
 		[Required]

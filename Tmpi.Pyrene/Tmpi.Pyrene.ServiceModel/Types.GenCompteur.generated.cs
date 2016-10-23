@@ -20,13 +20,13 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(TypCompteur), nameof(CleService))]
-    [Route("/Compteur", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Compteur à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+    [Route("/Compteur", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Compteur à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class GenCompteur : IReturn<GenCompteur>, IPost, IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique (immutable)
+		/// Identifiant unique (immutable).
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
@@ -34,7 +34,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleCompteur { get; set; }
 
 		/// <summary>
-		/// Code (unique)
+		/// Code (unique).
 		/// </summary>
 		[StringLength(100)]
 		[Required]
@@ -43,7 +43,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public string CodCompteur { get; set; }
 
 		/// <summary>
-		/// Désignation
+		/// Désignation.
 		/// </summary>
 		[StringLength(200)]
 		[Required]
@@ -52,50 +52,50 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public string LibCompteur { get; set; }
 
 		/// <summary>
-		/// Commentaire ou description
+		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(500)]
 		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
 		public string TxtCompteur { get; set; }
 
 		/// <summary>
-		/// Actif ou inactif
+		/// Actif ou inactif.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Actif ou inactif", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
 		public bool EstActif { get; set; }
 
 		/// <summary>
-		/// Date de création (immutable)
+		/// Date de création (immutable).
 		/// </summary>
 		[Required]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la création (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la création (immutable).
 		/// </summary>
 		[Required]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification (immutable)
+		/// Date de dernière modification (immutable).
 		/// </summary>
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable).
 		/// </summary>
 		public int? CleEditeur { get; set; }
 
 		/// <summary>
-		/// Identifiant de synchronisation externe
+		/// Identifiant de synchronisation externe.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Identifiant de synchronisation externe", DataType = SwaggerDataTypes.String)]
 		public string CodExterne { get; set; }
 
 		/// <summary>
-		/// Périodicité
+		/// Périodicité.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Périodicité", IsRequired = true)]
@@ -103,7 +103,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public TypPeriodicite TypPeriodicite { get; set; }
 
 		/// <summary>
-		/// Type de compteur
+		/// Type de compteur.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Type de compteur", IsRequired = true)]
@@ -111,14 +111,14 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public TypCompteur TypCompteur { get; set; }
 
 		/// <summary>
-		/// Identifiant unique du service ayant accès au compteur, ou null pour tous les services
+		/// Identifiant unique du service ayant accès au compteur, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
 		[ApiMember(Description = "Identifiant unique du service ayant accès au compteur, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }
 
 		/// <summary>
-		/// Format du modèle de numérotation
+		/// Format du modèle de numérotation.
 		/// </summary>
 		[StringLength(100)]
 		[Required]

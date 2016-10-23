@@ -21,12 +21,12 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne une collection des ressources Personne
+	/// Retourne une collection des entités Personne.
 	/// </summary>
 	/// <seealso cref="GenPersonne"/>
-	[Route("/Personne", HttpVerbs.Get, Summary = "Retourne une collection des ressources Personne")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-	public partial class SelectGenPersonne : IReturn<SelectGenPersonneResponse>, IGet
+	[Route("/Personne", HttpVerbs.Get, Summary = "Retourne une collection des entités Personne")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	public partial class SelectGenPersonne : IReturn<SelectGenPersonneResponse>, IGet, IPagination
 	{
 		public int? Skip { get; set; }
 
@@ -48,61 +48,61 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne une ressource Personne à partir de son id
+	/// Retourne une entité Personne à partir de son id.
 	/// </summary>
 	/// <seealso cref="GenPersonne"/>
-	[Route("/Personne/{ClePersonne}", HttpVerbs.Get, Summary = "Retourne une ressource Personne à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
+	[Route("/Personne/{ClePersonne}", HttpVerbs.Get, Summary = "Retourne une entité Personne à partir de son id")]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class GetGenPersonne : IReturn<GenPersonne>, IGet
 	{
         /// <summary>
-        /// Identifiant unique de la ressource à retourner
+        /// Identifiant unique de l'entité à retourner.
         /// </summary>
-		[ApiMember(Description = "Identifiant unique de la ressource à retourner", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de l'entité à retourner", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int ClePersonne { get; set; }
 
         /// <summary>
-        /// Champs à retourner, ou null pour retourner tous les champs
+        /// Champs à retourner, ou null pour retourner tous les champs.
         /// </summary>
         [ApiMember(Description = "Champs à retourner, ou null pour retourner tous les champs", DataType = SwaggerDataTypes.ArrayOfString)]
         public string[] Fields { get; set; }
 	}
 
 	/// <summary>
-	/// Supprime une ressource Personne à partir de son id
+	/// Supprime une entité Personne à partir de son id.
 	/// </summary>
 	/// <seealso cref="GenPersonne"/>
-	[Route("/Personne/{ClePersonne}", HttpVerbs.Delete, Summary = "Supprime une ressource Personne à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
+	[Route("/Personne/{ClePersonne}", HttpVerbs.Delete, Summary = "Supprime une entité Personne à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class DeleteGenPersonne : IReturnVoid, IDelete
 	{
         /// <summary>
-        /// Identifiant unique de la ressource à supprimer
+        /// Identifiant unique de l'entité à supprimer.
         /// </summary>
-		[ApiMember(Description = "Identifiant unique de la ressource à supprimer", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de l'entité à supprimer", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int ClePersonne { get; set; }
 
 	}
 
 	/// <summary>
-	/// Modifie partiellement une ressource Personne à partir de son id
+	/// Modifie partiellement une entité Personne à partir de son id.
 	/// </summary>
 	/// <seealso cref="GenPersonne"/>
-	[Route("/Personne/{ClePersonne}", HttpVerbs.Patch, Summary = "Modifie partiellement une ressource Personne à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "La ressource ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+	[Route("/Personne/{ClePersonne}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Personne à partir de son id")]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class PatchGenPersonne : IReturnVoid, IPatch
 	{
         /// <summary>
-        /// Identifiant unique de la ressource à modifier
+        /// Identifiant unique de l'entité à modifier.
         /// </summary>
-		[ApiMember(Description = "Identifiant unique de la ressource à modifier", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "Identifiant unique de l'entité à modifier", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
         public int ClePersonne { get; set; }
 
         /// <summary>
-        /// Liste des modifications à appliquer
+        /// Liste des modifications à appliquer.
         /// </summary>
         [ApiMember(Description = "Liste des modifications à appliquer", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
         public Patch[] Fields { get; set; }

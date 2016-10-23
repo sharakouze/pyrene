@@ -20,13 +20,13 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[CompositeIndex(true, nameof(CleFourn), nameof(NomContact))]
-    [Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Contact (Fourn) à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+    [Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Contact (Fourn) à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class GenFournContact : IReturn<GenFournContact>, IPost, IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique (immutable)
+		/// Identifiant unique (immutable).
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
@@ -34,7 +34,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleContact { get; set; }
 
 		/// <summary>
-		/// Identifiant unique du fournisseur parent
+		/// Identifiant unique du fournisseur parent.
 		/// </summary>
 		[ForeignKey(typeof(GenFourn), OnDelete = "CASCADE")]
 		[Required]
@@ -42,7 +42,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleFourn { get; set; }
 
 		/// <summary>
-		/// Nom de famille
+		/// Nom de famille.
 		/// </summary>
 		[StringLength(100)]
 		[Required]
@@ -50,71 +50,71 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public string NomContact { get; set; }
 
 		/// <summary>
-		/// Prénom
+		/// Prénom.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Prénom", DataType = SwaggerDataTypes.String)]
 		public string PreContact { get; set; }
 
 		/// <summary>
-		/// Commentaire ou description
+		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(500)]
 		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
 		public string TxtContact { get; set; }
 
 		/// <summary>
-		/// Date de création (immutable)
+		/// Date de création (immutable).
 		/// </summary>
 		[Required]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la création (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la création (immutable).
 		/// </summary>
 		[Required]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification (immutable)
+		/// Date de dernière modification (immutable).
 		/// </summary>
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable).
 		/// </summary>
 		public int? CleEditeur { get; set; }
 
 		/// <summary>
-		/// Numéro de téléphone
+		/// Numéro de téléphone.
 		/// </summary>
 		[StringLength(25)]
 		[ApiMember(Description = "Numéro de téléphone", DataType = SwaggerDataTypes.String)]
 		public string NumTelep { get; set; }
 
 		/// <summary>
-		/// Numéro de fax
+		/// Numéro de fax.
 		/// </summary>
 		[StringLength(25)]
 		[ApiMember(Description = "Numéro de fax", DataType = SwaggerDataTypes.String)]
 		public string NumFax { get; set; }
 
 		/// <summary>
-		/// Adresse email
+		/// Adresse email.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Adresse email", DataType = SwaggerDataTypes.String)]
 		public string NumEmail { get; set; }
 
 		/// <summary>
-		/// Titre de civilité
+		/// Titre de civilité.
 		/// </summary>
 		[ApiMember(Description = "Titre de civilité")]
 		[ApiAllowableValues(nameof(TypCivilite), typeof(TypCivilite))]
 		public TypCivilite? TypCivilite { get; set; }
 
 		/// <summary>
-		/// Fonction ou poste du contact chez le fournisseur
+		/// Fonction ou poste du contact chez le fournisseur.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Fonction ou poste du contact chez le fournisseur", DataType = SwaggerDataTypes.String)]

@@ -22,7 +22,7 @@
 GO
 
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Type de mandat',
+    @value = N'Type de mandat.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -31,7 +31,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'TypMandat'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Nombre de signatures requises',
+    @value = N'Nombre de signatures requises.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -40,7 +40,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'NbrSignature'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Corps du message',
+    @value = N'Corps du message.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -49,7 +49,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'TxtMessage'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Niveau du mandat',
+    @value = N'Niveau du mandat.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',

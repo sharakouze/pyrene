@@ -19,13 +19,13 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    [Route("/Exercice", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Exercice à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+    [Route("/Exercice", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Exercice à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class GenExercice : IReturn<GenExercice>, IPost, IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique (immutable)
+		/// Identifiant unique (immutable).
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
@@ -33,7 +33,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleExercice { get; set; }
 
 		/// <summary>
-		/// Code (unique)
+		/// Code (unique).
 		/// </summary>
 		[StringLength(100)]
 		[Required]
@@ -42,7 +42,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public string CodExercice { get; set; }
 
 		/// <summary>
-		/// Désignation
+		/// Désignation.
 		/// </summary>
 		[StringLength(200)]
 		[Required]
@@ -51,57 +51,57 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public string LibExercice { get; set; }
 
 		/// <summary>
-		/// Commentaire ou description
+		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(500)]
 		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
 		public string TxtExercice { get; set; }
 
 		/// <summary>
-		/// Actif ou inactif
+		/// Actif ou inactif.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Actif ou inactif", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
 		public bool EstActif { get; set; }
 
 		/// <summary>
-		/// Date de création (immutable)
+		/// Date de création (immutable).
 		/// </summary>
 		[Required]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la création (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la création (immutable).
 		/// </summary>
 		[Required]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification (immutable)
+		/// Date de dernière modification (immutable).
 		/// </summary>
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable).
 		/// </summary>
 		public int? CleEditeur { get; set; }
 
 		/// <summary>
-		/// Identifiant de synchronisation externe
+		/// Identifiant de synchronisation externe.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Identifiant de synchronisation externe", DataType = SwaggerDataTypes.String)]
 		public string CodExterne { get; set; }
 
 		/// <summary>
-		/// Date de début
+		/// Date de début.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Date de début", DataType = SwaggerDataTypes.DateTime, IsRequired = true)]
 		public DateTime DatDebut { get; set; }
 
 		/// <summary>
-		/// Date de fin
+		/// Date de fin.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Date de fin", DataType = SwaggerDataTypes.DateTime, IsRequired = true)]

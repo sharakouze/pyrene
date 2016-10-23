@@ -19,7 +19,7 @@
 GO
 
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Date de début',
+    @value = N'Date de début.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -28,7 +28,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'DatDebut'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Date de fin',
+    @value = N'Date de fin.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',

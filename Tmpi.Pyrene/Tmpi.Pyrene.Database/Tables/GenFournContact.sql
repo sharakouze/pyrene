@@ -21,7 +21,7 @@
 
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Titre de civilité',
+    @value = N'Titre de civilité.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -30,7 +30,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'TypCivilite'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Identifiant unique du fournisseur parent',
+    @value = N'Identifiant unique du fournisseur parent.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -39,7 +39,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = 'CleFourn'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Nom de famille',
+    @value = N'Nom de famille.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -48,7 +48,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = 'NomContact'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Prénom',
+    @value = N'Prénom.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',
@@ -57,7 +57,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = 'PreContact'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Fonction ou poste du contact chez le fournisseur',
+    @value = N'Fonction ou poste du contact chez le fournisseur.',
     @level0type = N'SCHEMA',
     @level0name = N'dbo',
     @level1type = N'TABLE',

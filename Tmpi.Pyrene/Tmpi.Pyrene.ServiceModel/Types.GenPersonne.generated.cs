@@ -19,13 +19,13 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    [Route("/Personne", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Personne à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+    [Route("/Personne", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Personne à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class GenPersonne : IReturn<GenPersonne>, IPost, IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique (immutable)
+		/// Identifiant unique (immutable).
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
@@ -33,7 +33,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int ClePersonne { get; set; }
 
 		/// <summary>
-		/// Code (unique)
+		/// Code (unique).
 		/// </summary>
 		[StringLength(100)]
 		[Required]
@@ -42,7 +42,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public string CodPersonne { get; set; }
 
 		/// <summary>
-		/// Nom de famille
+		/// Nom de famille.
 		/// </summary>
 		[StringLength(100)]
 		[Required]
@@ -51,78 +51,78 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public string NomPersonne { get; set; }
 
 		/// <summary>
-		/// Prénom
+		/// Prénom.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Prénom", DataType = SwaggerDataTypes.String)]
 		public string PrePersonne { get; set; }
 
 		/// <summary>
-		/// Commentaire ou description
+		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(500)]
 		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
 		public string TxtPersonne { get; set; }
 
 		/// <summary>
-		/// Actif ou inactif
+		/// Actif ou inactif.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Actif ou inactif", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
 		public bool EstActif { get; set; }
 
 		/// <summary>
-		/// Date de création (immutable)
+		/// Date de création (immutable).
 		/// </summary>
 		[Required]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la création (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la création (immutable).
 		/// </summary>
 		[Required]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification (immutable)
+		/// Date de dernière modification (immutable).
 		/// </summary>
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable).
 		/// </summary>
 		public int? CleEditeur { get; set; }
 
 		/// <summary>
-		/// Identifiant de synchronisation externe
+		/// Identifiant de synchronisation externe.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Identifiant de synchronisation externe", DataType = SwaggerDataTypes.String)]
 		public string CodExterne { get; set; }
 
 		/// <summary>
-		/// Titre de civilité
+		/// Titre de civilité.
 		/// </summary>
 		[ApiMember(Description = "Titre de civilité")]
 		[ApiAllowableValues(nameof(TypCivilite), typeof(TypCivilite))]
 		public TypCivilite? TypCivilite { get; set; }
 
 		/// <summary>
-		/// Numéro de téléphone
+		/// Numéro de téléphone.
 		/// </summary>
 		[StringLength(25)]
 		[ApiMember(Description = "Numéro de téléphone", DataType = SwaggerDataTypes.String)]
 		public string NumTelep { get; set; }
 
 		/// <summary>
-		/// Numéro de fax
+		/// Numéro de fax.
 		/// </summary>
 		[StringLength(25)]
 		[ApiMember(Description = "Numéro de fax", DataType = SwaggerDataTypes.String)]
 		public string NumFax { get; set; }
 
 		/// <summary>
-		/// Adresse email
+		/// Adresse email.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Adresse email", DataType = SwaggerDataTypes.String)]

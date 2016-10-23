@@ -19,13 +19,13 @@ using ServiceStack.Model;
 
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
-    [Route("/Service", HttpVerbs.Post, Summary = "Ajoute ou remplace une ressource Service à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "La ressource spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "La ressource spécifiée est un doublon")]
+    [Route("/Service", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Service à partir de son id")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class GenService : IReturn<GenService>, IPost, IAuditable
 	{
 		/// <summary>
-		/// Identifiant unique (immutable)
+		/// Identifiant unique (immutable).
 		/// </summary>
 		[AutoIncrement]
 		[PrimaryKey]
@@ -33,7 +33,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleService { get; set; }
 
 		/// <summary>
-		/// Code (unique)
+		/// Code (unique).
 		/// </summary>
 		[StringLength(100)]
 		[Required]
@@ -42,7 +42,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public string CodService { get; set; }
 
 		/// <summary>
-		/// Désignation
+		/// Désignation.
 		/// </summary>
 		[StringLength(200)]
 		[Required]
@@ -51,50 +51,50 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public string LibService { get; set; }
 
 		/// <summary>
-		/// Commentaire ou description
+		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(500)]
 		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
 		public string TxtService { get; set; }
 
 		/// <summary>
-		/// Actif ou inactif
+		/// Actif ou inactif.
 		/// </summary>
 		[Required]
 		[ApiMember(Description = "Actif ou inactif", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
 		public bool EstActif { get; set; }
 
 		/// <summary>
-		/// Date de création (immutable)
+		/// Date de création (immutable).
 		/// </summary>
 		[Required]
 		public DateTime DatCreation { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la création (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la création (immutable).
 		/// </summary>
 		[Required]
 		public int CleCreateur { get; set; }
 
 		/// <summary>
-		/// Date de dernière modification (immutable)
+		/// Date de dernière modification (immutable).
 		/// </summary>
 		public DateTime? DatEdition { get; set; }
 
 		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)
+		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable).
 		/// </summary>
 		public int? CleEditeur { get; set; }
 
 		/// <summary>
-		/// Identifiant de synchronisation externe
+		/// Identifiant de synchronisation externe.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Identifiant de synchronisation externe", DataType = SwaggerDataTypes.String)]
 		public string CodExterne { get; set; }
 
 		/// <summary>
-		/// Identifiant unique du service parent
+		/// Identifiant unique du service parent.
 		/// </summary>
 		[References(typeof(GenService))]
 		[Index]
@@ -102,49 +102,49 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int? CleServiceParent { get; set; }
 
 		/// <summary>
-		/// Rue
+		/// Rue.
 		/// </summary>
 		[StringLength(200)]
 		[ApiMember(Description = "Rue", DataType = SwaggerDataTypes.String)]
 		public string AdrRue { get; set; }
 
 		/// <summary>
-		/// Code postal
+		/// Code postal.
 		/// </summary>
 		[StringLength(10)]
 		[ApiMember(Description = "Code postal", DataType = SwaggerDataTypes.String)]
 		public string AdrCode { get; set; }
 
 		/// <summary>
-		/// Ville ou commune
+		/// Ville ou commune.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Ville ou commune", DataType = SwaggerDataTypes.String)]
 		public string AdrCommune { get; set; }
 
 		/// <summary>
-		/// Pays
+		/// Pays.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Pays", DataType = SwaggerDataTypes.String)]
 		public string AdrPays { get; set; }
 
 		/// <summary>
-		/// Numéro de téléphone
+		/// Numéro de téléphone.
 		/// </summary>
 		[StringLength(25)]
 		[ApiMember(Description = "Numéro de téléphone", DataType = SwaggerDataTypes.String)]
 		public string NumTelep { get; set; }
 
 		/// <summary>
-		/// Numéro de fax
+		/// Numéro de fax.
 		/// </summary>
 		[StringLength(25)]
 		[ApiMember(Description = "Numéro de fax", DataType = SwaggerDataTypes.String)]
 		public string NumFax { get; set; }
 
 		/// <summary>
-		/// Adresse email
+		/// Adresse email.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Adresse email", DataType = SwaggerDataTypes.String)]

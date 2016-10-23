@@ -424,7 +424,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns></returns>
-		public List<BasicEntity> Get(SearchGenMandat request)
+		public List<BaseEntity> Get(SearchGenMandat request)
 		{
 			if (string.IsNullOrWhiteSpace(request.Text))
 			{
@@ -437,7 +437,7 @@ namespace Tmpi.Pyrene.ServiceInterface
                 q = q.Limit(request.Max);
             }
 
-            var items = Db.Select<BasicEntity>(q);
+            var items = Db.Select<BaseEntity>(q);
             return items;
 		}
 
