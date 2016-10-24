@@ -42,6 +42,12 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleCompteur { get; set; }
 
 		/// <summary>
+		/// Entité référencée par <see cref="CleCompteur"/>.
+		/// </summary>
+		[Reference]
+		public GenCompteur GenCompteur { get; set; }
+
+		/// <summary>
 		/// Valeur de la période.
 		/// </summary>
 		[Required]

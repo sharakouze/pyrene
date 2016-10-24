@@ -43,6 +43,12 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int ClePersonne { get; set; }
 
 		/// <summary>
+		/// Entité référencée par <see cref="ClePersonne"/>.
+		/// </summary>
+		[Reference]
+		public GenPersonne GenPersonne { get; set; }
+
+		/// <summary>
 		/// Code.
 		/// </summary>
 		[StringLength(100)]
@@ -78,6 +84,12 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[References(typeof(GenService))]
 		[ApiMember(Description = "Identifiant unique du service auquel a accès le profil, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }
+
+		/// <summary>
+		/// Entité référencée par <see cref="CleService"/>.
+		/// </summary>
+		[Reference]
+		public GenService GenService { get; set; }
 
 	}
 }

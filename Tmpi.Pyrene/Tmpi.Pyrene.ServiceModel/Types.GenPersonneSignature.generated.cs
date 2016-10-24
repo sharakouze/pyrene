@@ -34,6 +34,12 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int ClePersonne { get; set; }
 
 		/// <summary>
+		/// Entité référencée par <see cref="ClePersonne"/>.
+		/// </summary>
+		[Reference]
+		public GenPersonne GenPersonne { get; set; }
+
+		/// <summary>
 		/// Image de la signature.
 		/// </summary>
 		[Required]

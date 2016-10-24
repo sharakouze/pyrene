@@ -118,9 +118,21 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int? CleService { get; set; }
 
 		/// <summary>
-		/// Format du modèle de numérotation.
+		/// Entité référencée par <see cref="CleService"/>.
 		/// </summary>
-		[StringLength(100)]
+		[Reference]
+		public GenService GenService { get; set; }
+
+        [References(typeof(GenService))]
+        [ApiMember(Description = "Identifiant unique du service ayant accès au compteur, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]
+        public int? CleServicePlop { get; set; }
+        [Reference]
+        public GenService GenServicePlop { get; set; }
+
+        /// <summary>
+        /// Format du modèle de numérotation.
+        /// </summary>
+        [StringLength(100)]
 		[Required]
 		[ApiMember(Description = "Format du modèle de numérotation", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string ValFormatNumero { get; set; }

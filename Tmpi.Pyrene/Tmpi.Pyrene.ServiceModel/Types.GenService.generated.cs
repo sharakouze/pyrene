@@ -102,6 +102,12 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int? CleServiceParent { get; set; }
 
 		/// <summary>
+		/// Entité référencée par <see cref="CleServiceParent"/>.
+		/// </summary>
+		[Reference]
+		public GenService GenServiceParent { get; set; }
+
+		/// <summary>
 		/// Rue.
 		/// </summary>
 		[StringLength(200)]

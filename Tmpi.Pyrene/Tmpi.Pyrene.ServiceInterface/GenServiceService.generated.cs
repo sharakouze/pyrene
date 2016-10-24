@@ -119,14 +119,14 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var q = Db.From<GenService>().Where(x => x.CleService == request.CleService).Select(request.Fields);
 
-			var entity = Db.Single(q);
+			var entity = Db.LoadSelect(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
 					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenService), request.CleService));
 			}
 
-			return entity;
+			return entity.SingleOrDefault();
 		}
 
 		/// <summary>

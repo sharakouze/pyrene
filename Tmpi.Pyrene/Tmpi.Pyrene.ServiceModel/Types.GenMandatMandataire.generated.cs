@@ -42,6 +42,12 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleMandat { get; set; }
 
 		/// <summary>
+		/// Entité référencée par <see cref="CleMandat"/>.
+		/// </summary>
+		[Reference]
+		public GenMandat GenMandat { get; set; }
+
+		/// <summary>
 		/// Identifiant unique de l'utilisateur mandataire.
 		/// </summary>
 		[References(typeof(GenPersonne))]
@@ -50,11 +56,23 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int ClePersonne { get; set; }
 
 		/// <summary>
+		/// Entité référencée par <see cref="ClePersonne"/>.
+		/// </summary>
+		[Reference]
+		public GenPersonne GenPersonne { get; set; }
+
+		/// <summary>
 		/// Identifiant unique du service ayant accès au mandat, ou null pour tous les services.
 		/// </summary>
 		[References(typeof(GenService))]
 		[ApiMember(Description = "Identifiant unique du service ayant accès au mandat, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }
+
+		/// <summary>
+		/// Entité référencée par <see cref="CleService"/>.
+		/// </summary>
+		[Reference]
+		public GenService GenService { get; set; }
 
 		/// <summary>
 		/// Si true, le mandat est suspendu.

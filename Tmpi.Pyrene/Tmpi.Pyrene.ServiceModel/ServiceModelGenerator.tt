@@ -61,8 +61,9 @@
     // Ajoute les interfaces IAuditable, etc...
     bool AddCustomInterfaces = true;
 
-    // Ajoute des propriétés avec l'attribut [Reference] pour les tables enfants
+    // Ajoute des propriétés avec l'attribut [Reference] pour les tables enfants ou les FK
     bool AddChildReferences = true;
+    bool AddFKeyReferences = true;
 
     // Ajoute [ApiMember], [ApiAllowableValues]...
     bool AddApiAttributes = true;
@@ -396,6 +397,26 @@ namespace <#= pocoNamespace #>
 		public <#= MakePocoPropertiesVirtual ? "virtual " : "" #><#= col.ProperPropertyType #> <#= col.PropertyName #> { get; set; }
 
 <#
+			if (AddFKeyReferences && IncludeReferences)
+            {
+				FKey thisFkey = table.ForeignKeys.FirstOrDefault(f => f.FromColumns.Contains(col));
+				if (thisFkey != null)
+                {
+					Column refCol = thisFkey.ReferencedColumns.First();
+
+					string format = col.PropertyName.Replace(refCol.PropertyName, "{0}");
+					string propName = string.Format(format, thisFkey.ReferencedTable.ClassName);
+#>
+		/// <summary>
+		/// <#= FormatXmlDocSummary("Entité référencée par <see cref=\"" + col.PropertyName + "\"/>.") #>
+		/// </summary>
+		[Reference]
+		public <#= MakePocoPropertiesVirtual ? "virtual " : "" #><#= thisFkey.ReferencedTable.ClassName #> <#= propName #> { get; set; }
+
+<#
+
+                }
+            }
         } // end foreach (col)
 
         if (AddChildReferences)

@@ -42,6 +42,12 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int CleFourn { get; set; }
 
 		/// <summary>
+		/// Entité référencée par <see cref="CleFourn"/>.
+		/// </summary>
+		[Reference]
+		public GenFourn GenFourn { get; set; }
+
+		/// <summary>
 		/// Code IBAN.
 		/// </summary>
 		[StringLength(34)]

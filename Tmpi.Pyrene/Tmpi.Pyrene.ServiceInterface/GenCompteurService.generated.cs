@@ -285,16 +285,19 @@ namespace Tmpi.Pyrene.ServiceInterface
 		{
             ModelDefinitionHelper.UndefinedFields<GenCompteur>(request.Fields);
 
-            var q = Db.From<GenCompteur>().Where(x => x.CleCompteur == request.CleCompteur).Select(request.Fields);
+            var q = Db.From<GenCompteur>()
+                //.Where(x => x.CodCompteur.StartsWith("C"))
+                .Where(x => x.CleCompteur == request.CleCompteur)
+                .Select(request.Fields);
 
-			var entity = Db.Single(q);
+			var entity = Db.LoadSelect(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
 					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenCompteur), request.CleCompteur));
 			}
 
-			return entity;
+			return entity.Single();
 		}
 
 		/// <summary>
