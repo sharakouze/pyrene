@@ -99,15 +99,17 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Périodicité.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Périodicité", DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int TypPeriodicite { get; set; }
+		[ApiMember(Description = "Périodicité", IsRequired = true)]
+		[ApiAllowableValues(nameof(TypPeriodicite), typeof(TypPeriodicite))]
+		public TypPeriodicite TypPeriodicite { get; set; }
 
 		/// <summary>
 		/// Type de compteur.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Type de compteur", DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int TypCompteur { get; set; }
+		[ApiMember(Description = "Type de compteur", IsRequired = true)]
+		[ApiAllowableValues(nameof(TypCompteur), typeof(TypCompteur))]
+		public TypCompteur TypCompteur { get; set; }
 
 		/// <summary>
 		/// Identifiant unique du service ayant accès au compteur, ou null pour tous les services.

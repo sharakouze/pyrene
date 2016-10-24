@@ -99,8 +99,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Type de mandat.
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Type de mandat", DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int TypMandat { get; set; }
+		[ApiMember(Description = "Type de mandat", IsRequired = true)]
+		[ApiAllowableValues(nameof(TypMandat), typeof(TypMandat))]
+		public TypMandat TypMandat { get; set; }
 
 		/// <summary>
 		/// Niveau du mandat.

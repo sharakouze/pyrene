@@ -66,9 +66,9 @@
     <Folder Include="Tables\Gen" />
     <Folder Include="Security" />
     <Folder Include="Security\Schemas" />
+    <Folder Include="Scripts\Gen" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Scripts\TextIndex.sql" />
     <None Include="Scripts\FullTextIndex.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
     </None>
@@ -76,14 +76,10 @@
     <Build Include="Tables\Gen\CompteurValeur.sql" />
     <Build Include="Tables\Gen\Exercice.sql" />
     <Build Include="Security\Schemas\Gen.sql" />
+    <Build Include="Scripts\Gen\TextIndex.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Tmpi.Pyrene.Database.publish.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Build Include="Scripts\FullTextIndex.sql">
-      <DependentUpon>Scripts\FullTextIndex.tt</DependentUpon>
-    </Build>
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Tmpi.Pyrene.Database.refactorlog" />
@@ -102,5 +98,8 @@
     <Build Include="Tables\Gen\PersonneSignature.sql" />
     <Build Include="Tables\Gen\Service.sql" />
     <Build Include="Tables\Gen\TVA.sql" />
+    <Build Include="Scripts\FullTextIndex.sql">
+      <DependentUpon>Scripts\FullTextIndex.tt</DependentUpon>
+    </Build>
   </ItemGroup>
 </Project>

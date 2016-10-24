@@ -207,8 +207,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Mode de règlement.
 		/// </summary>
-		[ApiMember(Description = "Mode de règlement", DataType = SwaggerDataTypes.Int)]
-		public int? TypModeReglement { get; set; }
+		[ApiMember(Description = "Mode de règlement")]
+		[ApiAllowableValues(nameof(TypModeReglement), typeof(TypModeReglement))]
+		public TypModeReglement? TypModeReglement { get; set; }
 
 		[Required]
 		[ApiMember(DataType = SwaggerDataTypes.Bool, IsRequired = true)]

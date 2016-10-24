@@ -104,8 +104,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Titre de civilité.
 		/// </summary>
-		[ApiMember(Description = "Titre de civilité", DataType = SwaggerDataTypes.Int)]
-		public int? TypCivilite { get; set; }
+		[ApiMember(Description = "Titre de civilité")]
+		[ApiAllowableValues(nameof(TypCivilite), typeof(TypCivilite))]
+		public TypCivilite? TypCivilite { get; set; }
 
 		/// <summary>
 		/// Numéro de téléphone.

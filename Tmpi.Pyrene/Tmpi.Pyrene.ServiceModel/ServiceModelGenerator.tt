@@ -96,12 +96,12 @@
 
 		tables.RemoveAll(t => t.Name == "__RefactorLog");
 
-		tables.ChangePropertyType("GenCompteur", "TypCompteur", "TypCompteur");
-		tables.ChangePropertyType("GenCompteur", "TypPeriodicite", "TypPeriodicite");
-		tables.ChangePropertyType("GenMandat", "TypMandat", "TypMandat");
-		tables.ChangePropertyType("GenPersonne", "TypCivilite", "TypCivilite");
-		tables.ChangePropertyType("GenFourn", "TypModeReglement", "TypModeReglement");
-		tables.ChangePropertyType("GenFournContact", "TypCivilite", "TypCivilite");
+		tables.ChangePropertyType("Compteur", "TypCompteur", "TypCompteur");
+		tables.ChangePropertyType("Compteur", "TypPeriodicite", "TypPeriodicite");
+		tables.ChangePropertyType("Mandat", "TypMandat", "TypMandat");
+		tables.ChangePropertyType("Personne", "TypCivilite", "TypCivilite");
+		tables.ChangePropertyType("Fourn", "TypModeReglement", "TypModeReglement");
+		tables.ChangePropertyType("FournContact", "TypCivilite", "TypCivilite");
     };
 
 #>

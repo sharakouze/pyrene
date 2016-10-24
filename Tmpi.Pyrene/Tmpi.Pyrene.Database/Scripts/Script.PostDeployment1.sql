@@ -11,6 +11,6 @@ Post-Deployment Script Template
 */
 
 /*
-:r TextIndex.sql
+:r Gen\TextIndex.sql
 
 */
