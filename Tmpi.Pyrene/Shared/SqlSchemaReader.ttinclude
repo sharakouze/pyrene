@@ -35,9 +35,15 @@ public class Table
 
 public class Tables : List<Table>
 {
-	public Column GetColumn(string tableName, string columnName)
+	public Column GetColumn(string schemaName, string tableName, string columnName)
     {
-		Table tbl = this.Where(t => t.Name == tableName).SingleOrDefault();
+		IEnumerable<Table> q = this.Where(t => t.Name == tableName);
+		if (!string.IsNullOrEmpty(schemaName))
+        {
+			q = q.Where(t => t.Schema == schemaName);
+        }
+
+		Table tbl = q.SingleOrDefault();;
 		if (tbl != null)
         {
 			Column col = tbl.Columns.Where(c => c.Name == columnName).SingleOrDefault();
@@ -46,9 +52,9 @@ public class Tables : List<Table>
 		return null;
 	}
 
-	public bool ChangePropertyType(string tableName, string columnName, string newPropertyType)
+	public bool ChangePropertyType(string schemaName, string tableName, string columnName, string newPropertyType)
     {
-		Column col = GetColumn(tableName, columnName);
+		Column col = GetColumn(schemaName, tableName, columnName);
 		if (col != null)
         {
 			col.PropertyType = newPropertyType;

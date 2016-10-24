@@ -16,8 +16,8 @@
 	/***** TODO *****
 	- DefaultAttribute
     - Commentaires sur les [References] ?
-    - Ajout de propriétés [References] pour les FK ?
 	- Possibilité d'avoir 0 PK ?
+	- Namespace par rapport au schéma
 	****************/
 
 	/*********************/
@@ -96,12 +96,12 @@
 
 		tables.RemoveAll(t => t.Name == "__RefactorLog");
 
-		tables.ChangePropertyType("Compteur", "TypCompteur", "TypCompteur");
-		tables.ChangePropertyType("Compteur", "TypPeriodicite", "TypPeriodicite");
-		tables.ChangePropertyType("Mandat", "TypMandat", "TypMandat");
-		tables.ChangePropertyType("Personne", "TypCivilite", "TypCivilite");
-		tables.ChangePropertyType("Fourn", "TypModeReglement", "TypModeReglement");
-		tables.ChangePropertyType("FournContact", "TypCivilite", "TypCivilite");
+		tables.ChangePropertyType("Gen", "Compteur", "TypCompteur", "TypCompteur");
+		tables.ChangePropertyType("Gen", "Compteur", "TypPeriodicite", "TypPeriodicite");
+		tables.ChangePropertyType("Gen", "Mandat", "TypMandat", "TypMandat");
+		tables.ChangePropertyType("Gen", "Personne", "TypCivilite", "TypCivilite");
+		tables.ChangePropertyType("Gen", "Fourn", "TypModeReglement", "TypModeReglement");
+		tables.ChangePropertyType("Gen", "FournContact", "TypCivilite", "TypCivilite");
     };
 
 #>
