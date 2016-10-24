@@ -43,43 +43,43 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Messages.GenCompteur.generated.cs">
+    <Compile Include="Messages.Compteur.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.GenCompteurValeur.generated.cs">
+    <Compile Include="Messages.CompteurValeur.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.GenExercice.generated.cs">
+    <Compile Include="Messages.Exercice.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.GenFourn.generated.cs">
+    <Compile Include="Messages.Fourn.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.GenFournBanque.generated.cs">
+    <Compile Include="Messages.FournBanque.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.GenFournContact.generated.cs">
+    <Compile Include="Messages.FournContact.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.GenMandat.generated.cs">
+    <Compile Include="Messages.Mandat.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.GenMandatMandataire.generated.cs">
+    <Compile Include="Messages.MandatMandataire.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.GenPersonne.generated.cs">
+    <Compile Include="Messages.Personne.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.GenPersonneProfil.generated.cs">
+    <Compile Include="Messages.PersonneProfil.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.GenPersonneSignature.generated.cs">
+    <Compile Include="Messages.PersonneSignature.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.GenService.generated.cs">
+    <Compile Include="Messages.Service.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.GenTVA.generated.cs">
+    <Compile Include="Messages.TVA.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Messages\BaseEntity.cs" />
@@ -93,43 +93,43 @@
     </Compile>
     <Compile Include="SwaggerDataTypes.cs" />
     <Compile Include="SwaggerParamTypes.cs" />
-    <Compile Include="Types.GenCompteur.generated.cs">
+    <Compile Include="Types.Compteur.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types.GenCompteurValeur.generated.cs">
+    <Compile Include="Types.CompteurValeur.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types.GenExercice.generated.cs">
+    <Compile Include="Types.Exercice.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types.GenFourn.generated.cs">
+    <Compile Include="Types.Fourn.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types.GenFournBanque.generated.cs">
+    <Compile Include="Types.FournBanque.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types.GenFournContact.generated.cs">
+    <Compile Include="Types.FournContact.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types.GenMandat.generated.cs">
+    <Compile Include="Types.Mandat.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types.GenMandatMandataire.generated.cs">
+    <Compile Include="Types.MandatMandataire.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types.GenPersonne.generated.cs">
+    <Compile Include="Types.Personne.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types.GenPersonneProfil.generated.cs">
+    <Compile Include="Types.PersonneProfil.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types.GenPersonneSignature.generated.cs">
+    <Compile Include="Types.PersonneSignature.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types.GenService.generated.cs">
+    <Compile Include="Types.Service.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types.GenTVA.generated.cs">
+    <Compile Include="Types.TVA.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\IAuditable.cs" />

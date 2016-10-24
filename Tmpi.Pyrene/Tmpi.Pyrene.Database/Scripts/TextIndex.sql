@@ -1,27 +1,27 @@
-﻿CREATE INDEX [IX_GenCompteur_LibCompteur] ON [GenCompteur] ([LibCompteur]);
+﻿CREATE INDEX [IX_Compteur_LibCompteur] ON [Gen].[Compteur] ([LibCompteur]);
 
 GO
 
-CREATE INDEX [IX_GenExercice_LibExercice] ON [GenExercice] ([LibExercice]);
+CREATE INDEX [IX_Exercice_LibExercice] ON [Gen].[Exercice] ([LibExercice]);
 
 GO
 
-CREATE INDEX [IX_GenFourn_LibFourn] ON [GenFourn] ([LibFourn]);
+CREATE INDEX [IX_Fourn_LibFourn] ON [Gen].[Fourn] ([LibFourn]);
 
 GO
 
-CREATE INDEX [IX_GenMandat_LibMandat] ON [GenMandat] ([LibMandat]);
+CREATE INDEX [IX_Mandat_LibMandat] ON [Gen].[Mandat] ([LibMandat]);
 
 GO
 
-CREATE INDEX [IX_GenPersonne_NomPersonne] ON [GenPersonne] ([NomPersonne]);
+CREATE INDEX [IX_Personne_NomPersonne] ON [Gen].[Personne] ([NomPersonne]);
 
 GO
 
-CREATE INDEX [IX_GenService_LibService] ON [GenService] ([LibService]);
+CREATE INDEX [IX_Service_LibService] ON [Gen].[Service] ([LibService]);
 
 GO
 
-CREATE INDEX [IX_GenTVA_LibTVA] ON [GenTVA] ([LibTVA]);
+CREATE INDEX [IX_TVA_LibTVA] ON [Gen].[TVA] ([LibTVA]);
 
 GO

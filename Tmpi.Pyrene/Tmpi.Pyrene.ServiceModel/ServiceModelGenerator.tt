@@ -439,7 +439,7 @@ namespace <#= pocoNamespace #>
                 string propName = "";
 				if (obj.Table.ClassName == table.ClassName)
                 {
-					propName = table.ClassName.Remove(0, 3);
+					propName = table.ClassName;
                 }
 				else
                 {
@@ -980,7 +980,7 @@ private string GetStandardColumnFormat(Table table)
 	{
 		return parentFkey.FromTable.ClassName.Replace(parentFkey.ReferencedTable.ClassName, "{0}");
 	}
-	return "{0}" + table.Name.Remove(0, 3);
+	return "{0}" + table.Name;
 }
 
 private void SetColumnsDescription(Table table, string stdColFormat)
@@ -1189,7 +1189,7 @@ private string GetStrRoutePath(List<Column> lstCols, bool keepEnd = true, bool r
     {
 		if (phCol.ParentTable.ClassName != currentTable)
         {
-			string newTableName = phCol.ParentTable.ClassName.Remove(0, 3);
+			string newTableName = phCol.ParentTable.ClassName;
 			if (currentTable != "")
             {
 				newTableName = phCol.ParentTable.ClassName.Replace(currentTable, "");
@@ -1226,7 +1226,7 @@ private string GetResourceName(List<Column> lstCols)
     {
 		if (phCol.ParentTable.ClassName != currentTable)
         {
-			string newTableName = phCol.ParentTable.ClassName.Remove(0, 3);
+			string newTableName = phCol.ParentTable.ClassName;
 			if (currentTable != "")
             {
 				newTableName = phCol.ParentTable.ClassName.Replace(currentTable, "");

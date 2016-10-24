@@ -63,30 +63,24 @@
     <Folder Include="Properties" />
     <Folder Include="Scripts" />
     <Folder Include="Tables" />
+    <Folder Include="Tables\Gen" />
+    <Folder Include="Security" />
+    <Folder Include="Security\Schemas" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Tables\GenExercice.sql" />
-    <Build Include="Tables\GenTVA.sql" />
-    <Build Include="Tables\GenFourn.sql" />
-    <Build Include="Tables\GenFournBanque.sql" />
-    <Build Include="Tables\GenFournContact.sql" />
-    <Build Include="Tables\GenService.sql" />
-    <Build Include="Tables\GenCompteur.sql" />
     <Build Include="Scripts\TextIndex.sql" />
     <None Include="Scripts\FullTextIndex.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
     </None>
+    <Build Include="Tables\Gen\Compteur.sql" />
+    <Build Include="Tables\Gen\CompteurValeur.sql" />
+    <Build Include="Tables\Gen\Exercice.sql" />
+    <Build Include="Security\Schemas\Gen.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Tmpi.Pyrene.Database.publish.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Tables\GenCompteurValeur.sql" />
-    <Build Include="Tables\GenMandat.sql" />
-    <Build Include="Tables\GenMandatMandataire.sql" />
-    <Build Include="Tables\GenPersonne.sql" />
-    <Build Include="Tables\GenPersonneProfil.sql" />
-    <Build Include="Tables\GenPersonneSignature.sql" />
     <Build Include="Scripts\FullTextIndex.sql">
       <DependentUpon>Scripts\FullTextIndex.tt</DependentUpon>
     </Build>
@@ -96,5 +90,17 @@
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\Script.PostDeployment1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Tables\Gen\Fourn.sql" />
+    <Build Include="Tables\Gen\FournBanque.sql" />
+    <Build Include="Tables\Gen\FournContact.sql" />
+    <Build Include="Tables\Gen\Mandat.sql" />
+    <Build Include="Tables\Gen\MandatMandataire.sql" />
+    <Build Include="Tables\Gen\Personne.sql" />
+    <Build Include="Tables\Gen\PersonneProfil.sql" />
+    <Build Include="Tables\Gen\PersonneSignature.sql" />
+    <Build Include="Tables\Gen\Service.sql" />
+    <Build Include="Tables\Gen\TVA.sql" />
   </ItemGroup>
 </Project>
