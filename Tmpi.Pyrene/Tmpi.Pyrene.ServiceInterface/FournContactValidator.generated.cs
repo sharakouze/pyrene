@@ -14,24 +14,30 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceInterface
 {
     /// <summary>
-    /// Validation pour la requête <see cref="GenTVA"/>.
+    /// Validation pour la requête <see cref="FournContact"/>.
     /// </summary>
-    public partial class GenTVAValidator : AbstractValidator<GenTVA>
+    public partial class FournContactValidator : AbstractValidator<FournContact>
     {
         /// <summary>
-        /// Initialise une nouvelle instance de la classe <see cref="GenTVAValidator" />.
+        /// Initialise une nouvelle instance de la classe <see cref="FournContactValidator" />.
         /// </summary>
-        public GenTVAValidator()
+        public FournContactValidator()
         {
-            RuleFor(x => x.CodTVA)
+            RuleFor(x => x.NomContact)
                 .NotEmpty()
                 .Length(0, 100);
-            RuleFor(x => x.LibTVA)
-                .NotEmpty()
-                .Length(0, 200);
-            RuleFor(x => x.TxtTVA)
+            RuleFor(x => x.PreContact)
+                .Length(0, 100);
+            RuleFor(x => x.TxtContact)
                 .Length(0, 500);
-            RuleFor(x => x.CodExterne)
+            RuleFor(x => x.NumTelep)
+                .Length(0, 25);
+            RuleFor(x => x.NumFax)
+                .Length(0, 25);
+            RuleFor(x => x.NumEmail)
+                .Length(0, 100)
+                .EmailAddress();
+            RuleFor(x => x.LibFonction)
                 .Length(0, 100);
 
             SetRules();

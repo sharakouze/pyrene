@@ -14,18 +14,25 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceInterface
 {
     /// <summary>
-    /// Validation pour la requête <see cref="GenPersonneSignature"/>.
+    /// Validation pour la requête <see cref="TVA"/>.
     /// </summary>
-    public partial class GenPersonneSignatureValidator : AbstractValidator<GenPersonneSignature>
+    public partial class TVAValidator : AbstractValidator<TVA>
     {
         /// <summary>
-        /// Initialise une nouvelle instance de la classe <see cref="GenPersonneSignatureValidator" />.
+        /// Initialise une nouvelle instance de la classe <see cref="TVAValidator" />.
         /// </summary>
-        public GenPersonneSignatureValidator()
+        public TVAValidator()
         {
-            RuleFor(x => x.TypMime)
+            RuleFor(x => x.CodTVA)
                 .NotEmpty()
-                .Length(0, 255);
+                .Length(0, 100);
+            RuleFor(x => x.LibTVA)
+                .NotEmpty()
+                .Length(0, 200);
+            RuleFor(x => x.TxtTVA)
+                .Length(0, 500);
+            RuleFor(x => x.CodExterne)
+                .Length(0, 100);
 
             SetRules();
         }

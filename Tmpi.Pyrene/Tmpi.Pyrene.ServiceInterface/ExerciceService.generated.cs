@@ -21,23 +21,23 @@ using Tmpi.Pyrene.Infrastructure.Linq;
 namespace Tmpi.Pyrene.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur les ressources <see cref="GenExercice"/>.
+	/// Service qui traite les requêtes sur les ressources <see cref="Exercice"/>.
 	/// </summary>
-	public partial class GenExerciceService : Service
+	public partial class ExerciceService : Service
 	{
 		private static readonly object _syncLock = new object();
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="GenExercice"/>.
+		/// Teste l'unicité d'un <see cref="Exercice"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
         /// <returns></returns>
-		protected bool GenExercice_CodExercice_EstUnique(GenExercice model, IEnumerable<string> fields = null)
+		protected bool Exercice_CodExercice_EstUnique(Exercice model, IEnumerable<string> fields = null)
 		{
-			var q = Db.From<GenExercice>();
+			var q = Db.From<Exercice>();
 
-			if (fields == null || fields.Contains(nameof(GenExercice.CodExercice), StringComparer.OrdinalIgnoreCase))
+			if (fields == null || fields.Contains(nameof(Exercice.CodExercice), StringComparer.OrdinalIgnoreCase))
 			{
 				q.Where(t1 => t1.CodExercice == model.CodExercice);
 			}
@@ -55,36 +55,36 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="GenExercice"/> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="Exercice"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenExercice request)
+		public void Delete(DeleteExercice request)
 		{
-			int count = Db.DeleteById<GenExercice>(request.CleExercice);
+			int count = Db.DeleteById<Exercice>(request.CleExercice);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.CleExercice));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Exercice), request.CleExercice));
 			}
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="GenExercice"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="Exercice"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenExercice"/> ajoutée.</returns>
+		/// <returns>Ressource <see cref="Exercice"/> ajoutée.</returns>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
-		public GenExercice Post(GenExercice request)
+		public Exercice Post(Exercice request)
 		{
 			lock (_syncLock)
 			{
-				bool unique1 = GenExercice_CodExercice_EstUnique(request);
+				bool unique1 = Exercice_CodExercice_EstUnique(request);
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenExercice)));
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Exercice)));
 				}
 
 				if (request.CleExercice == 0)
@@ -98,7 +98,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.CleExercice));
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Exercice), request.CleExercice));
 					}
 				}
 
@@ -107,37 +107,37 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="GenExercice"/> spécifiée dans la requête.
+		/// Retourne la ressource <see cref="Exercice"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenExercice"/> trouvée.</returns>
+		/// <returns>Ressource <see cref="Exercice"/> trouvée.</returns>
 		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		public GenExercice Get(GetGenExercice request)
+		public Exercice Get(GetExercice request)
 		{
-            ModelDefinitionHelper.UndefinedFields<GenExercice>(request.Fields);
+            ModelDefinitionHelper.UndefinedFields<Exercice>(request.Fields);
 
-            var q = Db.From<GenExercice>().Where(x => x.CleExercice == request.CleExercice).Select(request.Fields);
+            var q = Db.From<Exercice>().Where(x => x.CleExercice == request.CleExercice).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.CleExercice));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Exercice), request.CleExercice));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="GenExercice"/> spécifiée dans la requête.
+		/// Met à jour la ressource <see cref="Exercice"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
-		public void Patch(PatchGenExercice request)
+		public void Patch(PatchExercice request)
 		{
 			if (request.Fields.IsNullOrEmpty())
 			{
@@ -146,27 +146,27 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<GenExercice>(patchDic.Keys);
+            ModelDefinitionHelper.UndefinedFields<Exercice>(patchDic.Keys);
 
-			var entity = new GenExercice();
+			var entity = new Exercice();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
 
-			var q = Db.From<GenExercice>().Where(x => x.CleExercice == request.CleExercice).Update(patchDic.Keys);
+			var q = Db.From<Exercice>().Where(x => x.CleExercice == request.CleExercice).Update(patchDic.Keys);
 
 			lock (_syncLock)
 			{
-				bool unique1 = GenExercice_CodExercice_EstUnique(entity, patchDic.Keys);
+				bool unique1 = Exercice_CodExercice_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenExercice)));
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Exercice)));
 				}
 
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenExercice), request.CleExercice));
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Exercice), request.CleExercice));
 				}
 			}
 		}
@@ -176,20 +176,20 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns></returns>
-		public List<BaseEntity> Get(SearchGenExercice request)
+		public List<BasicEntity> Get(SearchExercice request)
 		{
 			if (string.IsNullOrWhiteSpace(request.Text))
 			{
 				return null;
 			}
 
-            var q = Db.From<GenExercice>().Where(x => x.LibExercice.Contains(request.Text));
+            var q = Db.From<Exercice>().Where(x => x.Librcice.Contains(request.Text));
             if (request.Max > 0)
             {
                 q = q.Limit(request.Max);
             }
 
-            var items = Db.Select<BaseEntity>(q);
+            var items = Db.Select<BasicEntity>(q);
             return items;
 		}
 

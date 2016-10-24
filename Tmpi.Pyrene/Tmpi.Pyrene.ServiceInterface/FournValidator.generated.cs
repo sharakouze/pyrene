@@ -14,14 +14,14 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceInterface
 {
     /// <summary>
-    /// Validation pour la requête <see cref="GenFourn"/>.
+    /// Validation pour la requête <see cref="Fourn"/>.
     /// </summary>
-    public partial class GenFournValidator : AbstractValidator<GenFourn>
+    public partial class FournValidator : AbstractValidator<Fourn>
     {
         /// <summary>
-        /// Initialise une nouvelle instance de la classe <see cref="GenFournValidator" />.
+        /// Initialise une nouvelle instance de la classe <see cref="FournValidator" />.
         /// </summary>
-        public GenFournValidator()
+        public FournValidator()
         {
             RuleFor(x => x.CodFourn)
                 .NotEmpty()

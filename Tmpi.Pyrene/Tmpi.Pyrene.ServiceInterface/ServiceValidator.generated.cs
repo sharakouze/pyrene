@@ -14,22 +14,33 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceInterface
 {
     /// <summary>
-    /// Validation pour la requête <see cref="GenFournContact"/>.
+    /// Validation pour la requête <see cref="Service"/>.
     /// </summary>
-    public partial class GenFournContactValidator : AbstractValidator<GenFournContact>
+    public partial class ServiceValidator : AbstractValidator<Service>
     {
         /// <summary>
-        /// Initialise une nouvelle instance de la classe <see cref="GenFournContactValidator" />.
+        /// Initialise une nouvelle instance de la classe <see cref="ServiceValidator" />.
         /// </summary>
-        public GenFournContactValidator()
+        public ServiceValidator()
         {
-            RuleFor(x => x.NomContact)
+            RuleFor(x => x.CodService)
                 .NotEmpty()
                 .Length(0, 100);
-            RuleFor(x => x.PreContact)
-                .Length(0, 100);
-            RuleFor(x => x.TxtContact)
+            RuleFor(x => x.LibService)
+                .NotEmpty()
+                .Length(0, 200);
+            RuleFor(x => x.TxtService)
                 .Length(0, 500);
+            RuleFor(x => x.CodExterne)
+                .Length(0, 100);
+            RuleFor(x => x.AdrRue)
+                .Length(0, 200);
+            RuleFor(x => x.AdrCode)
+                .Length(0, 10);
+            RuleFor(x => x.AdrCommune)
+                .Length(0, 100);
+            RuleFor(x => x.AdrPays)
+                .Length(0, 100);
             RuleFor(x => x.NumTelep)
                 .Length(0, 25);
             RuleFor(x => x.NumFax)
@@ -37,8 +48,6 @@ namespace Tmpi.Pyrene.ServiceInterface
             RuleFor(x => x.NumEmail)
                 .Length(0, 100)
                 .EmailAddress();
-            RuleFor(x => x.LibFonction)
-                .Length(0, 100);
 
             SetRules();
         }

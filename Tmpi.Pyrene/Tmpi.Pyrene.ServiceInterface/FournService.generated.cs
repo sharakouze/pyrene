@@ -21,23 +21,23 @@ using Tmpi.Pyrene.Infrastructure.Linq;
 namespace Tmpi.Pyrene.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur les ressources <see cref="GenFourn"/>.
+	/// Service qui traite les requêtes sur les ressources <see cref="Fourn"/>.
 	/// </summary>
-	public partial class GenFournService : Service
+	public partial class FournService : Service
 	{
 		private static readonly object _syncLock = new object();
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="GenFourn"/>.
+		/// Teste l'unicité d'un <see cref="Fourn"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
         /// <returns></returns>
-		protected bool GenFourn_CodFourn_EstUnique(GenFourn model, IEnumerable<string> fields = null)
+		protected bool Fourn_CodFourn_EstUnique(Fourn model, IEnumerable<string> fields = null)
 		{
-			var q = Db.From<GenFourn>();
+			var q = Db.From<Fourn>();
 
-			if (fields == null || fields.Contains(nameof(GenFourn.CodFourn), StringComparer.OrdinalIgnoreCase))
+			if (fields == null || fields.Contains(nameof(Fourn.CodFourn), StringComparer.OrdinalIgnoreCase))
 			{
 				q.Where(t1 => t1.CodFourn == model.CodFourn);
 			}
@@ -55,51 +55,51 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="GenFourn"/> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="Fourn"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenFourn request)
+		public void Delete(DeleteFourn request)
 		{
-			int count = Db.DeleteById<GenFourn>(request.CleFourn);
+			int count = Db.DeleteById<Fourn>(request.CleFourn);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Fourn), request.CleFourn));
 			}
 		}
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="GenFournBanque"/>.
+		/// Teste l'unicité d'un <see cref="FournBanque"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
         /// <returns></returns>
-		protected bool GenFournBanque_CleFourn_CodIBAN_EstUnique(GenFournBanque model, IEnumerable<string> fields = null)
+		protected bool FournBanque_CleFourn_CodIBAN_EstUnique(FournBanque model, IEnumerable<string> fields = null)
 		{
-			var q = Db.From<GenFournBanque>();
+			var q = Db.From<FournBanque>();
 
 			if (fields != null)
 			{
-				var uniqueFields = new[] { nameof(GenFournBanque.CleFourn), nameof(GenFournBanque.CodIBAN) };
+				var uniqueFields = new[] { nameof(FournBanque.CleFourn), nameof(FournBanque.CodIBAN) };
 				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
 				{
-					// INNER JOIN GenFournBanque t2 ON t2.CleBanque=xxx [...]
-					Expression<Func<GenFournBanque, GenFournBanque, bool>> joinExpr = (t1, t2)
+					// INNER JOIN FournBanque t2 ON t2.CleBanque=xxx [...]
+					Expression<Func<FournBanque, FournBanque, bool>> joinExpr = (t1, t2)
 						=> (t2.CleBanque == model.CleBanque);
 
-					if (!fields.Contains(nameof(GenFournBanque.CleFourn), StringComparer.OrdinalIgnoreCase))
+					if (!fields.Contains(nameof(FournBanque.CleFourn), StringComparer.OrdinalIgnoreCase))
 					{
 						// [...] AND t1.CleFourn=t2.CleFourn
 						joinExpr = joinExpr.And((t1, t2) => t1.CleFourn == t2.CleFourn);
 					}
-					if (!fields.Contains(nameof(GenFournBanque.CodIBAN), StringComparer.OrdinalIgnoreCase))
+					if (!fields.Contains(nameof(FournBanque.CodIBAN), StringComparer.OrdinalIgnoreCase))
 					{
 						// [...] AND t1.CodIBAN=t2.CodIBAN
 						joinExpr = joinExpr.And((t1, t2) => t1.CodIBAN == t2.CodIBAN);
 					}
 
-					q = q.Join<GenFournBanque>(joinExpr, Db.JoinAlias("t2"));
+					q = q.Join<FournBanque>(joinExpr, Db.JoinAlias("t2"));
 				}
 				else
 				{
@@ -107,11 +107,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 				}
 			}
 			
-			if (fields == null || fields.Contains(nameof(GenFournBanque.CleFourn), StringComparer.OrdinalIgnoreCase))
+			if (fields == null || fields.Contains(nameof(FournBanque.CleFourn), StringComparer.OrdinalIgnoreCase))
 			{
 				q.Where(t1 => t1.CleFourn == model.CleFourn);
 			}
-			if (fields == null || fields.Contains(nameof(GenFournBanque.CodIBAN), StringComparer.OrdinalIgnoreCase))
+			if (fields == null || fields.Contains(nameof(FournBanque.CodIBAN), StringComparer.OrdinalIgnoreCase))
 			{
 				q.Where(t1 => t1.CodIBAN == model.CodIBAN);
 			}
@@ -125,51 +125,51 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="GenFournBanque"/> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="FournBanque"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenFournBanque request)
+		public void Delete(DeleteFournBanque request)
 		{
-			int count = Db.DeleteById<GenFournBanque>(request.CleBanque);
+			int count = Db.DeleteById<FournBanque>(request.CleBanque);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournBanque), request.CleBanque));
 			}
 		}
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="GenFournContact"/>.
+		/// Teste l'unicité d'un <see cref="FournContact"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
         /// <returns></returns>
-		protected bool GenFournContact_CleFourn_NomContact_EstUnique(GenFournContact model, IEnumerable<string> fields = null)
+		protected bool FournContact_CleFourn_NomContact_EstUnique(FournContact model, IEnumerable<string> fields = null)
 		{
-			var q = Db.From<GenFournContact>();
+			var q = Db.From<FournContact>();
 
 			if (fields != null)
 			{
-				var uniqueFields = new[] { nameof(GenFournContact.CleFourn), nameof(GenFournContact.NomContact) };
+				var uniqueFields = new[] { nameof(FournContact.CleFourn), nameof(FournContact.NomContact) };
 				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
 				{
-					// INNER JOIN GenFournContact t2 ON t2.CleContact=xxx [...]
-					Expression<Func<GenFournContact, GenFournContact, bool>> joinExpr = (t1, t2)
+					// INNER JOIN FournContact t2 ON t2.CleContact=xxx [...]
+					Expression<Func<FournContact, FournContact, bool>> joinExpr = (t1, t2)
 						=> (t2.CleContact == model.CleContact);
 
-					if (!fields.Contains(nameof(GenFournContact.CleFourn), StringComparer.OrdinalIgnoreCase))
+					if (!fields.Contains(nameof(FournContact.CleFourn), StringComparer.OrdinalIgnoreCase))
 					{
 						// [...] AND t1.CleFourn=t2.CleFourn
 						joinExpr = joinExpr.And((t1, t2) => t1.CleFourn == t2.CleFourn);
 					}
-					if (!fields.Contains(nameof(GenFournContact.NomContact), StringComparer.OrdinalIgnoreCase))
+					if (!fields.Contains(nameof(FournContact.NomContact), StringComparer.OrdinalIgnoreCase))
 					{
 						// [...] AND t1.NomContact=t2.NomContact
 						joinExpr = joinExpr.And((t1, t2) => t1.NomContact == t2.NomContact);
 					}
 
-					q = q.Join<GenFournContact>(joinExpr, Db.JoinAlias("t2"));
+					q = q.Join<FournContact>(joinExpr, Db.JoinAlias("t2"));
 				}
 				else
 				{
@@ -177,11 +177,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 				}
 			}
 			
-			if (fields == null || fields.Contains(nameof(GenFournContact.CleFourn), StringComparer.OrdinalIgnoreCase))
+			if (fields == null || fields.Contains(nameof(FournContact.CleFourn), StringComparer.OrdinalIgnoreCase))
 			{
 				q.Where(t1 => t1.CleFourn == model.CleFourn);
 			}
-			if (fields == null || fields.Contains(nameof(GenFournContact.NomContact), StringComparer.OrdinalIgnoreCase))
+			if (fields == null || fields.Contains(nameof(FournContact.NomContact), StringComparer.OrdinalIgnoreCase))
 			{
 				q.Where(t1 => t1.NomContact == model.NomContact);
 			}
@@ -195,36 +195,36 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="GenFournContact"/> spécifiée dans la requête.
+		/// Supprime la ressource <see cref="FournContact"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		public void Delete(DeleteGenFournContact request)
+		public void Delete(DeleteFournContact request)
 		{
-			int count = Db.DeleteById<GenFournContact>(request.CleContact);
+			int count = Db.DeleteById<FournContact>(request.CleContact);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournContact), request.CleContact));
 			}
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="GenFourn"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="Fourn"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenFourn"/> ajoutée.</returns>
+		/// <returns>Ressource <see cref="Fourn"/> ajoutée.</returns>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
-		public GenFourn Post(GenFourn request)
+		public Fourn Post(Fourn request)
 		{
 			lock (_syncLock)
 			{
-				bool unique1 = GenFourn_CodFourn_EstUnique(request);
+				bool unique1 = Fourn_CodFourn_EstUnique(request);
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFourn)));
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Fourn)));
 				}
 
 				if (request.CleFourn == 0)
@@ -238,7 +238,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Fourn), request.CleFourn));
 					}
 				}
 
@@ -247,21 +247,21 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="GenFournBanque"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="FournBanque"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenFournBanque"/> ajoutée.</returns>
+		/// <returns>Ressource <see cref="FournBanque"/> ajoutée.</returns>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
-		public GenFournBanque Post(GenFournBanque request)
+		public FournBanque Post(FournBanque request)
 		{
 			lock (_syncLock)
 			{
-				bool unique1 = GenFournBanque_CleFourn_CodIBAN_EstUnique(request);
+				bool unique1 = FournBanque_CleFourn_CodIBAN_EstUnique(request);
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFournBanque)));
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(FournBanque)));
 				}
 
 				if (request.CleBanque == 0)
@@ -275,7 +275,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournBanque), request.CleBanque));
 					}
 				}
 
@@ -284,21 +284,21 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="GenFournContact"/> spécifiée dans la requête.
+		/// Ajoute ou remplace la ressource <see cref="FournContact"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenFournContact"/> ajoutée.</returns>
+		/// <returns>Ressource <see cref="FournContact"/> ajoutée.</returns>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
-		public GenFournContact Post(GenFournContact request)
+		public FournContact Post(FournContact request)
 		{
 			lock (_syncLock)
 			{
-				bool unique1 = GenFournContact_CleFourn_NomContact_EstUnique(request);
+				bool unique1 = FournContact_CleFourn_NomContact_EstUnique(request);
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFournContact)));
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(FournContact)));
 				}
 
 				if (request.CleContact == 0)
@@ -312,7 +312,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
+							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournContact), request.CleContact));
 					}
 				}
 
@@ -321,83 +321,83 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="GenFourn"/> spécifiée dans la requête.
+		/// Retourne la ressource <see cref="Fourn"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenFourn"/> trouvée.</returns>
+		/// <returns>Ressource <see cref="Fourn"/> trouvée.</returns>
 		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		public GenFourn Get(GetGenFourn request)
+		public Fourn Get(GetFourn request)
 		{
-            ModelDefinitionHelper.UndefinedFields<GenFourn>(request.Fields);
+            ModelDefinitionHelper.UndefinedFields<Fourn>(request.Fields);
 
-            var q = Db.From<GenFourn>().Where(x => x.CleFourn == request.CleFourn).Select(request.Fields);
+            var q = Db.From<Fourn>().Where(x => x.CleFourn == request.CleFourn).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Fourn), request.CleFourn));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="GenFournBanque"/> spécifiée dans la requête.
+		/// Retourne la ressource <see cref="FournBanque"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenFournBanque"/> trouvée.</returns>
+		/// <returns>Ressource <see cref="FournBanque"/> trouvée.</returns>
 		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		public GenFournBanque Get(GetGenFournBanque request)
+		public FournBanque Get(GetFournBanque request)
 		{
-            ModelDefinitionHelper.UndefinedFields<GenFournBanque>(request.Fields);
+            ModelDefinitionHelper.UndefinedFields<FournBanque>(request.Fields);
 
-            var q = Db.From<GenFournBanque>().Where(x => x.CleBanque == request.CleBanque).Select(request.Fields);
+            var q = Db.From<FournBanque>().Where(x => x.CleBanque == request.CleBanque).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournBanque), request.CleBanque));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="GenFournContact"/> spécifiée dans la requête.
+		/// Retourne la ressource <see cref="FournContact"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="GenFournContact"/> trouvée.</returns>
+		/// <returns>Ressource <see cref="FournContact"/> trouvée.</returns>
 		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		public GenFournContact Get(GetGenFournContact request)
+		public FournContact Get(GetFournContact request)
 		{
-            ModelDefinitionHelper.UndefinedFields<GenFournContact>(request.Fields);
+            ModelDefinitionHelper.UndefinedFields<FournContact>(request.Fields);
 
-            var q = Db.From<GenFournContact>().Where(x => x.CleContact == request.CleContact).Select(request.Fields);
+            var q = Db.From<FournContact>().Where(x => x.CleContact == request.CleContact).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
+					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournContact), request.CleContact));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="GenFourn"/> spécifiée dans la requête.
+		/// Met à jour la ressource <see cref="Fourn"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
-		public void Patch(PatchGenFourn request)
+		public void Patch(PatchFourn request)
 		{
 			if (request.Fields.IsNullOrEmpty())
 			{
@@ -406,40 +406,40 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<GenFourn>(patchDic.Keys);
+            ModelDefinitionHelper.UndefinedFields<Fourn>(patchDic.Keys);
 
-			var entity = new GenFourn();
+			var entity = new Fourn();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
 
-			var q = Db.From<GenFourn>().Where(x => x.CleFourn == request.CleFourn).Update(patchDic.Keys);
+			var q = Db.From<Fourn>().Where(x => x.CleFourn == request.CleFourn).Update(patchDic.Keys);
 
 			lock (_syncLock)
 			{
-				bool unique1 = GenFourn_CodFourn_EstUnique(entity, patchDic.Keys);
+				bool unique1 = Fourn_CodFourn_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFourn)));
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Fourn)));
 				}
 
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFourn), request.CleFourn));
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Fourn), request.CleFourn));
 				}
 			}
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="GenFournBanque"/> spécifiée dans la requête.
+		/// Met à jour la ressource <see cref="FournBanque"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
-		public void Patch(PatchGenFournBanque request)
+		public void Patch(PatchFournBanque request)
 		{
 			if (request.Fields.IsNullOrEmpty())
 			{
@@ -448,40 +448,40 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<GenFournBanque>(patchDic.Keys);
+            ModelDefinitionHelper.UndefinedFields<FournBanque>(patchDic.Keys);
 
-			var entity = new GenFournBanque();
+			var entity = new FournBanque();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
 
-			var q = Db.From<GenFournBanque>().Where(x => x.CleBanque == request.CleBanque).Update(patchDic.Keys);
+			var q = Db.From<FournBanque>().Where(x => x.CleBanque == request.CleBanque).Update(patchDic.Keys);
 
 			lock (_syncLock)
 			{
-				bool unique1 = GenFournBanque_CleFourn_CodIBAN_EstUnique(entity, patchDic.Keys);
+				bool unique1 = FournBanque_CleFourn_CodIBAN_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFournBanque)));
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(FournBanque)));
 				}
 
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournBanque), request.CleBanque));
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournBanque), request.CleBanque));
 				}
 			}
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="GenFournContact"/> spécifiée dans la requête.
+		/// Met à jour la ressource <see cref="FournContact"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
-		public void Patch(PatchGenFournContact request)
+		public void Patch(PatchFournContact request)
 		{
 			if (request.Fields.IsNullOrEmpty())
 			{
@@ -490,27 +490,27 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<GenFournContact>(patchDic.Keys);
+            ModelDefinitionHelper.UndefinedFields<FournContact>(patchDic.Keys);
 
-			var entity = new GenFournContact();
+			var entity = new FournContact();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
 
-			var q = Db.From<GenFournContact>().Where(x => x.CleContact == request.CleContact).Update(patchDic.Keys);
+			var q = Db.From<FournContact>().Where(x => x.CleContact == request.CleContact).Update(patchDic.Keys);
 
 			lock (_syncLock)
 			{
-				bool unique1 = GenFournContact_CleFourn_NomContact_EstUnique(entity, patchDic.Keys);
+				bool unique1 = FournContact_CleFourn_NomContact_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(GenFournContact)));
+						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(FournContact)));
 				}
 
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(GenFournContact), request.CleContact));
+						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournContact), request.CleContact));
 				}
 			}
 		}
@@ -520,20 +520,20 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns></returns>
-		public List<BaseEntity> Get(SearchGenFourn request)
+		public List<BasicEntity> Get(SearchFourn request)
 		{
 			if (string.IsNullOrWhiteSpace(request.Text))
 			{
 				return null;
 			}
 
-            var q = Db.From<GenFourn>().Where(x => x.LibFourn.Contains(request.Text));
+            var q = Db.From<Fourn>().Where(x => x.Librn.Contains(request.Text));
             if (request.Max > 0)
             {
                 q = q.Limit(request.Max);
             }
 
-            var items = Db.Select<BaseEntity>(q);
+            var items = Db.Select<BasicEntity>(q);
             return items;
 		}
 

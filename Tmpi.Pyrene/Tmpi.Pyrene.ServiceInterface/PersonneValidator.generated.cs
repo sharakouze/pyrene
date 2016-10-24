@@ -14,24 +14,34 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceInterface
 {
     /// <summary>
-    /// Validation pour la requête <see cref="GenFournBanque"/>.
+    /// Validation pour la requête <see cref="Personne"/>.
     /// </summary>
-    public partial class GenFournBanqueValidator : AbstractValidator<GenFournBanque>
+    public partial class PersonneValidator : AbstractValidator<Personne>
     {
         /// <summary>
-        /// Initialise une nouvelle instance de la classe <see cref="GenFournBanqueValidator" />.
+        /// Initialise une nouvelle instance de la classe <see cref="PersonneValidator" />.
         /// </summary>
-        public GenFournBanqueValidator()
+        public PersonneValidator()
         {
-            RuleFor(x => x.CodIBAN)
+            RuleFor(x => x.CodPersonne)
                 .NotEmpty()
-                .Length(0, 34);
-            RuleFor(x => x.CodBIC)
+                .Length(0, 100);
+            RuleFor(x => x.NomPersonne)
                 .NotEmpty()
-                .Length(0, 11);
-            RuleFor(x => x.LibEtablissement)
-                .NotEmpty()
-                .Length(0, 200);
+                .Length(0, 100);
+            RuleFor(x => x.PrePersonne)
+                .Length(0, 100);
+            RuleFor(x => x.TxtPersonne)
+                .Length(0, 500);
+            RuleFor(x => x.CodExterne)
+                .Length(0, 100);
+            RuleFor(x => x.NumTelep)
+                .Length(0, 25);
+            RuleFor(x => x.NumFax)
+                .Length(0, 25);
+            RuleFor(x => x.NumEmail)
+                .Length(0, 100)
+                .EmailAddress();
 
             SetRules();
         }

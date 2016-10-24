@@ -14,26 +14,16 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceInterface
 {
     /// <summary>
-    /// Validation pour la requête <see cref="GenCompteur"/>.
+    /// Validation pour la requête <see cref="PersonneProfil"/>.
     /// </summary>
-    public partial class GenCompteurValidator : AbstractValidator<GenCompteur>
+    public partial class PersonneProfilValidator : AbstractValidator<PersonneProfil>
     {
         /// <summary>
-        /// Initialise une nouvelle instance de la classe <see cref="GenCompteurValidator" />.
+        /// Initialise une nouvelle instance de la classe <see cref="PersonneProfilValidator" />.
         /// </summary>
-        public GenCompteurValidator()
+        public PersonneProfilValidator()
         {
-            RuleFor(x => x.CodCompteur)
-                .NotEmpty()
-                .Length(0, 100);
-            RuleFor(x => x.LibCompteur)
-                .NotEmpty()
-                .Length(0, 200);
-            RuleFor(x => x.TxtCompteur)
-                .Length(0, 500);
-            RuleFor(x => x.CodExterne)
-                .Length(0, 100);
-            RuleFor(x => x.ValFormatNumero)
+            RuleFor(x => x.CodProfil)
                 .NotEmpty()
                 .Length(0, 100);
 

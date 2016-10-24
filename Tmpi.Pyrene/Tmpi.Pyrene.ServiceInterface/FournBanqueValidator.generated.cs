@@ -14,25 +14,24 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceInterface
 {
     /// <summary>
-    /// Validation pour la requête <see cref="GenMandat"/>.
+    /// Validation pour la requête <see cref="FournBanque"/>.
     /// </summary>
-    public partial class GenMandatValidator : AbstractValidator<GenMandat>
+    public partial class FournBanqueValidator : AbstractValidator<FournBanque>
     {
         /// <summary>
-        /// Initialise une nouvelle instance de la classe <see cref="GenMandatValidator" />.
+        /// Initialise une nouvelle instance de la classe <see cref="FournBanqueValidator" />.
         /// </summary>
-        public GenMandatValidator()
+        public FournBanqueValidator()
         {
-            RuleFor(x => x.CodMandat)
+            RuleFor(x => x.CodIBAN)
                 .NotEmpty()
-                .Length(0, 100);
-            RuleFor(x => x.LibMandat)
+                .Length(0, 34);
+            RuleFor(x => x.CodBIC)
+                .NotEmpty()
+                .Length(0, 11);
+            RuleFor(x => x.LibEtablissement)
                 .NotEmpty()
                 .Length(0, 200);
-            RuleFor(x => x.TxtMandat)
-                .Length(0, 500);
-            RuleFor(x => x.CodExterne)
-                .Length(0, 100);
 
             SetRules();
         }
