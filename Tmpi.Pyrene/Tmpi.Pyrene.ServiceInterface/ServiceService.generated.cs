@@ -21,23 +21,23 @@ using Tmpi.Pyrene.Infrastructure.Linq;
 namespace Tmpi.Pyrene.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur les ressources <see cref="Service"/>.
+	/// Service qui traite les requêtes sur les entités <see cref="Service"/>.
 	/// </summary>
 	public partial class ServiceService : ServiceStack.Service
 	{
 		private static readonly object _syncLock = new object();
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="Service"/>.
+		/// Teste l'unicité d'une entité <see cref="ServiceModel.Types.Service"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
         /// <returns></returns>
-		protected bool Service_CodService_EstUnique(Service model, IEnumerable<string> fields = null)
+		protected bool Service_CodService_EstUnique(ServiceModel.Types.Service model, IEnumerable<string> fields = null)
 		{
-			var q = Db.From<Service>();
+			var q = Db.From<ServiceModel.Types.Service>();
 
-			if (fields == null || fields.Contains(nameof(Service.CodService), StringComparer.OrdinalIgnoreCase))
+			if (fields == null || fields.Contains(nameof(ServiceModel.Types.Service.CodService), StringComparer.OrdinalIgnoreCase))
 			{
 				q.Where(t1 => t1.CodService == model.CodService);
 			}
@@ -55,50 +55,50 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="Service"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="ServiceModel.Types.Service"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeleteService request)
 		{
-			int count = Db.DeleteById<Service>(request.CleService);
+			int count = Db.DeleteById<ServiceModel.Types.Service>(request.CleService);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Service), request.CleService));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
 			}
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="Service"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="ServiceModel.Types.Service"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="Service"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
-		public Service Get(GetService request)
+		/// <returns>Entité <see cref="ServiceModel.Types.Service"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public ServiceModel.Types.Service Get(GetService request)
 		{
-            ModelDefinitionHelper.UndefinedFields<Service>(request.Fields);
+            ModelDefinitionHelper.UndefinedFields<ServiceModel.Types.Service>(request.Fields);
 
-            var q = Db.From<Service>().Where(x => x.CleService == request.CleService).Select(request.Fields);
+            var q = Db.From<ServiceModel.Types.Service>().Where(x => x.CleService == request.CleService).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Service), request.CleService));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="Service"/> spécifiée dans la requête.
+		/// Met à jour l'entité <see cref="ServiceModel.Types.Service"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchService request)
 		{
@@ -109,12 +109,12 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<Service>(patchDic.Keys);
+            ModelDefinitionHelper.UndefinedFields<ServiceModel.Types.Service>(patchDic.Keys);
 
-			var entity = new Service();
+			var entity = new ServiceModel.Types.Service();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
 
-			var q = Db.From<Service>().Where(x => x.CleService == request.CleService).Update(patchDic.Keys);
+			var q = Db.From<ServiceModel.Types.Service>().Where(x => x.CleService == request.CleService).Update(patchDic.Keys);
 
 			lock (_syncLock)
 			{
@@ -122,14 +122,14 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Service)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(ServiceModel.Types.Service)));
 				}
 
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Service), request.CleService));
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
 				}
 			}
 		}
@@ -146,7 +146,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 				return null;
 			}
 
-            var q = Db.From<Service>().Where(x => x.Libvice.Contains(request.Text));
+            var q = Db.From<ServiceModel.Types.Service>().Where(x => x.LibService.Contains(request.Text));
             if (request.Max > 0)
             {
                 q = q.Limit(request.Max);
@@ -157,13 +157,13 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="Service"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="ServiceModel.Types.Service"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="Service"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="ServiceModel.Types.Service"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
-		public Service Post(Service request)
+		public ServiceModel.Types.Service Post(ServiceModel.Types.Service request)
 		{
 			lock (_syncLock)
 			{
@@ -171,7 +171,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Service)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(ServiceModel.Types.Service)));
 				}
 
 				if (request.CleService == 0)
@@ -185,7 +185,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Service), request.CleService));
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
 					}
 				}
 

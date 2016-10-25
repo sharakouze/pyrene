@@ -21,14 +21,14 @@ using Tmpi.Pyrene.Infrastructure.Linq;
 namespace Tmpi.Pyrene.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur les ressources <see cref="Fourn"/>.
+	/// Service qui traite les requêtes sur les entités <see cref="Fourn"/>.
 	/// </summary>
 	public partial class FournService : ServiceStack.Service
 	{
 		private static readonly object _syncLock = new object();
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="Fourn"/>.
+		/// Teste l'unicité d'une entité <see cref="Fourn"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
@@ -55,22 +55,22 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="Fourn"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="Fourn"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeleteFourn request)
 		{
 			int count = Db.DeleteById<Fourn>(request.CleFourn);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Fourn), request.CleFourn));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Fourn), request.CleFourn));
 			}
 		}
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="FournBanque"/>.
+		/// Teste l'unicité d'une entité <see cref="FournBanque"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
@@ -125,22 +125,22 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="FournBanque"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="FournBanque"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeleteFournBanque request)
 		{
 			int count = Db.DeleteById<FournBanque>(request.CleBanque);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournBanque), request.CleBanque));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournBanque), request.CleBanque));
 			}
 		}
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="FournContact"/>.
+		/// Teste l'unicité d'une entité <see cref="FournContact"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
@@ -195,26 +195,26 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="FournContact"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="FournContact"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeleteFournContact request)
 		{
 			int count = Db.DeleteById<FournContact>(request.CleContact);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournContact), request.CleContact));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournContact), request.CleContact));
 			}
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="Fourn"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="Fourn"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="Fourn"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="Fourn"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public Fourn Post(Fourn request)
 		{
@@ -224,7 +224,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Fourn)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Fourn)));
 				}
 
 				if (request.CleFourn == 0)
@@ -238,7 +238,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Fourn), request.CleFourn));
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Fourn), request.CleFourn));
 					}
 				}
 
@@ -247,11 +247,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="FournBanque"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="FournBanque"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="FournBanque"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="FournBanque"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public FournBanque Post(FournBanque request)
 		{
@@ -261,7 +261,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(FournBanque)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(FournBanque)));
 				}
 
 				if (request.CleBanque == 0)
@@ -275,7 +275,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournBanque), request.CleBanque));
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournBanque), request.CleBanque));
 					}
 				}
 
@@ -284,11 +284,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="FournContact"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="FournContact"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="FournContact"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="FournContact"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public FournContact Post(FournContact request)
 		{
@@ -298,7 +298,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(FournContact)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(FournContact)));
 				}
 
 				if (request.CleContact == 0)
@@ -312,7 +312,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournContact), request.CleContact));
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournContact), request.CleContact));
 					}
 				}
 
@@ -321,12 +321,12 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="Fourn"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="Fourn"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="Fourn"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="Fourn"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public Fourn Get(GetFourn request)
 		{
             ModelDefinitionHelper.UndefinedFields<Fourn>(request.Fields);
@@ -337,19 +337,19 @@ namespace Tmpi.Pyrene.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Fourn), request.CleFourn));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Fourn), request.CleFourn));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="FournBanque"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="FournBanque"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="FournBanque"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="FournBanque"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public FournBanque Get(GetFournBanque request)
 		{
             ModelDefinitionHelper.UndefinedFields<FournBanque>(request.Fields);
@@ -360,19 +360,19 @@ namespace Tmpi.Pyrene.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournBanque), request.CleBanque));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournBanque), request.CleBanque));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="FournContact"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="FournContact"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="FournContact"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="FournContact"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public FournContact Get(GetFournContact request)
 		{
             ModelDefinitionHelper.UndefinedFields<FournContact>(request.Fields);
@@ -383,19 +383,19 @@ namespace Tmpi.Pyrene.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournContact), request.CleContact));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournContact), request.CleContact));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="Fourn"/> spécifiée dans la requête.
+		/// Met à jour l'entité <see cref="Fourn"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchFourn request)
 		{
@@ -419,25 +419,25 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Fourn)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Fourn)));
 				}
 
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Fourn), request.CleFourn));
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Fourn), request.CleFourn));
 				}
 			}
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="FournBanque"/> spécifiée dans la requête.
+		/// Met à jour l'entité <see cref="FournBanque"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchFournBanque request)
 		{
@@ -461,25 +461,25 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(FournBanque)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(FournBanque)));
 				}
 
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournBanque), request.CleBanque));
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournBanque), request.CleBanque));
 				}
 			}
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="FournContact"/> spécifiée dans la requête.
+		/// Met à jour l'entité <see cref="FournContact"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchFournContact request)
 		{
@@ -503,14 +503,14 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(FournContact)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(FournContact)));
 				}
 
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(FournContact), request.CleContact));
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournContact), request.CleContact));
 				}
 			}
 		}
@@ -527,7 +527,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 				return null;
 			}
 
-            var q = Db.From<Fourn>().Where(x => x.Librn.Contains(request.Text));
+            var q = Db.From<Fourn>().Where(x => x.LibFourn.Contains(request.Text));
             if (request.Max > 0)
             {
                 q = q.Limit(request.Max);

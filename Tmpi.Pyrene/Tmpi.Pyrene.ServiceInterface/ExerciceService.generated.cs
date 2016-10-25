@@ -21,14 +21,14 @@ using Tmpi.Pyrene.Infrastructure.Linq;
 namespace Tmpi.Pyrene.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur les ressources <see cref="Exercice"/>.
+	/// Service qui traite les requêtes sur les entités <see cref="Exercice"/>.
 	/// </summary>
 	public partial class ExerciceService : ServiceStack.Service
 	{
 		private static readonly object _syncLock = new object();
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="Exercice"/>.
+		/// Teste l'unicité d'une entité <see cref="Exercice"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
@@ -55,26 +55,26 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="Exercice"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="Exercice"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeleteExercice request)
 		{
 			int count = Db.DeleteById<Exercice>(request.CleExercice);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Exercice), request.CleExercice));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Exercice), request.CleExercice));
 			}
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="Exercice"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="Exercice"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="Exercice"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="Exercice"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public Exercice Post(Exercice request)
 		{
@@ -84,7 +84,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Exercice)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Exercice)));
 				}
 
 				if (request.CleExercice == 0)
@@ -98,7 +98,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Exercice), request.CleExercice));
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Exercice), request.CleExercice));
 					}
 				}
 
@@ -107,12 +107,12 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="Exercice"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="Exercice"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="Exercice"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="Exercice"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public Exercice Get(GetExercice request)
 		{
             ModelDefinitionHelper.UndefinedFields<Exercice>(request.Fields);
@@ -123,19 +123,19 @@ namespace Tmpi.Pyrene.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Exercice), request.CleExercice));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Exercice), request.CleExercice));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="Exercice"/> spécifiée dans la requête.
+		/// Met à jour l'entité <see cref="Exercice"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchExercice request)
 		{
@@ -159,14 +159,14 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Exercice)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Exercice)));
 				}
 
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Exercice), request.CleExercice));
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Exercice), request.CleExercice));
 				}
 			}
 		}
@@ -183,7 +183,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 				return null;
 			}
 
-            var q = Db.From<Exercice>().Where(x => x.Librcice.Contains(request.Text));
+            var q = Db.From<Exercice>().Where(x => x.LibExercice.Contains(request.Text));
             if (request.Max > 0)
             {
                 q = q.Limit(request.Max);

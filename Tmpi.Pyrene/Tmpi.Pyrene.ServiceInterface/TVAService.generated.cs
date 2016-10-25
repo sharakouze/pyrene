@@ -21,14 +21,14 @@ using Tmpi.Pyrene.Infrastructure.Linq;
 namespace Tmpi.Pyrene.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur les ressources <see cref="TVA"/>.
+	/// Service qui traite les requêtes sur les entités <see cref="TVA"/>.
 	/// </summary>
 	public partial class TVAService : ServiceStack.Service
 	{
 		private static readonly object _syncLock = new object();
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="TVA"/>.
+		/// Teste l'unicité d'une entité <see cref="TVA"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
@@ -55,27 +55,27 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="TVA"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="TVA"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeleteTVA request)
 		{
 			int count = Db.DeleteById<TVA>(request.CleTVA);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(TVA), request.CleTVA));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(TVA), request.CleTVA));
 			}
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="TVA"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="TVA"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="TVA"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="TVA"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public TVA Get(GetTVA request)
 		{
             ModelDefinitionHelper.UndefinedFields<TVA>(request.Fields);
@@ -86,19 +86,19 @@ namespace Tmpi.Pyrene.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(TVA), request.CleTVA));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(TVA), request.CleTVA));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="TVA"/> spécifiée dans la requête.
+		/// Met à jour l'entité <see cref="TVA"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchTVA request)
 		{
@@ -122,14 +122,14 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(TVA)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(TVA)));
 				}
 
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(TVA), request.CleTVA));
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(TVA), request.CleTVA));
 				}
 			}
 		}
@@ -146,7 +146,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 				return null;
 			}
 
-            var q = Db.From<TVA>().Where(x => x.Lib.Contains(request.Text));
+            var q = Db.From<TVA>().Where(x => x.LibTVA.Contains(request.Text));
             if (request.Max > 0)
             {
                 q = q.Limit(request.Max);
@@ -157,11 +157,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="TVA"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="TVA"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="TVA"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="TVA"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public TVA Post(TVA request)
 		{
@@ -171,7 +171,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(TVA)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(TVA)));
 				}
 
 				if (request.CleTVA == 0)
@@ -185,7 +185,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(TVA), request.CleTVA));
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(TVA), request.CleTVA));
 					}
 				}
 

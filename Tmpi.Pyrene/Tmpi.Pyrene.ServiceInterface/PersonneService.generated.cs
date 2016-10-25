@@ -21,14 +21,14 @@ using Tmpi.Pyrene.Infrastructure.Linq;
 namespace Tmpi.Pyrene.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur les ressources <see cref="Personne"/>.
+	/// Service qui traite les requêtes sur les entités <see cref="Personne"/>.
 	/// </summary>
 	public partial class PersonneService : ServiceStack.Service
 	{
 		private static readonly object _syncLock = new object();
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="Personne"/>.
+		/// Teste l'unicité d'une entité <see cref="Personne"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
@@ -55,22 +55,22 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="Personne"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="Personne"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeletePersonne request)
 		{
 			int count = Db.DeleteById<Personne>(request.ClePersonne);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Personne), request.ClePersonne));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
 			}
 		}
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="PersonneProfil"/>.
+		/// Teste l'unicité d'une entité <see cref="PersonneProfil"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
@@ -125,7 +125,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="PersonneProfil"/>.
+		/// Teste l'unicité d'une entité <see cref="PersonneProfil"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
@@ -180,42 +180,42 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="PersonneProfil"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="PersonneProfil"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeletePersonneProfil request)
 		{
 			int count = Db.DeleteById<PersonneProfil>(request.CleProfil);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(PersonneProfil), request.CleProfil));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneProfil), request.CleProfil));
 			}
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="PersonneSignature"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="PersonneSignature"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeletePersonneSignature request)
 		{
 			int count = Db.DeleteById<PersonneSignature>(request.ClePersonne);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
 			}
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="Personne"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="Personne"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="Personne"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="Personne"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public Personne Get(GetPersonne request)
 		{
             ModelDefinitionHelper.UndefinedFields<Personne>(request.Fields);
@@ -226,19 +226,19 @@ namespace Tmpi.Pyrene.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Personne), request.ClePersonne));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="PersonneProfil"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="PersonneProfil"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="PersonneProfil"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="PersonneProfil"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public PersonneProfil Get(GetPersonneProfil request)
 		{
             ModelDefinitionHelper.UndefinedFields<PersonneProfil>(request.Fields);
@@ -249,19 +249,19 @@ namespace Tmpi.Pyrene.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(PersonneProfil), request.CleProfil));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneProfil), request.CleProfil));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="PersonneSignature"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="PersonneSignature"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="PersonneSignature"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="PersonneSignature"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public PersonneSignature Get(GetPersonneSignature request)
 		{
             ModelDefinitionHelper.UndefinedFields<PersonneSignature>(request.Fields);
@@ -272,19 +272,19 @@ namespace Tmpi.Pyrene.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="Personne"/> spécifiée dans la requête.
+		/// Met à jour l'entité <see cref="Personne"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchPersonne request)
 		{
@@ -308,25 +308,25 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Personne)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Personne)));
 				}
 
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Personne), request.ClePersonne));
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
 				}
 			}
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="PersonneProfil"/> spécifiée dans la requête.
+		/// Met à jour l'entité <see cref="PersonneProfil"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchPersonneProfil request)
 		{
@@ -350,31 +350,31 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(PersonneProfil)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(PersonneProfil)));
 				}
 				bool unique2 = PersonneProfil_CodProfil_ClePersonne_EstUnique(entity, patchDic.Keys);
 				if (!unique2)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(PersonneProfil)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(PersonneProfil)));
 				}
 
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(PersonneProfil), request.CleProfil));
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneProfil), request.CleProfil));
 				}
 			}
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="PersonneSignature"/> spécifiée dans la requête.
+		/// Met à jour l'entité <see cref="PersonneSignature"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchPersonneSignature request)
 		{
@@ -399,17 +399,17 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
 				}
 			}
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="Personne"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="Personne"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="Personne"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="Personne"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public Personne Post(Personne request)
 		{
@@ -419,7 +419,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Personne)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Personne)));
 				}
 
 				if (request.ClePersonne == 0)
@@ -433,7 +433,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Personne), request.ClePersonne));
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
 					}
 				}
 
@@ -442,11 +442,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="PersonneProfil"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="PersonneProfil"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="PersonneProfil"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="PersonneProfil"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public PersonneProfil Post(PersonneProfil request)
 		{
@@ -456,13 +456,13 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(PersonneProfil)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(PersonneProfil)));
 				}
 				bool unique2 = PersonneProfil_CodProfil_ClePersonne_EstUnique(request);
 				if (!unique2)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(PersonneProfil)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(PersonneProfil)));
 				}
 
 				if (request.CleProfil == 0)
@@ -476,7 +476,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(PersonneProfil), request.CleProfil));
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneProfil), request.CleProfil));
 					}
 				}
 
@@ -485,11 +485,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="PersonneSignature"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="PersonneSignature"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="PersonneSignature"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="PersonneSignature"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public PersonneSignature Post(PersonneSignature request)
 		{
@@ -507,7 +507,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
 					}
 				}
 

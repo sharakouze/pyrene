@@ -21,14 +21,14 @@ using Tmpi.Pyrene.Infrastructure.Linq;
 namespace Tmpi.Pyrene.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur les ressources <see cref="Compteur"/>.
+	/// Service qui traite les requêtes sur les entités <see cref="Compteur"/>.
 	/// </summary>
 	public partial class CompteurService : ServiceStack.Service
 	{
 		private static readonly object _syncLock = new object();
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="Compteur"/>.
+		/// Teste l'unicité d'une entité <see cref="Compteur"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
@@ -83,7 +83,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="Compteur"/>.
+		/// Teste l'unicité d'une entité <see cref="Compteur"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
@@ -110,11 +110,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="Compteur"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="Compteur"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="Compteur"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="Compteur"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public Compteur Post(Compteur request)
 		{
@@ -124,13 +124,13 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Compteur)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Compteur)));
 				}
 				bool unique2 = Compteur_CodCompteur_EstUnique(request);
 				if (!unique2)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Compteur)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Compteur)));
 				}
 
 				if (request.CleCompteur == 0)
@@ -144,7 +144,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Compteur), request.CleCompteur));
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Compteur), request.CleCompteur));
 					}
 				}
 
@@ -153,7 +153,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
         /// <summary>
-		/// Teste l'unicité d'un <see cref="CompteurValeur"/>.
+		/// Teste l'unicité d'une entité <see cref="CompteurValeur"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
@@ -208,11 +208,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="CompteurValeur"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="CompteurValeur"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="CompteurValeur"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public CompteurValeur Post(CompteurValeur request)
 		{
@@ -222,7 +222,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(CompteurValeur)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(CompteurValeur)));
 				}
 
 				if (request.CleValeur == 0)
@@ -236,7 +236,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(CompteurValeur), request.CleValeur));
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(CompteurValeur), request.CleValeur));
 					}
 				}
 
@@ -245,42 +245,42 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="Compteur"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="Compteur"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeleteCompteur request)
 		{
 			int count = Db.DeleteById<Compteur>(request.CleCompteur);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Compteur), request.CleCompteur));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Compteur), request.CleCompteur));
 			}
 		}
 
 		/// <summary>
-		/// Supprime la ressource <see cref="CompteurValeur"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeleteCompteurValeur request)
 		{
 			int count = Db.DeleteById<CompteurValeur>(request.CleValeur);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(CompteurValeur), request.CleValeur));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(CompteurValeur), request.CleValeur));
 			}
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="Compteur"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="Compteur"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="Compteur"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="Compteur"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public Compteur Get(GetCompteur request)
 		{
             ModelDefinitionHelper.UndefinedFields<Compteur>(request.Fields);
@@ -291,19 +291,19 @@ namespace Tmpi.Pyrene.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Compteur), request.CleCompteur));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Compteur), request.CleCompteur));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Retourne la ressource <see cref="CompteurValeur"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="CompteurValeur"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="CompteurValeur"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public CompteurValeur Get(GetCompteurValeur request)
 		{
             ModelDefinitionHelper.UndefinedFields<CompteurValeur>(request.Fields);
@@ -314,19 +314,19 @@ namespace Tmpi.Pyrene.ServiceInterface
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(CompteurValeur), request.CleValeur));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(CompteurValeur), request.CleValeur));
 			}
 
 			return entity;
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="Compteur"/> spécifiée dans la requête.
+		/// Met à jour l'entité <see cref="Compteur"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchCompteur request)
 		{
@@ -350,31 +350,31 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Compteur)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Compteur)));
 				}
 				bool unique2 = Compteur_CodCompteur_EstUnique(entity, patchDic.Keys);
 				if (!unique2)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(Compteur)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Compteur)));
 				}
 
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(Compteur), request.CleCompteur));
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Compteur), request.CleCompteur));
 				}
 			}
 		}
 
 		/// <summary>
-		/// Met à jour la ressource <see cref="CompteurValeur"/> spécifiée dans la requête.
+		/// Met à jour l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchCompteurValeur request)
 		{
@@ -398,14 +398,14 @@ namespace Tmpi.Pyrene.ServiceInterface
 				if (!unique1)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(CompteurValeur)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(CompteurValeur)));
 				}
 
 				int count = Db.UpdateOnly(entity, q);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(CompteurValeur), request.CleValeur));
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(CompteurValeur), request.CleValeur));
 				}
 			}
 		}
@@ -422,7 +422,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 				return null;
 			}
 
-            var q = Db.From<Compteur>().Where(x => x.Libpteur.Contains(request.Text));
+            var q = Db.From<Compteur>().Where(x => x.LibCompteur.Contains(request.Text));
             if (request.Max > 0)
             {
                 q = q.Limit(request.Max);

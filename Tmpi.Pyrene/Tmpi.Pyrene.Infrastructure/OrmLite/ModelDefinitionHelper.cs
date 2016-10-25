@@ -23,7 +23,7 @@ namespace Tmpi.Pyrene.Infrastructure
                 {
                     string str = string.Join(", ", lst.Select(f => "'" + f + "'"));
                     throw new ArgumentException(
-                        string.Format(ServiceErrorMessages.ResourceFieldsNotFound, nameof(T), str));
+                        string.Format(ServiceErrorMessages.EntityFieldsNotFound, nameof(T), str));
                 }
             }
         }

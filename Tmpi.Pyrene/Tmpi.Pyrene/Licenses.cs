@@ -7,7 +7,7 @@ namespace Tmpi.Pyrene
     {
         public static Assembly[] GetAssembliesWithServices()
         {
-            return new[] { typeof(GenCompteurService).Assembly };
+            return new[] { typeof(CompteurService).Assembly };
         }
     }
 }

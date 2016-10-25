@@ -158,7 +158,7 @@ using Tmpi.Pyrene.Infrastructure.Linq;
 namespace <#= fileNamespace #>
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur les ressources <see cref="<#= kvp.Key #>"/>.
+	/// Service qui traite les requêtes sur les entités <see cref="<#= kvp.Key #>"/>.
 	/// </summary>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= serviceClassName #> : ServiceStack.Service
 	{
@@ -171,24 +171,29 @@ namespace <#= fileNamespace #>
         {
 			string requestClassName = item.RequestClass.Name;
 			string pocoClassName = item.PocoClass.Name;
+			if (pocoClassName == "Service")
+            {
+				pocoClassName = "ServiceModel.Types." + pocoClassName;
+            }
+
 			CodeProperty pkProp = GetPrimaryKeyProperty(item.PocoClass);
 
-			if (!dicPocoUnicityMethods.ContainsKey(pocoClassName) && (pkProp != null))
+			if (!dicPocoUnicityMethods.ContainsKey(item.PocoClass.Name) && (pkProp != null))
             {
 				/*************/
 				/** UNICITE **/
 				/*************/
 
-				dicPocoUnicityMethods.Add(pocoClassName, new List<string>());
+				dicPocoUnicityMethods.Add(item.PocoClass.Name, new List<string>());
 
 				List<CodeProperty[]> lstIdxProps = GetUniqueProperties(item.PocoClass);
 				foreach (CodeProperty[] lstProps in lstIdxProps)
 				{
-					string methodName = pocoClassName + "_" + string.Join("_", lstProps.Select(p => p.Name)) + "_EstUnique";
-					dicPocoUnicityMethods[pocoClassName].Add(methodName);
+					string methodName = item.PocoClass.Name + "_" + string.Join("_", lstProps.Select(p => p.Name)) + "_EstUnique";
+					dicPocoUnicityMethods[item.PocoClass.Name].Add(methodName);
 #>
         /// <summary>
-		/// Teste l'unicité d'un <see cref="<#= pocoClassName #>"/>.
+		/// Teste l'unicité d'une entité <see cref="<#= pocoClassName #>"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fields"></param>
@@ -274,12 +279,12 @@ namespace <#= fileNamespace #>
 					/**************/
 #>
 		/// <summary>
-		/// Retourne la ressource <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="<#= pocoClassName #>"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="<#= pocoClassName #>"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public <#= pocoClassName #> Get(<#= requestClassName #> request)
 		{
             ModelDefinitionHelper.UndefinedFields<<#= pocoClassName #>>(request.Fields);
@@ -290,7 +295,7 @@ namespace <#= fileNamespace #>
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
 			}
 
 			return entity;
@@ -305,17 +310,17 @@ namespace <#= fileNamespace #>
 					/*****************/
 #>
 		/// <summary>
-		/// Supprime la ressource <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(<#= requestClassName #> request)
 		{
 			int count = Db.DeleteById<<#= pocoClassName #>>(request.<#= pkProp.Name #>);
 			if (count == 0)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
 			}
 		}
 
@@ -328,12 +333,12 @@ namespace <#= fileNamespace #>
 					/****************/
 #>
 		/// <summary>
-		/// Met à jour la ressource <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
+		/// Met à jour l'entité <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">La ressource ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(<#= requestClassName #> request)
 		{
@@ -355,14 +360,14 @@ namespace <#= fileNamespace #>
 			{
 <# 
 				int i = 1;
-				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == pocoClassName).SelectMany(k => k.Value))
+				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == item.PocoClass.Name).SelectMany(k => k.Value))
                 {
 #>
 				bool unique<#= i.ToString() #> = <#= meth #>(entity, patchDic.Keys);
 				if (!unique<#= i.ToString() #>)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(<#= pocoClassName #>)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(<#= pocoClassName #>)));
 				}
 <# 
 					i++;
@@ -373,7 +378,7 @@ namespace <#= fileNamespace #>
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
 				}
 			}
 		}
@@ -398,7 +403,7 @@ namespace <#= fileNamespace #>
 			}
 
 <#
-				string suffix = pocoClassName.Substring(3);
+				string suffix = item.PocoClass.Name;
 #>
             var q = Db.From<<#= pocoClassName #>>().Where(x => x.Lib<#= suffix #>.Contains(request.Text));
             if (request.Max > 0)
@@ -416,26 +421,26 @@ namespace <#= fileNamespace #>
             {
 #>
 		/// <summary>
-		/// Ajoute ou remplace la ressource <see cref="<#= requestClassName #>"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Ressource <see cref="<#= requestClassName #>"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">La ressource spécifiée est introuvable.</exception>
+		/// <returns>Entité <see cref="<#= pocoClassName #>"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		/// <exception cref="HttpError.Conflict"></exception>
-		public <#= requestClassName #> Post(<#= requestClassName #> request)
+		public <#= pocoClassName #> Post(<#= pocoClassName #> request)
 		{
 			lock (_syncLock)
 			{
 <# 
 				int i = 1;
-				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == requestClassName).SelectMany(k => k.Value))
+				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == item.PocoClass.Name).SelectMany(k => k.Value))
                 {
 #>
 				bool unique<#= i.ToString() #> = <#= meth #>(request);
 				if (!unique<#= i.ToString() #>)
 				{
 					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.ResourceNotUnique, nameof(<#= requestClassName #>)));
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(<#= pocoClassName #>)));
 				}
 <# 
 					i++;
@@ -453,7 +458,7 @@ namespace <#= fileNamespace #>
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.ResourceByIdNotFound, nameof(<#= requestClassName #>), request.<#= pkProp.Name #>));
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
 					}
 				}
 
@@ -635,7 +640,7 @@ private List<string> GetRouteParts(CodeAttribute routeAttr)
 private string GetIdFromRouteParts(List<string> parts, string pocoClassName)
 {
 	List<string> lstId = new List<string>();
-	string currentEntity = pocoClassName.Substring(0, 3);
+	string currentEntity = pocoClassName;
 
 	foreach (string str in parts)
     {
