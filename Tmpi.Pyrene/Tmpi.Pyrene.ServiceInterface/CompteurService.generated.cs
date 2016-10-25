@@ -23,7 +23,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 	/// <summary>
 	/// Service qui traite les requêtes sur les ressources <see cref="Compteur"/>.
 	/// </summary>
-	public partial class CompteurService : Service
+	public partial class CompteurService : ServiceStack.Service
 	{
 		private static readonly object _syncLock = new object();
 
@@ -415,7 +415,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns></returns>
-		public List<BasicEntity> Get(SearchCompteur request)
+		public List<BaseEntity> Get(SearchCompteur request)
 		{
 			if (string.IsNullOrWhiteSpace(request.Text))
 			{
@@ -428,7 +428,7 @@ namespace Tmpi.Pyrene.ServiceInterface
                 q = q.Limit(request.Max);
             }
 
-            var items = Db.Select<BasicEntity>(q);
+            var items = Db.Select<BaseEntity>(q);
             return items;
 		}
 

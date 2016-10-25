@@ -23,7 +23,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 	/// <summary>
 	/// Service qui traite les requêtes sur les ressources <see cref="Personne"/>.
 	/// </summary>
-	public partial class PersonneService : Service
+	public partial class PersonneService : ServiceStack.Service
 	{
 		private static readonly object _syncLock = new object();
 
