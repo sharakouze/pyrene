@@ -30,6 +30,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique (immutable).
 		/// </summary>
+		/// <remarks>
+		/// Clé primaire auto-incrémentée.
+		/// </remarks>
 		[AutoIncrement]
 		[PrimaryKey]
 		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
@@ -38,6 +41,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique de l'utilisateur parent.
 		/// </summary>
+		/// <remarks>
+		/// Référence <se cref="Personne.ClePersonne"/>.
+		/// </remarks>
 		[ForeignKey(typeof(Personne), OnDelete = "CASCADE")]
 		[Required]
 		[ApiMember(Description = "Identifiant unique de l'utilisateur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
@@ -82,6 +88,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique du service auquel a accès le profil, ou null pour tous les services.
 		/// </summary>
+		/// <remarks>
+		/// Référence <se cref="Service.CleService"/>.
+		/// </remarks>
 		[References(typeof(Service))]
 		[ApiMember(Description = "Identifiant unique du service auquel a accès le profil, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }

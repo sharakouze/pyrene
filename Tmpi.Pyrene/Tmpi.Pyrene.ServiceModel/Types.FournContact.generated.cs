@@ -29,6 +29,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique (immutable).
 		/// </summary>
+		/// <remarks>
+		/// Clé primaire auto-incrémentée.
+		/// </remarks>
 		[AutoIncrement]
 		[PrimaryKey]
 		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
@@ -37,6 +40,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique du fournisseur parent.
 		/// </summary>
+		/// <remarks>
+		/// Référence <se cref="Fourn.CleFourn"/>.
+		/// </remarks>
 		[ForeignKey(typeof(Fourn), OnDelete = "CASCADE")]
 		[Required]
 		[ApiMember(Description = "Identifiant unique du fournisseur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]

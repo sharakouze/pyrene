@@ -28,6 +28,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique (immutable).
 		/// </summary>
+		/// <remarks>
+		/// Clé primaire auto-incrémentée.
+		/// </remarks>
 		[AutoIncrement]
 		[PrimaryKey]
 		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
@@ -97,6 +100,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique du service parent.
 		/// </summary>
+		/// <remarks>
+		/// Référence <se cref="Service.CleService"/>.
+		/// </remarks>
 		[References(typeof(Service))]
 		[Index]
 		[ApiMember(Description = "Identifiant unique du service parent", DataType = SwaggerDataTypes.Int)]

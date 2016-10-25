@@ -29,6 +29,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique (immutable).
 		/// </summary>
+		/// <remarks>
+		/// Clé primaire auto-incrémentée.
+		/// </remarks>
 		[AutoIncrement]
 		[PrimaryKey]
 		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
@@ -37,6 +40,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique du compteur parent.
 		/// </summary>
+		/// <remarks>
+		/// Référence <se cref="Compteur.CleCompteur"/>.
+		/// </remarks>
 		[ForeignKey(typeof(Compteur), OnDelete = "CASCADE")]
 		[Required]
 		[ApiMember(Description = "Identifiant unique du compteur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]

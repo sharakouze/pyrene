@@ -1,6 +1,6 @@
 ﻿/* REMARQUES :
 - Sociétes et Secteurs :
-Fusion avec GenService, qui permet une arborescence récursive.
+Fusion avec Services, qui permet une arborescence récursive.
 
 - Profils d'utilisateurs :
 Suppression de CleSite. (a quoi sert Gen_SocSite ?)
@@ -15,7 +15,7 @@ Suppression de CleLogiciel qu'on retrouve par déduction dans TypMandat.
 
 - Fournisseurs :
 Plusieurs contacts possibles.
-Transformation de RIB en IBAN pour les coordonées banquaires.
+Transformation de RIB en IBAN pour les coordonnées banquaires.
 Suppression de CleProprietaire.
 
 - Exercice :
@@ -26,8 +26,8 @@ NivExercice devient EstActif.
 -- CONSTANTES POUR LA REPRISE
 --
 
-:setvar CleSecteurBase "1"
-:setvar CleServiceBase "2"
+:setvar CleSecteurBase "1000"
+:setvar CleServiceBase "20000"
 
 GO
 

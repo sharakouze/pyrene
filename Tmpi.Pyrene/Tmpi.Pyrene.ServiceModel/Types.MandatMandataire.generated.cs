@@ -21,7 +21,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
 	[CompositeIndex(true, nameof(CleMandat), nameof(ClePersonne), nameof(CleService))]
-    [Route("/Mandat/{CleMandat}/aire", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité aire (Mandat) à partir de son id")]
+    [Route("/Mandat/{CleMandat}/Mandataire", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Mandataire (Mandat) à partir de son id")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
     [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class MandatMandataire : IReturn<MandatMandataire>, IPost, IAuditable
@@ -29,6 +29,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique (immutable).
 		/// </summary>
+		/// <remarks>
+		/// Clé primaire auto-incrémentée.
+		/// </remarks>
 		[AutoIncrement]
 		[PrimaryKey]
 		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
@@ -37,6 +40,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique du mandat parent.
 		/// </summary>
+		/// <remarks>
+		/// Référence <se cref="Mandat.CleMandat"/>.
+		/// </remarks>
 		[ForeignKey(typeof(Mandat), OnDelete = "CASCADE")]
 		[Required]
 		[ApiMember(Description = "Identifiant unique du mandat parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
@@ -51,6 +57,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique de l'utilisateur mandataire.
 		/// </summary>
+		/// <remarks>
+		/// Référence <se cref="Personne.ClePersonne"/>.
+		/// </remarks>
 		[References(typeof(Personne))]
 		[Required]
 		[ApiMember(Description = "Identifiant unique de l'utilisateur mandataire", DataType = SwaggerDataTypes.Int, IsRequired = true)]
@@ -65,6 +74,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique du service ayant accès au mandat, ou null pour tous les services.
 		/// </summary>
+		/// <remarks>
+		/// Référence <se cref="Service.CleService"/>.
+		/// </remarks>
 		[References(typeof(Service))]
 		[ApiMember(Description = "Identifiant unique du service ayant accès au mandat, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]
 		public int? CleService { get; set; }

@@ -28,6 +28,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique (immutable).
 		/// </summary>
+		/// <remarks>
+		/// Clé primaire auto-incrémentée.
+		/// </remarks>
 		[AutoIncrement]
 		[PrimaryKey]
 		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
@@ -216,10 +219,10 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public bool EstEnvoiMailBonCde { get; set; }
 
 		[Reference]
-		public List<FournBanque> LstBanque { get; set; }
+		public List<FournContact> LstContact { get; set; }
 
 		[Reference]
-		public List<FournContact> LstContact { get; set; }
+		public List<FournBanque> LstBanque { get; set; }
 
 	}
 }

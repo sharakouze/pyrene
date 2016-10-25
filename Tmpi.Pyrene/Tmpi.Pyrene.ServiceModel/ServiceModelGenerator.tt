@@ -285,10 +285,47 @@ namespace <#= pocoNamespace #>
             {
 #>
 		/// <summary>
-		/// <#= FormatXmlDocSummary(col.Description) #>
+		/// <#= FormatXmlDoc(col.Description) #>
 		/// </summary>
 <#
 			}
+
+			FKey colFkey = table.ForeignKeys.FirstOrDefault(f => f.FromColumns.Contains(col));
+			
+			List<string> remarks = new List<string>();
+			if (col.IsPKey)
+            {
+				if (col.IsAutoIncrement)
+                {
+					remarks.Add("Clé primaire auto-incrémentée.");
+                }
+				else
+                {
+					remarks.Add("Clé primaire.");
+                }
+            }
+			if (colFkey != null)
+            {
+				Column refCol = colFkey.ReferencedColumns.First();
+				remarks.Add(string.Format("Référence <se cref=\"{0}.{1}\"/>.", colFkey.ReferencedTable.ClassName, refCol.PropertyName));
+            }
+
+			if (remarks.Any())
+            {
+#>
+		/// <remarks>
+<#
+				foreach (string str in remarks)
+                {
+#>
+		/// <#= FormatXmlDoc(str) #>
+<#
+                }
+#>
+		/// </remarks>
+<#
+            }
+
 			if (col.Name != col.PropertyName)
 			{
 #>
@@ -325,19 +362,18 @@ namespace <#= pocoNamespace #>
 
             if (IncludeReferences)
             {
-                FKey thisFKey = table.ForeignKeys.Where(fk => fk.FromColumns.Contains(col)).FirstOrDefault();
-                if (thisFKey != null)
+                if (colFkey != null)
                 {
-                    if (string.IsNullOrEmpty(thisFKey.DeleteRule))
+                    if (string.IsNullOrEmpty(colFkey.DeleteRule))
                     {
 #>
-		[References(typeof(<#= thisFKey.ReferencedTable.ClassName #>))]
+		[References(typeof(<#= colFkey.ReferencedTable.ClassName #>))]
 <#
                     }
                     else
                     {
 #>
-		[ForeignKey(typeof(<#= thisFKey.ReferencedTable.ClassName #>), OnDelete = "<#= thisFKey.DeleteRule #>")]
+		[ForeignKey(typeof(<#= colFkey.ReferencedTable.ClassName #>), OnDelete = "<#= colFkey.DeleteRule #>")]
 <#
                     }
                 }
@@ -399,19 +435,18 @@ namespace <#= pocoNamespace #>
 <#
 			if (AddFKeyReferences && IncludeReferences)
             {
-				FKey thisFkey = table.ForeignKeys.FirstOrDefault(f => f.FromColumns.Contains(col));
-				if (thisFkey != null)
+				if (colFkey != null)
                 {
-					Column refCol = thisFkey.ReferencedColumns.First();
+					Column refCol = colFkey.ReferencedColumns.First();
 
 					string format = col.PropertyName.Replace(refCol.PropertyName, "{0}");
-					string propName = string.Format(format, thisFkey.ReferencedTable.ClassName);
+					string propName = string.Format(format, colFkey.ReferencedTable.ClassName);
 #>
 		/// <summary>
-		/// <#= FormatXmlDocSummary("Entité référencée par <see cref=\"" + col.PropertyName + "\"/>.") #>
+		/// <#= FormatXmlDoc("Entité référencée par <see cref=\"" + col.PropertyName + "\"/>.") #>
 		/// </summary>
 		[Reference]
-		public <#= MakePocoPropertiesVirtual ? "virtual " : "" #><#= thisFkey.ReferencedTable.ClassName #> <#= propName #> { get; set; }
+		public <#= MakePocoPropertiesVirtual ? "virtual " : "" #><#= colFkey.ReferencedTable.ClassName #> <#= propName #> { get; set; }
 
 <#
 
@@ -498,7 +533,7 @@ namespace <#= msgNamespace #>
 
 #>
 	/// <summary>
-	/// <#= FormatXmlDocSummary(selectTableClassDescription) #>
+	/// <#= FormatXmlDoc(selectTableClassDescription) #>
 	/// </summary>
 	/// <seealso cref="<#= table.ClassName #>"/>
 <#
@@ -537,7 +572,7 @@ namespace <#= msgNamespace #>
 				{
 #>
         /// <summary>
-        /// <#= FormatXmlDocSummary(newCol.Description) #>
+        /// <#= FormatXmlDoc(newCol.Description) #>
         /// </summary>
 <#
 				}
@@ -560,7 +595,7 @@ namespace <#= msgNamespace #>
 
 #>
         /// <summary>
-        /// <#= FormatXmlDocSummary(skipPropDescription) #>
+        /// <#= FormatXmlDoc(skipPropDescription) #>
         /// </summary>
 <#
 			if (AddApiAttributes)
@@ -573,7 +608,7 @@ namespace <#= msgNamespace #>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int? Skip { get; set; }
 
         /// <summary>
-        /// <#= FormatXmlDocSummary(takePropDescription) #>
+        /// <#= FormatXmlDoc(takePropDescription) #>
         /// </summary>
 <#
 			if (AddApiAttributes)
@@ -586,7 +621,7 @@ namespace <#= msgNamespace #>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int? Take { get; set; }
 
         /// <summary>
-        /// <#= FormatXmlDocSummary(sortPropDescription) #>
+        /// <#= FormatXmlDoc(sortPropDescription) #>
         /// </summary>
 <#
 			if (AddApiAttributes)
@@ -600,7 +635,7 @@ namespace <#= msgNamespace #>
 	}
 
     /// <summary>
-    /// <#= FormatXmlDocSummary("Réponse à la requête <see cref=\"" + selectTableClassName + "\"/>.") #>
+    /// <#= FormatXmlDoc("Réponse à la requête <see cref=\"" + selectTableClassName + "\"/>.") #>
     /// </summary>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #>Response
 	{
@@ -626,7 +661,7 @@ namespace <#= msgNamespace #>
 			string fieldsPropDescription = "Champs à retourner, ou null pour retourner tous les champs";
 #>
 	/// <summary>
-	/// <#= FormatXmlDocSummary(getTableClassDescription) #>
+	/// <#= FormatXmlDoc(getTableClassDescription) #>
 	/// </summary>
 	/// <seealso cref="<#= table.ClassName #>"/>
 <#
@@ -662,7 +697,7 @@ namespace <#= msgNamespace #>
             {
 #>
         /// <summary>
-        /// <#= FormatXmlDocSummary(newCol.Description) #>
+        /// <#= FormatXmlDoc(newCol.Description) #>
         /// </summary>
 <#
             }
@@ -684,7 +719,7 @@ namespace <#= msgNamespace #>
 		}
 #>
         /// <summary>
-        /// <#= FormatXmlDocSummary(fieldsPropDescription) #>
+        /// <#= FormatXmlDoc(fieldsPropDescription) #>
         /// </summary>
 <#
 			    if (AddApiAttributes)
@@ -711,7 +746,7 @@ namespace <#= msgNamespace #>
 			string deleteTableClassDescription = string.Format("Supprime une entité {0} à partir de son id", resourceName);
 #>
 	/// <summary>
-	/// <#= FormatXmlDocSummary(deleteTableClassDescription) #>
+	/// <#= FormatXmlDoc(deleteTableClassDescription) #>
 	/// </summary>
 	/// <seealso cref="<#= table.ClassName #>"/>
 <#
@@ -747,7 +782,7 @@ namespace <#= msgNamespace #>
             {
 #>
         /// <summary>
-        /// <#= FormatXmlDocSummary(newCol.Description) #>
+        /// <#= FormatXmlDoc(newCol.Description) #>
         /// </summary>
 <#
             }
@@ -785,7 +820,7 @@ namespace <#= msgNamespace #>
 			string fieldsPropDescription = "Liste des modifications à appliquer";
 #>
 	/// <summary>
-	/// <#= FormatXmlDocSummary(patchTableClassDescription) #>
+	/// <#= FormatXmlDoc(patchTableClassDescription) #>
 	/// </summary>
 	/// <seealso cref="<#= table.ClassName #>"/>
 <#
@@ -822,7 +857,7 @@ namespace <#= msgNamespace #>
             {
 #>
         /// <summary>
-        /// <#= FormatXmlDocSummary(newCol.Description) #>
+        /// <#= FormatXmlDoc(newCol.Description) #>
         /// </summary>
 <#
             }
@@ -844,7 +879,7 @@ namespace <#= msgNamespace #>
 		}
 #>
         /// <summary>
-        /// <#= FormatXmlDocSummary(fieldsPropDescription) #>
+        /// <#= FormatXmlDoc(fieldsPropDescription) #>
         /// </summary>
 <#
 			    if (AddApiAttributes)
@@ -881,7 +916,7 @@ namespace <#= msgNamespace #>
 				var maxPropDescription = "Nombre maximum de résultats à retourner";
 #>
 	/// <summary>
-	/// <#= FormatXmlDocSummary(searchDescription) #>
+	/// <#= FormatXmlDoc(searchDescription) #>
 	/// </summary>
 	/// <seealso cref="<#= table.ClassName #>"/>
 <#
@@ -896,7 +931,7 @@ namespace <#= msgNamespace #>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= searchClassName #> : IReturn<List<BaseEntity>>, IGet
 	{
         /// <summary>
-        /// <#= FormatXmlDocSummary(textPropDescription) #>
+        /// <#= FormatXmlDoc(textPropDescription) #>
         /// </summary>
 <#
 			    if (AddApiAttributes)
@@ -909,7 +944,7 @@ namespace <#= msgNamespace #>
         public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string Text { get; set; }
 
         /// <summary>
-        /// <#= FormatXmlDocSummary(maxPropDescription) #>
+        /// <#= FormatXmlDoc(maxPropDescription) #>
         /// </summary>
 <#
 			    if (AddApiAttributes)
@@ -937,7 +972,7 @@ namespace <#= msgNamespace #>
     manager.Process(SplitIntoMultipleFiles);
 #>
 <#+
-private string FormatXmlDocSummary(string str)
+private string FormatXmlDoc(string str)
 {
 	if (string.IsNullOrEmpty(str))
     {
@@ -1177,6 +1212,16 @@ private List<Column> GetRouteColumns(Table table, bool recurseParents)
 	return lstCols;
 }
 
+private string ReplaceFirst(string text, string search, string replace)
+{
+	int pos = text.IndexOf(search);
+	if (pos < 0)
+	{
+		return text;
+	}
+	return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
+}
+
 private string GetStrRoutePath(List<Column> lstCols, bool keepEnd = true, bool removeUselessCols = true)
 {
 	string strRoute = "";
@@ -1192,7 +1237,7 @@ private string GetStrRoutePath(List<Column> lstCols, bool keepEnd = true, bool r
 			string newTableName = phCol.ParentTable.ClassName;
 			if (currentTable != "")
             {
-				newTableName = phCol.ParentTable.ClassName.Replace(currentTable, "");
+				newTableName = ReplaceFirst(phCol.ParentTable.ClassName, currentTable, ""); 
             }
 			strRoute += "/" + newTableName;
 
@@ -1229,7 +1274,7 @@ private string GetResourceName(List<Column> lstCols)
 			string newTableName = phCol.ParentTable.ClassName;
 			if (currentTable != "")
             {
-				newTableName = phCol.ParentTable.ClassName.Replace(currentTable, "");
+				newTableName = ReplaceFirst(phCol.ParentTable.ClassName, currentTable, "");
             }
 			
 			parts.Add(newTableName);

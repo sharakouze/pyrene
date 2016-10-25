@@ -28,6 +28,10 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Identifiant unique de l'utilisateur parent.
 		/// </summary>
+		/// <remarks>
+		/// Clé primaire.
+		/// Référence <se cref="Personne.ClePersonne"/>.
+		/// </remarks>
 		[ForeignKey(typeof(Personne), OnDelete = "CASCADE")]
 		[Required]
 		[PrimaryKey]
