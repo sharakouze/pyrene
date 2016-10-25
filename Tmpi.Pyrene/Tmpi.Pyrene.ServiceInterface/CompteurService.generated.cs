@@ -23,9 +23,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 	/// <summary>
 	/// Service qui traite les requêtes sur les entités <see cref="Compteur"/>.
 	/// </summary>
+	/// <seealso cref="CompteurValeur"/>
 	public partial class CompteurService : ServiceStack.Service
 	{
-		private static readonly object _syncLock = new object();
+		private static readonly object _compteurLock = new object();
+		private static readonly object _compteurValeurLock = new object();
 
         /// <summary>
 		/// Teste l'unicité d'une entité <see cref="Compteur"/>.
@@ -118,7 +120,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public Compteur Post(Compteur request)
 		{
-			lock (_syncLock)
+			lock (_compteurLock)
 			{
 				bool unique1 = Compteur_TypCompteur_CleService_EstUnique(request);
 				if (!unique1)
@@ -216,7 +218,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public CompteurValeur Post(CompteurValeur request)
 		{
-			lock (_syncLock)
+			lock (_compteurValeurLock)
 			{
 				bool unique1 = CompteurValeur_CleCompteur_ValPeriode_EstUnique(request);
 				if (!unique1)
@@ -344,7 +346,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 			var q = Db.From<Compteur>().Where(x => x.CleCompteur == request.CleCompteur).Update(patchDic.Keys);
 
-			lock (_syncLock)
+			lock (_compteurLock)
 			{
 				bool unique1 = Compteur_TypCompteur_CleService_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
@@ -392,7 +394,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 			var q = Db.From<CompteurValeur>().Where(x => x.CleValeur == request.CleValeur).Update(patchDic.Keys);
 
-			lock (_syncLock)
+			lock (_compteurValeurLock)
 			{
 				bool unique1 = CompteurValeur_CleCompteur_ValPeriode_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
@@ -430,6 +432,50 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var items = Db.Select<BaseEntity>(q);
             return items;
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="Compteur"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="Compteur"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectCompteurResponse Get(SelectCompteur request)
+		{
+			var q = Db.From<Compteur>()
+				.Limit(request.Skip, request.Take);
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectCompteurResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="CompteurValeur"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectCompteurValeurResponse Get(SelectCompteurValeur request)
+		{
+			var q = Db.From<CompteurValeur>()
+				.Limit(request.Skip, request.Take);
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectCompteurValeurResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
 		}
 
 	}

@@ -23,9 +23,13 @@ namespace Tmpi.Pyrene.ServiceInterface
 	/// <summary>
 	/// Service qui traite les requêtes sur les entités <see cref="Fourn"/>.
 	/// </summary>
+	/// <seealso cref="FournBanque"/>
+	/// <seealso cref="FournContact"/>
 	public partial class FournService : ServiceStack.Service
 	{
-		private static readonly object _syncLock = new object();
+		private static readonly object _fournLock = new object();
+		private static readonly object _fournBanqueLock = new object();
+		private static readonly object _fournContactLock = new object();
 
         /// <summary>
 		/// Teste l'unicité d'une entité <see cref="Fourn"/>.
@@ -218,7 +222,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public Fourn Post(Fourn request)
 		{
-			lock (_syncLock)
+			lock (_fournLock)
 			{
 				bool unique1 = Fourn_CodFourn_EstUnique(request);
 				if (!unique1)
@@ -255,7 +259,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public FournBanque Post(FournBanque request)
 		{
-			lock (_syncLock)
+			lock (_fournBanqueLock)
 			{
 				bool unique1 = FournBanque_CleFourn_CodIBAN_EstUnique(request);
 				if (!unique1)
@@ -292,7 +296,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public FournContact Post(FournContact request)
 		{
-			lock (_syncLock)
+			lock (_fournContactLock)
 			{
 				bool unique1 = FournContact_CleFourn_NomContact_EstUnique(request);
 				if (!unique1)
@@ -413,7 +417,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 			var q = Db.From<Fourn>().Where(x => x.CleFourn == request.CleFourn).Update(patchDic.Keys);
 
-			lock (_syncLock)
+			lock (_fournLock)
 			{
 				bool unique1 = Fourn_CodFourn_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
@@ -455,7 +459,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 			var q = Db.From<FournBanque>().Where(x => x.CleBanque == request.CleBanque).Update(patchDic.Keys);
 
-			lock (_syncLock)
+			lock (_fournBanqueLock)
 			{
 				bool unique1 = FournBanque_CleFourn_CodIBAN_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
@@ -497,7 +501,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 			var q = Db.From<FournContact>().Where(x => x.CleContact == request.CleContact).Update(patchDic.Keys);
 
-			lock (_syncLock)
+			lock (_fournContactLock)
 			{
 				bool unique1 = FournContact_CleFourn_NomContact_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
@@ -535,6 +539,72 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var items = Db.Select<BaseEntity>(q);
             return items;
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="Fourn"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="Fourn"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectFournResponse Get(SelectFourn request)
+		{
+			var q = Db.From<Fourn>()
+				.Limit(request.Skip, request.Take);
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectFournResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="FournBanque"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="FournBanque"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectFournBanqueResponse Get(SelectFournBanque request)
+		{
+			var q = Db.From<FournBanque>()
+				.Limit(request.Skip, request.Take);
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectFournBanqueResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="FournContact"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="FournContact"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectFournContactResponse Get(SelectFournContact request)
+		{
+			var q = Db.From<FournContact>()
+				.Limit(request.Skip, request.Take);
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectFournContactResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
 		}
 
 	}

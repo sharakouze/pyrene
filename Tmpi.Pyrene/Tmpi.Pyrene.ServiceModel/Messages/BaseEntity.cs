@@ -24,11 +24,5 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
         /// </summary>
         [ApiMember(Description = "Désignation", DataType = SwaggerDataTypes.String, IsRequired = true)]
         public string LibObjet { get; set; }
-
-        /// <summary>
-        /// Actif ou inactif.
-        /// </summary>
-        [ApiMember(Description = "Actif ou inactif", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
-        public bool EstActif { get; set; }
     }
 }

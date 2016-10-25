@@ -23,9 +23,13 @@ namespace Tmpi.Pyrene.ServiceInterface
 	/// <summary>
 	/// Service qui traite les requêtes sur les entités <see cref="Personne"/>.
 	/// </summary>
+	/// <seealso cref="PersonneProfil"/>
+	/// <seealso cref="PersonneSignature"/>
 	public partial class PersonneService : ServiceStack.Service
 	{
-		private static readonly object _syncLock = new object();
+		private static readonly object _personneLock = new object();
+		private static readonly object _personneProfilLock = new object();
+		private static readonly object _personneSignatureLock = new object();
 
         /// <summary>
 		/// Teste l'unicité d'une entité <see cref="Personne"/>.
@@ -302,7 +306,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 			var q = Db.From<Personne>().Where(x => x.ClePersonne == request.ClePersonne).Update(patchDic.Keys);
 
-			lock (_syncLock)
+			lock (_personneLock)
 			{
 				bool unique1 = Personne_CodPersonne_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
@@ -344,7 +348,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 			var q = Db.From<PersonneProfil>().Where(x => x.CleProfil == request.CleProfil).Update(patchDic.Keys);
 
-			lock (_syncLock)
+			lock (_personneProfilLock)
 			{
 				bool unique1 = PersonneProfil_ClePersonne_CleService_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
@@ -392,7 +396,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 			var q = Db.From<PersonneSignature>().Where(x => x.ClePersonne == request.ClePersonne).Update(patchDic.Keys);
 
-			lock (_syncLock)
+			lock (_personneSignatureLock)
 			{
 
 				int count = Db.UpdateOnly(entity, q);
@@ -413,7 +417,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public Personne Post(Personne request)
 		{
-			lock (_syncLock)
+			lock (_personneLock)
 			{
 				bool unique1 = Personne_CodPersonne_EstUnique(request);
 				if (!unique1)
@@ -450,7 +454,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public PersonneProfil Post(PersonneProfil request)
 		{
-			lock (_syncLock)
+			lock (_personneProfilLock)
 			{
 				bool unique1 = PersonneProfil_ClePersonne_CleService_EstUnique(request);
 				if (!unique1)
@@ -493,7 +497,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public PersonneSignature Post(PersonneSignature request)
 		{
-			lock (_syncLock)
+			lock (_personneSignatureLock)
 			{
 
 				if (request.ClePersonne == 0)
@@ -513,6 +517,72 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 				return request;
 			}
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="Personne"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="Personne"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectPersonneResponse Get(SelectPersonne request)
+		{
+			var q = Db.From<Personne>()
+				.Limit(request.Skip, request.Take);
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectPersonneResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="PersonneProfil"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="PersonneProfil"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectPersonneProfilResponse Get(SelectPersonneProfil request)
+		{
+			var q = Db.From<PersonneProfil>()
+				.Limit(request.Skip, request.Take);
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectPersonneProfilResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="PersonneSignature"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="PersonneSignature"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectPersonneSignatureResponse Get(SelectPersonneSignature request)
+		{
+			var q = Db.From<PersonneSignature>()
+				.Limit(request.Skip, request.Take);
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectPersonneSignatureResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
 		}
 
 	}

@@ -109,7 +109,7 @@
         }
         else if (codeClass.Name.StartsWith("Select"))
         {
-			//pocoClassName = codeClass.Name.Substring(6);
+			pocoClassName = codeClass.Name.Substring(6);
         }
 		else
 		{
@@ -157,12 +157,35 @@ using Tmpi.Pyrene.Infrastructure.Linq;
 
 namespace <#= fileNamespace #>
 {
+<#
+		string entityName = kvp.Key;
+		if (entityName == "Service")
+        {
+			entityName = "ServiceModel.Types." + entityName;
+        }
+#>
 	/// <summary>
-	/// Service qui traite les requêtes sur les entités <see cref="<#= kvp.Key #>"/>.
+	/// Service qui traite les requêtes sur les entités <see cref="<#= entityName #>"/>.
 	/// </summary>
+<#
+		List<string> lstSeeAlso = kvp.Value.Select(i => i.PocoClass.Name).Distinct().ToList();
+		foreach (string str in lstSeeAlso.Where(s => s != kvp.Key))
+        {
+#>
+	/// <seealso cref="<#= str #>"/>
+<#
+        }
+#>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= serviceClassName #> : ServiceStack.Service
 	{
-		private static readonly object _syncLock = new object();
+<#
+        foreach (string str in lstSeeAlso)
+        {
+#>
+		private static readonly object _<#= ToCamelCase(str) #>Lock = new object();
+<#
+        }
+#>
 
 <#
 		Dictionary<string, List<string>> dicPocoUnicityMethods = new Dictionary<string, List<string>>();
@@ -272,7 +295,38 @@ namespace <#= fileNamespace #>
 
 			if (pkProp != null)
             {
-				if (requestClassName.StartsWith("Get"))
+				if (requestClassName.StartsWith("Select"))
+                {
+					/************/
+					/** SELECT **/
+					/************/
+
+#>
+		/// <summary>
+		/// Retourne l'entité <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="<#= pocoClassName #>"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public <#= requestClassName #>Response Get(<#= requestClassName #> request)
+		{
+			var q = Db.From<<#= pocoClassName #>>()
+				.Limit(request.Skip, request.Take);
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new <#= requestClassName #>Response
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
+		}
+
+<#
+                }
+				else if (requestClassName.StartsWith("Get"))
 				{
 					/**************/
 					/** GET BYID **/
@@ -356,7 +410,7 @@ namespace <#= fileNamespace #>
 
 			var q = Db.From<<#= pocoClassName #>>().Where(x => x.<#= pkProp.Name #> == request.<#= pkProp.Name #>).Update(patchDic.Keys);
 
-			lock (_syncLock)
+			lock (_<#= ToCamelCase(item.PocoClass.Name) #>Lock)
 			{
 <# 
 				int i = 1;
@@ -429,7 +483,7 @@ namespace <#= fileNamespace #>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public <#= pocoClassName #> Post(<#= pocoClassName #> request)
 		{
-			lock (_syncLock)
+			lock (_<#= ToCamelCase(item.PocoClass.Name) #>Lock)
 			{
 <# 
 				int i = 1;
@@ -619,7 +673,10 @@ private string ToCamelCase(string str)
     {
 		return "";
 	}
-
+	if (str == str.ToUpper())
+    {
+		return str.ToLower();
+    }
 	return str.Substring(0, 1).ToLower() + str.Substring(1);
 }
 

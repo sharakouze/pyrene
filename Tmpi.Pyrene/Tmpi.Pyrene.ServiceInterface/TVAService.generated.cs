@@ -25,7 +25,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 	/// </summary>
 	public partial class TVAService : ServiceStack.Service
 	{
-		private static readonly object _syncLock = new object();
+		private static readonly object _tvaLock = new object();
 
         /// <summary>
 		/// Teste l'unicité d'une entité <see cref="TVA"/>.
@@ -116,7 +116,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 			var q = Db.From<TVA>().Where(x => x.CleTVA == request.CleTVA).Update(patchDic.Keys);
 
-			lock (_syncLock)
+			lock (_tvaLock)
 			{
 				bool unique1 = TVA_CodTVA_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
@@ -157,6 +157,28 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
+		/// Retourne l'entité <see cref="TVA"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="TVA"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectTVAResponse Get(SelectTVA request)
+		{
+			var q = Db.From<TVA>()
+				.Limit(request.Skip, request.Take);
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectTVAResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
+		}
+
+		/// <summary>
 		/// Ajoute ou remplace l'entité <see cref="TVA"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
@@ -165,7 +187,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public TVA Post(TVA request)
 		{
-			lock (_syncLock)
+			lock (_tvaLock)
 			{
 				bool unique1 = TVA_CodTVA_EstUnique(request);
 				if (!unique1)

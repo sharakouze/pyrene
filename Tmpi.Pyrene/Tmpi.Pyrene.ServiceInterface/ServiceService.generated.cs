@@ -21,11 +21,11 @@ using Tmpi.Pyrene.Infrastructure.Linq;
 namespace Tmpi.Pyrene.ServiceInterface
 {
 	/// <summary>
-	/// Service qui traite les requêtes sur les entités <see cref="Service"/>.
+	/// Service qui traite les requêtes sur les entités <see cref="ServiceModel.Types.Service"/>.
 	/// </summary>
 	public partial class ServiceService : ServiceStack.Service
 	{
-		private static readonly object _syncLock = new object();
+		private static readonly object _serviceLock = new object();
 
         /// <summary>
 		/// Teste l'unicité d'une entité <see cref="ServiceModel.Types.Service"/>.
@@ -116,7 +116,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 			var q = Db.From<ServiceModel.Types.Service>().Where(x => x.CleService == request.CleService).Update(patchDic.Keys);
 
-			lock (_syncLock)
+			lock (_serviceLock)
 			{
 				bool unique1 = Service_CodService_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
@@ -157,6 +157,28 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
+		/// Retourne l'entité <see cref="ServiceModel.Types.Service"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="ServiceModel.Types.Service"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectServiceResponse Get(SelectService request)
+		{
+			var q = Db.From<ServiceModel.Types.Service>()
+				.Limit(request.Skip, request.Take);
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectServiceResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
+		}
+
+		/// <summary>
 		/// Ajoute ou remplace l'entité <see cref="ServiceModel.Types.Service"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
@@ -165,7 +187,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public ServiceModel.Types.Service Post(ServiceModel.Types.Service request)
 		{
-			lock (_syncLock)
+			lock (_serviceLock)
 			{
 				bool unique1 = Service_CodService_EstUnique(request);
 				if (!unique1)

@@ -23,9 +23,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 	/// <summary>
 	/// Service qui traite les requêtes sur les entités <see cref="Mandat"/>.
 	/// </summary>
+	/// <seealso cref="MandatMandataire"/>
 	public partial class MandatService : ServiceStack.Service
 	{
-		private static readonly object _syncLock = new object();
+		private static readonly object _mandatLock = new object();
+		private static readonly object _mandatMandataireLock = new object();
 
         /// <summary>
 		/// Teste l'unicité d'une entité <see cref="Mandat"/>.
@@ -258,7 +260,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public Mandat Post(Mandat request)
 		{
-			lock (_syncLock)
+			lock (_mandatLock)
 			{
 				bool unique1 = Mandat_TypMandat_NivMandat_EstUnique(request);
 				if (!unique1)
@@ -301,7 +303,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public MandatMandataire Post(MandatMandataire request)
 		{
-			lock (_syncLock)
+			lock (_mandatMandataireLock)
 			{
 				bool unique1 = MandatMandataire_CleMandat_ClePersonne_CleService_EstUnique(request);
 				if (!unique1)
@@ -353,7 +355,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 			var q = Db.From<Mandat>().Where(x => x.CleMandat == request.CleMandat).Update(patchDic.Keys);
 
-			lock (_syncLock)
+			lock (_mandatLock)
 			{
 				bool unique1 = Mandat_TypMandat_NivMandat_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
@@ -401,7 +403,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 			var q = Db.From<MandatMandataire>().Where(x => x.CleMandataire == request.CleMandataire).Update(patchDic.Keys);
 
-			lock (_syncLock)
+			lock (_mandatMandataireLock)
 			{
 				bool unique1 = MandatMandataire_CleMandat_ClePersonne_CleService_EstUnique(entity, patchDic.Keys);
 				if (!unique1)
@@ -439,6 +441,50 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var items = Db.Select<BaseEntity>(q);
             return items;
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="Mandat"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="Mandat"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectMandatResponse Get(SelectMandat request)
+		{
+			var q = Db.From<Mandat>()
+				.Limit(request.Skip, request.Take);
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectMandatResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="MandatMandataire"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="MandatMandataire"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectMandatMandataireResponse Get(SelectMandatMandataire request)
+		{
+			var q = Db.From<MandatMandataire>()
+				.Limit(request.Skip, request.Take);
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectMandatMandataireResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
 		}
 
 	}
