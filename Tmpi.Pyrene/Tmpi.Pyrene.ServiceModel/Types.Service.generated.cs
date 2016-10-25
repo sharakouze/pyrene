@@ -101,7 +101,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Identifiant unique du service parent.
 		/// </summary>
 		/// <remarks>
-		/// Référence <se cref="Service.CleService"/>.
+		/// Référence <see cref="Service.CleService"/>.
 		/// </remarks>
 		[References(typeof(Service))]
 		[Index]

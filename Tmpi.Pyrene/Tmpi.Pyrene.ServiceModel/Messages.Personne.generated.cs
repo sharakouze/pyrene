@@ -21,9 +21,8 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne une collection des entités Personne.
+	/// Retourne une collection des entités <see cref="Personne"/>.
 	/// </summary>
-	/// <seealso cref="Personne"/>
 	[Route("/Personne", HttpVerbs.Get, Summary = "Retourne une collection des entités Personne")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class SelectPersonne : IReturn<SelectPersonneResponse>, IGet, IPagination
@@ -60,9 +59,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne une entité Personne à partir de son id.
+	/// Retourne une entité <see cref="Personne"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Personne"/>
 	[Route("/Personne/{ClePersonne}", HttpVerbs.Get, Summary = "Retourne une entité Personne à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
@@ -82,9 +80,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Supprime une entité Personne à partir de son id.
+	/// Supprime une entité <see cref="Personne"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Personne"/>
 	[Route("/Personne/{ClePersonne}", HttpVerbs.Delete, Summary = "Supprime une entité Personne à partir de son id")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class DeletePersonne : IReturnVoid, IDelete
@@ -98,9 +95,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Modifie partiellement une entité Personne à partir de son id.
+	/// Modifie partiellement une entité <see cref="Personne"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Personne"/>
 	[Route("/Personne/{ClePersonne}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Personne à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]

@@ -20,7 +20,7 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
-    [Route("/Personne/{ClePersonne}/Signature", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Signature (Personne) à partir de son id")]
+    [Route("/Personne/{ClePersonne}/Signature", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité PersonneSignature à partir de son id")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
     [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class PersonneSignature : IReturn<PersonneSignature>, IPost
@@ -30,7 +30,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// </summary>
 		/// <remarks>
 		/// Clé primaire.
-		/// Référence <se cref="Personne.ClePersonne"/>.
+		/// Référence <see cref="Personne.ClePersonne"/>.
 		/// </remarks>
 		[ForeignKey(typeof(Personne), OnDelete = "CASCADE")]
 		[Required]

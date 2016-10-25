@@ -21,9 +21,8 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne une collection des entités Fourn.
+	/// Retourne une collection des entités <see cref="Fourn"/>.
 	/// </summary>
-	/// <seealso cref="Fourn"/>
 	[Route("/Fourn", HttpVerbs.Get, Summary = "Retourne une collection des entités Fourn")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class SelectFourn : IReturn<SelectFournResponse>, IGet, IPagination
@@ -60,9 +59,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne une entité Fourn à partir de son id.
+	/// Retourne une entité <see cref="Fourn"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Fourn"/>
 	[Route("/Fourn/{CleFourn}", HttpVerbs.Get, Summary = "Retourne une entité Fourn à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
@@ -82,9 +80,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Supprime une entité Fourn à partir de son id.
+	/// Supprime une entité <see cref="Fourn"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Fourn"/>
 	[Route("/Fourn/{CleFourn}", HttpVerbs.Delete, Summary = "Supprime une entité Fourn à partir de son id")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class DeleteFourn : IReturnVoid, IDelete
@@ -98,9 +95,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Modifie partiellement une entité Fourn à partir de son id.
+	/// Modifie partiellement une entité <see cref="Fourn"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Fourn"/>
 	[Route("/Fourn/{CleFourn}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Fourn à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
@@ -121,9 +117,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne le résultat d'une recherche sur les entités Fourn.
+	/// Retourne le résultat d'une recherche sur les entités <see cref="Fourn"/>.
 	/// </summary>
-	/// <seealso cref="Fourn"/>
 	[Route("/Fourn/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Fourn")]
 	public partial class SearchFourn : IReturn<List<BaseEntity>>, IGet
 	{

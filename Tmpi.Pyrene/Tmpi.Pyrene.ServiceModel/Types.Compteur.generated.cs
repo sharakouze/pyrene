@@ -118,7 +118,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Identifiant unique du service ayant accès au compteur, ou null pour tous les services.
 		/// </summary>
 		/// <remarks>
-		/// Référence <se cref="Service.CleService"/>.
+		/// Référence <see cref="Service.CleService"/>.
 		/// </remarks>
 		[References(typeof(Service))]
 		[ApiMember(Description = "Identifiant unique du service ayant accès au compteur, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]

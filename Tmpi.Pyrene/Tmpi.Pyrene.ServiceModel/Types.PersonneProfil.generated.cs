@@ -22,7 +22,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 	[Schema("Gen")]
 	[CompositeIndex(true, nameof(ClePersonne), nameof(CleService))]
 	[CompositeIndex(true, nameof(CodProfil), nameof(ClePersonne))]
-    [Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Profil (Personne) à partir de son id")]
+    [Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité PersonneProfil à partir de son id")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
     [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class PersonneProfil : IReturn<PersonneProfil>, IPost, IAuditable
@@ -42,7 +42,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Identifiant unique de l'utilisateur parent.
 		/// </summary>
 		/// <remarks>
-		/// Référence <se cref="Personne.ClePersonne"/>.
+		/// Référence <see cref="Personne.ClePersonne"/>.
 		/// </remarks>
 		[ForeignKey(typeof(Personne), OnDelete = "CASCADE")]
 		[Required]
@@ -89,7 +89,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Identifiant unique du service auquel a accès le profil, ou null pour tous les services.
 		/// </summary>
 		/// <remarks>
-		/// Référence <se cref="Service.CleService"/>.
+		/// Référence <see cref="Service.CleService"/>.
 		/// </remarks>
 		[References(typeof(Service))]
 		[ApiMember(Description = "Identifiant unique du service auquel a accès le profil, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]

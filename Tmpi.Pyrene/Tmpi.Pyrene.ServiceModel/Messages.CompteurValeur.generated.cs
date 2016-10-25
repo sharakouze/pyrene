@@ -21,10 +21,9 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne une collection des entités Valeur (Compteur).
+	/// Retourne une collection des entités <see cref="CompteurValeur"/>.
 	/// </summary>
-	/// <seealso cref="CompteurValeur"/>
-	[Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Get, Summary = "Retourne une collection des entités Valeur (Compteur)")]
+	[Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Get, Summary = "Retourne une collection des entités CompteurValeur")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class SelectCompteurValeur : IReturn<SelectCompteurValeurResponse>, IGet, IPagination
 	{
@@ -66,10 +65,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne une entité Valeur (Compteur) à partir de son id.
+	/// Retourne une entité <see cref="CompteurValeur"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="CompteurValeur"/>
-	[Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Get, Summary = "Retourne une entité Valeur (Compteur) à partir de son id")]
+	[Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Get, Summary = "Retourne une entité CompteurValeur à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class GetCompteurValeur : IReturn<CompteurValeur>, IGet
@@ -88,10 +86,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Supprime une entité Valeur (Compteur) à partir de son id.
+	/// Supprime une entité <see cref="CompteurValeur"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="CompteurValeur"/>
-	[Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Delete, Summary = "Supprime une entité Valeur (Compteur) à partir de son id")]
+	[Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Delete, Summary = "Supprime une entité CompteurValeur à partir de son id")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class DeleteCompteurValeur : IReturnVoid, IDelete
 	{
@@ -104,10 +101,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Modifie partiellement une entité Valeur (Compteur) à partir de son id.
+	/// Modifie partiellement une entité <see cref="CompteurValeur"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="CompteurValeur"/>
-	[Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Valeur (Compteur) à partir de son id")]
+	[Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité CompteurValeur à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
     [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]

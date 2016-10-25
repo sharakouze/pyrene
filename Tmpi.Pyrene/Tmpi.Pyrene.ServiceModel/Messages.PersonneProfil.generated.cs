@@ -21,10 +21,9 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne une collection des entités Profil (Personne).
+	/// Retourne une collection des entités <see cref="PersonneProfil"/>.
 	/// </summary>
-	/// <seealso cref="PersonneProfil"/>
-	[Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Get, Summary = "Retourne une collection des entités Profil (Personne)")]
+	[Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Get, Summary = "Retourne une collection des entités PersonneProfil")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class SelectPersonneProfil : IReturn<SelectPersonneProfilResponse>, IGet, IPagination
 	{
@@ -66,10 +65,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne une entité Profil (Personne) à partir de son id.
+	/// Retourne une entité <see cref="PersonneProfil"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="PersonneProfil"/>
-	[Route("/Personne/Profil/{CleProfil}", HttpVerbs.Get, Summary = "Retourne une entité Profil (Personne) à partir de son id")]
+	[Route("/Personne/Profil/{CleProfil}", HttpVerbs.Get, Summary = "Retourne une entité PersonneProfil à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class GetPersonneProfil : IReturn<PersonneProfil>, IGet
@@ -88,10 +86,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Supprime une entité Profil (Personne) à partir de son id.
+	/// Supprime une entité <see cref="PersonneProfil"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="PersonneProfil"/>
-	[Route("/Personne/Profil/{CleProfil}", HttpVerbs.Delete, Summary = "Supprime une entité Profil (Personne) à partir de son id")]
+	[Route("/Personne/Profil/{CleProfil}", HttpVerbs.Delete, Summary = "Supprime une entité PersonneProfil à partir de son id")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class DeletePersonneProfil : IReturnVoid, IDelete
 	{
@@ -104,10 +101,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Modifie partiellement une entité Profil (Personne) à partir de son id.
+	/// Modifie partiellement une entité <see cref="PersonneProfil"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="PersonneProfil"/>
-	[Route("/Personne/Profil/{CleProfil}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Profil (Personne) à partir de son id")]
+	[Route("/Personne/Profil/{CleProfil}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité PersonneProfil à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
     [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]

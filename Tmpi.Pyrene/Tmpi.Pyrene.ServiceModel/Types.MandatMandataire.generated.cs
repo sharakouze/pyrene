@@ -21,7 +21,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
 	[CompositeIndex(true, nameof(CleMandat), nameof(ClePersonne), nameof(CleService))]
-    [Route("/Mandat/{CleMandat}/Mandataire", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Mandataire (Mandat) à partir de son id")]
+    [Route("/Mandat/{CleMandat}/Mandataire", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité MandatMandataire à partir de son id")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
     [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class MandatMandataire : IReturn<MandatMandataire>, IPost, IAuditable
@@ -41,7 +41,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Identifiant unique du mandat parent.
 		/// </summary>
 		/// <remarks>
-		/// Référence <se cref="Mandat.CleMandat"/>.
+		/// Référence <see cref="Mandat.CleMandat"/>.
 		/// </remarks>
 		[ForeignKey(typeof(Mandat), OnDelete = "CASCADE")]
 		[Required]
@@ -58,7 +58,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Identifiant unique de l'utilisateur mandataire.
 		/// </summary>
 		/// <remarks>
-		/// Référence <se cref="Personne.ClePersonne"/>.
+		/// Référence <see cref="Personne.ClePersonne"/>.
 		/// </remarks>
 		[References(typeof(Personne))]
 		[Required]
@@ -75,7 +75,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Identifiant unique du service ayant accès au mandat, ou null pour tous les services.
 		/// </summary>
 		/// <remarks>
-		/// Référence <se cref="Service.CleService"/>.
+		/// Référence <see cref="Service.CleService"/>.
 		/// </remarks>
 		[References(typeof(Service))]
 		[ApiMember(Description = "Identifiant unique du service ayant accès au mandat, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]

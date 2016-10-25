@@ -21,9 +21,8 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne une collection des entités Mandat.
+	/// Retourne une collection des entités <see cref="Mandat"/>.
 	/// </summary>
-	/// <seealso cref="Mandat"/>
 	[Route("/Mandat", HttpVerbs.Get, Summary = "Retourne une collection des entités Mandat")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class SelectMandat : IReturn<SelectMandatResponse>, IGet, IPagination
@@ -60,9 +59,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne une entité Mandat à partir de son id.
+	/// Retourne une entité <see cref="Mandat"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Mandat"/>
 	[Route("/Mandat/{CleMandat}", HttpVerbs.Get, Summary = "Retourne une entité Mandat à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
@@ -82,9 +80,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Supprime une entité Mandat à partir de son id.
+	/// Supprime une entité <see cref="Mandat"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Mandat"/>
 	[Route("/Mandat/{CleMandat}", HttpVerbs.Delete, Summary = "Supprime une entité Mandat à partir de son id")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class DeleteMandat : IReturnVoid, IDelete
@@ -98,9 +95,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Modifie partiellement une entité Mandat à partir de son id.
+	/// Modifie partiellement une entité <see cref="Mandat"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Mandat"/>
 	[Route("/Mandat/{CleMandat}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Mandat à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
@@ -121,9 +117,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne le résultat d'une recherche sur les entités Mandat.
+	/// Retourne le résultat d'une recherche sur les entités <see cref="Mandat"/>.
 	/// </summary>
-	/// <seealso cref="Mandat"/>
 	[Route("/Mandat/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Mandat")]
 	public partial class SearchMandat : IReturn<List<BaseEntity>>, IGet
 	{

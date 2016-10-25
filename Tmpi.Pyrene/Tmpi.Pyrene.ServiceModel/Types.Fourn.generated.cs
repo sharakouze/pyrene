@@ -219,10 +219,10 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public bool EstEnvoiMailBonCde { get; set; }
 
 		[Reference]
-		public List<FournContact> LstContact { get; set; }
+		public List<FournBanque> LstBanque { get; set; }
 
 		[Reference]
-		public List<FournBanque> LstBanque { get; set; }
+		public List<FournContact> LstContact { get; set; }
 
 	}
 }

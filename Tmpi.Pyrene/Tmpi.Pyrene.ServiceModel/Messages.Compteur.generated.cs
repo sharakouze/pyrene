@@ -21,9 +21,8 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne une collection des entités Compteur.
+	/// Retourne une collection des entités <see cref="Compteur"/>.
 	/// </summary>
-	/// <seealso cref="Compteur"/>
 	[Route("/Compteur", HttpVerbs.Get, Summary = "Retourne une collection des entités Compteur")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class SelectCompteur : IReturn<SelectCompteurResponse>, IGet, IPagination
@@ -60,9 +59,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne une entité Compteur à partir de son id.
+	/// Retourne une entité <see cref="Compteur"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Compteur"/>
 	[Route("/Compteur/{CleCompteur}", HttpVerbs.Get, Summary = "Retourne une entité Compteur à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
@@ -82,9 +80,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Supprime une entité Compteur à partir de son id.
+	/// Supprime une entité <see cref="Compteur"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Compteur"/>
 	[Route("/Compteur/{CleCompteur}", HttpVerbs.Delete, Summary = "Supprime une entité Compteur à partir de son id")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class DeleteCompteur : IReturnVoid, IDelete
@@ -98,9 +95,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Modifie partiellement une entité Compteur à partir de son id.
+	/// Modifie partiellement une entité <see cref="Compteur"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Compteur"/>
 	[Route("/Compteur/{CleCompteur}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Compteur à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
@@ -121,9 +117,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne le résultat d'une recherche sur les entités Compteur.
+	/// Retourne le résultat d'une recherche sur les entités <see cref="Compteur"/>.
 	/// </summary>
-	/// <seealso cref="Compteur"/>
 	[Route("/Compteur/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Compteur")]
 	public partial class SearchCompteur : IReturn<List<BaseEntity>>, IGet
 	{

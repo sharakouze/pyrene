@@ -246,7 +246,7 @@ namespace <#= pocoNamespace #>
 
 		List<Column> lstPlaceholderCols = GetRouteColumns(table, TransformRoutePath);
 
-		string resourceName = GetResourceName(lstPlaceholderCols);
+		string entityName = table.ClassName; // GetEntityName(lstPlaceholderCols);
 
         if (!msgExcluded && AddRouteAttributes)
         {
@@ -255,7 +255,7 @@ namespace <#= pocoNamespace #>
             {
 				string strRoute = GetStrRoutePath(lstPlaceholderCols, false, false);
 #>
-    [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute ou remplace une entité {0} à partir de son id", resourceName) #>")]
+    [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute ou remplace une entité {0} à partir de son id", entityName) #>")]
 <#
             }
 
@@ -307,7 +307,7 @@ namespace <#= pocoNamespace #>
 			if (colFkey != null)
             {
 				Column refCol = colFkey.ReferencedColumns.First();
-				remarks.Add(string.Format("Référence <se cref=\"{0}.{1}\"/>.", colFkey.ReferencedTable.ClassName, refCol.PropertyName));
+				remarks.Add(string.Format("Référence <see cref=\"{0}.{1}\"/>.", colFkey.ReferencedTable.ClassName, refCol.PropertyName));
             }
 
 			if (remarks.Any())
@@ -526,22 +526,21 @@ namespace <#= msgNamespace #>
 		if (!selectExcluded)
 		{
 			string selectTableClassName = "Select" + table.ClassName;
-			string selectTableClassDescription = string.Format("Retourne une collection des entités {0}", resourceName);
+			string selectTableClassDescription = "Retourne une collection des entités {0}";
 			string skipPropDescription = "Nombre d'éléments à ignorer avant de retourner les éléments restants";
 			string takePropDescription = "Nombre d'éléments à retourner";
 			string sortPropDescription = "Tri";
 
 #>
 	/// <summary>
-	/// <#= FormatXmlDoc(selectTableClassDescription) #>
+	/// <#= FormatXmlDoc(selectTableClassDescription, entityName) #>
 	/// </summary>
-	/// <seealso cref="<#= table.ClassName #>"/>
 <#
             if (AddRouteAttributes)
             {
 				string strRoute = GetStrRoutePath(lstPlaceholderCols, false, false);
 #>
-	[Route("<#= strRoute #>", HttpVerbs.Get, Summary = "<#= selectTableClassDescription #>")]
+	[Route("<#= strRoute #>", HttpVerbs.Get, Summary = "<#= string.Format(selectTableClassDescription, entityName) #>")]
 <#
 			    if (AddApiAttributes)
                 {
@@ -657,19 +656,18 @@ namespace <#= msgNamespace #>
 		if (!getExcluded)
 		{
 			string getTableClassName = "Get" + table.ClassName;
-			string getTableClassDescription = string.Format("Retourne une entité {0} à partir de son id", resourceName);
+			string getTableClassDescription = "Retourne une entité {0} à partir de son id";
 			string fieldsPropDescription = "Champs à retourner, ou null pour retourner tous les champs";
 #>
 	/// <summary>
-	/// <#= FormatXmlDoc(getTableClassDescription) #>
+	/// <#= FormatXmlDoc(getTableClassDescription, entityName) #>
 	/// </summary>
-	/// <seealso cref="<#= table.ClassName #>"/>
 <#
             if (AddRouteAttributes)
             {
 				string strRoute = GetStrRoutePath(lstPlaceholderCols);
 #>
-	[Route("<#= strRoute #>", HttpVerbs.Get, Summary = "<#= getTableClassDescription #>")]
+	[Route("<#= strRoute #>", HttpVerbs.Get, Summary = "<#= string.Format(getTableClassDescription, entityName) #>")]
 <#
 			    if (AddApiAttributes)
                 {
@@ -743,18 +741,17 @@ namespace <#= msgNamespace #>
 		if (!deleteExcluded)
 		{
 			string deleteTableClassName = "Delete" + table.ClassName;
-			string deleteTableClassDescription = string.Format("Supprime une entité {0} à partir de son id", resourceName);
+			string deleteTableClassDescription = "Supprime une entité {0} à partir de son id";
 #>
 	/// <summary>
-	/// <#= FormatXmlDoc(deleteTableClassDescription) #>
+	/// <#= FormatXmlDoc(deleteTableClassDescription, entityName) #>
 	/// </summary>
-	/// <seealso cref="<#= table.ClassName #>"/>
 <#
             if (AddRouteAttributes)
             {
 				string strRoute = GetStrRoutePath(lstPlaceholderCols);
 #>
-	[Route("<#= strRoute #>", HttpVerbs.Delete, Summary = "<#= deleteTableClassDescription #>")]
+	[Route("<#= strRoute #>", HttpVerbs.Delete, Summary = "<#= string.Format(deleteTableClassDescription, entityName) #>")]
 <#
 			    if (AddApiAttributes)
                 {
@@ -816,19 +813,18 @@ namespace <#= msgNamespace #>
 		if (!patchExcluded)
 		{
 			string patchTableClassName = "Patch" + table.ClassName;
-			string patchTableClassDescription = string.Format("Modifie partiellement une entité {0} à partir de son id", resourceName);
+			string patchTableClassDescription = "Modifie partiellement une entité {0} à partir de son id";
 			string fieldsPropDescription = "Liste des modifications à appliquer";
 #>
 	/// <summary>
-	/// <#= FormatXmlDoc(patchTableClassDescription) #>
+	/// <#= FormatXmlDoc(patchTableClassDescription, entityName) #>
 	/// </summary>
-	/// <seealso cref="<#= table.ClassName #>"/>
 <#
             if (AddRouteAttributes)
             {
 				string strRoute = GetStrRoutePath(lstPlaceholderCols);
 #>
-	[Route("<#= strRoute #>", HttpVerbs.Patch, Summary = "<#= patchTableClassDescription #>")]
+	[Route("<#= strRoute #>", HttpVerbs.Patch, Summary = "<#= string.Format(patchTableClassDescription, entityName) #>")]
 <#
 			    if (AddApiAttributes)
                 {
@@ -911,20 +907,19 @@ namespace <#= msgNamespace #>
 			if (!searchExcluded)
 			{
 				var searchClassName = "Search" + table.ClassName;
-				var searchDescription = string.Format("Retourne le résultat d'une recherche sur les entités {0}", resourceName);
+				var searchDescription = "Retourne le résultat d'une recherche sur les entités {0}";
 				var textPropDescription = "Texte à rechercher";
 				var maxPropDescription = "Nombre maximum de résultats à retourner";
 #>
 	/// <summary>
-	/// <#= FormatXmlDoc(searchDescription) #>
+	/// <#= FormatXmlDoc(searchDescription, entityName) #>
 	/// </summary>
-	/// <seealso cref="<#= table.ClassName #>"/>
 <#
 			if (AddRouteAttributes)
             {
 				string strRouteBase = GetStrRoutePath(lstPlaceholderCols, false);
 #>
-	[Route("<#= strRouteBase #>/Recherche/{Text}", HttpVerbs.Get, Summary = "<#= searchDescription #>")]
+	[Route("<#= strRouteBase #>/Recherche/{Text}", HttpVerbs.Get, Summary = "<#= string.Format(searchDescription, entityName) #>")]
 <#
 			}
 #>
@@ -972,8 +967,12 @@ namespace <#= msgNamespace #>
     manager.Process(SplitIntoMultipleFiles);
 #>
 <#+
-private string FormatXmlDoc(string str)
+private string FormatXmlDoc(string str, params string[] crefs)
 {
+	if (crefs != null)
+    {
+		str = string.Format(str, crefs.Select(s => "<see cref=\"" + s + "\"/>").ToArray());
+    }
 	if (string.IsNullOrEmpty(str))
     {
 		return string.Empty;
@@ -1262,7 +1261,7 @@ private string GetStrRoutePath(List<Column> lstCols, bool keepEnd = true, bool r
 	return strRoute;
 }
 
-private string GetResourceName(List<Column> lstCols)
+private string GetEntityName(List<Column> lstCols)
 {
 	List<string> parts = new List<string>();
 

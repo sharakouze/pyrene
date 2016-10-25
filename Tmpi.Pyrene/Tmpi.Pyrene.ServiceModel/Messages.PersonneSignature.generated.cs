@@ -21,10 +21,9 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne une collection des entités Signature (Personne).
+	/// Retourne une collection des entités <see cref="PersonneSignature"/>.
 	/// </summary>
-	/// <seealso cref="PersonneSignature"/>
-	[Route("/Personne/{ClePersonne}/Signature", HttpVerbs.Get, Summary = "Retourne une collection des entités Signature (Personne)")]
+	[Route("/Personne/{ClePersonne}/Signature", HttpVerbs.Get, Summary = "Retourne une collection des entités PersonneSignature")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class SelectPersonneSignature : IReturn<SelectPersonneSignatureResponse>, IGet, IPagination
 	{
@@ -66,10 +65,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne une entité Signature (Personne) à partir de son id.
+	/// Retourne une entité <see cref="PersonneSignature"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="PersonneSignature"/>
-	[Route("/Personne/Signature/{ClePersonne}", HttpVerbs.Get, Summary = "Retourne une entité Signature (Personne) à partir de son id")]
+	[Route("/Personne/Signature/{ClePersonne}", HttpVerbs.Get, Summary = "Retourne une entité PersonneSignature à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class GetPersonneSignature : IReturn<PersonneSignature>, IGet
@@ -88,10 +86,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Supprime une entité Signature (Personne) à partir de son id.
+	/// Supprime une entité <see cref="PersonneSignature"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="PersonneSignature"/>
-	[Route("/Personne/Signature/{ClePersonne}", HttpVerbs.Delete, Summary = "Supprime une entité Signature (Personne) à partir de son id")]
+	[Route("/Personne/Signature/{ClePersonne}", HttpVerbs.Delete, Summary = "Supprime une entité PersonneSignature à partir de son id")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class DeletePersonneSignature : IReturnVoid, IDelete
 	{
@@ -104,10 +101,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Modifie partiellement une entité Signature (Personne) à partir de son id.
+	/// Modifie partiellement une entité <see cref="PersonneSignature"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="PersonneSignature"/>
-	[Route("/Personne/Signature/{ClePersonne}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Signature (Personne) à partir de son id")]
+	[Route("/Personne/Signature/{ClePersonne}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité PersonneSignature à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
     [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]

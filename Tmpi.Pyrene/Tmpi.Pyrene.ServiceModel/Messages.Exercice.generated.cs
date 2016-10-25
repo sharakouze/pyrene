@@ -21,9 +21,8 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
 	/// <summary>
-	/// Retourne une collection des entités Exercice.
+	/// Retourne une collection des entités <see cref="Exercice"/>.
 	/// </summary>
-	/// <seealso cref="Exercice"/>
 	[Route("/Exercice", HttpVerbs.Get, Summary = "Retourne une collection des entités Exercice")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class SelectExercice : IReturn<SelectExerciceResponse>, IGet, IPagination
@@ -60,9 +59,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne une entité Exercice à partir de son id.
+	/// Retourne une entité <see cref="Exercice"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Exercice"/>
 	[Route("/Exercice/{CleExercice}", HttpVerbs.Get, Summary = "Retourne une entité Exercice à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
@@ -82,9 +80,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Supprime une entité Exercice à partir de son id.
+	/// Supprime une entité <see cref="Exercice"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Exercice"/>
 	[Route("/Exercice/{CleExercice}", HttpVerbs.Delete, Summary = "Supprime une entité Exercice à partir de son id")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
 	public partial class DeleteExercice : IReturnVoid, IDelete
@@ -98,9 +95,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Modifie partiellement une entité Exercice à partir de son id.
+	/// Modifie partiellement une entité <see cref="Exercice"/> à partir de son id.
 	/// </summary>
-	/// <seealso cref="Exercice"/>
 	[Route("/Exercice/{CleExercice}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Exercice à partir de son id")]
     [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
     [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
@@ -121,9 +117,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne le résultat d'une recherche sur les entités Exercice.
+	/// Retourne le résultat d'une recherche sur les entités <see cref="Exercice"/>.
 	/// </summary>
-	/// <seealso cref="Exercice"/>
 	[Route("/Exercice/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Exercice")]
 	public partial class SearchExercice : IReturn<List<BaseEntity>>, IGet
 	{
