@@ -131,11 +131,5 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[ApiMember(Description = "Adresse email", DataType = SwaggerDataTypes.String)]
 		public string NumEmail { get; set; }
 
-		[Reference]
-		public PersonneSignature Signature { get; set; }
-
-		[Reference]
-		public List<PersonneProfil> LstProfil { get; set; }
-
 	}
 }

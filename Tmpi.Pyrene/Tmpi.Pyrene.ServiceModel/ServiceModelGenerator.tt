@@ -62,7 +62,7 @@
     bool AddCustomInterfaces = true;
 
     // Ajoute des propriétés avec l'attribut [Reference] pour les tables enfants ou les FK
-    bool AddChildReferences = true;
+    bool AddChildReferences = false;
     bool AddFKeyReferences = true;
 
     // Ajoute [ApiMember], [ApiAllowableValues]...

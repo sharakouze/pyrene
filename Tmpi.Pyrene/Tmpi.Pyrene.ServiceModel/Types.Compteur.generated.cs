@@ -137,8 +137,5 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[ApiMember(Description = "Format du modèle de numérotation", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string ValFormatNumero { get; set; }
 
-		[Reference]
-		public List<CompteurValeur> LstValeur { get; set; }
-
 	}
 }

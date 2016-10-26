@@ -125,8 +125,5 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[ApiMember(Description = "Corps du message", DataType = SwaggerDataTypes.String)]
 		public string TxtMessage { get; set; }
 
-		[Reference]
-		public List<MandatMandataire> Lstaire { get; set; }
-
 	}
 }

@@ -217,11 +217,5 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[ApiMember(DataType = SwaggerDataTypes.Bool, IsRequired = true)]
 		public bool EstEnvoiMailBonCde { get; set; }
 
-		[Reference]
-		public List<FournContact> LstContact { get; set; }
-
-		[Reference]
-		public List<FournBanque> LstBanque { get; set; }
-
 	}
 }
