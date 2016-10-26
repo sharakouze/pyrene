@@ -21,7 +21,6 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
     [Route("/Exercice", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Exercice à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
     [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class Exercice : IReturn<Exercice>, IPost, IAuditable
 	{

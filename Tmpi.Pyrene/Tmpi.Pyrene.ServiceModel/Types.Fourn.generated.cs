@@ -21,7 +21,6 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
     [Route("/Fourn", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Fourn à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
     [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 	public partial class Fourn : IReturn<Fourn>, IPost, IAuditable
 	{
@@ -219,10 +218,10 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public bool EstEnvoiMailBonCde { get; set; }
 
 		[Reference]
-		public List<FournBanque> LstBanque { get; set; }
+		public List<FournContact> LstContact { get; set; }
 
 		[Reference]
-		public List<FournContact> LstContact { get; set; }
+		public List<FournBanque> LstBanque { get; set; }
 
 	}
 }

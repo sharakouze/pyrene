@@ -262,7 +262,6 @@ namespace <#= pocoNamespace #>
             if (AddApiAttributes)
             {
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
     [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
 <#
             }
