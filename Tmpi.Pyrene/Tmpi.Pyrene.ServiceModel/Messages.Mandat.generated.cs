@@ -40,9 +40,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 		public int? Take { get; set; }
 
         /// <summary>
-        /// Tri.
+        /// Ordre de tri.
         /// </summary>
-		[ApiMember(Description = "Tri", DataType = SwaggerDataTypes.ArrayOfString)]
+		[ApiMember(Description = "Ordre de tri", DataType = SwaggerDataTypes.ArrayOfString)]
 		public string[] Sort { get; set; }
 	}
 

@@ -154,6 +154,17 @@ using ServiceStack.Model;
         TweakSchema(allTables);
     }
 
+	// Test doublons
+	List<string> lstDuplicate = allTables.GroupBy(t => t.ClassName).Where(grp => grp.Count() > 1).Select(grp => grp.Key).ToList();
+	if (lstDuplicate.Any())
+    {
+		string errorMsg = string.Format("Impossible de générer le modèle car des noms de tables sont en double : {0}",
+			string.Join(", ", lstDuplicate));
+		Error(errorMsg);
+		
+		return "// " + errorMsg; // interruption de la génération
+    }
+
     foreach (Table table in allTables)
     {
 	    bool msgExcluded = MsgTableFilterExclude != null && MsgTableFilterExclude.IsMatch(table.ClassName);
@@ -528,7 +539,7 @@ namespace <#= msgNamespace #>
 			string selectTableClassDescription = "Retourne une collection des entités {0}";
 			string skipPropDescription = "Nombre d'éléments à ignorer avant de retourner les éléments restants";
 			string takePropDescription = "Nombre d'éléments à retourner";
-			string sortPropDescription = "Tri";
+			string sortPropDescription = "Ordre de tri";
 
 #>
 	/// <summary>
@@ -968,13 +979,13 @@ namespace <#= msgNamespace #>
 <#+
 private string FormatXmlDoc(string str, params string[] crefs)
 {
-	if (crefs != null)
-    {
-		str = string.Format(str, crefs.Select(s => "<see cref=\"" + s + "\"/>").ToArray());
-    }
 	if (string.IsNullOrEmpty(str))
     {
 		return string.Empty;
+    }
+	if (crefs != null)
+    {
+		str = string.Format(str, crefs.Select(s => "<see cref=\"" + s + "\"/>").ToArray());
     }
 	if (!str.EndsWith("."))
     {
