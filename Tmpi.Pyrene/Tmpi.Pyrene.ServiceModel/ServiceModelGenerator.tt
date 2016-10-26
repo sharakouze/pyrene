@@ -162,7 +162,10 @@ using ServiceStack.Model;
 			string.Join(", ", lstDuplicate));
 		Error(errorMsg);
 		
-		return "// " + errorMsg; // interruption de la génération
+#>
+// <#= errorMsg #>
+<#
+		allTables.Clear();
     }
 
     foreach (Table table in allTables)
