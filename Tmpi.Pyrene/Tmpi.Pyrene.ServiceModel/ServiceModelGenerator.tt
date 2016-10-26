@@ -18,6 +18,7 @@
     - Commentaires sur les [References] ?
 	- Possibilité d'avoir 0 PK ?
 	- Namespace par rapport au schéma
+	- Doc complementaire sous forme d'url dans Route(Note="http://")
 	****************/
 
 	/*********************/

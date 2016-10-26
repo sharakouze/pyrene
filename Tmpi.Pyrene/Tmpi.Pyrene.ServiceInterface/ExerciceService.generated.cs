@@ -213,17 +213,7 @@ namespace Tmpi.Pyrene.ServiceInterface
             }
 			else
 			{
-				foreach (string s in request.Sort)
-				{
-					if (s.StartsWith("-"))
-					{
-						q.OrderByDescending(s.Substring(1));
-					}
-					else
-					{
-						q.OrderBy(s);
-					}
-				}
+                q.OrderByFields(request.Sort);
 			}
 
 			long count = Db.Count(q);
