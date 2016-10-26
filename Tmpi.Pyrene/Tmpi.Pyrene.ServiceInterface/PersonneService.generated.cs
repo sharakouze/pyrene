@@ -103,7 +103,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 						joinExpr = joinExpr.And((t1, t2) => t1.CleService == t2.CleService);
 					}
 
-					q = q.Join<PersonneProfil>(joinExpr, Db.JoinAlias("t2"));
+					q.Join<PersonneProfil>(joinExpr, Db.JoinAlias("t2"));
 				}
 				else
 				{
@@ -158,7 +158,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 						joinExpr = joinExpr.And((t1, t2) => t1.ClePersonne == t2.ClePersonne);
 					}
 
-					q = q.Join<PersonneProfil>(joinExpr, Db.JoinAlias("t2"));
+					q.Join<PersonneProfil>(joinExpr, Db.JoinAlias("t2"));
 				}
 				else
 				{
@@ -533,7 +533,7 @@ namespace Tmpi.Pyrene.ServiceInterface
             
 			if (request.Sort.IsNullOrEmpty())
             {
-                q.OrderBy(x => x.LibPersonne); // Tri par défaut.
+                q.OrderBy(x => x.CodPersonne); // Tri par défaut.
             }
 			else
 			{
@@ -574,7 +574,7 @@ namespace Tmpi.Pyrene.ServiceInterface
             
 			if (request.Sort.IsNullOrEmpty())
             {
-                q.OrderBy(x => x.LibProfil); // Tri par défaut.
+                q.OrderBy(x => x.CodProfil); // Tri par défaut.
             }
 			else
 			{
@@ -615,7 +615,7 @@ namespace Tmpi.Pyrene.ServiceInterface
             
 			if (request.Sort.IsNullOrEmpty())
             {
-                q.OrderBy(x => x.LibSignature); // Tri par défaut.
+                q.OrderBy(x => x.ClePersonne); // Tri par défaut.
             }
 			else
 			{

@@ -146,10 +146,12 @@ namespace Tmpi.Pyrene.ServiceInterface
 				return null;
 			}
 
-            var q = Db.From<ServiceModel.Types.Service>().Where(x => x.LibService.Contains(request.Text));
+            var q = Db.From<ServiceModel.Types.Service>()
+				.Where(x => x.LibService.Contains(request.Text))
+				.Select(x => new { CleObjet = x.CleService,  CodObjet = x.CodService, LibObjet = x.LibService });
             if (request.Max > 0)
             {
-                q = q.Limit(request.Max);
+                q.Limit(request.Max);
             }
 
             var items = Db.Select<BaseEntity>(q);

@@ -103,7 +103,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 						joinExpr = joinExpr.And((t1, t2) => t1.CodIBAN == t2.CodIBAN);
 					}
 
-					q = q.Join<FournBanque>(joinExpr, Db.JoinAlias("t2"));
+					q.Join<FournBanque>(joinExpr, Db.JoinAlias("t2"));
 				}
 				else
 				{
@@ -173,7 +173,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 						joinExpr = joinExpr.And((t1, t2) => t1.NomContact == t2.NomContact);
 					}
 
-					q = q.Join<FournContact>(joinExpr, Db.JoinAlias("t2"));
+					q.Join<FournContact>(joinExpr, Db.JoinAlias("t2"));
 				}
 				else
 				{
@@ -531,10 +531,12 @@ namespace Tmpi.Pyrene.ServiceInterface
 				return null;
 			}
 
-            var q = Db.From<Fourn>().Where(x => x.LibFourn.Contains(request.Text));
+            var q = Db.From<Fourn>()
+				.Where(x => x.LibFourn.Contains(request.Text))
+				.Select(x => new { CleObjet = x.CleFourn,  CodObjet = x.CodFourn, LibObjet = x.LibFourn });
             if (request.Max > 0)
             {
-                q = q.Limit(request.Max);
+                q.Limit(request.Max);
             }
 
             var items = Db.Select<BaseEntity>(q);
@@ -596,7 +598,7 @@ namespace Tmpi.Pyrene.ServiceInterface
             
 			if (request.Sort.IsNullOrEmpty())
             {
-                q.OrderBy(x => x.LibBanque); // Tri par défaut.
+                q.OrderBy(x => x.CleBanque); // Tri par défaut.
             }
 			else
 			{
@@ -637,7 +639,7 @@ namespace Tmpi.Pyrene.ServiceInterface
             
 			if (request.Sort.IsNullOrEmpty())
             {
-                q.OrderBy(x => x.LibContact); // Tri par défaut.
+                q.OrderBy(x => x.NomContact); // Tri par défaut.
             }
 			else
 			{

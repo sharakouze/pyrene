@@ -146,10 +146,12 @@ namespace Tmpi.Pyrene.ServiceInterface
 				return null;
 			}
 
-            var q = Db.From<TVA>().Where(x => x.LibTVA.Contains(request.Text));
+            var q = Db.From<TVA>()
+				.Where(x => x.LibTVA.Contains(request.Text))
+				.Select(x => new { CleObjet = x.CleTVA,  CodObjet = x.CodTVA, LibObjet = x.LibTVA });
             if (request.Max > 0)
             {
-                q = q.Limit(request.Max);
+                q.Limit(request.Max);
             }
 
             var items = Db.Select<BaseEntity>(q);

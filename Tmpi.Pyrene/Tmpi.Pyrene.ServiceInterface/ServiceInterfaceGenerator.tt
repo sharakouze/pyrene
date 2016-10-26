@@ -205,7 +205,8 @@ namespace <#= fileNamespace #>
 				stdColFormat = ReplaceFirst(item.PocoClass.Name, kvp.Key, "{0}");
             }
 
-			CodeProperty pkProp = GetPrimaryKeyProperty(item.PocoClass);
+			IEnumerable<CodeProperty> allPocoProperties = VisualStudioHelper.CodeModel.GetAllProperties(item.PocoClass);
+			CodeProperty pkProp = GetPrimaryKeyProperty(allPocoProperties);
 
 			if (!dicPocoUnicityMethods.ContainsKey(item.PocoClass.Name) && (pkProp != null))
             {
@@ -215,7 +216,7 @@ namespace <#= fileNamespace #>
 
 				dicPocoUnicityMethods.Add(item.PocoClass.Name, new List<string>());
 
-				List<CodeProperty[]> lstIdxProps = GetUniqueProperties(item.PocoClass);
+				List<CodeProperty[]> lstIdxProps = GetUniqueProperties(item.PocoClass, allPocoProperties);
 				foreach (CodeProperty[] lstProps in lstIdxProps)
 				{
 					string methodName = item.PocoClass.Name + "_" + string.Join("_", lstProps.Select(p => p.Name)) + "_EstUnique";
@@ -257,7 +258,7 @@ namespace <#= fileNamespace #>
 						}
 #>
 
-					q = q.Join<<#= pocoClassName #>>(joinExpr, Db.JoinAlias("t2"));
+					q.Join<<#= pocoClassName #>>(joinExpr, Db.JoinAlias("t2"));
 				}
 				else
 				{
@@ -323,9 +324,14 @@ namespace <#= fileNamespace #>
 			if (request.Sort.IsNullOrEmpty())
             {
 <# 
-	
+	string propName = GetFirstOccurenceOfProperty(allPocoProperties, 
+		string.Format(stdColFormat, "Lib"), string.Format(stdColFormat, "Cod"), string.Format(stdColFormat, "Num"), string.Format(stdColFormat, "Nom"));
+	if (string.IsNullOrEmpty(propName))
+    {
+		propName = pkProp.Name;
+    }
 #>
-                q.OrderBy(x => x.<#= string.Format(stdColFormat, "Lib") #>); // Tri par défaut.
+                q.OrderBy(x => x.<#= propName #>); // Tri par défaut.
             }
 			else
 			{
@@ -484,10 +490,12 @@ namespace <#= fileNamespace #>
 				return null;
 			}
 
-            var q = Db.From<<#= pocoClassName #>>().Where(x => x.<#= string.Format(stdColFormat, "Lib") #>.Contains(request.Text));
+            var q = Db.From<<#= pocoClassName #>>()
+				.Where(x => x.<#= string.Format(stdColFormat, "Lib") #>.Contains(request.Text))
+				.Select(x => new { CleObjet = x.<#= string.Format(stdColFormat, "Cle") #>,  CodObjet = x.<#= string.Format(stdColFormat, "Cod") #>, LibObjet = x.<#= string.Format(stdColFormat, "Lib") #> });
             if (request.Max > 0)
             {
-                q = q.Limit(request.Max);
+                q.Limit(request.Max);
             }
 
             var items = Db.Select<BaseEntity>(q);
@@ -674,6 +682,23 @@ class RequestItem
 	public CodeClass RequestClass { get; set; }
 }
 
+private string GetFirstOccurenceOfProperty(IEnumerable<CodeProperty> lstProperties, params string[] propertyNames)
+{
+	IEnumerable<string> lst = lstProperties.Select(p => p.Name);
+
+	string propName = null;
+	foreach (string prop in propertyNames)
+    {
+		propName = lst.FirstOrDefault(p => p == prop);
+		if (!string.IsNullOrEmpty(propName))
+        {
+			break;
+        }
+    }
+
+	return propName;
+}
+
 private string ReplaceFirst(string text, string search, string replace)
 {
 	int pos = text.IndexOf(search);
@@ -756,10 +781,9 @@ private string GetIdFromRouteParts(List<string> parts, string pocoClassName)
 	return id ?? "";
 }
 
-private CodeProperty GetPrimaryKeyProperty(CodeClass codeClass)
+private CodeProperty GetPrimaryKeyProperty(IEnumerable<CodeProperty> lstProperties)
 {
-	IEnumerable<CodeProperty> allProperties = VisualStudioHelper.CodeModel.GetAllProperties(codeClass);
-	foreach (CodeProperty property in allProperties)
+	foreach (CodeProperty property in lstProperties)
     {
 		bool isPk = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(property.Attributes, vsCMElement.vsCMElementAttribute, false)
 			.OfType<CodeAttribute>()
@@ -774,11 +798,9 @@ private CodeProperty GetPrimaryKeyProperty(CodeClass codeClass)
 	return null;
 }
 
-private List<CodeProperty[]> GetUniqueProperties(CodeClass codeClass)
+private List<CodeProperty[]> GetUniqueProperties(CodeClass codeClass, IEnumerable<CodeProperty> lstProperties)
 {
 	List<CodeProperty[]> lstIdxProps = new List<CodeProperty[]>();
-
-	IEnumerable<CodeProperty> allProperties = VisualStudioHelper.CodeModel.GetAllProperties(codeClass);
 
 	// [CompositeIndex(true, ...)]
 	IEnumerable<CodeAttribute> compositeIdxAttrs = VisualStudioHelper.CodeModel.GetAllClassAttributes(codeClass)
@@ -812,7 +834,7 @@ private List<CodeProperty[]> GetUniqueProperties(CodeClass codeClass)
 
 				if (!string.IsNullOrEmpty(strParam))
                 {
-    				CodeProperty prop = allProperties.SingleOrDefault(p => p.Name == strParam);
+    				CodeProperty prop = lstProperties.SingleOrDefault(p => p.Name == strParam);
 					if (prop != null)
                     {
 						lstProps.Add(prop);
@@ -825,7 +847,7 @@ private List<CodeProperty[]> GetUniqueProperties(CodeClass codeClass)
     }
 	
 	// [Index(true)]
-	foreach (CodeProperty property in allProperties)
+	foreach (CodeProperty property in lstProperties)
     {
 		IEnumerable<CodeAttribute> idxAttrs = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(property.Attributes, vsCMElement.vsCMElementAttribute, false)
 			.OfType<CodeAttribute>()
