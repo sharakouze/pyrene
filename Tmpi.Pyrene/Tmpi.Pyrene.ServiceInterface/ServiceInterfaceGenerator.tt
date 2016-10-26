@@ -150,10 +150,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using ServiceStack;
 using ServiceStack.OrmLite;
-using <#= sourceNamespace #>.Messages;
-using <#= sourceNamespace #>.Types;
 using Tmpi.Pyrene.Infrastructure;
 using Tmpi.Pyrene.Infrastructure.Linq;
+using <#= sourceNamespace #>.Messages;
+using <#= sourceNamespace #>.Types;
 
 namespace <#= fileNamespace #>
 {
@@ -197,6 +197,12 @@ namespace <#= fileNamespace #>
 			if (pocoClassName == "Service")
             {
 				pocoClassName = "ServiceModel.Types." + pocoClassName;
+            }
+
+			string stdColFormat = "{0}" + item.PocoClass.Name;
+			if (item.PocoClass.Name != kvp.Key)
+            {
+				stdColFormat = ReplaceFirst(item.PocoClass.Name, kvp.Key, "{0}");
             }
 
 			CodeProperty pkProp = GetPrimaryKeyProperty(item.PocoClass);
@@ -313,6 +319,28 @@ namespace <#= fileNamespace #>
 		{
 			var q = Db.From<<#= pocoClassName #>>()
 				.Limit(request.Skip, request.Take);
+            
+			if (request.Sort.IsNullOrEmpty())
+            {
+<# 
+	
+#>
+                q.OrderBy(x => x.<#= string.Format(stdColFormat, "Lib") #>); // Tri par défaut.
+            }
+			else
+			{
+				foreach (string s in request.Sort)
+				{
+					if (s.StartsWith("-"))
+					{
+						q.OrderByDescending(s.Substring(1));
+					}
+					else
+					{
+						q.OrderBy(s);
+					}
+				}
+			}
 
 			long count = Db.Count(q);
 			var lst = Db.LoadSelect(q);
@@ -456,10 +484,7 @@ namespace <#= fileNamespace #>
 				return null;
 			}
 
-<#
-				string suffix = item.PocoClass.Name;
-#>
-            var q = Db.From<<#= pocoClassName #>>().Where(x => x.Lib<#= suffix #>.Contains(request.Text));
+            var q = Db.From<<#= pocoClassName #>>().Where(x => x.<#= string.Format(stdColFormat, "Lib") #>.Contains(request.Text));
             if (request.Max > 0)
             {
                 q = q.Limit(request.Max);
@@ -647,6 +672,16 @@ class RequestItem
 	public CodeClass PocoClass { get; set; }
 
 	public CodeClass RequestClass { get; set; }
+}
+
+private string ReplaceFirst(string text, string search, string replace)
+{
+	int pos = text.IndexOf(search);
+	if (pos < 0)
+	{
+		return text;
+	}
+	return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
 }
 
 private string ToProperType(CodeTypeRef type, params string[] namespaces)

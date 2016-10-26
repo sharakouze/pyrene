@@ -13,10 +13,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using ServiceStack;
 using ServiceStack.OrmLite;
-using Tmpi.Pyrene.ServiceModel.Messages;
-using Tmpi.Pyrene.ServiceModel.Types;
 using Tmpi.Pyrene.Infrastructure;
 using Tmpi.Pyrene.Infrastructure.Linq;
+using Tmpi.Pyrene.ServiceModel.Messages;
+using Tmpi.Pyrene.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.ServiceInterface
 {
@@ -530,6 +530,25 @@ namespace Tmpi.Pyrene.ServiceInterface
 		{
 			var q = Db.From<Personne>()
 				.Limit(request.Skip, request.Take);
+            
+			if (request.Sort.IsNullOrEmpty())
+            {
+                q.OrderBy(x => x.LibPersonne); // Tri par défaut.
+            }
+			else
+			{
+				foreach (string s in request.Sort)
+				{
+					if (s.StartsWith("-"))
+					{
+						q.OrderByDescending(s.Substring(1));
+					}
+					else
+					{
+						q.OrderBy(s);
+					}
+				}
+			}
 
 			long count = Db.Count(q);
 			var lst = Db.LoadSelect(q);
@@ -552,6 +571,25 @@ namespace Tmpi.Pyrene.ServiceInterface
 		{
 			var q = Db.From<PersonneProfil>()
 				.Limit(request.Skip, request.Take);
+            
+			if (request.Sort.IsNullOrEmpty())
+            {
+                q.OrderBy(x => x.LibProfil); // Tri par défaut.
+            }
+			else
+			{
+				foreach (string s in request.Sort)
+				{
+					if (s.StartsWith("-"))
+					{
+						q.OrderByDescending(s.Substring(1));
+					}
+					else
+					{
+						q.OrderBy(s);
+					}
+				}
+			}
 
 			long count = Db.Count(q);
 			var lst = Db.LoadSelect(q);
@@ -574,6 +612,25 @@ namespace Tmpi.Pyrene.ServiceInterface
 		{
 			var q = Db.From<PersonneSignature>()
 				.Limit(request.Skip, request.Take);
+            
+			if (request.Sort.IsNullOrEmpty())
+            {
+                q.OrderBy(x => x.LibSignature); // Tri par défaut.
+            }
+			else
+			{
+				foreach (string s in request.Sort)
+				{
+					if (s.StartsWith("-"))
+					{
+						q.OrderByDescending(s.Substring(1));
+					}
+					else
+					{
+						q.OrderBy(s);
+					}
+				}
+			}
 
 			long count = Db.Count(q);
 			var lst = Db.LoadSelect(q);

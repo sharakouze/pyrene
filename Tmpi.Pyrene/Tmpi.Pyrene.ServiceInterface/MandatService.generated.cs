@@ -13,10 +13,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using ServiceStack;
 using ServiceStack.OrmLite;
-using Tmpi.Pyrene.ServiceModel.Messages;
-using Tmpi.Pyrene.ServiceModel.Types;
 using Tmpi.Pyrene.Infrastructure;
 using Tmpi.Pyrene.Infrastructure.Linq;
+using Tmpi.Pyrene.ServiceModel.Messages;
+using Tmpi.Pyrene.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.ServiceInterface
 {
@@ -454,6 +454,25 @@ namespace Tmpi.Pyrene.ServiceInterface
 		{
 			var q = Db.From<Mandat>()
 				.Limit(request.Skip, request.Take);
+            
+			if (request.Sort.IsNullOrEmpty())
+            {
+                q.OrderBy(x => x.LibMandat); // Tri par défaut.
+            }
+			else
+			{
+				foreach (string s in request.Sort)
+				{
+					if (s.StartsWith("-"))
+					{
+						q.OrderByDescending(s.Substring(1));
+					}
+					else
+					{
+						q.OrderBy(s);
+					}
+				}
+			}
 
 			long count = Db.Count(q);
 			var lst = Db.LoadSelect(q);
@@ -476,6 +495,25 @@ namespace Tmpi.Pyrene.ServiceInterface
 		{
 			var q = Db.From<MandatMandataire>()
 				.Limit(request.Skip, request.Take);
+            
+			if (request.Sort.IsNullOrEmpty())
+            {
+                q.OrderBy(x => x.LibMandataire); // Tri par défaut.
+            }
+			else
+			{
+				foreach (string s in request.Sort)
+				{
+					if (s.StartsWith("-"))
+					{
+						q.OrderByDescending(s.Substring(1));
+					}
+					else
+					{
+						q.OrderBy(s);
+					}
+				}
+			}
 
 			long count = Db.Count(q);
 			var lst = Db.LoadSelect(q);

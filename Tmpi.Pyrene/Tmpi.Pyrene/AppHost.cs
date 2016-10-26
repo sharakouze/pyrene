@@ -31,11 +31,11 @@ namespace Tmpi.Pyrene
 
             SetConfig(new HostConfig
             {
-#if DEBUG
-                DebugMode = true,
-#else
-                DebugMode = false,
-#endif
+//#if DEBUG
+//                DebugMode = true,
+//#else
+//                DebugMode = false,
+//#endif
                 EnableFeatures = enableFeatures,
             });
         }
