@@ -23,8 +23,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Retourne une collection des entités <see cref="TVA"/>.
 	/// </summary>
-	[Route("/TVA", HttpVerbs.Get, Summary = "Retourne une collection des entités TVA")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/TVA", HttpVerbs.Get, Summary = "Retourne une collection des entités TVA", Notes = SwaggerDescriptions.SelectRequestNotes)]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité TVA spécifiée est introuvable")]
 	public partial class SelectTVA : IReturn<SelectTVAResponse>, IGet, IPagination
 	{
         /// <summary>
@@ -61,9 +61,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Retourne une entité <see cref="TVA"/> à partir de son id.
 	/// </summary>
-	[Route("/TVA/{CleTVA}", HttpVerbs.Get, Summary = "Retourne une entité TVA à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/TVA/{CleTVA}", HttpVerbs.Get, Summary = "Retourne une entité TVA à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité TVA ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité TVA spécifiée est introuvable")]
 	public partial class GetTVA : IReturn<TVA>, IGet
 	{
         /// <summary>
@@ -82,8 +82,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Supprime une entité <see cref="TVA"/> à partir de son id.
 	/// </summary>
-	[Route("/TVA/{CleTVA}", HttpVerbs.Delete, Summary = "Supprime une entité TVA à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/TVA/{CleTVA}", HttpVerbs.Delete, Summary = "Supprime une entité TVA à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité TVA spécifiée est introuvable")]
 	public partial class DeleteTVA : IReturnVoid, IDelete
 	{
         /// <summary>
@@ -97,10 +97,10 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Modifie partiellement une entité <see cref="TVA"/> à partir de son id.
 	/// </summary>
-	[Route("/TVA/{CleTVA}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité TVA à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
+	[Route("/TVA/{CleTVA}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité TVA à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité TVA ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité TVA spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité TVA spécifiée est un doublon")]
 	public partial class PatchTVA : IReturnVoid, IPatch
 	{
         /// <summary>
@@ -119,7 +119,7 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Retourne le résultat d'une recherche sur les entités <see cref="TVA"/>.
 	/// </summary>
-	[Route("/TVA/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités TVA")]
+	[Route("/TVA/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités TVA", Notes = SwaggerDescriptions.SearchRequestNotes)]
 	public partial class SearchTVA : IReturn<List<BaseEntity>>, IGet
 	{
         /// <summary>

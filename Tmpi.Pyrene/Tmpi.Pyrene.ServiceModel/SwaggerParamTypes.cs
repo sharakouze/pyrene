@@ -1,5 +1,8 @@
 ﻿namespace Tmpi.Pyrene.ServiceModel
 {
+    /// <summary>
+    /// http://swagger.io/specification/
+    /// </summary>
     internal static class SwaggerParamTypes
     {
         /// <summary>

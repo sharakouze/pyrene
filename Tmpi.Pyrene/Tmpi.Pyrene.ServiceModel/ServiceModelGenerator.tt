@@ -16,9 +16,8 @@
 	/***** TODO *****
 	- DefaultAttribute
     - Commentaires sur les [References] ?
-	- Possibilité d'avoir 0 PK ?
+	- Possibilité d'avoir 0 PKey ?
 	- Namespace par rapport au schéma
-	- Doc complementaire sous forme d'url dans Route(Note="http://")
 	****************/
 
 	/*********************/
@@ -270,14 +269,15 @@ namespace <#= pocoNamespace #>
             {
 				string strRoute = GetStrRoutePath(lstPlaceholderCols, false, false);
 #>
-    [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute ou remplace une entité {0} à partir de son id", entityName) #>")]
+    [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute ou remplace une entité {0} à partir de son id", entityName) #>", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 <#
             }
 
             if (AddApiAttributes)
             {
+				string entityNotUniqueResp = string.Format("L'entité {0} spécifiée est un doublon", entityName);
 #>
-    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
+    [ApiResponse(HttpStatusCode.Conflict, "<#= entityNotUniqueResp #>")]
 <#
             }
         }
@@ -554,12 +554,13 @@ namespace <#= msgNamespace #>
             {
 				string strRoute = GetStrRoutePath(lstPlaceholderCols, false, false);
 #>
-	[Route("<#= strRoute #>", HttpVerbs.Get, Summary = "<#= string.Format(selectTableClassDescription, entityName) #>")]
+	[Route("<#= strRoute #>", HttpVerbs.Get, Summary = "<#= string.Format(selectTableClassDescription, entityName) #>", Notes = SwaggerDescriptions.SelectRequestNotes)]
 <#
 			    if (AddApiAttributes)
                 {
+					string entityNotFoundResp = string.Format("L'entité {0} spécifiée est introuvable", entityName);
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.NotFound, "<#= entityNotFoundResp #>")]
 <#
                 }
 			}
@@ -681,13 +682,15 @@ namespace <#= msgNamespace #>
             {
 				string strRoute = GetStrRoutePath(lstPlaceholderCols);
 #>
-	[Route("<#= strRoute #>", HttpVerbs.Get, Summary = "<#= string.Format(getTableClassDescription, entityName) #>")]
+	[Route("<#= strRoute #>", HttpVerbs.Get, Summary = "<#= string.Format(getTableClassDescription, entityName) #>", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
 <#
 			    if (AddApiAttributes)
                 {
+					string entityFieldsNotFoundResp = string.Format("L'entité {0} ne contient pas tous les champs demandés", entityName);
+					string entityNotFoundResp = string.Format("L'entité {0} spécifiée est introuvable", entityName);
 #>
-    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.BadRequest, "<#= entityFieldsNotFoundResp #>")]
+    [ApiResponse(HttpStatusCode.NotFound, "<#= entityNotFoundResp #>")]
 <#
                 }
 			}
@@ -765,12 +768,13 @@ namespace <#= msgNamespace #>
             {
 				string strRoute = GetStrRoutePath(lstPlaceholderCols);
 #>
-	[Route("<#= strRoute #>", HttpVerbs.Delete, Summary = "<#= string.Format(deleteTableClassDescription, entityName) #>")]
+	[Route("<#= strRoute #>", HttpVerbs.Delete, Summary = "<#= string.Format(deleteTableClassDescription, entityName) #>", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
 <#
 			    if (AddApiAttributes)
                 {
+					string entityNotFoundResp = string.Format("L'entité {0} spécifiée est introuvable", entityName);
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.NotFound, "<#= entityNotFoundResp #>")]
 <#
                 }
 			}
@@ -838,14 +842,17 @@ namespace <#= msgNamespace #>
             {
 				string strRoute = GetStrRoutePath(lstPlaceholderCols);
 #>
-	[Route("<#= strRoute #>", HttpVerbs.Patch, Summary = "<#= string.Format(patchTableClassDescription, entityName) #>")]
+	[Route("<#= strRoute #>", HttpVerbs.Patch, Summary = "<#= string.Format(patchTableClassDescription, entityName) #>", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
 <#
 			    if (AddApiAttributes)
                 {
+					string entityFieldsNotFoundResp = string.Format("L'entité {0} ne contient pas tous les champs demandés", entityName);
+					string entityNotFoundResp = string.Format("L'entité {0} spécifiée est introuvable", entityName);
+					string entityNotUniqueResp = string.Format("L'entité {0} spécifiée est un doublon", entityName);
 #>
-    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
+    [ApiResponse(HttpStatusCode.BadRequest, "<#= entityFieldsNotFoundResp #>")]
+    [ApiResponse(HttpStatusCode.NotFound, "<#= entityNotFoundResp #>")]
+    [ApiResponse(HttpStatusCode.Conflict, "<#= entityNotUniqueResp #>")]
 <#
                 }
 			}
@@ -933,7 +940,7 @@ namespace <#= msgNamespace #>
             {
 				string strRouteBase = GetStrRoutePath(lstPlaceholderCols, false);
 #>
-	[Route("<#= strRouteBase #>/Recherche/{Text}", HttpVerbs.Get, Summary = "<#= string.Format(searchDescription, entityName) #>")]
+	[Route("<#= strRouteBase #>/Recherche/{Text}", HttpVerbs.Get, Summary = "<#= string.Format(searchDescription, entityName) #>", Notes = SwaggerDescriptions.SearchRequestNotes)]
 <#
 			}
 #>

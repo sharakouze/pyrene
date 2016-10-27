@@ -23,8 +23,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Retourne une collection des entités <see cref="Fourn"/>.
 	/// </summary>
-	[Route("/Fourn", HttpVerbs.Get, Summary = "Retourne une collection des entités Fourn")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/Fourn", HttpVerbs.Get, Summary = "Retourne une collection des entités Fourn", Notes = SwaggerDescriptions.SelectRequestNotes)]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité Fourn spécifiée est introuvable")]
 	public partial class SelectFourn : IReturn<SelectFournResponse>, IGet, IPagination
 	{
         /// <summary>
@@ -61,9 +61,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Retourne une entité <see cref="Fourn"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/{CleFourn}", HttpVerbs.Get, Summary = "Retourne une entité Fourn à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/Fourn/{CleFourn}", HttpVerbs.Get, Summary = "Retourne une entité Fourn à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité Fourn ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité Fourn spécifiée est introuvable")]
 	public partial class GetFourn : IReturn<Fourn>, IGet
 	{
         /// <summary>
@@ -82,8 +82,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Supprime une entité <see cref="Fourn"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/{CleFourn}", HttpVerbs.Delete, Summary = "Supprime une entité Fourn à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/Fourn/{CleFourn}", HttpVerbs.Delete, Summary = "Supprime une entité Fourn à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité Fourn spécifiée est introuvable")]
 	public partial class DeleteFourn : IReturnVoid, IDelete
 	{
         /// <summary>
@@ -97,10 +97,10 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Modifie partiellement une entité <see cref="Fourn"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/{CleFourn}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Fourn à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
+	[Route("/Fourn/{CleFourn}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Fourn à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité Fourn ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité Fourn spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité Fourn spécifiée est un doublon")]
 	public partial class PatchFourn : IReturnVoid, IPatch
 	{
         /// <summary>
@@ -119,7 +119,7 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Retourne le résultat d'une recherche sur les entités <see cref="Fourn"/>.
 	/// </summary>
-	[Route("/Fourn/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Fourn")]
+	[Route("/Fourn/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Fourn", Notes = SwaggerDescriptions.SearchRequestNotes)]
 	public partial class SearchFourn : IReturn<List<BaseEntity>>, IGet
 	{
         /// <summary>

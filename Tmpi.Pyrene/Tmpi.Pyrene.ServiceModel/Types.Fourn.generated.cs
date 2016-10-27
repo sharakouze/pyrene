@@ -20,8 +20,8 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
-    [Route("/Fourn", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Fourn à partir de son id")]
-    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
+    [Route("/Fourn", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Fourn à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité Fourn spécifiée est un doublon")]
 	public partial class Fourn : IReturn<Fourn>, IPost, IAuditable
 	{
 		/// <summary>

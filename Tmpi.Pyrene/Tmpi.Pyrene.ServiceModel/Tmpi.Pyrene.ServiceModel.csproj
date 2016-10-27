@@ -92,6 +92,7 @@
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="SwaggerDataTypes.cs" />
+    <Compile Include="SwaggerDescriptions.cs" />
     <Compile Include="SwaggerParamTypes.cs" />
     <Compile Include="Types.Compteur.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>

@@ -21,8 +21,8 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
 	[CompositeIndex(true, nameof(CleCompteur), nameof(ValPeriode))]
-    [Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité CompteurValeur à partir de son id")]
-    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
+    [Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité CompteurValeur à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité CompteurValeur spécifiée est un doublon")]
 	public partial class CompteurValeur : IReturn<CompteurValeur>, IPost
 	{
 		/// <summary>

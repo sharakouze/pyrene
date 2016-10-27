@@ -23,8 +23,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Retourne une collection des entités <see cref="FournContact"/>.
 	/// </summary>
-	[Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Get, Summary = "Retourne une collection des entités FournContact")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Get, Summary = "Retourne une collection des entités FournContact", Notes = SwaggerDescriptions.SelectRequestNotes)]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité FournContact spécifiée est introuvable")]
 	public partial class SelectFournContact : IReturn<SelectFournContactResponse>, IGet, IPagination
 	{
         /// <summary>
@@ -67,9 +67,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Retourne une entité <see cref="FournContact"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/Contact/{CleContact}", HttpVerbs.Get, Summary = "Retourne une entité FournContact à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/Fourn/Contact/{CleContact}", HttpVerbs.Get, Summary = "Retourne une entité FournContact à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité FournContact ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité FournContact spécifiée est introuvable")]
 	public partial class GetFournContact : IReturn<FournContact>, IGet
 	{
         /// <summary>
@@ -88,8 +88,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Supprime une entité <see cref="FournContact"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/Contact/{CleContact}", HttpVerbs.Delete, Summary = "Supprime une entité FournContact à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/Fourn/Contact/{CleContact}", HttpVerbs.Delete, Summary = "Supprime une entité FournContact à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité FournContact spécifiée est introuvable")]
 	public partial class DeleteFournContact : IReturnVoid, IDelete
 	{
         /// <summary>
@@ -103,10 +103,10 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Modifie partiellement une entité <see cref="FournContact"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/Contact/{CleContact}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité FournContact à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
+	[Route("/Fourn/Contact/{CleContact}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité FournContact à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité FournContact ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité FournContact spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité FournContact spécifiée est un doublon")]
 	public partial class PatchFournContact : IReturnVoid, IPatch
 	{
         /// <summary>

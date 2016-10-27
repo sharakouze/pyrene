@@ -23,8 +23,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Retourne une collection des entités <see cref="Exercice"/>.
 	/// </summary>
-	[Route("/Exercice", HttpVerbs.Get, Summary = "Retourne une collection des entités Exercice")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/Exercice", HttpVerbs.Get, Summary = "Retourne une collection des entités Exercice", Notes = SwaggerDescriptions.SelectRequestNotes)]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité Exercice spécifiée est introuvable")]
 	public partial class SelectExercice : IReturn<SelectExerciceResponse>, IGet, IPagination
 	{
         /// <summary>
@@ -61,9 +61,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Retourne une entité <see cref="Exercice"/> à partir de son id.
 	/// </summary>
-	[Route("/Exercice/{CleExercice}", HttpVerbs.Get, Summary = "Retourne une entité Exercice à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/Exercice/{CleExercice}", HttpVerbs.Get, Summary = "Retourne une entité Exercice à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité Exercice ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité Exercice spécifiée est introuvable")]
 	public partial class GetExercice : IReturn<Exercice>, IGet
 	{
         /// <summary>
@@ -82,8 +82,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Supprime une entité <see cref="Exercice"/> à partir de son id.
 	/// </summary>
-	[Route("/Exercice/{CleExercice}", HttpVerbs.Delete, Summary = "Supprime une entité Exercice à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/Exercice/{CleExercice}", HttpVerbs.Delete, Summary = "Supprime une entité Exercice à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité Exercice spécifiée est introuvable")]
 	public partial class DeleteExercice : IReturnVoid, IDelete
 	{
         /// <summary>
@@ -97,10 +97,10 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Modifie partiellement une entité <see cref="Exercice"/> à partir de son id.
 	/// </summary>
-	[Route("/Exercice/{CleExercice}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Exercice à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
+	[Route("/Exercice/{CleExercice}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Exercice à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité Exercice ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité Exercice spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité Exercice spécifiée est un doublon")]
 	public partial class PatchExercice : IReturnVoid, IPatch
 	{
         /// <summary>
@@ -119,7 +119,7 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Retourne le résultat d'une recherche sur les entités <see cref="Exercice"/>.
 	/// </summary>
-	[Route("/Exercice/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Exercice")]
+	[Route("/Exercice/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Exercice", Notes = SwaggerDescriptions.SearchRequestNotes)]
 	public partial class SearchExercice : IReturn<List<BaseEntity>>, IGet
 	{
         /// <summary>

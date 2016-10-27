@@ -20,8 +20,8 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
-    [Route("/Exercice", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Exercice à partir de son id")]
-    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
+    [Route("/Exercice", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Exercice à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité Exercice spécifiée est un doublon")]
 	public partial class Exercice : IReturn<Exercice>, IPost, IAuditable
 	{
 		/// <summary>

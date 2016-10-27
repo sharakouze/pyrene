@@ -23,8 +23,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Retourne une collection des entités <see cref="FournBanque"/>.
 	/// </summary>
-	[Route("/Fourn/{CleFourn}/Banque", HttpVerbs.Get, Summary = "Retourne une collection des entités FournBanque")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/Fourn/{CleFourn}/Banque", HttpVerbs.Get, Summary = "Retourne une collection des entités FournBanque", Notes = SwaggerDescriptions.SelectRequestNotes)]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité FournBanque spécifiée est introuvable")]
 	public partial class SelectFournBanque : IReturn<SelectFournBanqueResponse>, IGet, IPagination
 	{
         /// <summary>
@@ -67,9 +67,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Retourne une entité <see cref="FournBanque"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Get, Summary = "Retourne une entité FournBanque à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Get, Summary = "Retourne une entité FournBanque à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité FournBanque ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité FournBanque spécifiée est introuvable")]
 	public partial class GetFournBanque : IReturn<FournBanque>, IGet
 	{
         /// <summary>
@@ -88,8 +88,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Supprime une entité <see cref="FournBanque"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Delete, Summary = "Supprime une entité FournBanque à partir de son id")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
+	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Delete, Summary = "Supprime une entité FournBanque à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité FournBanque spécifiée est introuvable")]
 	public partial class DeleteFournBanque : IReturnVoid, IDelete
 	{
         /// <summary>
@@ -103,10 +103,10 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// <summary>
 	/// Modifie partiellement une entité <see cref="FournBanque"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité FournBanque à partir de son id")]
-    [ApiResponse(HttpStatusCode.BadRequest, "L'entité ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "L'entité spécifiée est un doublon")]
+	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité FournBanque à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
+    [ApiResponse(HttpStatusCode.BadRequest, "L'entité FournBanque ne contient pas tous les champs demandés")]
+    [ApiResponse(HttpStatusCode.NotFound, "L'entité FournBanque spécifiée est introuvable")]
+    [ApiResponse(HttpStatusCode.Conflict, "L'entité FournBanque spécifiée est un doublon")]
 	public partial class PatchFournBanque : IReturnVoid, IPatch
 	{
         /// <summary>
