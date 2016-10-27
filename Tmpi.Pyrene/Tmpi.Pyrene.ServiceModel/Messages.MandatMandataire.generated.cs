@@ -34,6 +34,15 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 		public int CleMandat { get; set; }
 
         /// <summary>
+        /// Champs à retourner, ou null pour retourner tous les champs.
+        /// </summary>
+        /// <example>
+        /// CleCompteur,CodCompteur,LibCompteur,EstActif,Service(CodService,LibService)
+        /// </example>
+		[ApiMember(Description = "Champs à retourner, ou null pour retourner tous les champs", DataType = SwaggerDataTypes.String)]
+		public string Fields { get; set; }
+
+        /// <summary>
         /// Nombre d'éléments à ignorer avant de retourner les éléments restants.
         /// </summary>
 		[ApiMember(Description = "Nombre d'éléments à ignorer avant de retourner les éléments restants", DataType = SwaggerDataTypes.Int)]
@@ -48,6 +57,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
         /// <summary>
         /// Ordre de tri.
         /// </summary>
+        /// <remarks>
+        /// En préfixant le nom du champ avec le caractère moins (-) le tri sera descendant. Par défaut le tri est ascendant.
+        /// </remarks>
 		[ApiMember(Description = "Ordre de tri", DataType = SwaggerDataTypes.ArrayOfString)]
 		public string[] Sort { get; set; }
 	}
@@ -81,8 +93,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
         /// <summary>
         /// Champs à retourner, ou null pour retourner tous les champs.
         /// </summary>
-        [ApiMember(Description = "Champs à retourner, ou null pour retourner tous les champs", DataType = SwaggerDataTypes.ArrayOfString)]
-        public string[] Fields { get; set; }
+        [ApiMember(Description = "Champs à retourner, ou null pour retourner tous les champs", DataType = SwaggerDataTypes.String)]
+        public string Fields { get; set; }
 	}
 
 	/// <summary>

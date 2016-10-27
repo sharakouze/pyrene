@@ -1,4 +1,4 @@
-﻿namespace Tmpi.Pyrene.Infrastructure
+﻿namespace Tmpi.Pyrene.Common
 {
     public static class ServiceErrorMessages
     {

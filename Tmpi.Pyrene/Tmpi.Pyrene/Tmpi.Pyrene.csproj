@@ -125,10 +125,6 @@
     <Compile Include="SwaggerConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Tmpi.Pyrene.Infrastructure\Tmpi.Pyrene.Infrastructure.csproj">
-      <Project>{e10042b4-7da4-48d8-ae04-4d87a0317d0a}</Project>
-      <Name>Tmpi.Pyrene.Infrastructure</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Tmpi.Pyrene.ServiceInterface\Tmpi.Pyrene.ServiceInterface.csproj">
       <Project>{813f65d3-22f1-41db-84fc-7cfffbead768}</Project>
       <Name>Tmpi.Pyrene.ServiceInterface</Name>

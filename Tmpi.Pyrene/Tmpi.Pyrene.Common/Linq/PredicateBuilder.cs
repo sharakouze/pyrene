@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tmpi.Pyrene.Infrastructure.Linq
+namespace Tmpi.Pyrene.Common.Linq
 {
     public static class JoinPredicateBuilder
     {

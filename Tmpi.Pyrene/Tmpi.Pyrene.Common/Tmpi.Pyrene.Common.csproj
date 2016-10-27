@@ -7,8 +7,8 @@
     <ProjectGuid>{E10042B4-7DA4-48D8-AE04-4D87A0317D0A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tmpi.Pyrene.Infrastructure</RootNamespace>
-    <AssemblyName>Tmpi.Pyrene.Infrastructure</AssemblyName>
+    <RootNamespace>Tmpi.Pyrene.Common</RootNamespace>
+    <AssemblyName>Tmpi.Pyrene.Common</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -28,7 +28,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Tmpi.Pyrene.Infrastructure.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Tmpi.Pyrene.Common.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ServiceStack.Common, Version=4.5.1.0, Culture=neutral, processorArchitecture=MSIL">

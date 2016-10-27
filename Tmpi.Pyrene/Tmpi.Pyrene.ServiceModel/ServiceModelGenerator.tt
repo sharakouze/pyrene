@@ -541,6 +541,7 @@ namespace <#= msgNamespace #>
 		{
 			string selectTableClassName = "Select" + table.ClassName;
 			string selectTableClassDescription = "Retourne une collection des entités {0}";
+			string fieldsPropDescription = "Champs à retourner, ou null pour retourner tous les champs";
 			string skipPropDescription = "Nombre d'éléments à ignorer avant de retourner les éléments restants";
 			string takePropDescription = "Nombre d'éléments à retourner";
 			string sortPropDescription = "Ordre de tri";
@@ -609,6 +610,22 @@ namespace <#= msgNamespace #>
 
 #>
         /// <summary>
+        /// <#= FormatXmlDoc(fieldsPropDescription) #>
+        /// </summary>
+        /// <example>
+        /// CleCompteur,CodCompteur,LibCompteur,EstActif,Service(CodService,LibService)
+        /// </example>
+<#
+			if (AddApiAttributes)
+            {
+#>
+		[ApiMember(Description = "<#= fieldsPropDescription #>", DataType = SwaggerDataTypes.String)]
+<#
+            }
+#>
+		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string Fields { get; set; }
+
+        /// <summary>
         /// <#= FormatXmlDoc(skipPropDescription) #>
         /// </summary>
 <#
@@ -637,6 +654,9 @@ namespace <#= msgNamespace #>
         /// <summary>
         /// <#= FormatXmlDoc(sortPropDescription) #>
         /// </summary>
+        /// <remarks>
+        /// En préfixant le nom du champ avec le caractère moins (-) le tri sera descendant. Par défaut le tri est ascendant.
+        /// </remarks>
 <#
 			if (AddApiAttributes)
             {
@@ -649,7 +669,7 @@ namespace <#= msgNamespace #>
 	}
 
     /// <summary>
-    /// <#= FormatXmlDoc("Réponse à la requête <see cref=\"" + selectTableClassName + "\"/>.") #>
+    /// <#= FormatXmlDoc("Réponse à la requête {0}.", selectTableClassName) #>
     /// </summary>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #>Response
 	{
@@ -740,11 +760,11 @@ namespace <#= msgNamespace #>
 			    if (AddApiAttributes)
                 {
 #>
-        [ApiMember(Description = "<#= fieldsPropDescription #>", DataType = SwaggerDataTypes.ArrayOfString)]
+        [ApiMember(Description = "<#= fieldsPropDescription #>", DataType = SwaggerDataTypes.String)]
 <#
                 }
 #>
-        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string[] Fields { get; set; }
+        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string Fields { get; set; }
 	}
 
 <#

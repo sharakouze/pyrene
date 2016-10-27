@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tmpi.Pyrene.Infrastructure
+namespace Tmpi.Pyrene.Common
 {
     public static class Ext
     {

@@ -135,9 +135,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Tmpi.Pyrene.Infrastructure\Tmpi.Pyrene.Infrastructure.csproj">
+    <ProjectReference Include="..\Tmpi.Pyrene.Common\Tmpi.Pyrene.Common.csproj">
       <Project>{e10042b4-7da4-48d8-ae04-4d87a0317d0a}</Project>
-      <Name>Tmpi.Pyrene.Infrastructure</Name>
+      <Name>Tmpi.Pyrene.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Tmpi.Pyrene.ServiceModel\Tmpi.Pyrene.ServiceModel.csproj">
       <Project>{e515a547-3e09-4f2e-b1f0-09d3e16fb36a}</Project>

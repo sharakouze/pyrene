@@ -5,10 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using ServiceStack.OrmLite;
 
-namespace Tmpi.Pyrene.Infrastructure
+namespace Tmpi.Pyrene.Common
 {
     public static class ModelDefinitionHelper
     {
+        public static void UndefinedFields<T>(string fields)
+        {
+        }
         public static void UndefinedFields<T>(IEnumerable<string> fields)
         {
             if (fields == null)

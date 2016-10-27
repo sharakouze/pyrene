@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Tmpi.Pyrene.Infrastructure
+namespace Tmpi.Pyrene.Common
 {
     public static class PatchHelper
     {

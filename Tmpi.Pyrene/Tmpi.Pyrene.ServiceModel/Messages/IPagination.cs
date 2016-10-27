@@ -19,8 +19,7 @@
         /// Obtient ou définit l'ordre de tri.
         /// </summary>
         /// <remarks>
-        /// En préfixant le nom du champ avec un - le tri sera descendant.
-        /// Par défaut le tri est ascendant.
+        /// En préfixant le nom du champ avec le caractère moins (-) le tri sera descendant. Par défaut le tri est ascendant.
         /// </remarks>
         string[] Sort { get; set; }
     }

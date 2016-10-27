@@ -13,8 +13,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using ServiceStack;
 using ServiceStack.OrmLite;
-using Tmpi.Pyrene.Infrastructure;
-using Tmpi.Pyrene.Infrastructure.Linq;
+using Tmpi.Pyrene.Common;
+using Tmpi.Pyrene.Common.Linq;
 using Tmpi.Pyrene.ServiceModel.Messages;
 using Tmpi.Pyrene.ServiceModel.Types;
 
