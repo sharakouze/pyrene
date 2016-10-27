@@ -906,7 +906,7 @@ namespace <#= msgNamespace #>
 <#
                 }
 #>
-        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>Patch[] Fields { get; set; }
+        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>Patch[] Operations { get; set; }
 	}
 
 <#

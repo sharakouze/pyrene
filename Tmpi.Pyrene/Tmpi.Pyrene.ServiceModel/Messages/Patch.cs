@@ -3,7 +3,7 @@
 namespace Tmpi.Pyrene.ServiceModel.Messages
 {
     /// <summary>
-    /// Représente une instruction de modification partielle.
+    /// Représente une opération de modification partielle.
     /// </summary>
     public class Patch
     {

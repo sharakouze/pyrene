@@ -113,7 +113,7 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
         /// Liste des modifications à appliquer.
         /// </summary>
         [ApiMember(Description = "Liste des modifications à appliquer", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
-        public Patch[] Fields { get; set; }
+        public Patch[] Operations { get; set; }
 	}
 
 }

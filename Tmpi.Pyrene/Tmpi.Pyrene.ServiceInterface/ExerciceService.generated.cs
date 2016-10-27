@@ -139,12 +139,12 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchExercice request)
 		{
-			if (request.Fields.IsNullOrEmpty())
+			if (request.Operations.IsNullOrEmpty())
 			{
-				throw new ArgumentNullException(nameof(request.Fields));
+				throw new ArgumentNullException(nameof(request.Operations));
 			}
 
-            var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
+            var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
             ModelDefinitionHelper.UndefinedFields<Exercice>(patchDic.Keys);
 

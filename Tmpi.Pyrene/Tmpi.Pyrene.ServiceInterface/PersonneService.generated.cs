@@ -292,12 +292,12 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchPersonne request)
 		{
-			if (request.Fields.IsNullOrEmpty())
+			if (request.Operations.IsNullOrEmpty())
 			{
-				throw new ArgumentNullException(nameof(request.Fields));
+				throw new ArgumentNullException(nameof(request.Operations));
 			}
 
-            var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
+            var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
             ModelDefinitionHelper.UndefinedFields<Personne>(patchDic.Keys);
 
@@ -334,12 +334,12 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchPersonneProfil request)
 		{
-			if (request.Fields.IsNullOrEmpty())
+			if (request.Operations.IsNullOrEmpty())
 			{
-				throw new ArgumentNullException(nameof(request.Fields));
+				throw new ArgumentNullException(nameof(request.Operations));
 			}
 
-            var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
+            var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
             ModelDefinitionHelper.UndefinedFields<PersonneProfil>(patchDic.Keys);
 
@@ -382,12 +382,12 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.Conflict"></exception>
 		public void Patch(PatchPersonneSignature request)
 		{
-			if (request.Fields.IsNullOrEmpty())
+			if (request.Operations.IsNullOrEmpty())
 			{
-				throw new ArgumentNullException(nameof(request.Fields));
+				throw new ArgumentNullException(nameof(request.Operations));
 			}
 
-            var patchDic = request.Fields.ToDictionary(f => f.Field, f => f.Value);
+            var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
             ModelDefinitionHelper.UndefinedFields<PersonneSignature>(patchDic.Keys);
 

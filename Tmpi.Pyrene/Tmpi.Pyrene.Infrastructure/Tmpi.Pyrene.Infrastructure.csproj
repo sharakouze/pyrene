@@ -58,6 +58,7 @@
     </Compile>
     <Compile Include="EnumerableExt.cs" />
     <Compile Include="Linq\PredicateBuilder.cs" />
+    <Compile Include="OrmLite\ReadApi.cs" />
     <Compile Include="ServiceErrorMessages.cs" />
     <Compile Include="OrmLite\ModelDefinitionHelper.cs" />
     <Compile Include="PatchHelper.cs" />
