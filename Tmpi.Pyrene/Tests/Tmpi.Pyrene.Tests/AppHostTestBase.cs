@@ -35,7 +35,7 @@ namespace Tmpi.Pyrene.Tests
 
         public void Dispose()
         {
-            appHost.Dispose();
+            //appHost.Dispose();
         }
     }
 }

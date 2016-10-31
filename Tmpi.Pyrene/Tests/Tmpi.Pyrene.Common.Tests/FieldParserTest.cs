@@ -9,13 +9,15 @@ using Xunit;
 
 namespace Tmpi.Pyrene.Common.Tests
 {
-    public class OrmLiteExtensionsTest
+    public class FieldParserTest
     {
-        [Theory]
-        [InlineData("codarticle, magasin(clemagasin,libmagasin), magasinsecondaire (libmagasin), libarticle")]
-        public void ParseFields(string fields)
+        [Fact]
+        public void ParseFields()
         {
-            var lookup = OrmLiteExtensions.ParseFields<Article>(fields);
+            string fields = "codarticle, magasin, fourn (libfourn), fournfabricant(codfourn,libfourn), libarticle";
+
+            var fp = new FieldParser();
+            var lookup = fp.Parse<Article>(fields);
 
             Assert.True(true);
         }

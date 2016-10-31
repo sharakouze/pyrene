@@ -81,9 +81,10 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="OrmLiteExtensionsTest.cs" />
+    <Compile Include="FieldParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\Article.cs" />
+    <Compile Include="Shared\Fourn.cs" />
     <Compile Include="Shared\Magasin.cs" />
   </ItemGroup>
   <ItemGroup>
