@@ -1,10 +1,7 @@
 ﻿using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tmpi.Pyrene.Common.OrmLite
 {
@@ -14,80 +11,66 @@ namespace Tmpi.Pyrene.Common.OrmLite
 
         public ILookup<Type, string> Parse<T>(string fields)
         {
-            var baseModelDef = typeof(T).GetModelMetadata();
-            if (baseModelDef == null)
-            {
-                return null;
-            }
+            var modelDef = typeof(T).GetModelMetadata();
 
-            var buffer = new StringBuilder();
-            var modelDef = baseModelDef;
-
+            char[] specialChars = new[] { ',', '(', ')', ' ' };
             int startIndex = 0;
+            ModelDefinition refModelDef = null;
+
             int index;
             do
             {
-                index = fields.IndexOfAny(new[] { ',', '(', ')', ' ' }, startIndex);
-                string field;
+                index = fields.IndexOfAny(specialChars, startIndex);
+
+                char c = char.MinValue;
+                int length;
                 if (index == -1)
                 {
-                    field = fields.Substring(startIndex);
+                    length = fields.Length - startIndex;
                 }
                 else
                 {
-                    field = fields.Substring(startIndex, index - startIndex);
-                    startIndex = index + 1;
+                    c = fields[index];
+                    length = index - startIndex;
                 }
-            }
-            while (index >= 0);
 
+                string field = fields.Substring(startIndex, length);
+                startIndex = index + 1;
 
-            for (int i = 0; i < fields.Length; i++)
-            {
-                char c = fields[i];
-
-                if (c == ',' || c == '(' || c == ')' || i == fields.Length)
+                if (field != string.Empty)
                 {
-                    if (buffer.Length == 0)
-                    {
-                        continue;
-                    }
-
                     var fieldDef = modelDef.AllFieldDefinitionsArray
-                        .FirstOrDefault(f => string.Equals(f.Name, buffer.ToString(), StringComparison.OrdinalIgnoreCase));
+                        .FirstOrDefault(f => string.Equals(f.Name, field, StringComparison.OrdinalIgnoreCase));
                     if (fieldDef == null)
                     {
 
                     }
-                    else if (fieldDef.IsReference)
-                    {
-                        var refModelDef = fieldDef.FieldType.GetModelMetadata();
-                        _result.Add(Tuple.Create(refModelDef.ModelType, ""));
-
-                        if (c == '(')
-                        {
-                            modelDef = refModelDef;
-                        }
-                    }
                     else
                     {
-                        _result.Add(Tuple.Create(modelDef.ModelType, fieldDef.Name));
-
-                        if (c == ')')
+                        if (fieldDef.IsReference)
                         {
-                            modelDef = baseModelDef;
+                            refModelDef = fieldDef.FieldType.GetModelMetadata();
+                            _result.Add(Tuple.Create(refModelDef.ModelType, ""));
+                        }
+                        else
+                        {
+                            _result.Add(Tuple.Create(modelDef.ModelType, fieldDef.Name));
                         }
                     }
-
-                    buffer.Clear();
                 }
-                else if (!char.IsWhiteSpace(c))
+
+                if (c == '(')
                 {
-                    buffer.Append(c);
+                    modelDef = refModelDef;
+                }
+                else if (c == ')')
+                {
+                    modelDef = typeof(T).GetModelMetadata();
                 }
             }
+            while (index >= 0);
 
-            return null;
+            return _result.ToLookup(k => k.Item1, v => v.Item2);
         }
     }
 }
