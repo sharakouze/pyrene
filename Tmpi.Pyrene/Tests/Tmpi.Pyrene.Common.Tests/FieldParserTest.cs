@@ -56,7 +56,7 @@ namespace Tmpi.Pyrene.Common.Tests
         public void ShouldNotAddFieldWhenReferenceNotFound()
         {
             // foo introuvable ou n'est pas une référence
-            string fields = "clearticle,foo(libarticle)";
+            string fields = "clearticle,foo(codarticle),libarticle";
 
             var parser = new FieldParser();
             parser.Load<Article>(fields);
@@ -65,7 +65,8 @@ namespace Tmpi.Pyrene.Common.Tests
 
             var q1 = lookup.SelectMany(x => x);
             Assert.Contains("clearticle", q1, StringComparer.OrdinalIgnoreCase);
-            Assert.DoesNotContain("libarticle", q1, StringComparer.OrdinalIgnoreCase);
+            Assert.Contains("libarticle", q1, StringComparer.OrdinalIgnoreCase);
+            Assert.DoesNotContain("codarticle", q1, StringComparer.OrdinalIgnoreCase);
         }
 
         [Fact]

@@ -20,9 +20,9 @@ namespace Tmpi.Pyrene.Common.OrmLite
             return _results.ToLookup(k => k.Item1, v => v.Item2);
         }
 
-        private void AddResult(Type modelType, string fieldName)
+        private void AddResult(Type type, string field = null)
         {
-            _results.Add(Tuple.Create(modelType, fieldName));
+            _results.Add(Tuple.Create(type, field));
         }
 
         /// <summary>
@@ -75,10 +75,12 @@ namespace Tmpi.Pyrene.Common.OrmLite
             Clear();
 
             var modelDef = typeof(T).GetModelMetadata();
+            var lastRefModelDef = modelDef;
+
+            AddResult(modelDef.ModelType);
 
             char[] specialChars = new[] { ',', '(', ')', ' ' };
             int startIndex = 0;
-            ModelDefinition refModelDef = null;
 
             int index;
             do
@@ -100,20 +102,22 @@ namespace Tmpi.Pyrene.Common.OrmLite
                 string field = fields.Substring(startIndex, length);
                 startIndex = index + 1;
 
-                if (field != string.Empty)
+                if ((field != string.Empty) && (modelDef != null))
                 {
                     var fieldDef = modelDef.AllFieldDefinitionsArray
                         .FirstOrDefault(f => string.Equals(f.Name, field, StringComparison.OrdinalIgnoreCase));
                     if (fieldDef == null)
                     {
                         AddError(modelDef.ModelType, field);
+                        lastRefModelDef = null;
                     }
                     else
                     {
                         if (fieldDef.IsReference)
                         {
-                            refModelDef = fieldDef.FieldType.GetModelMetadata();
-                            _results.Add(Tuple.Create(refModelDef.ModelType, ""));
+                            lastRefModelDef = fieldDef.FieldType.GetModelMetadata();
+
+                            AddResult(lastRefModelDef.ModelType);
 
                             var fkField = GetForeignKeyField(modelDef, fieldDef);
                             if (fkField == null)
@@ -122,19 +126,19 @@ namespace Tmpi.Pyrene.Common.OrmLite
                             }
                             else
                             {
-                                _foreignKeys.Add(Tuple.Create(refModelDef.ModelType, fkField));
+                                _foreignKeys.Add(Tuple.Create(lastRefModelDef.ModelType, fkField));
                             }
                         }
                         else
                         {
-                            _results.Add(Tuple.Create(modelDef.ModelType, fieldDef.Name));
+                            AddResult(modelDef.ModelType, fieldDef.Name);
                         }
                     }
                 }
 
                 if (c == '(')
                 {
-                    modelDef = refModelDef;
+                    modelDef = lastRefModelDef;
                 }
                 else if (c == ')')
                 {
