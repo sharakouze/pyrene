@@ -24,5 +24,8 @@ namespace Tmpi.Pyrene.Common.Tests.Shared
         public int CleMagasin { get; set; }
         [Reference]
         public Magasin Magasin { get; set; }
+
+        [Reference]
+        public Magasin MagasinSecondaire { get; set; } // pas de foreign key associée !
     }
 }
