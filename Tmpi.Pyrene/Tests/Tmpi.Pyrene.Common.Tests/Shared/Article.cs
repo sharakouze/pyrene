@@ -9,6 +9,7 @@ namespace Tmpi.Pyrene.Common.Tests.Shared
 
         public string CodArticle { get; set; }
         public string LibArticle { get; set; }
+        public string TxtArticle { get; set; }
 
         [References(typeof(Fourn))]
         public int CleFourn { get; set; }

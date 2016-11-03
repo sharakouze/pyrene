@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Tmpi.Pyrene.Common.OrmLite
 {
@@ -9,20 +10,18 @@ namespace Tmpi.Pyrene.Common.OrmLite
     {
         public static string ForeignKeyFormat = "Cle{0}";
 
+        private readonly List<Tuple<string, Type, string>> _results = new List<Tuple<string, Type, string>>();
         private readonly List<Tuple<Type, string>> _errors = new List<Tuple<Type, string>>();
-
-        private readonly List<Tuple<Type, string>> _results = new List<Tuple<Type, string>>();
-
         private readonly List<Tuple<Type, FieldDefinition>> _foreignKeys = new List<Tuple<Type, FieldDefinition>>();
 
-        public ILookup<Type, string> GetFields()
+        /// <summary>
+        /// Supprime tous les éléments de <see cref="FieldParser"/>.
+        /// </summary>
+        public void Clear()
         {
-            return _results.ToLookup(k => k.Item1, v => v.Item2);
-        }
-
-        private void AddResult(Type type, string field = null)
-        {
-            _results.Add(Tuple.Create(type, field));
+            _results.Clear();
+            _errors.Clear();
+            _foreignKeys.Clear();
         }
 
         /// <summary>
@@ -50,6 +49,16 @@ namespace Tmpi.Pyrene.Common.OrmLite
             _errors.Add(Tuple.Create(type, field));
         }
 
+        public ILookup<Type, string> GetFields()
+        {
+            return _results.ToLookup(k => k.Item2, v => v.Item3);
+        }
+
+        private void AddResult(string refField, Type refType, string field = null)
+        {
+            _results.Add(Tuple.Create(refField, refType, field));
+        }
+
         private FieldDefinition GetForeignKeyField(ModelDefinition modelDef, FieldDefinition field)
         {
             if (field.IsReference)
@@ -61,91 +70,100 @@ namespace Tmpi.Pyrene.Common.OrmLite
             return null;
         }
 
-        /// <summary>
-        /// Supprime tous les éléments de <see cref="FieldParser"/>.
-        /// </summary>
-        public void Clear()
+
+        private FieldDefinition ParseField(StringBuilder buffer, Tuple<string, ModelDefinition> tpl,
+            bool forceReference = false)
         {
-            _errors.Clear();
-            _results.Clear();
+            if (buffer.Length > 0)
+            {
+                string field = buffer.ToString();
+                buffer.Clear();
+
+                var fieldDef = tpl.Item2.AllFieldDefinitionsArray
+                    .FirstOrDefault(f => string.Equals(f.Name, field, StringComparison.OrdinalIgnoreCase));
+                if (fieldDef == null)
+                {
+                    AddError(tpl.Item2.ModelType, field);
+                }
+                else if (fieldDef.IsReference)
+                {
+                    if (!string.IsNullOrEmpty(tpl.Item1))
+                    {
+                        throw new ArgumentException();
+                    }
+                    //                    var fkField = GetForeignKeyField(modelDef, fieldDef);
+                    //                    if (fkField == null)
+                    //                    {
+                    //                        AddError(modelDef.ModelType, field);
+                    //                    }
+                    //                    else
+                    //                    {
+                    //                        _foreignKeys.Add(Tuple.Create(lastRefModelDef.ModelType, fkField));
+                    //                    }
+
+                    AddResult(fieldDef.Name, fieldDef.FieldType);
+                }
+                else if (!forceReference)
+                {
+                    AddResult(tpl.Item1, tpl.Item2.ModelType, fieldDef.Name);
+                }
+
+                return fieldDef;
+            }
+
+            return null;
         }
 
         public void Load<T>(string fields)
         {
             Clear();
 
-            var modelDef = typeof(T).GetModelMetadata();
-            var lastRefModelDef = modelDef;
+            var buffer = new StringBuilder();
 
-            AddResult(modelDef.ModelType);
+            var tpl = Tuple.Create(string.Empty, typeof(T).GetModelMetadata());
+            AddResult(tpl.Item1, tpl.Item2.ModelType);
 
-            char[] specialChars = new[] { ',', '(', ')', ' ' };
-            int startIndex = 0;
+            var stack = new Stack<Tuple<string, ModelDefinition>>();
+            stack.Push(tpl);
 
-            int index;
-            do
+            for (int i = 0; i < fields.Length; i++)
             {
-                index = fields.IndexOfAny(specialChars, startIndex);
+                char c = fields[i];
 
-                char c = char.MinValue;
-                int length;
-                if (index == -1)
+                if (c == ',')
                 {
-                    length = fields.Length - startIndex;
+                    ParseField(buffer, stack.Peek());
                 }
-                else
+                else if (c == '(')
                 {
-                    c = fields[index];
-                    length = index - startIndex;
-                }
+                    var fieldDef = ParseField(buffer, stack.Peek(), true);
 
-                string field = fields.Substring(startIndex, length);
-                startIndex = index + 1;
-
-                if ((field != string.Empty) && (modelDef != null))
-                {
-                    var fieldDef = modelDef.AllFieldDefinitionsArray
-                        .FirstOrDefault(f => string.Equals(f.Name, field, StringComparison.OrdinalIgnoreCase));
-                    if (fieldDef == null)
+                    if (fieldDef == null || !fieldDef.IsReference)
                     {
-                        AddError(modelDef.ModelType, field);
-                        lastRefModelDef = null;
+                        int index = fields.IndexOf(')', i);
+                        if (index == -1)
+                        {
+                            throw new ArgumentException("Parenthèse fermante attendue dans : '{0}'", fields);
+                        }
+
+                        i = index + 1; // on saute tout le contenu de la parenthèse non valable
                     }
                     else
                     {
-                        if (fieldDef.IsReference)
-                        {
-                            lastRefModelDef = fieldDef.FieldType.GetModelMetadata();
-
-                            AddResult(lastRefModelDef.ModelType);
-
-                            var fkField = GetForeignKeyField(modelDef, fieldDef);
-                            if (fkField == null)
-                            {
-                                AddError(modelDef.ModelType, field);
-                            }
-                            else
-                            {
-                                _foreignKeys.Add(Tuple.Create(lastRefModelDef.ModelType, fkField));
-                            }
-                        }
-                        else
-                        {
-                            AddResult(modelDef.ModelType, fieldDef.Name);
-                        }
+                        stack.Push(Tuple.Create(fieldDef.Name, fieldDef.FieldType.GetModelMetadata()));
                     }
-                }
-
-                if (c == '(')
-                {
-                    modelDef = lastRefModelDef;
                 }
                 else if (c == ')')
                 {
-                    modelDef = typeof(T).GetModelMetadata();
+                    ParseField(buffer, stack.Pop());
+                }
+                else if (c != ' ')
+                {
+                    buffer.Append(c);
                 }
             }
-            while (index >= 0);
+
+            ParseField(buffer, stack.Peek());
         }
     }
 }
