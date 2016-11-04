@@ -8,9 +8,9 @@ namespace Tmpi.Pyrene.Common.OrmLite
 {
     public class FieldParser
     {
-        public static string ForeignKeyFormat = "Cle{0}";
+        public static string ForeignKeyFieldFormat = "Cle{0}";
 
-        private readonly List<Tuple<string, Type, string>> _results = new List<Tuple<string, Type, string>>();
+        private readonly List<Tuple<Type, string, string>> _results = new List<Tuple<Type, string, string>>();
         private readonly List<Tuple<Type, string>> _errors = new List<Tuple<Type, string>>();
         private readonly List<Tuple<Type, FieldDefinition>> _foreignKeys = new List<Tuple<Type, FieldDefinition>>();
 
@@ -36,9 +36,9 @@ namespace Tmpi.Pyrene.Common.OrmLite
         }
 
         /// <summary>
-        /// Obtient les noms des champs non trouvés regroupés par type.
+        /// Obtient les champs non trouvés.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Nom des champs non trouvés regroupés par type.</returns>
         public ILookup<Type, string> GetErrors()
         {
             return _errors.ToLookup(k => k.Item1, v => v.Item2);
@@ -49,29 +49,28 @@ namespace Tmpi.Pyrene.Common.OrmLite
             _errors.Add(Tuple.Create(type, field));
         }
 
-        public ILookup<Type, string> GetFields()
+        /// <summary>
+        /// Obtient les champs trouvés.
+        /// </summary>
+        /// <returns>Nom des champs trouvés regroupés par type.</returns>
+        public ILookup<Type, string> GetFieldsByType()
         {
-            return _results.ToLookup(k => k.Item2, v => v.Item3);
+            return _results.Select(x => new { x.Item1, x.Item3 })
+                .Distinct()
+                .ToLookup(k => k.Item1, v => v.Item3);
         }
 
-        private void AddResult(string refField, Type refType, string field = null)
+        private void AddResult(Type refType, string refField, string field = null)
         {
-            _results.Add(Tuple.Create(refField, refType, field));
+            _results.Add(Tuple.Create(refType, refField, field));
         }
 
-        private FieldDefinition GetForeignKeyField(ModelDefinition modelDef, FieldDefinition field)
+        private void AddForeignKey(Type type, FieldDefinition field)
         {
-            if (field.IsReference)
-            {
-                string match = string.Format(ForeignKeyFormat, field.Name);
-                return modelDef.FieldDefinitions.SingleOrDefault(f => f.Name == match);
-            }
-
-            return null;
+            _foreignKeys.Add(Tuple.Create(type, field));
         }
 
-
-        private FieldDefinition ParseField(StringBuilder buffer, Tuple<string, ModelDefinition> tpl,
+        private FieldDefinition ParseField(StringBuilder buffer, Tuple<ModelDefinition, string> tpl,
             bool forceReference = false)
         {
             if (buffer.Length > 0)
@@ -79,33 +78,42 @@ namespace Tmpi.Pyrene.Common.OrmLite
                 string field = buffer.ToString();
                 buffer.Clear();
 
-                var fieldDef = tpl.Item2.AllFieldDefinitionsArray
+                var fieldDef = tpl.Item1.AllFieldDefinitionsArray
                     .FirstOrDefault(f => string.Equals(f.Name, field, StringComparison.OrdinalIgnoreCase));
                 if (fieldDef == null)
                 {
-                    AddError(tpl.Item2.ModelType, field);
+                    AddError(tpl.Item1.ModelType, field);
                 }
                 else if (fieldDef.IsReference)
                 {
-                    if (!string.IsNullOrEmpty(tpl.Item1))
+                    if (!string.IsNullOrEmpty(tpl.Item2))
                     {
                         throw new ArgumentException();
                     }
-                    //                    var fkField = GetForeignKeyField(modelDef, fieldDef);
-                    //                    if (fkField == null)
-                    //                    {
-                    //                        AddError(modelDef.ModelType, field);
-                    //                    }
-                    //                    else
-                    //                    {
-                    //                        _foreignKeys.Add(Tuple.Create(lastRefModelDef.ModelType, fkField));
-                    //                    }
 
-                    AddResult(fieldDef.Name, fieldDef.FieldType);
+                    string fkFieldName = string.Format(ForeignKeyFieldFormat, fieldDef.Name);
+                    var fkFieldDef = tpl.Item1.FieldDefinitions
+                        .FirstOrDefault(f => string.Equals(f.Name, fkFieldName, StringComparison.OrdinalIgnoreCase));
+                    if (fkFieldDef == null)
+                    {
+                        throw new Exception(
+                            string.Format("Impossible de trouver un champ '{0}' associé à '{1}.{2}'", fkFieldName, tpl.Item1.Name, fieldDef.Name));
+                    }
+                    else
+                    {
+                        AddForeignKey(tpl.Item1.ModelType, fkFieldDef);
+                        AddResult(tpl.Item1.ModelType, tpl.Item2, fkFieldDef.Name);
+
+                        AddResult(fieldDef.FieldType, fieldDef.Name);
+                    }
                 }
-                else if (!forceReference)
+                else if (forceReference)
                 {
-                    AddResult(tpl.Item1, tpl.Item2.ModelType, fieldDef.Name);
+                    AddError(tpl.Item1.ModelType, field);
+                }
+                else
+                {
+                    AddResult(tpl.Item1.ModelType, tpl.Item2, fieldDef.Name);
                 }
 
                 return fieldDef;
@@ -114,16 +122,21 @@ namespace Tmpi.Pyrene.Common.OrmLite
             return null;
         }
 
+        /// <summary>
+        /// Analyse la chaîne spécifiée.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="fields">Expression à analyser.</param>
         public void Load<T>(string fields)
         {
             Clear();
 
             var buffer = new StringBuilder();
 
-            var tpl = Tuple.Create(string.Empty, typeof(T).GetModelMetadata());
-            AddResult(tpl.Item1, tpl.Item2.ModelType);
+            var tpl = Tuple.Create(typeof(T).GetModelMetadata(), string.Empty);
+            AddResult(tpl.Item1.ModelType, tpl.Item2);
 
-            var stack = new Stack<Tuple<string, ModelDefinition>>();
+            var stack = new Stack<Tuple<ModelDefinition, string>>();
             stack.Push(tpl);
 
             for (int i = 0; i < fields.Length; i++)
@@ -136,25 +149,31 @@ namespace Tmpi.Pyrene.Common.OrmLite
                 }
                 else if (c == '(')
                 {
+                    int index = fields.IndexOf(')', i);
+                    if (index == -1)
+                    {
+                        throw new ArgumentException(
+                            string.Format("Parenthèse fermante attendue dans : '{0}'", fields));
+                    }
+
                     var fieldDef = ParseField(buffer, stack.Peek(), true);
 
                     if (fieldDef == null || !fieldDef.IsReference)
                     {
-                        int index = fields.IndexOf(')', i);
-                        if (index == -1)
-                        {
-                            throw new ArgumentException("Parenthèse fermante attendue dans : '{0}'", fields);
-                        }
-
                         i = index + 1; // on saute tout le contenu de la parenthèse non valable
                     }
                     else
                     {
-                        stack.Push(Tuple.Create(fieldDef.Name, fieldDef.FieldType.GetModelMetadata()));
+                        stack.Push(Tuple.Create(fieldDef.FieldType.GetModelMetadata(), fieldDef.Name));
                     }
                 }
                 else if (c == ')')
                 {
+                    if (stack.Count == 1)
+                    {
+                        throw new ArgumentException(
+                            string.Format("Trop de parenthèses fermantes dans : '{0}'", fields));
+                    }
                     ParseField(buffer, stack.Pop());
                 }
                 else if (c != ' ')

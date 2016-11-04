@@ -86,6 +86,7 @@
     <Compile Include="Shared\Article.cs" />
     <Compile Include="Shared\Fourn.cs" />
     <Compile Include="Shared\Magasin.cs" />
+    <Compile Include="Shared\Pays.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

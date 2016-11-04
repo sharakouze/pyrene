@@ -6,7 +6,6 @@ namespace Tmpi.Pyrene.Tests
 {
     public class GenCompteurServiceTest : AppHostTestBase
     {
-        [Fact]
         public void Should()
         {
             //using (var service = appHost.TryResolve<GenCompteurService>())
