@@ -333,7 +333,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public Fourn Get(GetFourn request)
 		{
-            ModelDefinitionHelper.UndefinedFields<Fourn>(request.Fields);
+            //ModelDefinitionHelper.UndefinedFields<Fourn>(request.Fields);
 
             var q = Db.From<Fourn>().Where(x => x.CleFourn == request.CleFourn).Select(request.Fields);
 
@@ -356,7 +356,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public FournBanque Get(GetFournBanque request)
 		{
-            ModelDefinitionHelper.UndefinedFields<FournBanque>(request.Fields);
+            //ModelDefinitionHelper.UndefinedFields<FournBanque>(request.Fields);
 
             var q = Db.From<FournBanque>().Where(x => x.CleBanque == request.CleBanque).Select(request.Fields);
 
@@ -379,7 +379,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public FournContact Get(GetFournContact request)
 		{
-            ModelDefinitionHelper.UndefinedFields<FournContact>(request.Fields);
+            //ModelDefinitionHelper.UndefinedFields<FournContact>(request.Fields);
 
             var q = Db.From<FournContact>().Where(x => x.CleContact == request.CleContact).Select(request.Fields);
 
@@ -410,7 +410,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<Fourn>(patchDic.Keys);
+            //ModelDefinitionHelper.UndefinedFields<Fourn>(patchDic.Keys);
 
 			var entity = new Fourn();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
@@ -452,7 +452,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<FournBanque>(patchDic.Keys);
+            //ModelDefinitionHelper.UndefinedFields<FournBanque>(patchDic.Keys);
 
 			var entity = new FournBanque();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
@@ -494,7 +494,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<FournContact>(patchDic.Keys);
+            //ModelDefinitionHelper.UndefinedFields<FournContact>(patchDic.Keys);
 
 			var entity = new FournContact();
 			PatchHelper.PopulateFromPatch(entity, patchDic);

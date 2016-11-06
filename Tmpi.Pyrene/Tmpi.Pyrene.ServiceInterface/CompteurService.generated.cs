@@ -285,7 +285,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public Compteur Get(GetCompteur request)
 		{
-            ModelDefinitionHelper.UndefinedFields<Compteur>(request.Fields);
+            //ModelDefinitionHelper.UndefinedFields<Compteur>(request.Fields);
 
             var q = Db.From<Compteur>().Where(x => x.CleCompteur == request.CleCompteur).Select(request.Fields);
 
@@ -308,7 +308,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public CompteurValeur Get(GetCompteurValeur request)
 		{
-            ModelDefinitionHelper.UndefinedFields<CompteurValeur>(request.Fields);
+            //ModelDefinitionHelper.UndefinedFields<CompteurValeur>(request.Fields);
 
             var q = Db.From<CompteurValeur>().Where(x => x.CleValeur == request.CleValeur).Select(request.Fields);
 
@@ -339,7 +339,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<Compteur>(patchDic.Keys);
+            //ModelDefinitionHelper.UndefinedFields<Compteur>(patchDic.Keys);
 
 			var entity = new Compteur();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
@@ -387,7 +387,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<CompteurValeur>(patchDic.Keys);
+            //ModelDefinitionHelper.UndefinedFields<CompteurValeur>(patchDic.Keys);
 
 			var entity = new CompteurValeur();
 			PatchHelper.PopulateFromPatch(entity, patchDic);

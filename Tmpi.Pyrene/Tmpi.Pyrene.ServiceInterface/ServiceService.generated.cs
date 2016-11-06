@@ -78,7 +78,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public ServiceModel.Types.Service Get(GetService request)
 		{
-            ModelDefinitionHelper.UndefinedFields<ServiceModel.Types.Service>(request.Fields);
+            //ModelDefinitionHelper.UndefinedFields<ServiceModel.Types.Service>(request.Fields);
 
             var q = Db.From<ServiceModel.Types.Service>().Where(x => x.CleService == request.CleService).Select(request.Fields);
 
@@ -109,7 +109,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<ServiceModel.Types.Service>(patchDic.Keys);
+            //ModelDefinitionHelper.UndefinedFields<ServiceModel.Types.Service>(patchDic.Keys);
 
 			var entity = new ServiceModel.Types.Service();
 			PatchHelper.PopulateFromPatch(entity, patchDic);

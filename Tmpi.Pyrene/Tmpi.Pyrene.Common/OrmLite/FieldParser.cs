@@ -10,18 +10,20 @@ namespace Tmpi.Pyrene.Common.OrmLite
     {
         public static string ForeignKeyFieldFormat = "Cle{0}";
 
-        private readonly List<Tuple<Type, string, string>> _results = new List<Tuple<Type, string, string>>();
+        private readonly Dictionary<Type, List<string>> _refsByType = new Dictionary<Type, List<string>>();
+        private readonly Dictionary<string, List<string>> _fieldsByRef = new Dictionary<string, List<string>>();
+        private readonly List<FieldDefinition> _foreignKeys = new List<FieldDefinition>();
         private readonly List<Tuple<Type, string>> _errors = new List<Tuple<Type, string>>();
-        private readonly List<Tuple<Type, FieldDefinition>> _foreignKeys = new List<Tuple<Type, FieldDefinition>>();
 
         /// <summary>
         /// Supprime tous les éléments de <see cref="FieldParser"/>.
         /// </summary>
         public void Clear()
         {
-            _results.Clear();
-            _errors.Clear();
+            _refsByType.Clear();
+            _fieldsByRef.Clear();
             _foreignKeys.Clear();
+            _errors.Clear();
         }
 
         /// <summary>
@@ -36,7 +38,7 @@ namespace Tmpi.Pyrene.Common.OrmLite
         }
 
         /// <summary>
-        /// Obtient les champs non trouvés.
+        /// Retourne les champs non trouvés.
         /// </summary>
         /// <returns>Nom des champs non trouvés regroupés par type.</returns>
         public ILookup<Type, string> GetErrors()
@@ -50,24 +52,77 @@ namespace Tmpi.Pyrene.Common.OrmLite
         }
 
         /// <summary>
-        /// Obtient les champs trouvés.
+        /// Retourne les champs trouvés.
         /// </summary>
         /// <returns>Nom des champs trouvés regroupés par type.</returns>
         public ILookup<Type, string> GetFieldsByType()
         {
-            return _results.Select(x => new { x.Item1, x.Item3 })
-                .Distinct()
-                .ToLookup(k => k.Item1, v => v.Item3);
+            var q1 = from refByType in _refsByType
+                     from refName in refByType.Value
+                     join fieldByRef in _fieldsByRef on refName equals fieldByRef.Key
+                     select new
+                     {
+                         refByType.Key,
+                         selectAll = !fieldByRef.Value.Any()
+                     };
+
+
+            var q = from refByType in _refsByType
+                    from refName in refByType.Value
+                    join fieldByRef in _fieldsByRef on refName equals fieldByRef.Key
+                    //let selectAll = !fieldByRef.Value.Any()
+                    from fieldName in fieldByRef.Value
+                    select new
+                    {
+                        refByType.Key,
+                        fieldName
+                    };
+
+            var dic = q.ToLookup(k => k.Key, v => v.fieldName).ToDictionary(k => k.Key, v => v);
+
+
+            return q.ToLookup(k => k.Key, v => v.fieldName);
         }
 
         private void AddResult(Type refType, string refField, string field = null)
         {
-            _results.Add(Tuple.Create(refType, refField, field));
+            List<string> lstRefFields;
+            _refsByType.TryGetValue(refType, out lstRefFields);
+            if (lstRefFields == null)
+            {
+                lstRefFields = new List<string>();
+                _refsByType.Add(refType, lstRefFields);
+            }
+            if (!lstRefFields.Contains(refField, StringComparer.OrdinalIgnoreCase))
+            {
+                lstRefFields.Add(refField);
+            }
+
+            List<string> lstFields;
+            _fieldsByRef.TryGetValue(refField, out lstFields);
+            if (lstFields == null)
+            {
+                lstFields = new List<string>();
+                _fieldsByRef.Add(refField, lstFields);
+            }
+            if (!string.IsNullOrEmpty(field) && !lstFields.Contains(field, StringComparer.OrdinalIgnoreCase))
+            {
+                lstFields.Add(field);
+            }
         }
 
-        private void AddForeignKey(Type type, FieldDefinition field)
+        /// <summary>
+        /// Retourne les clés étrangères.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<FieldDefinition> GetForeignKeys()
         {
-            _foreignKeys.Add(Tuple.Create(type, field));
+            return _foreignKeys;
+        }
+
+        private void AddForeignKey(FieldDefinition fieldDef)
+        {
+            _foreignKeys.Add(fieldDef);
         }
 
         private FieldDefinition ParseField(StringBuilder buffer, Tuple<ModelDefinition, string> tpl,
@@ -101,7 +156,7 @@ namespace Tmpi.Pyrene.Common.OrmLite
                     }
                     else
                     {
-                        AddForeignKey(tpl.Item1.ModelType, fkFieldDef);
+                        AddForeignKey(fkFieldDef);
                         AddResult(tpl.Item1.ModelType, tpl.Item2, fkFieldDef.Name);
 
                         AddResult(fieldDef.FieldType, fieldDef.Name);
@@ -129,11 +184,15 @@ namespace Tmpi.Pyrene.Common.OrmLite
         /// <param name="fields">Expression à analyser.</param>
         public void Load<T>(string fields)
         {
+            Load(fields, typeof(T));
+        }
+        public void Load(string fields, Type type)
+        {
             Clear();
 
             var buffer = new StringBuilder();
 
-            var tpl = Tuple.Create(typeof(T).GetModelMetadata(), string.Empty);
+            var tpl = Tuple.Create(type.GetModelMetadata(), string.Empty);
             AddResult(tpl.Item1.ModelType, tpl.Item2);
 
             var stack = new Stack<Tuple<ModelDefinition, string>>();
@@ -174,6 +233,7 @@ namespace Tmpi.Pyrene.Common.OrmLite
                         throw new ArgumentException(
                             string.Format("Trop de parenthèses fermantes dans : '{0}'", fields));
                     }
+
                     ParseField(buffer, stack.Pop());
                 }
                 else if (c != ' ')

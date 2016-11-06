@@ -61,7 +61,6 @@
     <Compile Include="OrmLite\FieldParser.cs" />
     <Compile Include="OrmLite\OrmLiteExtensions.cs" />
     <Compile Include="ServiceErrorMessages.cs" />
-    <Compile Include="OrmLite\ModelDefinitionHelper.cs" />
     <Compile Include="PatchHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

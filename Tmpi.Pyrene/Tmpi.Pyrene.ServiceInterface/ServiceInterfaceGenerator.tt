@@ -365,7 +365,7 @@ namespace <#= fileNamespace #>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public <#= pocoClassName #> Get(<#= requestClassName #> request)
 		{
-            ModelDefinitionHelper.UndefinedFields<<#= pocoClassName #>>(request.Fields);
+            //ModelDefinitionHelper.UndefinedFields<<#= pocoClassName #>>(request.Fields);
 
             var q = Db.From<<#= pocoClassName #>>().Where(x => x.<#= pkProp.Name #> == request.<#= pkProp.Name #>).Select(request.Fields);
 
@@ -427,7 +427,7 @@ namespace <#= fileNamespace #>
 
             var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<<#= pocoClassName #>>(patchDic.Keys);
+            //ModelDefinitionHelper.UndefinedFields<<#= pocoClassName #>>(patchDic.Keys);
 
 			var entity = new <#= pocoClassName #>();
 			PatchHelper.PopulateFromPatch(entity, patchDic);

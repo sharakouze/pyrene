@@ -115,7 +115,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public Exercice Get(GetExercice request)
 		{
-            ModelDefinitionHelper.UndefinedFields<Exercice>(request.Fields);
+            //ModelDefinitionHelper.UndefinedFields<Exercice>(request.Fields);
 
             var q = Db.From<Exercice>().Where(x => x.CleExercice == request.CleExercice).Select(request.Fields);
 
@@ -146,7 +146,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<Exercice>(patchDic.Keys);
+            //ModelDefinitionHelper.UndefinedFields<Exercice>(patchDic.Keys);
 
 			var entity = new Exercice();
 			PatchHelper.PopulateFromPatch(entity, patchDic);

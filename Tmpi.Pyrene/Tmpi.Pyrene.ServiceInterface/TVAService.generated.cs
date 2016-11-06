@@ -78,7 +78,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public TVA Get(GetTVA request)
 		{
-            ModelDefinitionHelper.UndefinedFields<TVA>(request.Fields);
+            //ModelDefinitionHelper.UndefinedFields<TVA>(request.Fields);
 
             var q = Db.From<TVA>().Where(x => x.CleTVA == request.CleTVA).Select(request.Fields);
 
@@ -109,7 +109,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<TVA>(patchDic.Keys);
+            //ModelDefinitionHelper.UndefinedFields<TVA>(patchDic.Keys);
 
 			var entity = new TVA();
 			PatchHelper.PopulateFromPatch(entity, patchDic);

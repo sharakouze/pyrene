@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Tmpi.Pyrene.Common.OrmLite;
 using Tmpi.Pyrene.Common.Tests.Shared;
@@ -8,101 +10,132 @@ namespace Tmpi.Pyrene.Common.Tests
 {
     public class FieldParserTest
     {
-        [Fact]
-        public void ShouldHaveErrorsWhenFieldNotFound()
+        [Theory]
+        [InlineData("foo,clearticle,bar,fourn(plop)", typeof(Article),
+            new[] { "foo", "bar" }, new[] { "plop" })]
+        public void ShouldHaveErrorsWhenFieldNotFound(string inputFields, Type inputType,
+            IEnumerable<string> expectedErrorsInBaseType, IEnumerable<string> expectedErrorsInOtherTypes)
         {
-            // 'foo', 'bar' et 'plop' introuvables
-            string fields = "foo,clearticle,bar,fourn(plop)";
-
             var parser = new FieldParser();
-            parser.Load<Article>(fields);
+            parser.Load(inputFields, inputType);
 
             Assert.True(parser.HasErrors);
 
             var errors = parser.GetErrors();
-            Assert.Equal(2, errors.Count);
+            var q1 = errors.Where(x => x.Key == inputType).SelectMany(x => x);
+            var q2 = errors.Where(x => x.Key != inputType).SelectMany(x => x);
 
-            var q1 = errors.Where(x => x.Key == typeof(Article)).SelectMany(x => x);
-            Assert.Contains("foo", q1);
-            Assert.Contains("bar", q1);
-            Assert.DoesNotContain("plop", q1);
-            Assert.DoesNotContain("clearticle", q1, StringComparer.OrdinalIgnoreCase);
-
-            var q2 = errors.Where(x => x.Key == typeof(Fourn)).SelectMany(x => x);
-            Assert.DoesNotContain("foo", q2);
-            Assert.DoesNotContain("bar", q2);
-            Assert.Contains("plop", q2);
-            Assert.DoesNotContain("clearticle", q2, StringComparer.OrdinalIgnoreCase);
+            foreach (string field in expectedErrorsInBaseType)
+            {
+                Assert.Contains(field, q1, StringComparer.OrdinalIgnoreCase);
+                Assert.DoesNotContain(field, q2, StringComparer.OrdinalIgnoreCase);
+            }
+            foreach (string field in expectedErrorsInOtherTypes)
+            {
+                Assert.Contains(field, q2, StringComparer.OrdinalIgnoreCase);
+                Assert.DoesNotContain(field, q1, StringComparer.OrdinalIgnoreCase);
+            }
         }
 
+        /// <summary>
+        /// Teste le cas particulier où le champ correspondant à la FK est introuvable.
+        /// </summary>
         [Fact]
         public void ThrowExceptionIfForeignKeyFieldNotFound()
         {
-            // 'CleMagasinSecondaire' introuvable
             string fields = "CleArticle,MagasinSecondaire";
 
             var parser = new FieldParser();
             Assert.Throws<Exception>(() => parser.Load<Article>(fields));
         }
 
+        /// <summary>
+        /// Teste les références incorrectes et les références introuvables.
+        /// </summary>
         [Theory]
-        [InlineData("clearticle,foo(codarticle),libarticle")]
-        [InlineData("clearticle,codarticle(txtarticle),libarticle")]
-        public void ShouldNotHaveFieldWhenReferenceNotFound(string fields)
+        [InlineData("clearticle,foo(codarticle),libarticle", typeof(Article),
+            new[] { "clearticle", "libarticle" }, new[] { "codarticle" })]
+        [InlineData("clearticle,codarticle(txtarticle),libarticle", typeof(Article),
+            new[] { "clearticle", "libarticle" }, new[] { "codarticle", "txtarticle" })]
+        public void ShouldNotHaveFieldWhenReferenceNotFound(string inputFields, Type inputType,
+            IEnumerable<string> expectedFields, IEnumerable<string> notExpectedFields)
         {
-            // Teste les références incorrectes et les références introuvables
             var parser = new FieldParser();
-            parser.Load<Article>(fields);
+            parser.Load(inputFields, inputType);
 
             Assert.True(parser.HasErrors);
 
             var lookup = parser.GetFieldsByType();
+            var q = lookup.SelectMany(x => x);
 
-            var q1 = lookup.SelectMany(x => x);
-            Assert.Contains("clearticle", q1, StringComparer.OrdinalIgnoreCase);
-            Assert.DoesNotContain("codarticle", q1, StringComparer.OrdinalIgnoreCase);
-            Assert.Contains("libarticle", q1, StringComparer.OrdinalIgnoreCase);
-            Assert.DoesNotContain("txtarticle", q1, StringComparer.OrdinalIgnoreCase);
+            foreach (string field in expectedFields)
+            {
+                Assert.Contains(field, q, StringComparer.OrdinalIgnoreCase);
+            }
+            foreach (string field in notExpectedFields)
+            {
+                Assert.DoesNotContain(field, q, StringComparer.OrdinalIgnoreCase);
+            }
         }
 
+        /// <summary>
+        /// Teste la présence de références imbriquées sur plus d'un niveau de profondeur.
+        /// </summary>
         [Theory]
-        [InlineData("clearticle,fourn(codarticle,pays)")]
-        [InlineData("clearticle,fourn(codarticle,pays(nompays))")]
-        public void ThrowArgumentExceptionIfMultiLevelReference(string fields)
+        [InlineData("clearticle,fourn(codarticle,pays)", typeof(Article))]
+        [InlineData("clearticle,fourn(codarticle,pays(nompays))", typeof(Article))]
+        public void ThrowArgumentExceptionIfMultiLevelReference(string inputFields, Type inputType)
         {
-            // Teste la présence de références imbriquées sur plus d'un niveau de profondeur
             var parser = new FieldParser();
-            Assert.Throws<ArgumentException>(() => parser.Load<Article>(fields));
+            Assert.Throws<ArgumentException>(() => parser.Load(inputFields, inputType));
         }
 
+        /// <summary>
+        /// Teste les parenthèses en trop ou manquantes.
+        /// </summary>
         [Theory]
-        [InlineData("clearticle,fourn(clefourn,codfourn")]
-        [InlineData("clearticle,fourn(codfourn)),magasin")]
-        public void ThrowArgumentExceptionIfIncorrectParenthesis(string fields)
+        [InlineData("clearticle,fourn(clefourn,codfourn", typeof(Article))]
+        [InlineData("clearticle,fourn(codfourn)),magasin", typeof(Article))]
+        public void ThrowArgumentExceptionIfIncorrectParenthesis(string inputFields, Type inputType)
         {
-            // Teste les parenthèses en trop ou manquantes
             var parser = new FieldParser();
-            Assert.Throws<ArgumentException>(() => parser.Load<Article>(fields));
+            Assert.Throws<ArgumentException>(() => parser.Load(inputFields, inputType));
         }
 
-        [Fact]
-        public void ShouldHaveForeignKeyField()
+        /// <summary>
+        /// Teste l'ajout automatique les champs associés aux références à charger.
+        /// </summary>
+        [Theory]
+        [InlineData("codarticle,fourn,magasin", typeof(Article),
+            new[] { "clefourn", "clemagasin" }, new[] { "clefournfabricant" })]
+        public void ShouldHaveForeignKeyField(string inputFields, Type inputType,
+            IEnumerable<string> expectedFields, IEnumerable<string> notExpectedFields)
         {
-            string fields = "codarticle,fourn";
-
             var parser = new FieldParser();
-            parser.Load<Article>(fields);
+            parser.Load(inputFields, inputType);
 
             var lookup = parser.GetFieldsByType();
-
             var q1 = lookup.SelectMany(x => x);
-            Assert.Contains("CleFourn", q1, StringComparer.OrdinalIgnoreCase);
+
+            var fks = parser.GetForeignKeys();
+            var q2 = fks.Select(x => x.Name);
+
+            foreach (string field in expectedFields)
+            {
+                Assert.Contains(field, q1, StringComparer.OrdinalIgnoreCase);
+                Assert.Contains(field, q2, StringComparer.OrdinalIgnoreCase);
+            }
+            foreach (string field in notExpectedFields)
+            {
+                Assert.DoesNotContain(field, q1, StringComparer.OrdinalIgnoreCase);
+                Assert.DoesNotContain(field, q2, StringComparer.OrdinalIgnoreCase);
+            }
         }
 
         [Fact]
-        public void ShouldHaveAskedField()
+        public void ShouldHaveAskedFields()
         {
-            string fields = "codarticle,fourn(codfourn,),,magasin";
+            string fields = "codarticle, fourn ( codfourn , ),fournfabricant(), ,libarticle";
 
             var parser = new FieldParser();
             parser.Load<Article>(fields);
@@ -111,27 +144,39 @@ namespace Tmpi.Pyrene.Common.Tests
 
             var lookup = parser.GetFieldsByType();
 
-            var q1 = lookup.SelectMany(x => x);
-            Assert.Contains("CleFourn", q1, StringComparer.OrdinalIgnoreCase);
+            var q1 = lookup.Where(x => x.Key == typeof(Article)).SelectMany(x => x);
+            Assert.Contains("CodArticle", q1, StringComparer.OrdinalIgnoreCase);
+            Assert.Contains("LibArticle", q1, StringComparer.OrdinalIgnoreCase);
+
+            var q2 = lookup.Where(x => x.Key == typeof(Fourn)).SelectMany(x => x);
+            Assert.Contains("CodFourn", q2, StringComparer.OrdinalIgnoreCase);
+
+            var q3 = lookup.Select(x => x.Key);
+            Assert.Contains(typeof(Article), q3);
+            Assert.Contains(typeof(Fourn), q3);
+            Assert.DoesNotContain(typeof(Magasin), q3);
         }
 
-        [Fact]
-        public void ShouldNotHaveDuplicateFieldsInResult()
+        /// <summary>
+        /// Teste l'unicité des champs dans le résultat.
+        /// </summary>
+        [Theory]
+        [InlineData("codarticle,clefourn,fourn(codfourn),fournfabricant(codfourn),codarticle", typeof(Article))]
+        public void ShouldNotHaveDuplicateFieldsInResult(string inputFields, Type inputType)
         {
-            // 'CodArticle' et 'CodFourn' sont spécifiés en double. 'CleFourn' est aussi ajouté en temps que FK
-            string fields = "codarticle,clefourn,fourn(codfourn),fournfabricant(codfourn),codarticle";
-
             var parser = new FieldParser();
-            parser.Load<Article>(fields);
+            parser.Load(inputFields, inputType);
 
             Assert.False(parser.HasErrors);
 
             var lookup = parser.GetFieldsByType();
-
-            var q1 = lookup.SelectMany(x => x);
-            Assert.Single(q1, x => string.Equals(x, "codarticle", StringComparison.OrdinalIgnoreCase));
-            Assert.Single(q1, x => string.Equals(x, "clefourn", StringComparison.OrdinalIgnoreCase));
-            Assert.Single(q1, x => string.Equals(x, "codfourn", StringComparison.OrdinalIgnoreCase));
+            foreach (var grp in lookup)
+            {
+                foreach (string field in grp)
+                {
+                    Assert.Single(grp, x => string.Equals(x, field, StringComparison.OrdinalIgnoreCase));
+                }
+            }
         }
     }
 }

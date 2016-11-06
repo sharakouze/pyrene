@@ -214,7 +214,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public Mandat Get(GetMandat request)
 		{
-            ModelDefinitionHelper.UndefinedFields<Mandat>(request.Fields);
+            //ModelDefinitionHelper.UndefinedFields<Mandat>(request.Fields);
 
             var q = Db.From<Mandat>().Where(x => x.CleMandat == request.CleMandat).Select(request.Fields);
 
@@ -237,7 +237,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public MandatMandataire Get(GetMandatMandataire request)
 		{
-            ModelDefinitionHelper.UndefinedFields<MandatMandataire>(request.Fields);
+            //ModelDefinitionHelper.UndefinedFields<MandatMandataire>(request.Fields);
 
             var q = Db.From<MandatMandataire>().Where(x => x.CleMandataire == request.CleMandataire).Select(request.Fields);
 
@@ -348,7 +348,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<Mandat>(patchDic.Keys);
+            //ModelDefinitionHelper.UndefinedFields<Mandat>(patchDic.Keys);
 
 			var entity = new Mandat();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
@@ -396,7 +396,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<MandatMandataire>(patchDic.Keys);
+            //ModelDefinitionHelper.UndefinedFields<MandatMandataire>(patchDic.Keys);
 
 			var entity = new MandatMandataire();
 			PatchHelper.PopulateFromPatch(entity, patchDic);

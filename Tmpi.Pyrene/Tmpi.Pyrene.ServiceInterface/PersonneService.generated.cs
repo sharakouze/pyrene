@@ -222,7 +222,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public Personne Get(GetPersonne request)
 		{
-            ModelDefinitionHelper.UndefinedFields<Personne>(request.Fields);
+            //ModelDefinitionHelper.UndefinedFields<Personne>(request.Fields);
 
             var q = Db.From<Personne>().Where(x => x.ClePersonne == request.ClePersonne).Select(request.Fields);
 
@@ -245,7 +245,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public PersonneProfil Get(GetPersonneProfil request)
 		{
-            ModelDefinitionHelper.UndefinedFields<PersonneProfil>(request.Fields);
+            //ModelDefinitionHelper.UndefinedFields<PersonneProfil>(request.Fields);
 
             var q = Db.From<PersonneProfil>().Where(x => x.CleProfil == request.CleProfil).Select(request.Fields);
 
@@ -268,7 +268,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public PersonneSignature Get(GetPersonneSignature request)
 		{
-            ModelDefinitionHelper.UndefinedFields<PersonneSignature>(request.Fields);
+            //ModelDefinitionHelper.UndefinedFields<PersonneSignature>(request.Fields);
 
             var q = Db.From<PersonneSignature>().Where(x => x.ClePersonne == request.ClePersonne).Select(request.Fields);
 
@@ -299,7 +299,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<Personne>(patchDic.Keys);
+            //ModelDefinitionHelper.UndefinedFields<Personne>(patchDic.Keys);
 
 			var entity = new Personne();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
@@ -341,7 +341,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<PersonneProfil>(patchDic.Keys);
+            //ModelDefinitionHelper.UndefinedFields<PersonneProfil>(patchDic.Keys);
 
 			var entity = new PersonneProfil();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
@@ -389,7 +389,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
             var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-            ModelDefinitionHelper.UndefinedFields<PersonneSignature>(patchDic.Keys);
+            //ModelDefinitionHelper.UndefinedFields<PersonneSignature>(patchDic.Keys);
 
 			var entity = new PersonneSignature();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
