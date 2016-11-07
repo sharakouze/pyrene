@@ -106,10 +106,12 @@ namespace Tmpi.Pyrene.Common.Tests
         /// Teste l'ajout automatique les champs associés aux références à charger.
         /// </summary>
         [Theory]
-        [InlineData("codarticle,fourn,magasin", typeof(Article),
-            new[] { "clefourn", "clemagasin" }, new[] { "clefournfabricant" })]
+        [InlineData("codarticle,fournfabricant,magasin", typeof(Article),
+            new[] { "clefournfabricant", "clemagasin" }, new[] { "clefournfabricant", "clemagasin" }, new[] { "clefourn" })]
+        [InlineData("fourn(codfourn),magasin", typeof(Article),
+            new string[] { }, new[] { "clefourn", "clemagasin" }, new[] { "clefourn", "clemagasin", "clefournfabricant" })]
         public void ShouldHaveForeignKeyField(string inputFields, Type inputType,
-            IEnumerable<string> expectedFields, IEnumerable<string> notExpectedFields)
+            IEnumerable<string> expectedFields, IEnumerable<string> expectedFKs, IEnumerable<string> notExpectedFields)
         {
             var parser = new FieldParser();
             parser.Load(inputFields, inputType);
@@ -123,12 +125,14 @@ namespace Tmpi.Pyrene.Common.Tests
             foreach (string field in expectedFields)
             {
                 Assert.Contains(field, q1, StringComparer.OrdinalIgnoreCase);
-                Assert.Contains(field, q2, StringComparer.OrdinalIgnoreCase);
+            }
+            foreach (string fk in expectedFKs)
+            {
+                Assert.Contains(fk, q2, StringComparer.OrdinalIgnoreCase);
             }
             foreach (string field in notExpectedFields)
             {
                 Assert.DoesNotContain(field, q1, StringComparer.OrdinalIgnoreCase);
-                Assert.DoesNotContain(field, q2, StringComparer.OrdinalIgnoreCase);
             }
         }
 

@@ -60,28 +60,21 @@ namespace Tmpi.Pyrene.Common.OrmLite
             var q1 = from refByType in _refsByType
                      from refName in refByType.Value
                      join fieldByRef in _fieldsByRef on refName equals fieldByRef.Key
-                     select new
-                     {
-                         refByType.Key,
-                         selectAll = !fieldByRef.Value.Any()
-                     };
-
+                     where !fieldByRef.Value.Any()
+                     select refByType.Key;
+            var lstTypeSelectAll = q1.Distinct();
 
             var q = from refByType in _refsByType
+                    where !lstTypeSelectAll.Contains(refByType.Key)
                     from refName in refByType.Value
                     join fieldByRef in _fieldsByRef on refName equals fieldByRef.Key
-                    //let selectAll = !fieldByRef.Value.Any()
                     from fieldName in fieldByRef.Value
                     select new
                     {
-                        refByType.Key,
-                        fieldName
+                        Key = refByType.Key,
+                        Value = fieldName
                     };
-
-            var dic = q.ToLookup(k => k.Key, v => v.fieldName).ToDictionary(k => k.Key, v => v);
-
-
-            return q.ToLookup(k => k.Key, v => v.fieldName);
+            return q.Union(q1.Select(x => new { Key = x, Value = (string)null })).ToLookup(k => k.Key, v => v.Value);
         }
 
         private void AddResult(Type refType, string refField, string field = null)
@@ -157,8 +150,6 @@ namespace Tmpi.Pyrene.Common.OrmLite
                     else
                     {
                         AddForeignKey(fkFieldDef);
-                        AddResult(tpl.Item1.ModelType, tpl.Item2, fkFieldDef.Name);
-
                         AddResult(fieldDef.FieldType, fieldDef.Name);
                     }
                 }
