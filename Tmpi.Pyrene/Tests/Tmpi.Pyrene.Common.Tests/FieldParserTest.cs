@@ -22,8 +22,8 @@ namespace Tmpi.Pyrene.Common.Tests
             Assert.True(parser.HasErrors);
 
             var errors = parser.GetErrors();
-            var q1 = errors.Where(x => x.Key == inputType).SelectMany(x => x);
-            var q2 = errors.Where(x => x.Key != inputType).SelectMany(x => x);
+            var q1 = errors.Where(x => x.Key == inputType).SelectMany(x => x.Value);
+            var q2 = errors.Where(x => x.Key != inputType).SelectMany(x => x.Value);
 
             foreach (string field in expectedErrorsInBaseType)
             {
@@ -65,8 +65,8 @@ namespace Tmpi.Pyrene.Common.Tests
 
             Assert.True(parser.HasErrors);
 
-            var lookup = parser.GetFieldsByType();
-            var q = lookup.SelectMany(x => x);
+            var fieldsByType = parser.GetFieldsByType();
+            var q = fieldsByType.SelectMany(x => x.Value);
 
             foreach (string field in expectedFields)
             {
@@ -116,8 +116,8 @@ namespace Tmpi.Pyrene.Common.Tests
             var parser = new FieldParser();
             parser.Load(inputFields, inputType);
 
-            var lookup = parser.GetFieldsByType();
-            var q1 = lookup.SelectMany(x => x);
+            var fieldsByType = parser.GetFieldsByType();
+            var q1 = fieldsByType.SelectMany(x => x.Value);
 
             var fks = parser.GetForeignKeys();
             var q2 = fks.Select(x => x.Name);
@@ -146,16 +146,16 @@ namespace Tmpi.Pyrene.Common.Tests
 
             Assert.False(parser.HasErrors);
 
-            var lookup = parser.GetFieldsByType();
+            var fieldsByType = parser.GetFieldsByType();
 
-            var q1 = lookup.Where(x => x.Key == typeof(Article)).SelectMany(x => x);
+            var q1 = fieldsByType.Where(x => x.Key == typeof(Article)).SelectMany(x => x.Value);
             Assert.Contains("CodArticle", q1, StringComparer.OrdinalIgnoreCase);
             Assert.Contains("LibArticle", q1, StringComparer.OrdinalIgnoreCase);
 
-            var q2 = lookup.Where(x => x.Key == typeof(Fourn)).SelectMany(x => x);
+            var q2 = fieldsByType.Where(x => x.Key == typeof(Fourn)).SelectMany(x => x.Value);
             Assert.Contains("CodFourn", q2, StringComparer.OrdinalIgnoreCase);
 
-            var q3 = lookup.Select(x => x.Key);
+            var q3 = fieldsByType.Select(x => x.Key);
             Assert.Contains(typeof(Article), q3);
             Assert.Contains(typeof(Fourn), q3);
             Assert.DoesNotContain(typeof(Magasin), q3);
@@ -173,12 +173,12 @@ namespace Tmpi.Pyrene.Common.Tests
 
             Assert.False(parser.HasErrors);
 
-            var lookup = parser.GetFieldsByType();
-            foreach (var grp in lookup)
+            var fieldsByType = parser.GetFieldsByType();
+            foreach (var kvp in fieldsByType)
             {
-                foreach (string field in grp)
+                foreach (string field in kvp.Value)
                 {
-                    Assert.Single(grp, x => string.Equals(x, field, StringComparison.OrdinalIgnoreCase));
+                    Assert.Single(kvp.Value, x => string.Equals(x, field, StringComparison.OrdinalIgnoreCase));
                 }
             }
         }

@@ -10,16 +10,19 @@ namespace Tmpi.Pyrene.Common.OrmLite
     {
         public static string ForeignKeyFieldFormat = "Cle{0}";
 
+        private string _fields;
+
         private readonly Dictionary<Type, List<string>> _refsByType = new Dictionary<Type, List<string>>();
         private readonly Dictionary<string, List<string>> _fieldsByRef = new Dictionary<string, List<string>>();
         private readonly List<FieldDefinition> _foreignKeys = new List<FieldDefinition>();
-        private readonly List<Tuple<Type, string>> _errors = new List<Tuple<Type, string>>();
+        private readonly Dictionary<Type, List<string>> _errors = new Dictionary<Type, List<string>>();
 
         /// <summary>
         /// Supprime tous les éléments de <see cref="FieldParser"/>.
         /// </summary>
-        public void Clear()
+        private void Clear()
         {
+            _fields = null;
             _refsByType.Clear();
             _fieldsByRef.Clear();
             _foreignKeys.Clear();
@@ -27,7 +30,7 @@ namespace Tmpi.Pyrene.Common.OrmLite
         }
 
         /// <summary>
-        /// Obtient une valeur indiquant s'il existe des erreurs.
+        /// Obtient une valeur indiquant si l'analyse a généré des erreurs de champs non trouvés.
         /// </summary>
         public bool HasErrors
         {
@@ -41,40 +44,74 @@ namespace Tmpi.Pyrene.Common.OrmLite
         /// Retourne les champs non trouvés.
         /// </summary>
         /// <returns>Nom des champs non trouvés regroupés par type.</returns>
-        public ILookup<Type, string> GetErrors()
+        public IDictionary<Type, List<string>> GetErrors()
         {
-            return _errors.ToLookup(k => k.Item1, v => v.Item2);
+            return _errors;
         }
 
         private void AddError(Type type, string field)
         {
-            _errors.Add(Tuple.Create(type, field));
+            List<string> lstErrors;
+            _errors.TryGetValue(type, out lstErrors);
+            if (lstErrors == null)
+            {
+                lstErrors = new List<string>();
+                _errors.Add(type, lstErrors);
+            }
+            if (!lstErrors.Contains(field, StringComparer.OrdinalIgnoreCase))
+            {
+                lstErrors.Add(field);
+            }
         }
 
         /// <summary>
-        /// Retourne les champs trouvés.
+        /// Retourne le résultat de l'analyse des champs trouvés.
         /// </summary>
         /// <returns>Nom des champs trouvés regroupés par type.</returns>
-        public ILookup<Type, string> GetFieldsByType()
+        public IDictionary<Type, string[]> GetFieldsByType()
         {
+            // types pour lesquels on fera un select *
             var q1 = from refByType in _refsByType
                      from refName in refByType.Value
                      join fieldByRef in _fieldsByRef on refName equals fieldByRef.Key
                      where !fieldByRef.Value.Any()
                      select refByType.Key;
-            var lstTypeSelectAll = q1.Distinct();
+            var allFieldsTypes = q1.Distinct().ToArray();
 
-            var q = from refByType in _refsByType
-                    where !lstTypeSelectAll.Contains(refByType.Key)
-                    from refName in refByType.Value
-                    join fieldByRef in _fieldsByRef on refName equals fieldByRef.Key
-                    from fieldName in fieldByRef.Value
-                    select new
-                    {
-                        Key = refByType.Key,
-                        Value = fieldName
-                    };
-            return q.Union(q1.Select(x => new { Key = x, Value = (string)null })).ToLookup(k => k.Key, v => v.Value);
+            var q2a = from fk in _foreignKeys
+                      select new
+                      {
+                          RefName = string.Empty,
+                          FieldName = fk.Name
+                      };
+            var q2b = from fbr in _fieldsByRef
+                      from field in fbr.Value
+                      select new
+                      {
+                          RefName = fbr.Key,
+                          FieldName = field
+                      };
+            var q2 = q2a.Union(q2b);
+
+            var q3 = from refByType in _refsByType
+                     where !allFieldsTypes.Contains(refByType.Key)
+                     from refName in refByType.Value
+                     join fieldByRef in q2 on refName equals fieldByRef.RefName
+                     group fieldByRef.FieldName by refByType.Key into grp
+                     select new
+                     {
+                         Key = grp.Key,
+                         Fields = grp.Distinct().ToArray()
+                     };
+            var q4 = from t in allFieldsTypes
+                     select new
+                     {
+                         Key = t,
+                         Fields = new string[] { }
+                     };
+
+            var dic = q3.Union(q4).ToDictionary(x => x.Key, x => x.Fields);
+            return dic;
         }
 
         private void AddResult(Type refType, string refField, string field = null)
@@ -180,6 +217,7 @@ namespace Tmpi.Pyrene.Common.OrmLite
         public void Load(string fields, Type type)
         {
             Clear();
+            _fields = fields;
 
             var buffer = new StringBuilder();
 

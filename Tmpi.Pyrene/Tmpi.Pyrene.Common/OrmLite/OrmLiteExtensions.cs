@@ -21,12 +21,12 @@ namespace Tmpi.Pyrene.Common.OrmLite
             {
                 var errors = parser.GetErrors();
 
-                var q = from err in errors
-                        let field = err.Select(f => "'" + f + "'")
-                        select string.Format(ServiceErrorMessages.EntityFieldsNotFound, err.Key.Name, string.Join(", ", field));
+                //var q = from err in errors
+                //        let field = err.Select(f => "'" + f + "'")
+                //        select string.Format(ServiceErrorMessages.EntityFieldsNotFound, err.Key.Name, string.Join(", ", field));
 
-                throw new ArgumentException(
-                            string.Format(ServiceErrorMessages.EntityFieldsNotFound, nameof(T), q.ToList()));
+                //throw new ArgumentException(
+                //            string.Format(ServiceErrorMessages.EntityFieldsNotFound, nameof(T), q.ToList()));
             }
 
             //var lookup = ParseFields<T>(fields);
