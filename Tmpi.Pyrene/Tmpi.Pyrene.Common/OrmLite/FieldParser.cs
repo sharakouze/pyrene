@@ -10,11 +10,9 @@ namespace Tmpi.Pyrene.Common.OrmLite
     {
         public static string ForeignKeyFieldFormat = "Cle{0}";
 
-        private string _fields;
-
         private readonly Dictionary<Type, List<string>> _refsByType = new Dictionary<Type, List<string>>();
         private readonly Dictionary<string, List<string>> _fieldsByRef = new Dictionary<string, List<string>>();
-        private readonly List<FieldDefinition> _foreignKeys = new List<FieldDefinition>();
+        private readonly Dictionary<Type, List<FieldDefinition>> _foreignKeyFields = new Dictionary<Type, List<FieldDefinition>>();
         private readonly Dictionary<Type, List<string>> _errors = new Dictionary<Type, List<string>>();
 
         /// <summary>
@@ -22,17 +20,16 @@ namespace Tmpi.Pyrene.Common.OrmLite
         /// </summary>
         private void Clear()
         {
-            _fields = null;
             _refsByType.Clear();
             _fieldsByRef.Clear();
-            _foreignKeys.Clear();
+            _foreignKeyFields.Clear();
             _errors.Clear();
         }
 
         /// <summary>
         /// Obtient une valeur indiquant si l'analyse a généré des erreurs de champs non trouvés.
         /// </summary>
-        public bool HasErrors
+        public bool HasFieldsNotFound
         {
             get
             {
@@ -44,7 +41,7 @@ namespace Tmpi.Pyrene.Common.OrmLite
         /// Retourne les champs non trouvés.
         /// </summary>
         /// <returns>Nom des champs non trouvés regroupés par type.</returns>
-        public IDictionary<Type, List<string>> GetErrors()
+        public IDictionary<Type, List<string>> GetFieldsNotFound()
         {
             return _errors;
         }
@@ -142,67 +139,65 @@ namespace Tmpi.Pyrene.Common.OrmLite
         }
 
         /// <summary>
-        /// Retourne les clés étrangères.
+        /// Retourne les métadonnées pour les champs associés à des références à charger.
         /// </summary>
-        /// <returns></returns>
-        public IEnumerable<FieldDefinition> GetForeignKeys()
+        /// <returns>Métadonnées des champs regroupés par type.</returns>
+        public IDictionary<Type, List<FieldDefinition>> GetForeignKeyFields()
         {
-            return _foreignKeys;
+            return _foreignKeyFields;
         }
 
-        private void AddForeignKey(FieldDefinition fieldDef)
+        private void AddForeignKeyField(Type type, FieldDefinition fieldDef)
         {
-            _foreignKeys.Add(fieldDef);
-        }
-
-        private FieldDefinition ParseField(StringBuilder buffer, Tuple<ModelDefinition, string> tpl,
-            bool forceReference = false)
-        {
-            if (buffer.Length > 0)
+            if (!_foreignKeyFields.ContainsKey(type))
             {
-                string field = buffer.ToString();
-                buffer.Clear();
+                _foreignKeyFields.Add(type, fieldDef);
+            }
+        }
 
-                var fieldDef = tpl.Item1.AllFieldDefinitionsArray
-                    .FirstOrDefault(f => string.Equals(f.Name, field, StringComparison.OrdinalIgnoreCase));
-                if (fieldDef == null)
-                {
-                    AddError(tpl.Item1.ModelType, field);
-                }
-                else if (fieldDef.IsReference)
-                {
-                    if (!string.IsNullOrEmpty(tpl.Item2))
-                    {
-                        throw new ArgumentException();
-                    }
+        private FieldDefinition ParseField(StringBuilder buffer, Tuple<ModelDefinition, string> tpl)
+        {
+            if (buffer.Length == 0)
+            {
+                return null;
+            }
 
-                    string fkFieldName = string.Format(ForeignKeyFieldFormat, fieldDef.Name);
-                    var fkFieldDef = tpl.Item1.FieldDefinitions
-                        .FirstOrDefault(f => string.Equals(f.Name, fkFieldName, StringComparison.OrdinalIgnoreCase));
-                    if (fkFieldDef == null)
-                    {
-                        throw new Exception(
-                            string.Format("Impossible de trouver un champ '{0}' associé à '{1}.{2}'", fkFieldName, tpl.Item1.Name, fieldDef.Name));
-                    }
-                    else
-                    {
-                        AddForeignKey(fkFieldDef);
-                        AddResult(fieldDef.FieldType, fieldDef.Name);
-                    }
-                }
-                else if (forceReference)
+            string field = buffer.ToString();
+            buffer.Clear();
+
+            var fieldDef = tpl.Item1.AllFieldDefinitionsArray
+                .FirstOrDefault(f => string.Equals(f.Name, field, StringComparison.OrdinalIgnoreCase));
+            if (fieldDef == null)
+            {
+                AddError(tpl.Item1.ModelType, field);
+            }
+            else if (fieldDef.IsReference)
+            {
+                if (!string.IsNullOrEmpty(tpl.Item2))
                 {
-                    AddError(tpl.Item1.ModelType, field);
+                    throw new ArgumentException();
+                }
+
+                string fkFieldName = string.Format(ForeignKeyFieldFormat, fieldDef.Name);
+                var fkFieldDef = tpl.Item1.FieldDefinitions
+                    .FirstOrDefault(f => string.Equals(f.Name, fkFieldName, StringComparison.OrdinalIgnoreCase));
+                if (fkFieldDef == null)
+                {
+                    throw new Exception(
+                        string.Format("Impossible de trouver un champ '{0}' associé à '{1}.{2}'", fkFieldName, tpl.Item1.Name, fieldDef.Name));
                 }
                 else
                 {
-                    AddResult(tpl.Item1.ModelType, tpl.Item2, fieldDef.Name);
+                    AddForeignKeyField(fieldDef.FieldType, fkFieldDef);
+                    AddResult(fieldDef.FieldType, fieldDef.Name);
                 }
-
-                return fieldDef;
+            }
+            else
+            {
+                AddResult(tpl.Item1.ModelType, tpl.Item2, fieldDef.Name);
             }
 
-            return null;
+            return fieldDef;
         }
 
         /// <summary>
@@ -214,10 +209,14 @@ namespace Tmpi.Pyrene.Common.OrmLite
         {
             Load(fields, typeof(T));
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fields"></param>
+        /// <param name="type"></param>
         public void Load(string fields, Type type)
         {
             Clear();
-            _fields = fields;
 
             var buffer = new StringBuilder();
 
@@ -244,11 +243,15 @@ namespace Tmpi.Pyrene.Common.OrmLite
                             string.Format("Parenthèse fermante attendue dans : '{0}'", fields));
                     }
 
-                    var fieldDef = ParseField(buffer, stack.Peek(), true);
-
-                    if (fieldDef == null || !fieldDef.IsReference)
+                    var fieldDef = ParseField(buffer, stack.Peek());
+                    if (fieldDef == null)
                     {
                         i = index + 1; // on saute tout le contenu de la parenthèse non valable
+                    }
+                    else if (!fieldDef.IsReference)
+                    {
+                        throw new ArgumentException(
+                            string.Format("Le champ '{0}' n'est pas une référence dans : '{1}'", fieldDef.Name, fields));
                     }
                     else
                     {

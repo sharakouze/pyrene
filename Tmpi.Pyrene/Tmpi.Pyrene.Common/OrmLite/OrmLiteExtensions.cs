@@ -17,30 +17,31 @@ namespace Tmpi.Pyrene.Common.OrmLite
             var parser = new FieldParser();
             parser.Load<T>(fields);
 
-            if (parser.HasErrors)
+            if (parser.HasFieldsNotFound)
             {
-                var errors = parser.GetErrors();
+                var fieldsNotFound = parser.GetFieldsNotFound();
 
-                //var q = from err in errors
-                //        let field = err.Select(f => "'" + f + "'")
-                //        select string.Format(ServiceErrorMessages.EntityFieldsNotFound, err.Key.Name, string.Join(", ", field));
+                var q = from kvp in fieldsNotFound
+                        let qf = kvp.Value.Select(f => "'" + f + "'")
+                        select string.Format(ServiceErrorMessages.EntityFieldsNotFound, kvp.Key.Name, string.Join(", ", qf));
 
-                //throw new ArgumentException(
-                //            string.Format(ServiceErrorMessages.EntityFieldsNotFound, nameof(T), q.ToList()));
+                throw new ArgumentException(
+                            string.Format(ServiceErrorMessages.EntityFieldsNotFound, nameof(T), q.ToList()));
             }
 
-            //var lookup = ParseFields<T>(fields);
-            //var f0 = lookup.Where(x => x.Key == null).SelectMany(x => x).ToArray();
+            var fieldsByType = parser.GetFieldsByType();
 
-            //expression.Select(f0);
+            var fields0 = fieldsByType.Where(x => x.Key == typeof(T)).SelectMany(x => x.Value).ToArray();
+            expression.Select(fields0);
 
             var result = dbConn.Select(expression);
 
-            //foreach (Type type in lookup.Select(x => x.Key))
-            //{
+            foreach (Type type in fieldsByType.Keys)
+            {
+                var fk = parser.GetForeignKeys()
+                var fields1 = fieldsByType.Where(x => x.Key == type).SelectMany(x => x.Value).ToArray();
 
-
-            //}
+            }
 
             return result;
         }
