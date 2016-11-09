@@ -14,8 +14,9 @@ namespace Tmpi.Pyrene.Common.OrmLite
     {
         public static List<T> SelectPartial<T>(this IDbConnection dbConn, SqlExpression<T> expression, string fields)
         {
+            Type t = typeof(T);
             var parser = new FieldParser();
-            parser.Load<T>(fields);
+            parser.Load(fields, t);
 
             if (parser.HasFieldsNotFound)
             {
@@ -25,21 +26,39 @@ namespace Tmpi.Pyrene.Common.OrmLite
                         let qf = kvp.Value.Select(f => "'" + f + "'")
                         select string.Format(ServiceErrorMessages.EntityFieldsNotFound, kvp.Key.Name, string.Join(", ", qf));
 
-                throw new ArgumentException(
-                            string.Format(ServiceErrorMessages.EntityFieldsNotFound, nameof(T), q.ToList()));
+                throw new ArgumentException();
             }
 
             var fieldsByType = parser.GetFieldsByType();
 
-            var fields0 = fieldsByType.Where(x => x.Key == typeof(T)).SelectMany(x => x.Value).ToArray();
+            var fields0 = fieldsByType.Where(x => x.Key == t).SelectMany(x => x.Value).ToArray();
             expression.Select(fields0);
 
             var result = dbConn.Select(expression);
 
-            foreach (Type type in fieldsByType.Keys)
+            var fks = parser.GetForeignKeyFields();
+            var types = fieldsByType.Where(x => x.Key != t).Select(x => x.Key);
+            foreach (Type type in types)
             {
-                var fk = parser.GetForeignKeys()
+                List<object> lst = new List<object>();
+
+                var fieldDefs = fks.Where(x => x.Key == type).SelectMany(x => x.Value);
+                foreach (var fieldDef in fieldDefs)
+                {
+                    foreach (var row in result)
+                    {
+                        object value = fieldDef.GetValue(row);//GetQuotedValue ??
+                        if (value != null)
+                        {
+                            lst.Add(value);
+                        }
+                    }
+                }
+
+
                 var fields1 = fieldsByType.Where(x => x.Key == type).SelectMany(x => x.Value).ToArray();
+
+                var obj = dbConn.Select<T>()
 
             }
 

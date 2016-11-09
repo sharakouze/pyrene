@@ -129,7 +129,7 @@ namespace Tmpi.Pyrene.Common.Tests
             var q1 = fieldsByType.SelectMany(x => x.Value);
 
             var fks = parser.GetForeignKeyFields();
-            var q2 = fks.Values.Select(x => x.Name);
+            var q2 = fks.SelectMany(x => x.Value).Select(x => x.Name);
 
             foreach (string field in expectedFields)
             {
@@ -185,7 +185,7 @@ namespace Tmpi.Pyrene.Common.Tests
             parser.Load(inputFields, inputType);
 
             var fks = parser.GetForeignKeyFields();
-            var q = fks.Values.Select(x => x.Name);
+            var q = fks.SelectMany(x => x.Value).Select(x => x.Name);
 
             foreach (string field in q)
             {
