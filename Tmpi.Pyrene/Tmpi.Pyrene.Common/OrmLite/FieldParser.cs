@@ -6,29 +6,14 @@ using System.Text;
 
 namespace Tmpi.Pyrene.Common.OrmLite
 {
-    internal class FieldDefinitionComparer : IEqualityComparer<FieldDefinition>
-    {
-        public bool Equals(FieldDefinition x, FieldDefinition y)
-        {
-            return x.Name == y.Name;
-        }
-
-        public int GetHashCode(FieldDefinition obj)
-        {
-            if (obj == null)
-            {
-                throw new ArgumentNullException(nameof(obj));
-            }
-            return obj.Name.GetHashCode();
-        }
-    }
-
     public class FieldParser
     {
         public static string ForeignKeyFieldFormat = "Cle{0}";
 
+        private readonly FieldDefinitionComparer _fieldDefComparer = new FieldDefinitionComparer();
+
         private readonly Dictionary<Type, List<string>> _refsByType = new Dictionary<Type, List<string>>();
-        private readonly Dictionary<string, List<string>> _fieldsByRef = new Dictionary<string, List<string>>();
+        private readonly Dictionary<string, List<FieldDefinition>> _fieldsByRef = new Dictionary<string, List<FieldDefinition>>();
         private readonly Dictionary<Type, List<FieldDefinition>> _fkFieldsByType = new Dictionary<Type, List<FieldDefinition>>();
         private readonly Dictionary<Type, List<string>> _errors = new Dictionary<Type, List<string>>();
 
@@ -44,7 +29,7 @@ namespace Tmpi.Pyrene.Common.OrmLite
         }
 
         /// <summary>
-        /// Obtient une valeur indiquant si l'analyse a généré des erreurs de champs non trouvés.
+        /// Obtient une valeur indiquant si l'analyse n'a pas trouvé certains champs.
         /// </summary>
         public bool HasFieldsNotFound
         {
@@ -55,7 +40,7 @@ namespace Tmpi.Pyrene.Common.OrmLite
         }
 
         /// <summary>
-        /// Retourne les champs non trouvés par type.
+        /// Retourne les noms des champs non trouvés par type.
         /// </summary>
         /// <returns>Nom des champs non trouvés regroupés par type.</returns>
         public IDictionary<Type, List<string>> GetFieldsNotFound()
@@ -81,8 +66,8 @@ namespace Tmpi.Pyrene.Common.OrmLite
         /// <summary>
         /// Retourne le résultat de l'analyse des champs trouvés par type.
         /// </summary>
-        /// <returns>Nom des champs trouvés regroupés par type.</returns>
-        public IDictionary<Type, string[]> GetFieldsByType()
+        /// <returns>Définition des champs trouvés regroupés par type.</returns>
+        public IDictionary<Type, FieldDefinition[]> GetFieldsByType()
         {
             // types pour lesquels on fera un select *
             var q1 = from refByType in _refsByType
@@ -97,14 +82,14 @@ namespace Tmpi.Pyrene.Common.OrmLite
                       select new
                       {
                           RefName = string.Empty,
-                          FieldName = fieldDef.Name
+                          FieldDef = fieldDef
                       };
             var q2b = from fbr in _fieldsByRef
-                      from field in fbr.Value
+                      from fieldDef in fbr.Value
                       select new
                       {
                           RefName = fbr.Key,
-                          FieldName = field
+                          FieldDef = fieldDef
                       };
             var q2 = q2a.Union(q2b);
 
@@ -112,24 +97,24 @@ namespace Tmpi.Pyrene.Common.OrmLite
                      where !allFieldsTypes.Contains(refByType.Key)
                      from refName in refByType.Value
                      join fieldByRef in q2 on refName equals fieldByRef.RefName
-                     group fieldByRef.FieldName by refByType.Key into grp
+                     group fieldByRef.FieldDef by refByType.Key into grp
                      select new
                      {
                          Type = grp.Key,
-                         Fields = grp.Distinct().ToArray()
+                         Fields = grp.Distinct(_fieldDefComparer).ToArray()
                      };
             var q4 = from t in allFieldsTypes
                      select new
                      {
                          Type = t,
-                         Fields = new string[] { }
+                         Fields = new FieldDefinition[] { }
                      };
 
             var dic = q3.Union(q4).ToDictionary(x => x.Type, x => x.Fields);
             return dic;
         }
 
-        private void AddResult(Type refType, string refField, string field = null)
+        private void AddResult(Type refType, string refField, FieldDefinition fieldDef = null)
         {
             List<string> lstRefFields;
             _refsByType.TryGetValue(refType, out lstRefFields);
@@ -143,23 +128,23 @@ namespace Tmpi.Pyrene.Common.OrmLite
                 lstRefFields.Add(refField);
             }
 
-            List<string> lstFields;
-            _fieldsByRef.TryGetValue(refField, out lstFields);
-            if (lstFields == null)
+            List<FieldDefinition> lstFieldDefs;
+            _fieldsByRef.TryGetValue(refField, out lstFieldDefs);
+            if (lstFieldDefs == null)
             {
-                lstFields = new List<string>();
-                _fieldsByRef.Add(refField, lstFields);
+                lstFieldDefs = new List<FieldDefinition>();
+                _fieldsByRef.Add(refField, lstFieldDefs);
             }
-            if (!string.IsNullOrEmpty(field) && !lstFields.Contains(field, StringComparer.OrdinalIgnoreCase))
+            if (fieldDef != null && !lstFieldDefs.Contains(fieldDef, _fieldDefComparer))
             {
-                lstFields.Add(field);
+                lstFieldDefs.Add(fieldDef);
             }
         }
 
         /// <summary>
-        /// Retourne les métadonnées pour les champs associés à des références à charger.
+        /// Retourne le résultat de l'analyse des champs trouvés étant associés à des références.
         /// </summary>
-        /// <returns>Métadonnées des champs regroupés par type.</returns>
+        /// <returns>Définition des champs regroupés par type.</returns>
         public IDictionary<Type, List<FieldDefinition>> GetForeignKeyFields()
         {
             return _fkFieldsByType;
@@ -174,7 +159,7 @@ namespace Tmpi.Pyrene.Common.OrmLite
                 lstFieldDefs = new List<FieldDefinition>();
                 _fkFieldsByType.Add(type, lstFieldDefs);
             }
-            if (!lstFieldDefs.Contains(fieldDef))
+            if (!lstFieldDefs.Contains(fieldDef, _fieldDefComparer))
             {
                 lstFieldDefs.Add(fieldDef);
             }
@@ -200,7 +185,7 @@ namespace Tmpi.Pyrene.Common.OrmLite
             {
                 if (!string.IsNullOrEmpty(tpl.Item2))
                 {
-                    throw new ArgumentException();
+                    throw new ArgumentException("Les références imbriquées sur plus d'un niveau ne sont pas supportés.");
                 }
 
                 string fkFieldName = string.Format(ForeignKeyFieldFormat, fieldDef.Name);
@@ -219,7 +204,7 @@ namespace Tmpi.Pyrene.Common.OrmLite
             }
             else
             {
-                AddResult(tpl.Item1.ModelType, tpl.Item2, fieldDef.Name);
+                AddResult(tpl.Item1.ModelType, tpl.Item2, fieldDef);
             }
 
             return fieldDef;

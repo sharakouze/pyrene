@@ -63,7 +63,7 @@ namespace Tmpi.Pyrene.Common.Tests
             Assert.True(parser.HasFieldsNotFound);
 
             var fieldsByType = parser.GetFieldsByType();
-            var q = fieldsByType.SelectMany(x => x.Value);
+            var q = fieldsByType.SelectMany(x => x.Value).Select(x => x.Name);
 
             foreach (string field in expectedFields)
             {
@@ -126,7 +126,7 @@ namespace Tmpi.Pyrene.Common.Tests
             parser.Load(inputFields, inputType);
 
             var fieldsByType = parser.GetFieldsByType();
-            var q1 = fieldsByType.SelectMany(x => x.Value);
+            var q1 = fieldsByType.SelectMany(x => x.Value).Select(x => x.Name);
 
             var fks = parser.GetForeignKeyFields();
             var q2 = fks.SelectMany(x => x.Value).Select(x => x.Name);
@@ -160,11 +160,11 @@ namespace Tmpi.Pyrene.Common.Tests
 
             var fieldsByType = parser.GetFieldsByType();
 
-            var q1 = fieldsByType.Where(x => x.Key == typeof(Article)).SelectMany(x => x.Value);
+            var q1 = fieldsByType.Where(x => x.Key == typeof(Article)).SelectMany(x => x.Value).Select(x => x.Name);
             Assert.Contains("CodArticle", q1, StringComparer.OrdinalIgnoreCase);
             Assert.Contains("LibArticle", q1, StringComparer.OrdinalIgnoreCase);
 
-            var q2 = fieldsByType.Where(x => x.Key == typeof(Fourn)).SelectMany(x => x.Value);
+            var q2 = fieldsByType.Where(x => x.Key == typeof(Fourn)).SelectMany(x => x.Value).Select(x => x.Name);
             Assert.Contains("CodFourn", q2, StringComparer.OrdinalIgnoreCase);
             Assert.Contains("LibFourn", q2, StringComparer.OrdinalIgnoreCase);
 
@@ -208,9 +208,9 @@ namespace Tmpi.Pyrene.Common.Tests
             var fieldsByType = parser.GetFieldsByType();
             foreach (var kvp in fieldsByType)
             {
-                foreach (string field in kvp.Value)
+                foreach (var fieldDef in kvp.Value)
                 {
-                    Assert.Single(kvp.Value, x => string.Equals(x, field, StringComparison.OrdinalIgnoreCase));
+                    Assert.Single(kvp.Value, x => string.Equals(x.Name, fieldDef.Name, StringComparison.OrdinalIgnoreCase));
                 }
             }
         }

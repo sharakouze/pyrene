@@ -14,9 +14,10 @@ namespace Tmpi.Pyrene.Common.OrmLite
     {
         public static List<T> SelectPartial<T>(this IDbConnection dbConn, SqlExpression<T> expression, string fields)
         {
-            Type t = typeof(T);
+            Type type = typeof(T);
+
             var parser = new FieldParser();
-            parser.Load(fields, t);
+            parser.Load(fields, type);
 
             if (parser.HasFieldsNotFound)
             {
@@ -31,18 +32,18 @@ namespace Tmpi.Pyrene.Common.OrmLite
 
             var fieldsByType = parser.GetFieldsByType();
 
-            var fields0 = fieldsByType.Where(x => x.Key == t).SelectMany(x => x.Value).ToArray();
+            var fields0 = fieldsByType.Where(x => x.Key == type).SelectMany(x => x.Value).Select(x => x.Name).ToArray();
             expression.Select(fields0);
 
             var result = dbConn.Select(expression);
 
             var fks = parser.GetForeignKeyFields();
-            var types = fieldsByType.Where(x => x.Key != t).Select(x => x.Key);
-            foreach (Type type in types)
+            var types = fieldsByType.Where(x => x.Key != type).Select(x => x.Key);
+            foreach (Type refType in types)
             {
                 List<object> lst = new List<object>();
 
-                var fieldDefs = fks.Where(x => x.Key == type).SelectMany(x => x.Value);
+                var fieldDefs = fks.Where(x => x.Key == refType).SelectMany(x => x.Value);
                 foreach (var fieldDef in fieldDefs)
                 {
                     foreach (var row in result)
@@ -54,12 +55,17 @@ namespace Tmpi.Pyrene.Common.OrmLite
                         }
                     }
                 }
+                
+                var fields1 = fieldsByType.Where(x => x.Key == refType)
+                    .SelectMany(x => x.Value)
+                    .Select(x => x.GetQuotedName(null));
 
+                var modelDef = refType.GetModelMetadata();
 
-                var fields1 = fieldsByType.Where(x => x.Key == type).SelectMany(x => x.Value).ToArray();
-
-                var obj = dbConn.Select<T>()
-
+                StringBuilder sql = new StringBuilder();
+                sql.AppendFormat("SELECT {0}", string.Join(",", fields1));
+                sql.AppendFormat("FROM {0}", modelDef.Name);
+                sql.AppendFormat("WHERE {0} IN ({1})", modelDef.PrimaryKey.GetQuotedName(null), null);
             }
 
             return result;
