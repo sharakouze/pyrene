@@ -25,9 +25,11 @@ namespace Tmpi.Pyrene.Common.OrmLite
 
                 var q = from kvp in fieldsNotFound
                         let qf = kvp.Value.Select(f => "'" + f + "'")
-                        select string.Format(ServiceErrorMessages.EntityFieldsNotFound, kvp.Key.Name, string.Join(", ", qf));
+                        let str = string.Join(", ", qf)
+                        select string.Format(ServiceErrorMessages.EntityFieldsNotFound, kvp.Key.Name, str);
+                string message = string.Join(Environment.NewLine, q);
 
-                throw new ArgumentException();
+                throw new ArgumentException(message);
             }
 
             var fieldsByType = parser.GetFieldsByType();
@@ -55,7 +57,7 @@ namespace Tmpi.Pyrene.Common.OrmLite
                         }
                     }
                 }
-                
+
                 var fields1 = fieldsByType.Where(x => x.Key == refType)
                     .SelectMany(x => x.Value)
                     .Select(x => x.GetQuotedName(null));
