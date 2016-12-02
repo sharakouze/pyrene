@@ -87,6 +87,8 @@
     <Compile Include="Shared\Fourn.cs" />
     <Compile Include="Shared\Magasin.cs" />
     <Compile Include="Shared\Pays.cs" />
+    <Compile Include="StringBuilderExtensionsTest.cs" />
+    <Compile Include="StringExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

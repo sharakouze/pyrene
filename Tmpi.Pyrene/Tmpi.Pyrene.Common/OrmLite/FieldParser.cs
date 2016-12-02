@@ -286,5 +286,96 @@ namespace Tmpi.Pyrene.Common.OrmLite
 
             ParseField(buffer, stack.Peek());
         }
+
+
+
+        //private void ParseField2(string field, char separator, ModelDefinition modelDef)
+        //{
+        //    var fieldDef = modelDef.AllFieldDefinitionsArray
+        //        .FirstOrDefault(f => string.Equals(f.Name, field, StringComparison.OrdinalIgnoreCase));
+        //    if (fieldDef == null)
+        //    {
+        //        AddError(modelDef.ModelType, field);
+        //    }
+        //    else if (fieldDef.IsReference)
+        //    {
+        //        if (!string.IsNullOrEmpty(tpl.Item2))
+        //        {
+        //            throw new ArgumentException("Les références imbriquées sur plus d'un niveau ne sont pas supportés.");
+        //        }
+
+        //        string fkFieldName = string.Format(ForeignKeyFieldFormat, fieldDef.Name);
+        //        var fkFieldDef = modelDef.FieldDefinitions
+        //            .FirstOrDefault(f => string.Equals(f.Name, fkFieldName, StringComparison.OrdinalIgnoreCase));
+        //        if (fkFieldDef == null)
+        //        {
+        //            throw new Exception(
+        //                string.Format("Impossible de trouver un champ '{0}' associé à '{1}.{2}'", fkFieldName, modelDef.Name, fieldDef.Name));
+        //        }
+        //        else
+        //        {
+        //            AddForeignKeyField(fieldDef.FieldType, fkFieldDef);
+        //            AddResult(fieldDef.FieldType, fieldDef.Name);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        AddResult(modelDef.ModelType, tpl.Item2, fieldDef);
+        //    }
+        //}
+
+        //public void Load2(string fields, Type type)
+        //{
+        //    Clear();
+
+        //    var buffer = new StringBuilder();
+
+        //    var baseModefDef = type.GetModelMetadata();
+        //    AddResult(type, string.Empty);
+
+        //    var tpl = new Tuple<ModelDefinition, string>(baseModefDef, string.Empty);
+
+        //    for (int i = 0; i < fields.Length; i++)
+        //    {
+        //        char c = fields[i];
+
+        //        if (c == ',' || c == '(' || c == ')')
+        //        {
+        //            if (buffer.Length > 0)
+        //            {
+        //                string field = buffer.ToString();
+        //                buffer.Clear();
+
+        //                var fieldDef = tpl.Item1.AllFieldDefinitionsArray
+        //                    .FirstOrDefault(f => string.Equals(f.Name, field, StringComparison.OrdinalIgnoreCase));
+        //                if (fieldDef == null)
+        //                {
+        //                    AddError(tpl.Item1.ModelType, field);
+        //                }
+        //                else
+        //                {
+        //                    switch (c)
+        //                    {
+        //                        case ',':
+        //                            var tpl = stack.Peek();
+        //                            break;
+        //                        case '(':
+        //                            var tpl = stack.Peek();
+        //                            break;
+        //                        case ')':
+        //                            var tpl = stack.Pop();
+        //                            break;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        else if (c != ' ')
+        //        {
+        //            buffer.Append(c);
+        //        }
+        //    }
+
+        //    ParseField(buffer, stack.Peek());
+        //}
     }
 }
