@@ -23,15 +23,6 @@ NivExercice devient EstActif.
 */
 
 --
--- CONSTANTES POUR LA REPRISE
---
-
-:setvar CleSecteurBase "1000"
-:setvar CleServiceBase "20000"
-
-GO
-
---
 -- DIVERS TESTS AVANT REPRISE
 --
 

@@ -111,11 +111,11 @@ BEGIN
 			return @CleSociete
 		end
 		else begin
-			return @CleSecteur+1000
+			return @CleSecteur+$(CleSecteurBase)
 		end
 	end
 	else begin
-		return @CleService+20000
+		return @CleService+$(CleServiceBase)
 	end
 return null
 END;
