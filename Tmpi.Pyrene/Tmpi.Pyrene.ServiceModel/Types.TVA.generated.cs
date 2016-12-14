@@ -20,8 +20,8 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
-    [Route("/TVA", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité TVA à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
-    [ApiResponse(HttpStatusCode.Conflict, "L'entité TVA spécifiée est un doublon")]
+	[Route("/TVA", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité TVA à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+	[ApiResponse(HttpStatusCode.Conflict, "L'entité TVA spécifiée est un doublon")]
 	public partial class TVA : IReturn<TVA>, IPost, IAuditable
 	{
 		/// <summary>

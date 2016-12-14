@@ -269,7 +269,7 @@ namespace <#= pocoNamespace #>
             {
 				string strRoute = GetStrRoutePath(lstPlaceholderCols, false, false);
 #>
-    [Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute ou remplace une entité {0} à partir de son id", entityName) #>", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+	[Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute ou remplace une entité {0} à partir de son id", entityName) #>", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 <#
             }
 
@@ -277,7 +277,7 @@ namespace <#= pocoNamespace #>
             {
 				string entityNotUniqueResp = string.Format("L'entité {0} spécifiée est un doublon", entityName);
 #>
-    [ApiResponse(HttpStatusCode.Conflict, "<#= entityNotUniqueResp #>")]
+	[ApiResponse(HttpStatusCode.Conflict, "<#= entityNotUniqueResp #>")]
 <#
             }
         }
@@ -343,7 +343,7 @@ namespace <#= pocoNamespace #>
 			if (col.Name != col.PropertyName)
 			{
 #>
-        [Alias("<#= col.Name #>")]
+		[Alias("<#= col.Name #>")]
 <#
 			}
 
@@ -561,7 +561,7 @@ namespace <#= msgNamespace #>
                 {
 					string entityNotFoundResp = string.Format("L'entité {0} spécifiée est introuvable", entityName);
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "<#= entityNotFoundResp #>")]
+	[ApiResponse(HttpStatusCode.NotFound, "<#= entityNotFoundResp #>")]
 <#
                 }
 			}
@@ -586,9 +586,9 @@ namespace <#= msgNamespace #>
 				if (!string.IsNullOrWhiteSpace(newCol.Description))
 				{
 #>
-        /// <summary>
-        /// <#= FormatXmlDoc(newCol.Description) #>
-        /// </summary>
+		/// <summary>
+		/// <#= FormatXmlDoc(newCol.Description) #>
+		/// </summary>
 <#
 				}
 				if (AddApiAttributes)
@@ -609,12 +609,12 @@ namespace <#= msgNamespace #>
             }
 
 #>
-        /// <summary>
-        /// <#= FormatXmlDoc(fieldsPropDescription) #>
-        /// </summary>
-        /// <example>
-        /// CleCompteur,CodCompteur,LibCompteur,EstActif,Service(CodService,LibService)
-        /// </example>
+		/// <summary>
+		/// <#= FormatXmlDoc(fieldsPropDescription) #>
+		/// </summary>
+		/// <example>
+		/// CleCompteur,CodCompteur,LibCompteur,EstActif,Service(CodService,LibService)
+		/// </example>
 <#
 			if (AddApiAttributes)
             {
@@ -625,9 +625,9 @@ namespace <#= msgNamespace #>
 #>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string Fields { get; set; }
 
-        /// <summary>
-        /// <#= FormatXmlDoc(skipPropDescription) #>
-        /// </summary>
+		/// <summary>
+		/// <#= FormatXmlDoc(skipPropDescription) #>
+		/// </summary>
 <#
 			if (AddApiAttributes)
             {
@@ -638,9 +638,9 @@ namespace <#= msgNamespace #>
 #>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int? Skip { get; set; }
 
-        /// <summary>
-        /// <#= FormatXmlDoc(takePropDescription) #>
-        /// </summary>
+		/// <summary>
+		/// <#= FormatXmlDoc(takePropDescription) #>
+		/// </summary>
 <#
 			if (AddApiAttributes)
             {
@@ -651,12 +651,12 @@ namespace <#= msgNamespace #>
 #>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int? Take { get; set; }
 
-        /// <summary>
-        /// <#= FormatXmlDoc(sortPropDescription) #>
-        /// </summary>
-        /// <remarks>
-        /// En préfixant le nom du champ avec le caractère moins (-) le tri sera descendant. Par défaut le tri est ascendant.
-        /// </remarks>
+		/// <summary>
+		/// <#= FormatXmlDoc(sortPropDescription) #>
+		/// </summary>
+		/// <remarks>
+		/// En préfixant le nom du champ avec le caractère moins (-) le tri sera descendant. Par défaut le tri est ascendant.
+		/// </remarks>
 <#
 			if (AddApiAttributes)
             {
@@ -668,9 +668,9 @@ namespace <#= msgNamespace #>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string[] Sort { get; set; }
 	}
 
-    /// <summary>
-    /// <#= FormatXmlDoc("Réponse à la requête {0}.", selectTableClassName) #>
-    /// </summary>
+	/// <summary>
+	/// <#= FormatXmlDoc("Réponse à la requête {0}.", selectTableClassName) #>
+	/// </summary>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #>Response
 	{
 		public ResponseStatus ResponseStatus { get; set; }
@@ -709,8 +709,8 @@ namespace <#= msgNamespace #>
 					string entityFieldsNotFoundResp = string.Format("L'entité {0} ne contient pas tous les champs demandés", entityName);
 					string entityNotFoundResp = string.Format("L'entité {0} spécifiée est introuvable", entityName);
 #>
-    [ApiResponse(HttpStatusCode.BadRequest, "<#= entityFieldsNotFoundResp #>")]
-    [ApiResponse(HttpStatusCode.NotFound, "<#= entityNotFoundResp #>")]
+	[ApiResponse(HttpStatusCode.BadRequest, "<#= entityFieldsNotFoundResp #>")]
+	[ApiResponse(HttpStatusCode.NotFound, "<#= entityNotFoundResp #>")]
 <#
                 }
 			}
@@ -731,9 +731,9 @@ namespace <#= msgNamespace #>
 			if (!string.IsNullOrWhiteSpace(newCol.Description))
             {
 #>
-        /// <summary>
-        /// <#= FormatXmlDoc(newCol.Description) #>
-        /// </summary>
+		/// <summary>
+		/// <#= FormatXmlDoc(newCol.Description) #>
+		/// </summary>
 <#
             }
 			if (AddApiAttributes)
@@ -748,23 +748,23 @@ namespace <#= msgNamespace #>
                 }
             }
 #>
-        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #><#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
+		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #><#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
 
 <#
 		}
 #>
-        /// <summary>
-        /// <#= FormatXmlDoc(fieldsPropDescription) #>
-        /// </summary>
+		/// <summary>
+		/// <#= FormatXmlDoc(fieldsPropDescription) #>
+		/// </summary>
 <#
 			    if (AddApiAttributes)
                 {
 #>
-        [ApiMember(Description = "<#= fieldsPropDescription #>", DataType = SwaggerDataTypes.String)]
+		[ApiMember(Description = "<#= fieldsPropDescription #>", DataType = SwaggerDataTypes.String)]
 <#
                 }
 #>
-        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string Fields { get; set; }
+		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string Fields { get; set; }
 	}
 
 <#
@@ -794,7 +794,7 @@ namespace <#= msgNamespace #>
                 {
 					string entityNotFoundResp = string.Format("L'entité {0} spécifiée est introuvable", entityName);
 #>
-    [ApiResponse(HttpStatusCode.NotFound, "<#= entityNotFoundResp #>")]
+	[ApiResponse(HttpStatusCode.NotFound, "<#= entityNotFoundResp #>")]
 <#
                 }
 			}
@@ -816,9 +816,9 @@ namespace <#= msgNamespace #>
 			if (!string.IsNullOrWhiteSpace(newCol.Description))
             {
 #>
-        /// <summary>
-        /// <#= FormatXmlDoc(newCol.Description) #>
-        /// </summary>
+		/// <summary>
+		/// <#= FormatXmlDoc(newCol.Description) #>
+		/// </summary>
 <#
             }
 			if (AddApiAttributes)
@@ -833,7 +833,7 @@ namespace <#= msgNamespace #>
                 }
             }
 #>
-        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #><#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
+		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #><#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
 
 <#
 		}
@@ -870,9 +870,9 @@ namespace <#= msgNamespace #>
 					string entityNotFoundResp = string.Format("L'entité {0} spécifiée est introuvable", entityName);
 					string entityNotUniqueResp = string.Format("L'entité {0} spécifiée est un doublon", entityName);
 #>
-    [ApiResponse(HttpStatusCode.BadRequest, "<#= entityFieldsNotFoundResp #>")]
-    [ApiResponse(HttpStatusCode.NotFound, "<#= entityNotFoundResp #>")]
-    [ApiResponse(HttpStatusCode.Conflict, "<#= entityNotUniqueResp #>")]
+	[ApiResponse(HttpStatusCode.BadRequest, "<#= entityFieldsNotFoundResp #>")]
+	[ApiResponse(HttpStatusCode.NotFound, "<#= entityNotFoundResp #>")]
+	[ApiResponse(HttpStatusCode.Conflict, "<#= entityNotUniqueResp #>")]
 <#
                 }
 			}
@@ -893,9 +893,9 @@ namespace <#= msgNamespace #>
 			if (!string.IsNullOrWhiteSpace(newCol.Description))
             {
 #>
-        /// <summary>
-        /// <#= FormatXmlDoc(newCol.Description) #>
-        /// </summary>
+		/// <summary>
+		/// <#= FormatXmlDoc(newCol.Description) #>
+		/// </summary>
 <#
             }
 			if (AddApiAttributes)
@@ -910,23 +910,23 @@ namespace <#= msgNamespace #>
                 }
             }
 #>
-        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #><#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
+		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #><#= newCol.ProperPropertyType #> <#= newCol.PropertyName #> { get; set; }
 
 <#
 		}
 #>
-        /// <summary>
-        /// <#= FormatXmlDoc(fieldsPropDescription) #>
-        /// </summary>
+		/// <summary>
+		/// <#= FormatXmlDoc(fieldsPropDescription) #>
+		/// </summary>
 <#
 			    if (AddApiAttributes)
                 {
 #>
-        [ApiMember(Description = "<#= fieldsPropDescription #>", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
+		[ApiMember(Description = "<#= fieldsPropDescription #>", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
 <#
                 }
 #>
-        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>Patch[] Operations { get; set; }
+		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>Patch[] Operations { get; set; }
 	}
 
 <#
@@ -966,22 +966,22 @@ namespace <#= msgNamespace #>
 #>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= searchClassName #> : IReturn<List<BaseEntity>>, IGet
 	{
-        /// <summary>
-        /// <#= FormatXmlDoc(textPropDescription) #>
-        /// </summary>
+		/// <summary>
+		/// <#= FormatXmlDoc(textPropDescription) #>
+		/// </summary>
 <#
 			    if (AddApiAttributes)
                 {
 #>
-        [ApiMember(Description = "<#= textPropDescription #>", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		[ApiMember(Description = "<#= textPropDescription #>", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 <#
                 }
 #>
-        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string Text { get; set; }
+		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string Text { get; set; }
 
-        /// <summary>
-        /// <#= FormatXmlDoc(maxPropDescription) #>
-        /// </summary>
+		/// <summary>
+		/// <#= FormatXmlDoc(maxPropDescription) #>
+		/// </summary>
 <#
 			    if (AddApiAttributes)
                 {
@@ -990,7 +990,7 @@ namespace <#= msgNamespace #>
 <#
                 }
 #>
-        public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int Max { get; set; }
+		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int Max { get; set; }
 	}
 
 <#

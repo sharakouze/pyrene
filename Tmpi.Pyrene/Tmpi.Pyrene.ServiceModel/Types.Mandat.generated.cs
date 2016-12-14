@@ -21,8 +21,8 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
 	[CompositeIndex(true, nameof(TypMandat), nameof(NivMandat))]
-    [Route("/Mandat", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Mandat à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
-    [ApiResponse(HttpStatusCode.Conflict, "L'entité Mandat spécifiée est un doublon")]
+	[Route("/Mandat", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Mandat à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+	[ApiResponse(HttpStatusCode.Conflict, "L'entité Mandat spécifiée est un doublon")]
 	public partial class Mandat : IReturn<Mandat>, IPost, IAuditable
 	{
 		/// <summary>

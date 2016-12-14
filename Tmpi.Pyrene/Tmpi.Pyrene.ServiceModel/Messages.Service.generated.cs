@@ -24,43 +24,43 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// Retourne une collection des entités <see cref="Service"/>.
 	/// </summary>
 	[Route("/Service", HttpVerbs.Get, Summary = "Retourne une collection des entités Service", Notes = SwaggerDescriptions.SelectRequestNotes)]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
 	public partial class SelectService : IReturn<SelectServiceResponse>, IGet, IPagination
 	{
-        /// <summary>
-        /// Champs à retourner, ou null pour retourner tous les champs.
-        /// </summary>
-        /// <example>
-        /// CleCompteur,CodCompteur,LibCompteur,EstActif,Service(CodService,LibService)
-        /// </example>
+		/// <summary>
+		/// Champs à retourner, ou null pour retourner tous les champs.
+		/// </summary>
+		/// <example>
+		/// CleCompteur,CodCompteur,LibCompteur,EstActif,Service(CodService,LibService)
+		/// </example>
 		[ApiMember(Description = "Champs à retourner, ou null pour retourner tous les champs", DataType = SwaggerDataTypes.String)]
 		public string Fields { get; set; }
 
-        /// <summary>
-        /// Nombre d'éléments à ignorer avant de retourner les éléments restants.
-        /// </summary>
+		/// <summary>
+		/// Nombre d'éléments à ignorer avant de retourner les éléments restants.
+		/// </summary>
 		[ApiMember(Description = "Nombre d'éléments à ignorer avant de retourner les éléments restants", DataType = SwaggerDataTypes.Int)]
 		public int? Skip { get; set; }
 
-        /// <summary>
-        /// Nombre d'éléments à retourner.
-        /// </summary>
+		/// <summary>
+		/// Nombre d'éléments à retourner.
+		/// </summary>
 		[ApiMember(Description = "Nombre d'éléments à retourner", DataType = SwaggerDataTypes.Int)]
 		public int? Take { get; set; }
 
-        /// <summary>
-        /// Ordre de tri.
-        /// </summary>
-        /// <remarks>
-        /// En préfixant le nom du champ avec le caractère moins (-) le tri sera descendant. Par défaut le tri est ascendant.
-        /// </remarks>
+		/// <summary>
+		/// Ordre de tri.
+		/// </summary>
+		/// <remarks>
+		/// En préfixant le nom du champ avec le caractère moins (-) le tri sera descendant. Par défaut le tri est ascendant.
+		/// </remarks>
 		[ApiMember(Description = "Ordre de tri", DataType = SwaggerDataTypes.ArrayOfString)]
 		public string[] Sort { get; set; }
 	}
 
-    /// <summary>
-    /// Réponse à la requête <see cref="SelectService"/>.
-    /// </summary>
+	/// <summary>
+	/// Réponse à la requête <see cref="SelectService"/>.
+	/// </summary>
 	public partial class SelectServiceResponse
 	{
 		public ResponseStatus ResponseStatus { get; set; }
@@ -74,35 +74,35 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// Retourne une entité <see cref="Service"/> à partir de son id.
 	/// </summary>
 	[Route("/Service/{CleService}", HttpVerbs.Get, Summary = "Retourne une entité Service à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
-    [ApiResponse(HttpStatusCode.BadRequest, "L'entité Service ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Service ne contient pas tous les champs demandés")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
 	public partial class GetService : IReturn<Service>, IGet
 	{
-        /// <summary>
-        /// Identifiant unique de l'entité à retourner.
-        /// </summary>
+		/// <summary>
+		/// Identifiant unique de l'entité à retourner.
+		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à retourner", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public int CleService { get; set; }
+		public int CleService { get; set; }
 
-        /// <summary>
-        /// Champs à retourner, ou null pour retourner tous les champs.
-        /// </summary>
-        [ApiMember(Description = "Champs à retourner, ou null pour retourner tous les champs", DataType = SwaggerDataTypes.String)]
-        public string Fields { get; set; }
+		/// <summary>
+		/// Champs à retourner, ou null pour retourner tous les champs.
+		/// </summary>
+		[ApiMember(Description = "Champs à retourner, ou null pour retourner tous les champs", DataType = SwaggerDataTypes.String)]
+		public string Fields { get; set; }
 	}
 
 	/// <summary>
 	/// Supprime une entité <see cref="Service"/> à partir de son id.
 	/// </summary>
 	[Route("/Service/{CleService}", HttpVerbs.Delete, Summary = "Supprime une entité Service à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
 	public partial class DeleteService : IReturnVoid, IDelete
 	{
-        /// <summary>
-        /// Identifiant unique de l'entité à supprimer.
-        /// </summary>
+		/// <summary>
+		/// Identifiant unique de l'entité à supprimer.
+		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à supprimer", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public int CleService { get; set; }
+		public int CleService { get; set; }
 
 	}
 
@@ -110,22 +110,22 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// Modifie partiellement une entité <see cref="Service"/> à partir de son id.
 	/// </summary>
 	[Route("/Service/{CleService}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Service à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
-    [ApiResponse(HttpStatusCode.BadRequest, "L'entité Service ne contient pas tous les champs demandés")]
-    [ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
-    [ApiResponse(HttpStatusCode.Conflict, "L'entité Service spécifiée est un doublon")]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Service ne contient pas tous les champs demandés")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.Conflict, "L'entité Service spécifiée est un doublon")]
 	public partial class PatchService : IReturnVoid, IPatch
 	{
-        /// <summary>
-        /// Identifiant unique de l'entité à modifier.
-        /// </summary>
+		/// <summary>
+		/// Identifiant unique de l'entité à modifier.
+		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à modifier", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public int CleService { get; set; }
+		public int CleService { get; set; }
 
-        /// <summary>
-        /// Liste des modifications à appliquer.
-        /// </summary>
-        [ApiMember(Description = "Liste des modifications à appliquer", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
-        public Patch[] Operations { get; set; }
+		/// <summary>
+		/// Liste des modifications à appliquer.
+		/// </summary>
+		[ApiMember(Description = "Liste des modifications à appliquer", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
+		public Patch[] Operations { get; set; }
 	}
 
 	/// <summary>
@@ -134,17 +134,17 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	[Route("/Service/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Service", Notes = SwaggerDescriptions.SearchRequestNotes)]
 	public partial class SearchService : IReturn<List<BaseEntity>>, IGet
 	{
-        /// <summary>
-        /// Texte à rechercher.
-        /// </summary>
-        [ApiMember(Description = "Texte à rechercher", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-        public string Text { get; set; }
+		/// <summary>
+		/// Texte à rechercher.
+		/// </summary>
+		[ApiMember(Description = "Texte à rechercher", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		public string Text { get; set; }
 
-        /// <summary>
-        /// Nombre maximum de résultats à retourner.
-        /// </summary>
+		/// <summary>
+		/// Nombre maximum de résultats à retourner.
+		/// </summary>
         [ApiMember(Description = "Nombre maximum de résultats à retourner", DataType = SwaggerDataTypes.Int)]
-        public int Max { get; set; }
+		public int Max { get; set; }
 	}
 
 }
