@@ -1,5 +1,7 @@
 ﻿# Base de données PYRENE
 
+Projet **Tmpi.Pyrene.Database**
+
 ## Schémas
 
 L'application PYRENE est décomposée en plusieurs modules.
