@@ -1,6 +1,6 @@
-﻿# Base de données PYRENE
+﻿# Tmpi.Pyrene.Database
 
-Projet **Tmpi.Pyrene.Database**
+Base de données PYRENE.
 
 ## Schémas
 
@@ -9,7 +9,7 @@ Les objets de la base de données associés à chacun de ces modules sont regrou
 
 Module | Schéma
 -------|-------
-Commun * | Gen
+Commun* | Gen
 Stock | Sto
 Concerto | Lsn
 Budget | Bud
@@ -22,17 +22,29 @@ Prélude (automates) | Aut
 Marketing | Bdg
 EDI | Edi
 
-> Le module "Commun" regroupe
-
-## Nommage
-
-- 
+> Le module "Commun" regroupe ...
 
 ## Tables
 
-- Les tables doivent avoir une clé primaire
-- Les clé primaires composites sont interdites
-- Les tables sans clé primaire ne sont pas autorisées pour l'instant
-- 
+### Structure
+
+- Toutes les tables doivent avoir une clé primaire.
+  - Les tables sans clé primaire ne sont pas autorisées pour l'instant.
+- Les clés primaires composites sont interdites.
+
+#### Audit
+
+Pour pouvoir utiliser le mécanisme qui renseigne automatiquement le contexte de création et de modification d'une entité.
+
+*SQL Server :*
+> [...]
+> [DatCreation] DATETIME NOT NULL,
+> [CleCreateur] INT NOT NULL,
+> [DatEdition] DATETIME NULL,
+> [CleEditeur] INT NULL,
+> [...]
+
+### Nommage
 
 
+## Index
