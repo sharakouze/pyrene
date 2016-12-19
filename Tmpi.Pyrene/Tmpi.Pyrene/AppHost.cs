@@ -3,6 +3,7 @@ using ServiceStack;
 using ServiceStack.Api.Swagger;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
+using ServiceStack.Razor;
 using ServiceStack.Text;
 using ServiceStack.Validation;
 using System;
@@ -31,11 +32,11 @@ namespace Tmpi.Pyrene
 
             SetConfig(new HostConfig
             {
-//#if DEBUG
-//                DebugMode = true,
-//#else
-//                DebugMode = false,
-//#endif
+                //#if DEBUG
+                //                DebugMode = true,
+                //#else
+                //                DebugMode = false,
+                //#endif
                 EnableFeatures = enableFeatures,
             });
         }
@@ -100,6 +101,11 @@ namespace Tmpi.Pyrene
             int.TryParse(ConfigurationManager.AppSettings["OrmLiteConfig.CommandTimeout"], out commandTimeout);
             OrmLiteConfig.CommandTimeout = commandTimeout;
 
+            ConfigOrmLiteFilters();
+        }
+
+        private void ConfigOrmLiteFilters()
+        {
             OrmLiteConfig.InsertFilter = (dbCmd, row) =>
             {
                 var auditRow = row as IAuditable;
@@ -175,13 +181,16 @@ namespace Tmpi.Pyrene
         /// <param name="container"></param>
         private void ConfigValidationPlugin(Container container)
         {
-            bool validationFeatureEnabled = true;
-            bool.TryParse(ConfigurationManager.AppSettings["Plugins.ValidationFeature"], out validationFeatureEnabled);
-            if (validationFeatureEnabled)
-            {
-                Plugins.Add(new ValidationFeature());
-                container.RegisterValidators(ServiceAssemblies);
-            }
+            Plugins.Add(new ValidationFeature());
+            container.RegisterValidators(ServiceAssemblies);
+        }
+
+        /// <summary>
+        /// Configure le plugin Razor.
+        /// </summary>
+        private void ConfigRazorPlugin()
+        {
+            Plugins.Add(new RazorFormat());
         }
 
         public override void Configure(Container container)
@@ -193,6 +202,7 @@ namespace Tmpi.Pyrene
             ConfigCorsPlugin();
             ConfigSwaggerPlugin();
             ConfigValidationPlugin(container);
+            ConfigRazorPlugin();
 
             ConfigCsvSerialization();
             ConfigJsonSerialization();
