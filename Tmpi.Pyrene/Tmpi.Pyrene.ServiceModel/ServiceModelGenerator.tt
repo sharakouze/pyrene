@@ -655,7 +655,8 @@ namespace <#= msgNamespace #>
 		/// <#= FormatXmlDoc(sortPropDescription) #>
 		/// </summary>
 		/// <remarks>
-		/// En préfixant le nom du champ avec le caractère moins (-) le tri sera descendant. Par défaut le tri est ascendant.
+		/// En préfixant le nom du champ avec le caractère moins (-) le tri sera descendant.
+		/// Par défaut le tri est ascendant.
 		/// </remarks>
 <#
 			if (AddApiAttributes)
@@ -673,10 +674,19 @@ namespace <#= msgNamespace #>
 	/// </summary>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #>Response
 	{
+		/// <summary>
+		/// <#= FormatXmlDoc("Erreur éventuelle.") #>
+		/// </summary>
 		public ResponseStatus ResponseStatus { get; set; }
 
+		/// <summary>
+		/// <#= FormatXmlDoc("Nombre total d'éléments disponibles.") #>
+		/// </summary>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int TotalCount { get; set; }
 
+		/// <summary>
+		/// <#= FormatXmlDoc("Collection des entités {0}.", entityName) #>
+		/// </summary>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>List<<#= table.ClassName #>> Results { get; set; }
 	}
 

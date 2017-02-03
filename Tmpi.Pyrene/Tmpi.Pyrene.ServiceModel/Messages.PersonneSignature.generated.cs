@@ -58,7 +58,8 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 		/// Ordre de tri.
 		/// </summary>
 		/// <remarks>
-		/// En préfixant le nom du champ avec le caractère moins (-) le tri sera descendant. Par défaut le tri est ascendant.
+		/// En préfixant le nom du champ avec le caractère moins (-) le tri sera descendant.
+		/// Par défaut le tri est ascendant.
 		/// </remarks>
 		[ApiMember(Description = "Ordre de tri", DataType = SwaggerDataTypes.ArrayOfString)]
 		public string[] Sort { get; set; }
@@ -69,10 +70,19 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	/// </summary>
 	public partial class SelectPersonneSignatureResponse
 	{
+		/// <summary>
+		/// Erreur éventuelle.
+		/// </summary>
 		public ResponseStatus ResponseStatus { get; set; }
 
+		/// <summary>
+		/// Nombre total d'éléments disponibles.
+		/// </summary>
 		public int TotalCount { get; set; }
 
+		/// <summary>
+		/// Collection des entités <see cref="PersonneSignature"/>.
+		/// </summary>
 		public List<PersonneSignature> Results { get; set; }
 	}
 
