@@ -1,17 +1,16 @@
 ﻿<#@ template language="C#" hostspecific="true" debug="true" #>
 <#@ output extension=".cs" #>
-<#@ assembly name="EnvDTE" #>
 <#@ assembly name="System" #>
 <#@ assembly name="System.Configuration" #>
 <#@ assembly name="System.Core" #>
-<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Configuration" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="System.Linq" #>
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" #>
-<#@ include file="$(MSBuildProjectDirectory)\..\Shared\VisualStudioHelper.ttinclude" #>
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\SqlSchemaReader.ttinclude" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\Config.ttinclude" #>
 <#
 	/***** TODO *****
 	- DefaultAttribute
@@ -24,15 +23,12 @@
 	/** CUSTOM SETTINGS **/
 	/*********************/
 
-	// chaine de connection pour l'extration du schéma
-    string ConnectionStringName = "PyreneModel";
-	string ConnectionString = "";
-
 	// schema a extraire ou vide pour tous les schémas
 	string SchemaName = "";
 
     // Namespace des fichiers générés.
-	// {0} = DefaultNamespace du projet/répertoire courant.
+	string BaseNamespace = "Tmpi.Pyrene.ServiceModel";
+	// {0} = BaseNamespace
     string NamespacePocos = "{0}.Types";
     string NamespaceMessages = "{0}.Messages";
 
@@ -85,6 +81,17 @@
 	Regex SearchTableFilterExclude = null;
 	Regex SelectTableFilterExclude = null;
 
+	// Contient tous les enums par colonnes
+	Dictionary<string, string> allEnums = new Dictionary<string, string>
+    {
+        { "Gen.Compteur.TypCompteur", "TypCompteur" },
+        { "Gen.Compteur.TypPeriodicite", "TypPeriodicite" },
+        { "Gen.Mandat.TypMandat", "TypMandat" },
+        { "Gen.Personne.TypCivilite", "TypCivilite" },
+        { "Gen.Fourn.TypModeReglement", "TypModeReglement" },
+        { "Gen.FournContact.TypCivilite", "TypCivilite" },
+    };
+
     // Si non null, méthode appliquée sur la collection des tables
     Action<Tables> TweakSchema = (tables) =>
     {	
@@ -96,12 +103,10 @@
 
 		tables.RemoveAll(t => t.Name == "__RefactorLog");
 
-		tables.ChangePropertyType("Gen", "Compteur", "TypCompteur", "TypCompteur");
-		tables.ChangePropertyType("Gen", "Compteur", "TypPeriodicite", "TypPeriodicite");
-		tables.ChangePropertyType("Gen", "Mandat", "TypMandat", "TypMandat");
-		tables.ChangePropertyType("Gen", "Personne", "TypCivilite", "TypCivilite");
-		tables.ChangePropertyType("Gen", "Fourn", "TypModeReglement", "TypModeReglement");
-		tables.ChangePropertyType("Gen", "FournContact", "TypCivilite", "TypCivilite");
+		foreach (var kvp in allEnums)
+		{
+			tables.ChangePropertyType(kvp.Key, kvp.Value);
+		}
     };
 
 #>
@@ -130,23 +135,6 @@ using ServiceStack.Model;
 <#
 	manager.EndBlock(); // end header
     
-    // Get a reference to the project of this t4 template
-    Project project = VisualStudioHelper.CurrentProject;
-	
-	string t4fileNamespace = VisualStudioHelper.CurrentFileNamespace;
-
-	// Contient tous les enums du projet
-    List<string> allEnums = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, vsCMElement.vsCMElementEnum, false)
-        .OfType<CodeEnum>()
-		.Select(x => x.Name)
-		.ToList();
-
-	if (string.IsNullOrWhiteSpace(ConnectionString))
-    {
-		string providerName;
-		ConnectionString = GetConnectionString(project, ConnectionStringName, out providerName);
-    }
-	
     // Read schema
     Tables allTables = LoadTables(ConnectionString, SchemaName, false);
     if (TweakSchema != null)
@@ -176,8 +164,8 @@ using ServiceStack.Model;
 		/** BEGIN POCO **/
 		/****************/
 
-		string pocoNamespace = string.Format(NamespacePocos, t4fileNamespace);
-		string pocoFileName = GetGeneratedFilename(table.ClassName, pocoNamespace, t4fileNamespace);
+		string pocoNamespace = string.Format(NamespacePocos, BaseNamespace);
+		string pocoFileName = GetGeneratedFilename(table.ClassName, pocoNamespace, BaseNamespace);
         manager.StartNewFile(pocoFileName + ".generated.cs");
 
 #>
@@ -420,7 +408,7 @@ namespace <#= pocoNamespace #>
 
 			if (AddApiAttributes)
             {
-				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(col, allEnums, lstInterfaces);
+				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(col, allEnums.Values, lstInterfaces);
 				if (dicApiMemberProps != null)
                 {
 					if (lstPlaceholderCols.Any(c => c.PropertyName == col.PropertyName))
@@ -435,7 +423,7 @@ namespace <#= pocoNamespace #>
 <#
                 }
 
-                if (allEnums.Contains(col.PropertyType))
+                if (allEnums.Values.Contains(col.PropertyType))
                 {
 #>
 		[ApiAllowableValues(nameof(<#= col.PropertyName #>), typeof(<#= col.PropertyType #>))]
@@ -517,8 +505,8 @@ namespace <#= pocoNamespace #>
 			continue;
         }
 
-		string msgNamespace = string.Format(NamespaceMessages, t4fileNamespace);
-		string msgFileName = GetGeneratedFilename(table.ClassName, msgNamespace, t4fileNamespace);
+		string msgNamespace = string.Format(NamespaceMessages, BaseNamespace);
+		string msgFileName = GetGeneratedFilename(table.ClassName, msgNamespace, BaseNamespace);
 		manager.StartNewFile(msgFileName + ".generated.cs");
 
 		if (pocoNamespace != msgNamespace)
@@ -593,7 +581,7 @@ namespace <#= msgNamespace #>
 				}
 				if (AddApiAttributes)
 				{
-					Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
+					Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
 					if (dicApiMemberProps != null)
 					{
 						dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
@@ -748,7 +736,7 @@ namespace <#= msgNamespace #>
             }
 			if (AddApiAttributes)
             {
-				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
+				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
 				if (dicApiMemberProps != null)
                 {
 					dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
@@ -833,7 +821,7 @@ namespace <#= msgNamespace #>
             }
 			if (AddApiAttributes)
             {
-				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
+				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
 				if (dicApiMemberProps != null)
                 {
 					dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
@@ -910,7 +898,7 @@ namespace <#= msgNamespace #>
             }
 			if (AddApiAttributes)
             {
-				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums, lstInterfaces);
+				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
 				if (dicApiMemberProps != null)
                 {
 					dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
@@ -1035,14 +1023,14 @@ private string FormatXmlDoc(string str, params string[] crefs)
 	return str;
 }
 
-private string GetGeneratedFilename(string filename, string fileNamespace, string t4Namespace)
+private string GetGeneratedFilename(string filename, string fileNamespace, string baseNamespace)
 {
-	if (fileNamespace == t4Namespace)
+	if (fileNamespace == baseNamespace)
     {
 		return filename;
     }
 
-	string str = fileNamespace.Replace(t4Namespace, "");
+	string str = fileNamespace.Replace(baseNamespace, "");
 	if (str.StartsWith("."))
     {
 		str = str.Remove(0, 1);
@@ -1161,7 +1149,7 @@ private void SetColumnsDescription(Table table, string stdColFormat)
     }
 }
 
-private Dictionary<string, string> GetApiMemberProps(Column col, List<string> lstEnums, List<string> lstInterfaces)
+private Dictionary<string, string> GetApiMemberProps(Column col, IEnumerable<string> lstEnums, List<string> lstInterfaces)
 {
     if (lstInterfaces.Contains("IAuditable") &&
 		(col.PropertyName == "DatCreation" || col.PropertyName == "CleCreateur" || col.PropertyName == "DatEdition" || col.PropertyName == "CleEditeur"))
@@ -1351,55 +1339,5 @@ private string GetEntityName(List<Column> lstCols)
 			return string.Format("{0} ({1})", res, parentRes);
         }
     }
-}
-
-private string GetConnectionString(Project project, string connectionStringName, out string providerName)
-{
-	providerName = null;
-	string configPath = "";
-
-	foreach (ProjectItem item in project.ProjectItems)
-    {
-		if (item.Name.Equals("App.config", StringComparison.OrdinalIgnoreCase) || item.Name.Equals("Web.config", StringComparison.OrdinalIgnoreCase))
-		{
-			string fullPath = project.Properties.Item("FullPath").Value.ToString();
-			configPath = Path.Combine(fullPath, item.Name);
-		}
-    }
-	
-	string connStr = "";
-
-	if (string.IsNullOrEmpty(configPath))
-    {
-		throw new ArgumentNullException("The project does not contain App.config or Web.config file.");
-	}
-	else
-	{
-		ExeConfigurationFileMap configFile = new ExeConfigurationFileMap();
-		configFile.ExeConfigFilename = configPath;
-
-		var config = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configFile, ConfigurationUserLevel.None);
-		var connSection = config.ConnectionStrings;
-
-		// if the connectionString is empty - which is the defauls look for count-1 - this is the last connection string
-		// and takes into account AppServices and LocalSqlServer
-		if (string.IsNullOrEmpty(connectionStringName))
-		{
-			if (connSection.ConnectionStrings.Count > 1)
-			{
-				connectionStringName = connSection.ConnectionStrings[connSection.ConnectionStrings.Count - 1].Name;
-			}
-		}
-		try
-		{
-			connStr = connSection.ConnectionStrings[connectionStringName].ConnectionString;
-			providerName = connSection.ConnectionStrings[connectionStringName].ProviderName;
-		}
-		catch
-		{
-		}
-	}
-
-    return connStr;
 }
 #>

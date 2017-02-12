@@ -51,6 +51,15 @@ public class Tables : List<Table>
         }
 		return null;
 	}
+	public Column GetColumn(string column)
+    {
+		var parts = column.Split('.');
+		string schemaName = parts[0];
+		string tableName = parts[1];
+		string columnName = parts[2];
+
+		return GetColumn(schemaName, tableName, columnName);
+	}
 
 	public bool ChangePropertyType(string schemaName, string tableName, string columnName, string newPropertyType)
     {
@@ -61,6 +70,15 @@ public class Tables : List<Table>
 			return true;
         }
 		return false;
+    }
+	public bool ChangePropertyType(string column, string newPropertyType)
+    {
+		var parts = column.Split('.');
+		string schemaName = parts[0];
+		string tableName = parts[1];
+		string columnName = parts[2];
+
+		return ChangePropertyType(schemaName, tableName, columnName, newPropertyType);
     }
 }
 

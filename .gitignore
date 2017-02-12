@@ -253,3 +253,4 @@ paket-files/
 
 # SSDT
 *.jfm
+/Tmpi.Pyrene/ClassLibrary1

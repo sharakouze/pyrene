@@ -1,0 +1,4 @@
+﻿<#
+	// chaine de connection pour l'extration du schéma
+	string ConnectionString = @"Server=(localdb)\MSSQLLocalDB;Database=TMPI_PYRENE;Integrated Security=True;MultipleActiveResultSets=True";
+#>
