@@ -95,7 +95,7 @@
     // Si non null, méthode appliquée sur la collection des tables
     Action<Tables> TweakSchema = (tables) =>
     {	
-		foreach (Table table in tables)
+		foreach (var table in tables)
         {
 			string stdColFormat = GetStandardColumnFormat(table);
 			SetColumnsDescription(table, stdColFormat);
@@ -111,7 +111,7 @@
 
 #>
 <#
-    Manager manager = Manager.Create(Host, GenerationEnvironment);
+    var manager = Manager.Create(Host, GenerationEnvironment);
     manager.StartHeader();
 #>
 //------------------------------------------------------------------------------
@@ -136,14 +136,14 @@ using ServiceStack.Model;
 	manager.EndBlock(); // end header
     
     // Read schema
-    Tables allTables = LoadTables(ConnectionString, SchemaName, false);
+    var allTables = LoadTables(ConnectionString, SchemaName, false);
     if (TweakSchema != null)
     {
         TweakSchema(allTables);
     }
 
 	// Test doublons
-	List<string> lstDuplicate = allTables.GroupBy(t => t.ClassName).Where(grp => grp.Count() > 1).Select(grp => grp.Key).ToList();
+	var lstDuplicate = allTables.GroupBy(t => t.ClassName).Where(grp => grp.Count() > 1).Select(grp => grp.Key).ToList();
 	if (lstDuplicate.Any())
     {
 		string errorMsg = string.Format("Impossible de générer le modèle car des noms de tables sont en double : {0}",
@@ -156,7 +156,7 @@ using ServiceStack.Model;
 		allTables.Clear();
     }
 
-    foreach (Table table in allTables)
+    foreach (var table in allTables)
     {
 	    bool msgExcluded = MsgTableFilterExclude != null && MsgTableFilterExclude.IsMatch(table.ClassName);
 
@@ -173,7 +173,7 @@ using ServiceStack.Model;
 namespace <#= pocoNamespace #>
 {
 <#
-        List<string> lstInterfaces = new List<string>();
+        var lstInterfaces = new List<string>();
 
 		if (table.PrimaryKey == null)
         {
@@ -198,7 +198,7 @@ namespace <#= pocoNamespace #>
 				continue;
             }
 
-			Column pkCol = table.PrimaryKey.PKeyColumns.Single();
+			var pkCol = table.PrimaryKey.PKeyColumns.Single();
             if (UseIdAsPK)
             {
                 pkCol.PropertyName = "Id";
@@ -235,10 +235,10 @@ namespace <#= pocoNamespace #>
 		
         if (IncludeIndices)
         {
-			IEnumerable<TableIndex> compositeIdx = table.Indices.Where(i => i.IndexColumns.Count > 1);
-            foreach (TableIndex idx in compositeIdx)
+			var compositeIdx = table.Indices.Where(i => i.IndexColumns.Count > 1);
+            foreach (var idx in compositeIdx)
             {
-				IEnumerable<string> q = idx.IndexColumns
+				var q = idx.IndexColumns
 					.Select(c => (c.Name == c.PropertyName) ? string.Format("nameof({0})", c.PropertyName) : string.Format("\"{0}\"", c.Name));
 #>
 	[CompositeIndex(<#= idx.IsUnique ? "true, " : "" #><#= string.Join(", ", q) #>)]
@@ -246,7 +246,7 @@ namespace <#= pocoNamespace #>
             }
         }
 
-		List<Column> lstPlaceholderCols = GetRouteColumns(table, TransformRoutePath);
+		var lstPlaceholderCols = GetRouteColumns(table, TransformRoutePath);
 
 		string entityName = table.ClassName; // GetEntityName(lstPlaceholderCols);
 
@@ -270,7 +270,7 @@ namespace <#= pocoNamespace #>
             }
         }
 
-		List<string> pocoInterfaces = new List<string>();
+		var pocoInterfaces = new List<string>();
 		if (!msgExcluded)
         {
 			pocoInterfaces.Add("IReturn<" + table.ClassName + ">");
@@ -281,7 +281,7 @@ namespace <#= pocoNamespace #>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= table.ClassName #><#= pocoInterfaces.Any() ? " : " + string.Join(", ", pocoInterfaces) : "" #>
 	{
 <#
-        foreach (Column col in table.Columns)
+        foreach (var col in table.Columns)
         {
             if (!string.IsNullOrWhiteSpace(col.Description))
             {
@@ -292,9 +292,9 @@ namespace <#= pocoNamespace #>
 <#
 			}
 
-			FKey colFkey = table.ForeignKeys.FirstOrDefault(f => f.FromColumns.Contains(col));
+			var colFkey = table.ForeignKeys.FirstOrDefault(f => f.FromColumns.Contains(col));
 			
-			List<string> remarks = new List<string>();
+			var remarks = new List<string>();
 			if (col.IsPKey)
             {
 				if (col.IsAutoIncrement)
@@ -308,7 +308,7 @@ namespace <#= pocoNamespace #>
             }
 			if (colFkey != null)
             {
-				Column refCol = colFkey.ReferencedColumns.First();
+				var refCol = colFkey.ReferencedColumns.First();
 				remarks.Add(string.Format("Référence <see cref=\"{0}.{1}\"/>.", colFkey.ReferencedTable.ClassName, refCol.PropertyName));
             }
 
@@ -390,7 +390,7 @@ namespace <#= pocoNamespace #>
 
             if (IncludeIndices)
             {
-				TableIndex index = table.Indices.Where(idx => idx.IndexColumns.Count == 1 && idx.IndexColumns.Contains(col)).FirstOrDefault();
+				var index = table.Indices.Where(idx => idx.IndexColumns.Count == 1 && idx.IndexColumns.Contains(col)).FirstOrDefault();
                 if (index != null)
                 {
 #>
@@ -408,7 +408,7 @@ namespace <#= pocoNamespace #>
 
 			if (AddApiAttributes)
             {
-				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(col, allEnums.Values, lstInterfaces);
+				var dicApiMemberProps = GetApiMemberProps(col, allEnums.Values, lstInterfaces);
 				if (dicApiMemberProps != null)
                 {
 					if (lstPlaceholderCols.Any(c => c.PropertyName == col.PropertyName))
@@ -439,7 +439,7 @@ namespace <#= pocoNamespace #>
             {
 				if (colFkey != null)
                 {
-					Column refCol = colFkey.ReferencedColumns.First();
+					var refCol = colFkey.ReferencedColumns.First();
 
 					string format = col.PropertyName.Replace(refCol.PropertyName, "{0}");
 					string propName = string.Format(format, colFkey.ReferencedTable.ClassName);
@@ -557,15 +557,15 @@ namespace <#= msgNamespace #>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #> : IReturn<<#= selectTableClassName #>Response>, IGet, IPagination
 	{
 <#
-			Column lastCol = lstPlaceholderCols.LastOrDefault();
-            foreach (Column phCol in lstPlaceholderCols)
+			var lastCol = lstPlaceholderCols.LastOrDefault();
+            foreach (var phCol in lstPlaceholderCols)
             {
 				if (lastCol != null && lastCol.IsPKey && lastCol == phCol)
 				{
 					continue; // on ne prend que les colonnes foreign key
 				}
-				Column newCol = phCol.Clone();
-				Column refCol = table.Columns.First(c => c.PropertyName == phCol.PropertyName);
+				var newCol = phCol.Clone();
+				var refCol = table.Columns.First(c => c.PropertyName == phCol.PropertyName);
 				if (refCol != null)
                 {
 					newCol.Description = refCol.Description;
@@ -581,7 +581,7 @@ namespace <#= msgNamespace #>
 				}
 				if (AddApiAttributes)
 				{
-					Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
+					var dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
 					if (dicApiMemberProps != null)
 					{
 						dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
@@ -716,14 +716,14 @@ namespace <#= msgNamespace #>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= getTableClassName #> : IReturn<<#= table.ClassName #>>, IGet
 	{
 <#
-		Column lastCol = lstPlaceholderCols.LastOrDefault();
-		foreach (Column phCol in lstPlaceholderCols)
+		var lastCol = lstPlaceholderCols.LastOrDefault();
+		foreach (var phCol in lstPlaceholderCols)
 		{
 			if (lastCol != null && lastCol.IsPKey && lastCol != phCol)
             {
 				continue; // on ignore les colonnes qui ne sont pas la PK de l'entité
             }
-			Column newCol = phCol.Clone();
+			var newCol = phCol.Clone();
 			newCol.Description = "Identifiant unique de l'entité à retourner";
 
 			if (!string.IsNullOrWhiteSpace(newCol.Description))
@@ -736,7 +736,7 @@ namespace <#= msgNamespace #>
             }
 			if (AddApiAttributes)
             {
-				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
+				var dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
 				if (dicApiMemberProps != null)
                 {
 					dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
@@ -800,14 +800,14 @@ namespace <#= msgNamespace #>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= deleteTableClassName #> : IReturnVoid, IDelete
 	{
 <#
-		Column lastCol = lstPlaceholderCols.LastOrDefault();
-		foreach (Column phCol in lstPlaceholderCols)
+		var lastCol = lstPlaceholderCols.LastOrDefault();
+		foreach (var phCol in lstPlaceholderCols)
 		{
 			if (lastCol != null && lastCol.IsPKey && lastCol != phCol)
             {
 				continue; // on ignore les colonnes qui ne sont pas la PK de l'entité
             }
-			Column newCol = phCol.Clone();
+			var newCol = phCol.Clone();
 			newCol.IsNullable = false;
 			newCol.Description = "Identifiant unique de l'entité à supprimer";
 
@@ -821,7 +821,7 @@ namespace <#= msgNamespace #>
             }
 			if (AddApiAttributes)
             {
-				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
+				var dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
 				if (dicApiMemberProps != null)
                 {
 					dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
@@ -878,14 +878,14 @@ namespace <#= msgNamespace #>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= patchTableClassName #> : IReturnVoid, IPatch
 	{
 <#
-		Column lastCol = lstPlaceholderCols.LastOrDefault();
-		foreach (Column phCol in lstPlaceholderCols)
+		var lastCol = lstPlaceholderCols.LastOrDefault();
+		foreach (var phCol in lstPlaceholderCols)
 		{
 			if (lastCol != null && lastCol.IsPKey && lastCol != phCol)
             {
 				continue; // on ignore les colonnes qui ne sont pas la PK de l'entité
             }
-			Column newCol = phCol.Clone();
+			var newCol = phCol.Clone();
 			newCol.Description = "Identifiant unique de l'entité à modifier";
 
 			if (!string.IsNullOrWhiteSpace(newCol.Description))
@@ -898,7 +898,7 @@ namespace <#= msgNamespace #>
             }
 			if (AddApiAttributes)
             {
-				Dictionary<string, string> dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
+				var dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
 				if (dicApiMemberProps != null)
                 {
 					dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
@@ -1048,7 +1048,7 @@ private string GetGeneratedFilename(string filename, string fileNamespace, strin
 /// </summary>
 private string GetStandardColumnFormat(Table table)
 {
-	FKey parentFkey = GetParentFKey(table);
+	var parentFkey = GetParentFKey(table);
 	if (parentFkey != null)
 	{
 		return parentFkey.FromTable.ClassName.Replace(parentFkey.ReferencedTable.ClassName, "{0}");
@@ -1058,7 +1058,7 @@ private string GetStandardColumnFormat(Table table)
 
 private void SetColumnsDescription(Table table, string stdColFormat)
 {
-	foreach (Column col in table.Columns)
+	foreach (var col in table.Columns)
     {
 		if (string.IsNullOrWhiteSpace(col.Description))
         {
@@ -1157,7 +1157,7 @@ private Dictionary<string, string> GetApiMemberProps(Column col, IEnumerable<str
         return null;
     }
 
-    Dictionary<string, string> dicApiMemberProps = new Dictionary<string, string>();
+    var dicApiMemberProps = new Dictionary<string, string>();
 
     if (!string.IsNullOrEmpty(col.Description))
     {
@@ -1214,7 +1214,7 @@ private List<Column> GetKeyColumns(Table table)
 /// </summary>
 private FKey GetParentFKey(Table table)
 {
-    FKey fkey = table.ForeignKeys
+    var fkey = table.ForeignKeys
 		.Where(fk => table.Name.StartsWith(fk.ReferencedTable.Name))
 		.Where(fk => table.Name != fk.ReferencedTable.Name)
 		.OrderByDescending(fk => fk.ReferencedTable.Name.Length) // si plusieurs parents, on prend celui avec le nom le plus long
@@ -1227,21 +1227,21 @@ private FKey GetParentFKey(Table table)
 /// </summary>
 private List<Column> GetRouteColumns(Table table, bool recurseParents)
 {
-	List<Column> lstCols = new List<Column>();
+	var lstCols = new List<Column>();
 
 	if (recurseParents)
     {
-		FKey fkParent = GetParentFKey(table);
+		var fkParent = GetParentFKey(table);
 		if (fkParent != null)
 		{
-			Table parentTable = fkParent.ReferencedTable;
+			var parentTable = fkParent.ReferencedTable;
 
-			List<Column> lst = GetRouteColumns(parentTable, recurseParents);
+			var lst = GetRouteColumns(parentTable, recurseParents);
 			lstCols.AddRange(lst);
 		}
     }
 
-	List<Column> parentCols = GetKeyColumns(table);
+	var parentCols = GetKeyColumns(table);
     if (parentCols != null)
 	{
 		lstCols.AddRange(parentCols);
@@ -1265,10 +1265,10 @@ private string GetStrRoutePath(List<Column> lstCols, bool keepEnd = true, bool r
 	string strRoute = "";
 	string currentTable = "";
 
-	Column lastCol = lstCols.Last();
-	Table tbl = lastCol.ParentTable;
+	var lastCol = lstCols.Last();
+	var tbl = lastCol.ParentTable;
 
-	foreach (Column phCol in lstCols)
+	foreach (var phCol in lstCols)
     {
 		if (phCol.ParentTable.ClassName != currentTable)
         {
@@ -1302,10 +1302,10 @@ private string GetStrRoutePath(List<Column> lstCols, bool keepEnd = true, bool r
 
 private string GetEntityName(List<Column> lstCols)
 {
-	List<string> parts = new List<string>();
+	var parts = new List<string>();
 
 	string currentTable = "";
-	foreach (Column phCol in lstCols)
+	foreach (var phCol in lstCols)
     {
 		if (phCol.ParentTable.ClassName != currentTable)
         {
