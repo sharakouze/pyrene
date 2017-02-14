@@ -152,7 +152,7 @@ using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.Common;
 using Tmpi.Pyrene.Common.Linq;
-using <#= sourceNamespace #>.Messages;
+using <#= sourceNamespace #>;
 using <#= sourceNamespace #>.Types;
 
 namespace <#= fileNamespace #>

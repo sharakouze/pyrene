@@ -15,7 +15,7 @@ using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.Common;
 using Tmpi.Pyrene.Common.Linq;
-using Tmpi.Pyrene.ServiceModel.Messages;
+using Tmpi.Pyrene.ServiceModel;
 using Tmpi.Pyrene.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.ServiceInterface
