@@ -37,16 +37,16 @@ public class Tables : List<Table>
 {
 	public Column GetColumn(string schemaName, string tableName, string columnName)
     {
-		IEnumerable<Table> q = this.Where(t => t.Name == tableName);
+		var q = this.Where(t => t.Name == tableName);
 		if (!string.IsNullOrEmpty(schemaName))
         {
 			q = q.Where(t => t.Schema == schemaName);
         }
 
-		Table tbl = q.SingleOrDefault();;
+		var tbl = q.SingleOrDefault();;
 		if (tbl != null)
         {
-			Column col = tbl.Columns.Where(c => c.Name == columnName).SingleOrDefault();
+			var col = tbl.Columns.Where(c => c.Name == columnName).SingleOrDefault();
 			return col;
         }
 		return null;
@@ -63,7 +63,7 @@ public class Tables : List<Table>
 
 	public bool ChangePropertyType(string schemaName, string tableName, string columnName, string newPropertyType)
     {
-		Column col = GetColumn(schemaName, tableName, columnName);
+		var col = GetColumn(schemaName, tableName, columnName);
 		if (col != null)
         {
 			col.PropertyType = newPropertyType;
@@ -100,7 +100,7 @@ public class Column
 
 	public Column Clone()
     {
-		Column newCol = new Column()
+		var newCol = new Column()
 		{
 			Name = Name,
 			PropertyName = PropertyName,
@@ -210,7 +210,7 @@ public class FKey
 	{
 		get
         {
-			Column col = FromColumns.FirstOrDefault();
+			var col = FromColumns.FirstOrDefault();
 			if (col != null)
             {
 				return col.ParentTable;
@@ -222,7 +222,7 @@ public class FKey
 	{
 		get
         {
-			Column col = ReferencedColumns.FirstOrDefault();
+			var col = ReferencedColumns.FirstOrDefault();
 			if (col != null)
             {
 				return col.ParentTable;
@@ -292,13 +292,13 @@ public string GetColumnDefaultValue(Column col)
 
 Tables LoadTables(string connectionString, string schemaName = null, bool includeViews = false)
 {
-	SchemaReader reader = new SqlServerSchemaReader();
-	Tables tables = reader.ReadSchema(connectionString, schemaName, includeViews);
+	var reader = new SqlServerSchemaReader();
+	var tables = reader.ReadSchema(connectionString, schemaName, includeViews);
 
-    Regex rxClean = new Regex("^(Equals|GetHashCode|GetType|ToString|repo|Save|IsNew|Insert|Update|Delete|Exists|SingleOrDefault|Single|First|FirstOrDefault|Fetch|Page|Query)$");
+    var rxClean = new Regex("^(Equals|GetHashCode|GetType|ToString|repo|Save|IsNew|Insert|Update|Delete|Exists|SingleOrDefault|Single|First|FirstOrDefault|Fetch|Page|Query)$");
     foreach (var tbl in tables)
     {
-        foreach (Column c in tbl.Columns)
+        foreach (var c in tbl.Columns)
         {
             c.PropertyName = rxClean.Replace(c.PropertyName, "_$1");
 
@@ -374,9 +374,9 @@ class SqlServerSchemaReader : SchemaReader
 			connection.ConnectionString = connectionString;
 			connection.Open();
 
-			Tables tables = LoadTables(connection, schemaName, includeViews);
+			var tables = LoadTables(connection, schemaName, includeViews);
 
-			foreach (Table tbl in tables)
+			foreach (var tbl in tables)
 			{
 				tbl.Columns = LoadColumns(connection, tbl);
 
@@ -393,7 +393,7 @@ class SqlServerSchemaReader : SchemaReader
 
 	private Tables LoadTables(DbConnection connection, string schemaName, bool includeViews)
     {
-		Tables tables = new Tables();
+		var tables = new Tables();
 
 		using (var cmd = _factory.CreateCommand())
 		{
@@ -422,7 +422,7 @@ class SqlServerSchemaReader : SchemaReader
 			{
 				while (rdr.Read())
 				{
-					Table tbl = new Table();
+					var tbl = new Table();
 
 					tbl.Name = rdr["TABLE_NAME"].ToString();
 					tbl.Schema = rdr["TABLE_SCHEMA"].ToString();
@@ -440,7 +440,7 @@ class SqlServerSchemaReader : SchemaReader
 
 	private List<Column> LoadColumns(DbConnection connection, Table tbl)
 	{
-		List<Column> columns = new List<Column>();
+		var columns = new List<Column>();
 
 		using (var cmd = _factory.CreateCommand())
 		{
@@ -462,7 +462,7 @@ class SqlServerSchemaReader : SchemaReader
 			{
 				while (rdr.Read())
 				{
-					Column col = new Column();
+					var col = new Column();
 
 					col.Name = rdr["COLUMN_NAME"].ToString();
 					col.Size = rdr["CHARACTER_MAXIMUM_LENGTH"] == DBNull.Value ? -1 : (int)rdr["CHARACTER_MAXIMUM_LENGTH"];
@@ -518,7 +518,7 @@ class SqlServerSchemaReader : SchemaReader
 
 					string columnName = rdr["COLUMN_NAME"].ToString();
 
-					Column col = tbl.Columns.Where(c => c.Name == columnName).SingleOrDefault();
+					var col = tbl.Columns.Where(c => c.Name == columnName).SingleOrDefault();
 					if (col != null)
                     {
 						pk.PKeyColumns.Add(col);
@@ -532,7 +532,7 @@ class SqlServerSchemaReader : SchemaReader
 
     private List<TableIndex> LoadIndices(DbConnection connection, Table tbl)
     {
-        List<TableIndex> indices = new List<TableIndex>();
+        var indices = new List<TableIndex>();
 
         using (var cmd1 = _factory.CreateCommand())
         {
@@ -556,7 +556,7 @@ class SqlServerSchemaReader : SchemaReader
             	{
 					string indexName = rdr["IndexName"].ToString();
 					
-					TableIndex idx = indices.Where(i => i.Name == indexName).SingleOrDefault();
+					var idx = indices.Where(i => i.Name == indexName).SingleOrDefault();
 					if (idx == null)
                     {
 						idx = new TableIndex();
@@ -571,7 +571,7 @@ class SqlServerSchemaReader : SchemaReader
                     }
 
 					string colName = rdr["ColumnName"].ToString();
-					Column col = tbl.Columns.Where(c => c.Name == colName).SingleOrDefault();
+					var col = tbl.Columns.Where(c => c.Name == colName).SingleOrDefault();
 					if (col != null)
                     {
 						idx.IndexColumns.Add(col);
@@ -611,10 +611,10 @@ class SqlServerSchemaReader : SchemaReader
 					string fkTableSchema = rdr["FK_TABLE_SCHEMA"].ToString();
 					string fkTableName = rdr["FK_TABLE_NAME"].ToString();
 
-					Table tbl = tbls.Where(t => t.Schema == fkTableSchema && t.Name == fkTableName).SingleOrDefault();
+					var tbl = tbls.Where(t => t.Schema == fkTableSchema && t.Name == fkTableName).SingleOrDefault();
 					if (tbl != null)
                     {
-						FKey fk = tbl.ForeignKeys.Where(f => f.Name == fkName).SingleOrDefault();
+						var fk = tbl.ForeignKeys.Where(f => f.Name == fkName).SingleOrDefault();
 						if (fk == null)
                         {
 							fk = new FKey();
@@ -628,7 +628,7 @@ class SqlServerSchemaReader : SchemaReader
 
 						string fkColumnName = rdr["FK_COLUMN_NAME"].ToString();
 
-						Column col = tbl.Columns.Where(c => c.Name == fkColumnName).SingleOrDefault();
+						var col = tbl.Columns.Where(c => c.Name == fkColumnName).SingleOrDefault();
 						if (col != null)
                         {
 							fk.FromColumns.Add(col);
@@ -637,7 +637,7 @@ class SqlServerSchemaReader : SchemaReader
 							string refTableName = rdr["REF_TABLE_NAME"].ToString();
 							string refColumnName = rdr["REF_COLUMN_NAME"].ToString();
 
-							Table reftbl = tbls.Where(t => t.Schema == refTableSchema && t.Name == refTableName).SingleOrDefault();
+							var reftbl = tbls.Where(t => t.Schema == refTableSchema && t.Name == refTableName).SingleOrDefault();
 							if (reftbl != null)
 							{
 								Column refcol = reftbl.Columns.Where(c => c.Name == refColumnName).SingleOrDefault();
