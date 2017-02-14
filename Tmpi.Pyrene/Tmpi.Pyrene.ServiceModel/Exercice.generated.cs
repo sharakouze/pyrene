@@ -25,7 +25,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// </summary>
 	[Route("/Exercice", HttpVerbs.Get, Summary = "Retourne une collection des entités Exercice", Notes = SwaggerDescriptions.SelectRequestNotes)]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité Exercice spécifiée est introuvable")]
-	public partial class SelectExercice : IReturn<SelectExerciceResponse>, IGet, IPagination
+	public partial class SelectExercice : IReturn<SelectExerciceResponse>, IGet
 	{
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.

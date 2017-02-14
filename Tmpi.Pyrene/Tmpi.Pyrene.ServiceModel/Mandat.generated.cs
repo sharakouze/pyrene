@@ -25,7 +25,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// </summary>
 	[Route("/Mandat", HttpVerbs.Get, Summary = "Retourne une collection des entités Mandat", Notes = SwaggerDescriptions.SelectRequestNotes)]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité Mandat spécifiée est introuvable")]
-	public partial class SelectMandat : IReturn<SelectMandatResponse>, IGet, IPagination
+	public partial class SelectMandat : IReturn<SelectMandatResponse>, IGet
 	{
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.

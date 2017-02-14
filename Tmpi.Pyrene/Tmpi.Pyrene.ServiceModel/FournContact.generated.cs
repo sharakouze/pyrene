@@ -25,7 +25,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// </summary>
 	[Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Get, Summary = "Retourne une collection des entités FournContact", Notes = SwaggerDescriptions.SelectRequestNotes)]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité FournContact spécifiée est introuvable")]
-	public partial class SelectFournContact : IReturn<SelectFournContactResponse>, IGet, IPagination
+	public partial class SelectFournContact : IReturn<SelectFournContactResponse>, IGet
 	{
 		/// <summary>
 		/// Identifiant unique du fournisseur parent.

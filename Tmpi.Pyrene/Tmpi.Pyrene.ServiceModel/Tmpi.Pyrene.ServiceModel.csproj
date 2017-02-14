@@ -69,7 +69,6 @@
     </Compile>
     <Compile Include="BaseEntity.cs" />
     <Compile Include="HttpVerbs.cs" />
-    <Compile Include="IPagination.cs" />
     <Compile Include="Patch.cs" />
     <Compile Include="Personne.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>

@@ -25,7 +25,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// </summary>
 	[Route("/Mandat/{CleMandat}/Mandataire", HttpVerbs.Get, Summary = "Retourne une collection des entités MandatMandataire", Notes = SwaggerDescriptions.SelectRequestNotes)]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité MandatMandataire spécifiée est introuvable")]
-	public partial class SelectMandatMandataire : IReturn<SelectMandatMandataireResponse>, IGet, IPagination
+	public partial class SelectMandatMandataire : IReturn<SelectMandatMandataireResponse>, IGet
 	{
 		/// <summary>
 		/// Identifiant unique du mandat parent.

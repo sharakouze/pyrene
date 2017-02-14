@@ -25,7 +25,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// </summary>
 	[Route("/TVA", HttpVerbs.Get, Summary = "Retourne une collection des entités TVA", Notes = SwaggerDescriptions.SelectRequestNotes)]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité TVA spécifiée est introuvable")]
-	public partial class SelectTVA : IReturn<SelectTVAResponse>, IGet, IPagination
+	public partial class SelectTVA : IReturn<SelectTVAResponse>, IGet
 	{
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.

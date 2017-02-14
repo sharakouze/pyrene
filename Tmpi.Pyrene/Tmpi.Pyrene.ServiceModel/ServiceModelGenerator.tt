@@ -556,7 +556,7 @@ namespace <#= msgNamespace #>
                 }
 			}
 #>
-	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #> : IReturn<<#= selectTableClassName #>Response>, IGet, IPagination
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #> : IReturn<<#= selectTableClassName #>Response>, IGet
 	{
 <#
 			var lastCol = lstPlaceholderCols.LastOrDefault();

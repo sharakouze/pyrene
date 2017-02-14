@@ -25,7 +25,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// </summary>
 	[Route("/Fourn", HttpVerbs.Get, Summary = "Retourne une collection des entités Fourn", Notes = SwaggerDescriptions.SelectRequestNotes)]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité Fourn spécifiée est introuvable")]
-	public partial class SelectFourn : IReturn<SelectFournResponse>, IGet, IPagination
+	public partial class SelectFourn : IReturn<SelectFournResponse>, IGet
 	{
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.

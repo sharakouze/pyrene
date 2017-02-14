@@ -25,7 +25,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// </summary>
 	[Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Get, Summary = "Retourne une collection des entités CompteurValeur", Notes = SwaggerDescriptions.SelectRequestNotes)]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité CompteurValeur spécifiée est introuvable")]
-	public partial class SelectCompteurValeur : IReturn<SelectCompteurValeurResponse>, IGet, IPagination
+	public partial class SelectCompteurValeur : IReturn<SelectCompteurValeurResponse>, IGet
 	{
 		/// <summary>
 		/// Identifiant unique du compteur parent.

@@ -25,7 +25,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// </summary>
 	[Route("/Compteur", HttpVerbs.Get, Summary = "Retourne une collection des entités Compteur", Notes = SwaggerDescriptions.SelectRequestNotes)]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité Compteur spécifiée est introuvable")]
-	public partial class SelectCompteur : IReturn<SelectCompteurResponse>, IGet, IPagination
+	public partial class SelectCompteur : IReturn<SelectCompteurResponse>, IGet
 	{
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.

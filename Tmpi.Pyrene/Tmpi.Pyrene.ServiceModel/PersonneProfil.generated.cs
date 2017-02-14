@@ -25,7 +25,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// </summary>
 	[Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Get, Summary = "Retourne une collection des entités PersonneProfil", Notes = SwaggerDescriptions.SelectRequestNotes)]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité PersonneProfil spécifiée est introuvable")]
-	public partial class SelectPersonneProfil : IReturn<SelectPersonneProfilResponse>, IGet, IPagination
+	public partial class SelectPersonneProfil : IReturn<SelectPersonneProfilResponse>, IGet
 	{
 		/// <summary>
 		/// Identifiant unique de l'utilisateur parent.
