@@ -41,6 +41,8 @@
 
     // true pour générer chaque classe dans un fichier séparé.
     bool SplitIntoMultipleFiles = true;
+	// Extension des fichiers générés
+	string FileExtension = ".generated.cs";
 
     // if true: Changes the primary key property name to Id.
     bool UseIdAsPK = false;
@@ -166,7 +168,7 @@ using ServiceStack.Model;
 
 		string pocoNamespace = string.Format(NamespacePocos, BaseNamespace);
 		string pocoFileName = GetGeneratedFilename(table.ClassName, pocoNamespace, BaseNamespace);
-        manager.StartNewFile(pocoFileName + ".generated.cs");
+        manager.StartNewFile(pocoFileName + FileExtension);
 
 #>
 
@@ -507,7 +509,7 @@ namespace <#= pocoNamespace #>
 
 		string msgNamespace = string.Format(NamespaceMessages, BaseNamespace);
 		string msgFileName = GetGeneratedFilename(table.ClassName, msgNamespace, BaseNamespace);
-		manager.StartNewFile(msgFileName + ".generated.cs");
+		manager.StartNewFile(msgFileName + FileExtension);
 
 		if (pocoNamespace != msgNamespace)
         {
@@ -945,10 +947,10 @@ namespace <#= msgNamespace #>
 			bool searchExcluded = SearchTableFilterExclude != null && SearchTableFilterExclude.IsMatch(table.ClassName);
 			if (!searchExcluded)
 			{
-				var searchClassName = "Search" + table.ClassName;
-				var searchDescription = "Retourne le résultat d'une recherche sur les entités {0}";
-				var textPropDescription = "Texte à rechercher";
-				var maxPropDescription = "Nombre maximum de résultats à retourner";
+				string searchClassName = "Search" + table.ClassName;
+				string searchDescription = "Retourne le résultat d'une recherche sur les entités {0}";
+				string textPropDescription = "Texte à rechercher";
+				string maxPropDescription = "Nombre maximum de résultats à retourner";
 #>
 	/// <summary>
 	/// <#= FormatXmlDoc(searchDescription, entityName) #>
