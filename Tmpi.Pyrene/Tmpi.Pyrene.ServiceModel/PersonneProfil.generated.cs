@@ -18,7 +18,7 @@ using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
 using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace Tmpi.Pyrene.ServiceModel.Messages
+namespace Tmpi.Pyrene.ServiceModel
 {
 	/// <summary>
 	/// Retourne une collection des entités <see cref="PersonneProfil"/>.

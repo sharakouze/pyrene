@@ -1,6 +1,6 @@
 ﻿using ServiceStack;
 
-namespace Tmpi.Pyrene.ServiceModel.Messages
+namespace Tmpi.Pyrene.ServiceModel
 {
     /// <summary>
     /// Représente une entité définie par un identifiant, un code et une désignation.

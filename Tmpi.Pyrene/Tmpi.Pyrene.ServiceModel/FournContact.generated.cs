@@ -18,14 +18,14 @@ using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
 using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace Tmpi.Pyrene.ServiceModel.Messages
+namespace Tmpi.Pyrene.ServiceModel
 {
 	/// <summary>
-	/// Retourne une collection des entités <see cref="FournBanque"/>.
+	/// Retourne une collection des entités <see cref="FournContact"/>.
 	/// </summary>
-	[Route("/Fourn/{CleFourn}/Banque", HttpVerbs.Get, Summary = "Retourne une collection des entités FournBanque", Notes = SwaggerDescriptions.SelectRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité FournBanque spécifiée est introuvable")]
-	public partial class SelectFournBanque : IReturn<SelectFournBanqueResponse>, IGet, IPagination
+	[Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Get, Summary = "Retourne une collection des entités FournContact", Notes = SwaggerDescriptions.SelectRequestNotes)]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité FournContact spécifiée est introuvable")]
+	public partial class SelectFournContact : IReturn<SelectFournContactResponse>, IGet, IPagination
 	{
 		/// <summary>
 		/// Identifiant unique du fournisseur parent.
@@ -66,9 +66,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Réponse à la requête <see cref="SelectFournBanque"/>.
+	/// Réponse à la requête <see cref="SelectFournContact"/>.
 	/// </summary>
-	public partial class SelectFournBanqueResponse
+	public partial class SelectFournContactResponse
 	{
 		/// <summary>
 		/// Erreur éventuelle.
@@ -81,24 +81,24 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 		public int TotalCount { get; set; }
 
 		/// <summary>
-		/// Collection des entités <see cref="FournBanque"/>.
+		/// Collection des entités <see cref="FournContact"/>.
 		/// </summary>
-		public List<FournBanque> Results { get; set; }
+		public List<FournContact> Results { get; set; }
 	}
 
 	/// <summary>
-	/// Retourne une entité <see cref="FournBanque"/> à partir de son id.
+	/// Retourne une entité <see cref="FournContact"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Get, Summary = "Retourne une entité FournBanque à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.BadRequest, "L'entité FournBanque ne contient pas tous les champs demandés")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité FournBanque spécifiée est introuvable")]
-	public partial class GetFournBanque : IReturn<FournBanque>, IGet
+	[Route("/Fourn/Contact/{CleContact}", HttpVerbs.Get, Summary = "Retourne une entité FournContact à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité FournContact ne contient pas tous les champs demandés")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité FournContact spécifiée est introuvable")]
+	public partial class GetFournContact : IReturn<FournContact>, IGet
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à retourner.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à retourner", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleBanque { get; set; }
+		public int CleContact { get; set; }
 
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.
@@ -108,34 +108,34 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Supprime une entité <see cref="FournBanque"/> à partir de son id.
+	/// Supprime une entité <see cref="FournContact"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Delete, Summary = "Supprime une entité FournBanque à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité FournBanque spécifiée est introuvable")]
-	public partial class DeleteFournBanque : IReturnVoid, IDelete
+	[Route("/Fourn/Contact/{CleContact}", HttpVerbs.Delete, Summary = "Supprime une entité FournContact à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité FournContact spécifiée est introuvable")]
+	public partial class DeleteFournContact : IReturnVoid, IDelete
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à supprimer.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à supprimer", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleBanque { get; set; }
+		public int CleContact { get; set; }
 
 	}
 
 	/// <summary>
-	/// Modifie partiellement une entité <see cref="FournBanque"/> à partir de son id.
+	/// Modifie partiellement une entité <see cref="FournContact"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/Banque/{CleBanque}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité FournBanque à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.BadRequest, "L'entité FournBanque ne contient pas tous les champs demandés")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité FournBanque spécifiée est introuvable")]
-	[ApiResponse(HttpStatusCode.Conflict, "L'entité FournBanque spécifiée est un doublon")]
-	public partial class PatchFournBanque : IReturnVoid, IPatch
+	[Route("/Fourn/Contact/{CleContact}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité FournContact à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité FournContact ne contient pas tous les champs demandés")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité FournContact spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.Conflict, "L'entité FournContact spécifiée est un doublon")]
+	public partial class PatchFournContact : IReturnVoid, IPatch
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à modifier.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à modifier", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleBanque { get; set; }
+		public int CleContact { get; set; }
 
 		/// <summary>
 		/// Liste des modifications à appliquer.

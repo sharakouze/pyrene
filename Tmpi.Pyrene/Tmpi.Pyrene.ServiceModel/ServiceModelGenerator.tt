@@ -30,7 +30,7 @@
 	string BaseNamespace = "Tmpi.Pyrene.ServiceModel";
 	// {0} = BaseNamespace
     string NamespacePocos = "{0}.Types";
-    string NamespaceMessages = "{0}.Messages";
+    string NamespaceMessages = "{0}";
 
     // true pour générer des classes partial.
     bool MakeClassesPartial = true;

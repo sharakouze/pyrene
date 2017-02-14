@@ -18,15 +18,21 @@ using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
 using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace Tmpi.Pyrene.ServiceModel.Messages
+namespace Tmpi.Pyrene.ServiceModel
 {
 	/// <summary>
-	/// Retourne une collection des entités <see cref="Fourn"/>.
+	/// Retourne une collection des entités <see cref="CompteurValeur"/>.
 	/// </summary>
-	[Route("/Fourn", HttpVerbs.Get, Summary = "Retourne une collection des entités Fourn", Notes = SwaggerDescriptions.SelectRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Fourn spécifiée est introuvable")]
-	public partial class SelectFourn : IReturn<SelectFournResponse>, IGet, IPagination
+	[Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Get, Summary = "Retourne une collection des entités CompteurValeur", Notes = SwaggerDescriptions.SelectRequestNotes)]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité CompteurValeur spécifiée est introuvable")]
+	public partial class SelectCompteurValeur : IReturn<SelectCompteurValeurResponse>, IGet, IPagination
 	{
+		/// <summary>
+		/// Identifiant unique du compteur parent.
+		/// </summary>
+		[ApiMember(Description = "Identifiant unique du compteur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		public int CleCompteur { get; set; }
+
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.
 		/// </summary>
@@ -60,9 +66,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Réponse à la requête <see cref="SelectFourn"/>.
+	/// Réponse à la requête <see cref="SelectCompteurValeur"/>.
 	/// </summary>
-	public partial class SelectFournResponse
+	public partial class SelectCompteurValeurResponse
 	{
 		/// <summary>
 		/// Erreur éventuelle.
@@ -75,24 +81,24 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 		public int TotalCount { get; set; }
 
 		/// <summary>
-		/// Collection des entités <see cref="Fourn"/>.
+		/// Collection des entités <see cref="CompteurValeur"/>.
 		/// </summary>
-		public List<Fourn> Results { get; set; }
+		public List<CompteurValeur> Results { get; set; }
 	}
 
 	/// <summary>
-	/// Retourne une entité <see cref="Fourn"/> à partir de son id.
+	/// Retourne une entité <see cref="CompteurValeur"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/{CleFourn}", HttpVerbs.Get, Summary = "Retourne une entité Fourn à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Fourn ne contient pas tous les champs demandés")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Fourn spécifiée est introuvable")]
-	public partial class GetFourn : IReturn<Fourn>, IGet
+	[Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Get, Summary = "Retourne une entité CompteurValeur à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité CompteurValeur ne contient pas tous les champs demandés")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité CompteurValeur spécifiée est introuvable")]
+	public partial class GetCompteurValeur : IReturn<CompteurValeur>, IGet
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à retourner.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à retourner", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleFourn { get; set; }
+		public int CleValeur { get; set; }
 
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.
@@ -102,59 +108,40 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Supprime une entité <see cref="Fourn"/> à partir de son id.
+	/// Supprime une entité <see cref="CompteurValeur"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/{CleFourn}", HttpVerbs.Delete, Summary = "Supprime une entité Fourn à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Fourn spécifiée est introuvable")]
-	public partial class DeleteFourn : IReturnVoid, IDelete
+	[Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Delete, Summary = "Supprime une entité CompteurValeur à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité CompteurValeur spécifiée est introuvable")]
+	public partial class DeleteCompteurValeur : IReturnVoid, IDelete
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à supprimer.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à supprimer", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleFourn { get; set; }
+		public int CleValeur { get; set; }
 
 	}
 
 	/// <summary>
-	/// Modifie partiellement une entité <see cref="Fourn"/> à partir de son id.
+	/// Modifie partiellement une entité <see cref="CompteurValeur"/> à partir de son id.
 	/// </summary>
-	[Route("/Fourn/{CleFourn}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Fourn à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Fourn ne contient pas tous les champs demandés")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Fourn spécifiée est introuvable")]
-	[ApiResponse(HttpStatusCode.Conflict, "L'entité Fourn spécifiée est un doublon")]
-	public partial class PatchFourn : IReturnVoid, IPatch
+	[Route("/Compteur/Valeur/{CleValeur}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité CompteurValeur à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité CompteurValeur ne contient pas tous les champs demandés")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité CompteurValeur spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.Conflict, "L'entité CompteurValeur spécifiée est un doublon")]
+	public partial class PatchCompteurValeur : IReturnVoid, IPatch
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à modifier.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à modifier", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleFourn { get; set; }
+		public int CleValeur { get; set; }
 
 		/// <summary>
 		/// Liste des modifications à appliquer.
 		/// </summary>
 		[ApiMember(Description = "Liste des modifications à appliquer", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
 		public Patch[] Operations { get; set; }
-	}
-
-	/// <summary>
-	/// Retourne le résultat d'une recherche sur les entités <see cref="Fourn"/>.
-	/// </summary>
-	[Route("/Fourn/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Fourn", Notes = SwaggerDescriptions.SearchRequestNotes)]
-	public partial class SearchFourn : IReturn<List<BaseEntity>>, IGet
-	{
-		/// <summary>
-		/// Texte à rechercher.
-		/// </summary>
-		[ApiMember(Description = "Texte à rechercher", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public string Text { get; set; }
-
-		/// <summary>
-		/// Nombre maximum de résultats à retourner.
-		/// </summary>
-		[ApiMember(Description = "Nombre maximum de résultats à retourner", DataType = SwaggerDataTypes.Int)]
-		public int Max { get; set; }
 	}
 
 }

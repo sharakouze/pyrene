@@ -18,14 +18,14 @@ using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
 using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace Tmpi.Pyrene.ServiceModel.Messages
+namespace Tmpi.Pyrene.ServiceModel
 {
 	/// <summary>
-	/// Retourne une collection des entités <see cref="Exercice"/>.
+	/// Retourne une collection des entités <see cref="TVA"/>.
 	/// </summary>
-	[Route("/Exercice", HttpVerbs.Get, Summary = "Retourne une collection des entités Exercice", Notes = SwaggerDescriptions.SelectRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Exercice spécifiée est introuvable")]
-	public partial class SelectExercice : IReturn<SelectExerciceResponse>, IGet, IPagination
+	[Route("/TVA", HttpVerbs.Get, Summary = "Retourne une collection des entités TVA", Notes = SwaggerDescriptions.SelectRequestNotes)]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité TVA spécifiée est introuvable")]
+	public partial class SelectTVA : IReturn<SelectTVAResponse>, IGet, IPagination
 	{
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.
@@ -60,9 +60,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Réponse à la requête <see cref="SelectExercice"/>.
+	/// Réponse à la requête <see cref="SelectTVA"/>.
 	/// </summary>
-	public partial class SelectExerciceResponse
+	public partial class SelectTVAResponse
 	{
 		/// <summary>
 		/// Erreur éventuelle.
@@ -75,24 +75,24 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 		public int TotalCount { get; set; }
 
 		/// <summary>
-		/// Collection des entités <see cref="Exercice"/>.
+		/// Collection des entités <see cref="TVA"/>.
 		/// </summary>
-		public List<Exercice> Results { get; set; }
+		public List<TVA> Results { get; set; }
 	}
 
 	/// <summary>
-	/// Retourne une entité <see cref="Exercice"/> à partir de son id.
+	/// Retourne une entité <see cref="TVA"/> à partir de son id.
 	/// </summary>
-	[Route("/Exercice/{CleExercice}", HttpVerbs.Get, Summary = "Retourne une entité Exercice à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Exercice ne contient pas tous les champs demandés")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Exercice spécifiée est introuvable")]
-	public partial class GetExercice : IReturn<Exercice>, IGet
+	[Route("/TVA/{CleTVA}", HttpVerbs.Get, Summary = "Retourne une entité TVA à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité TVA ne contient pas tous les champs demandés")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité TVA spécifiée est introuvable")]
+	public partial class GetTVA : IReturn<TVA>, IGet
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à retourner.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à retourner", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleExercice { get; set; }
+		public int CleTVA { get; set; }
 
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.
@@ -102,34 +102,34 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Supprime une entité <see cref="Exercice"/> à partir de son id.
+	/// Supprime une entité <see cref="TVA"/> à partir de son id.
 	/// </summary>
-	[Route("/Exercice/{CleExercice}", HttpVerbs.Delete, Summary = "Supprime une entité Exercice à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Exercice spécifiée est introuvable")]
-	public partial class DeleteExercice : IReturnVoid, IDelete
+	[Route("/TVA/{CleTVA}", HttpVerbs.Delete, Summary = "Supprime une entité TVA à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité TVA spécifiée est introuvable")]
+	public partial class DeleteTVA : IReturnVoid, IDelete
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à supprimer.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à supprimer", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleExercice { get; set; }
+		public int CleTVA { get; set; }
 
 	}
 
 	/// <summary>
-	/// Modifie partiellement une entité <see cref="Exercice"/> à partir de son id.
+	/// Modifie partiellement une entité <see cref="TVA"/> à partir de son id.
 	/// </summary>
-	[Route("/Exercice/{CleExercice}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Exercice à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Exercice ne contient pas tous les champs demandés")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Exercice spécifiée est introuvable")]
-	[ApiResponse(HttpStatusCode.Conflict, "L'entité Exercice spécifiée est un doublon")]
-	public partial class PatchExercice : IReturnVoid, IPatch
+	[Route("/TVA/{CleTVA}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité TVA à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité TVA ne contient pas tous les champs demandés")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité TVA spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.Conflict, "L'entité TVA spécifiée est un doublon")]
+	public partial class PatchTVA : IReturnVoid, IPatch
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à modifier.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à modifier", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleExercice { get; set; }
+		public int CleTVA { get; set; }
 
 		/// <summary>
 		/// Liste des modifications à appliquer.
@@ -139,10 +139,10 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Retourne le résultat d'une recherche sur les entités <see cref="Exercice"/>.
+	/// Retourne le résultat d'une recherche sur les entités <see cref="TVA"/>.
 	/// </summary>
-	[Route("/Exercice/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Exercice", Notes = SwaggerDescriptions.SearchRequestNotes)]
-	public partial class SearchExercice : IReturn<List<BaseEntity>>, IGet
+	[Route("/TVA/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités TVA", Notes = SwaggerDescriptions.SearchRequestNotes)]
+	public partial class SearchTVA : IReturn<List<BaseEntity>>, IGet
 	{
 		/// <summary>
 		/// Texte à rechercher.

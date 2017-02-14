@@ -18,14 +18,14 @@ using ServiceStack.DataAnnotations;
 using ServiceStack.Model;
 using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace Tmpi.Pyrene.ServiceModel.Messages
+namespace Tmpi.Pyrene.ServiceModel
 {
 	/// <summary>
-	/// Retourne une collection des entités <see cref="Mandat"/>.
+	/// Retourne une collection des entités <see cref="Personne"/>.
 	/// </summary>
-	[Route("/Mandat", HttpVerbs.Get, Summary = "Retourne une collection des entités Mandat", Notes = SwaggerDescriptions.SelectRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Mandat spécifiée est introuvable")]
-	public partial class SelectMandat : IReturn<SelectMandatResponse>, IGet, IPagination
+	[Route("/Personne", HttpVerbs.Get, Summary = "Retourne une collection des entités Personne", Notes = SwaggerDescriptions.SelectRequestNotes)]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité Personne spécifiée est introuvable")]
+	public partial class SelectPersonne : IReturn<SelectPersonneResponse>, IGet, IPagination
 	{
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.
@@ -60,9 +60,9 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Réponse à la requête <see cref="SelectMandat"/>.
+	/// Réponse à la requête <see cref="SelectPersonne"/>.
 	/// </summary>
-	public partial class SelectMandatResponse
+	public partial class SelectPersonneResponse
 	{
 		/// <summary>
 		/// Erreur éventuelle.
@@ -75,24 +75,24 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 		public int TotalCount { get; set; }
 
 		/// <summary>
-		/// Collection des entités <see cref="Mandat"/>.
+		/// Collection des entités <see cref="Personne"/>.
 		/// </summary>
-		public List<Mandat> Results { get; set; }
+		public List<Personne> Results { get; set; }
 	}
 
 	/// <summary>
-	/// Retourne une entité <see cref="Mandat"/> à partir de son id.
+	/// Retourne une entité <see cref="Personne"/> à partir de son id.
 	/// </summary>
-	[Route("/Mandat/{CleMandat}", HttpVerbs.Get, Summary = "Retourne une entité Mandat à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Mandat ne contient pas tous les champs demandés")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Mandat spécifiée est introuvable")]
-	public partial class GetMandat : IReturn<Mandat>, IGet
+	[Route("/Personne/{ClePersonne}", HttpVerbs.Get, Summary = "Retourne une entité Personne à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Personne ne contient pas tous les champs demandés")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité Personne spécifiée est introuvable")]
+	public partial class GetPersonne : IReturn<Personne>, IGet
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à retourner.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à retourner", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleMandat { get; set; }
+		public int ClePersonne { get; set; }
 
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.
@@ -102,59 +102,40 @@ namespace Tmpi.Pyrene.ServiceModel.Messages
 	}
 
 	/// <summary>
-	/// Supprime une entité <see cref="Mandat"/> à partir de son id.
+	/// Supprime une entité <see cref="Personne"/> à partir de son id.
 	/// </summary>
-	[Route("/Mandat/{CleMandat}", HttpVerbs.Delete, Summary = "Supprime une entité Mandat à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Mandat spécifiée est introuvable")]
-	public partial class DeleteMandat : IReturnVoid, IDelete
+	[Route("/Personne/{ClePersonne}", HttpVerbs.Delete, Summary = "Supprime une entité Personne à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité Personne spécifiée est introuvable")]
+	public partial class DeletePersonne : IReturnVoid, IDelete
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à supprimer.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à supprimer", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleMandat { get; set; }
+		public int ClePersonne { get; set; }
 
 	}
 
 	/// <summary>
-	/// Modifie partiellement une entité <see cref="Mandat"/> à partir de son id.
+	/// Modifie partiellement une entité <see cref="Personne"/> à partir de son id.
 	/// </summary>
-	[Route("/Mandat/{CleMandat}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Mandat à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Mandat ne contient pas tous les champs demandés")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Mandat spécifiée est introuvable")]
-	[ApiResponse(HttpStatusCode.Conflict, "L'entité Mandat spécifiée est un doublon")]
-	public partial class PatchMandat : IReturnVoid, IPatch
+	[Route("/Personne/{ClePersonne}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Personne à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Personne ne contient pas tous les champs demandés")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité Personne spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.Conflict, "L'entité Personne spécifiée est un doublon")]
+	public partial class PatchPersonne : IReturnVoid, IPatch
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à modifier.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à modifier", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleMandat { get; set; }
+		public int ClePersonne { get; set; }
 
 		/// <summary>
 		/// Liste des modifications à appliquer.
 		/// </summary>
 		[ApiMember(Description = "Liste des modifications à appliquer", DataType = "Array[" + nameof(Patch) + "]", IsRequired = true, ParameterType = SwaggerParamTypes.Form)]
 		public Patch[] Operations { get; set; }
-	}
-
-	/// <summary>
-	/// Retourne le résultat d'une recherche sur les entités <see cref="Mandat"/>.
-	/// </summary>
-	[Route("/Mandat/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Mandat", Notes = SwaggerDescriptions.SearchRequestNotes)]
-	public partial class SearchMandat : IReturn<List<BaseEntity>>, IGet
-	{
-		/// <summary>
-		/// Texte à rechercher.
-		/// </summary>
-		[ApiMember(Description = "Texte à rechercher", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public string Text { get; set; }
-
-		/// <summary>
-		/// Nombre maximum de résultats à retourner.
-		/// </summary>
-		[ApiMember(Description = "Nombre maximum de résultats à retourner", DataType = SwaggerDataTypes.Int)]
-		public int Max { get; set; }
 	}
 
 }

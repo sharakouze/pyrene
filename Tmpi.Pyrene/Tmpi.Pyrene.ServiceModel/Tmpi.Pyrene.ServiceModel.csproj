@@ -43,49 +43,46 @@
     <Compile Include="..\Shared\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Messages.Compteur.generated.cs">
+    <Compile Include="Compteur.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.CompteurValeur.generated.cs">
+    <Compile Include="CompteurValeur.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.Exercice.generated.cs">
+    <Compile Include="Exercice.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.Fourn.generated.cs">
+    <Compile Include="Fourn.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.FournBanque.generated.cs">
+    <Compile Include="FournBanque.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.FournContact.generated.cs">
+    <Compile Include="FournContact.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.Mandat.generated.cs">
+    <Compile Include="Mandat.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.MandatMandataire.generated.cs">
+    <Compile Include="MandatMandataire.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Messages.Personne.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Messages.PersonneProfil.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Messages.PersonneSignature.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Messages.Service.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Messages.TVA.generated.cs">
-      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Messages\BaseEntity.cs" />
+    <Compile Include="BaseEntity.cs" />
     <Compile Include="HttpVerbs.cs" />
-    <Compile Include="Messages\IPagination.cs" />
-    <Compile Include="Messages\Patch.cs" />
+    <Compile Include="IPagination.cs" />
+    <Compile Include="Patch.cs" />
+    <Compile Include="Personne.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PersonneProfil.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PersonneSignature.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="ServiceModelGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -94,6 +91,9 @@
     <Compile Include="SwaggerDataTypes.cs" />
     <Compile Include="SwaggerDescriptions.cs" />
     <Compile Include="SwaggerParamTypes.cs" />
+    <Compile Include="TVA.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="Types.Compteur.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
