@@ -62,7 +62,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeleteService request)
 		{
-			using (var scope = AuditScope.Create("ServiceModel.Types.Service:Delete", () => request))
+			using (var scope = AuditScope.Create("Service:Delete", () => request))
 			{
 				int count = Db.DeleteById<ServiceModel.Types.Service>(request.CleService);
 				if (count == 0)
@@ -131,7 +131,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(ServiceModel.Types.Service)));
 				}
 
-				using (var scope = AuditScope.Create("ServiceModel.Types.Service:Update", () => entity))
+				using (var scope = AuditScope.Create("Service:Update", () => entity))
 				{
 					int count = Db.UpdateOnly(entity, q);
 					if (count == 0)
@@ -224,7 +224,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 				if (request.CleService == 0)
 				{
-					using (var scope = AuditScope.Create("ServiceModel.Types.Service:Insert", () => request))
+					using (var scope = AuditScope.Create("Service:Insert", () => request))
 					{
 						long id = Db.Insert(request, selectIdentity: true);
 						request.CleService = (int)id;
@@ -234,7 +234,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 				}
 				else
 				{
-					using (var scope = AuditScope.Create("ServiceModel.Types.Service:Update", () => request))
+					using (var scope = AuditScope.Create("Service:Update", () => request))
 					{
 						int count = Db.Update(request);
 						if (count == 0)

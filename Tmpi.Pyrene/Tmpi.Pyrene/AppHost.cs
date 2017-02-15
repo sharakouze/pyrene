@@ -1,9 +1,9 @@
-﻿using Funq;
+﻿using Audit.Core;
+using Funq;
 using ServiceStack;
 using ServiceStack.Api.Swagger;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
-using ServiceStack.Razor;
 using ServiceStack.Text;
 using ServiceStack.Validation;
 using System;
@@ -19,24 +19,67 @@ namespace Tmpi.Pyrene
         {
         }
 
+        #region ConfigurationManager
+        private T GetAppSettingOrDefault<T>(string key, T defaultValue = default(T))
+        {
+            string str = ConfigurationManager.AppSettings[key];
+            if (string.IsNullOrEmpty(str))
+            {
+                return defaultValue;
+            }
+
+            Type type = typeof(T);
+            if (type.IsEnum)
+            {
+                return (T)Enum.Parse(type, str, true);
+            }
+            return (T)Convert.ChangeType(str, type);
+        }
+
+        private string GetConnectionStringOrLast(string key, out string providerName)
+        {
+            ConnectionStringSettings settings = null;
+
+            if (string.IsNullOrEmpty(key))
+            {
+                int count = ConfigurationManager.ConnectionStrings.Count;
+                if (count > 0)
+                {
+                    settings = ConfigurationManager.ConnectionStrings[count - 1];
+                }
+            }
+            else
+            {
+                settings = ConfigurationManager.ConnectionStrings[key];
+            }
+
+            if (settings == null)
+            {
+                throw new Exception(string.Format("La chaîne de connexion '{0}' est introuvable.", key));
+            }
+
+            providerName = settings.ProviderName;
+            return settings.ConnectionString;
+        }
+        #endregion
+
         private void ConfigHost()
         {
             var enableFeatures = Feature.All.Remove(Feature.Soap);
 
-            bool jsvFeatureEnabled = false;
-            bool.TryParse(ConfigurationManager.AppSettings["HostConfig.JsvFeature"], out jsvFeatureEnabled);
+            bool jsvFeatureEnabled = GetAppSettingOrDefault("HostConfig.JsvFeature", false);
             if (!jsvFeatureEnabled)
             {
                 enableFeatures = enableFeatures.Remove(Feature.Jsv);
             }
 
+            bool debugMode = GetAppSettingOrDefault("HostConfig.DebugMode", false);
+#if DEBUG
+            debugMode = true;
+#endif
             SetConfig(new HostConfig
             {
-                //#if DEBUG
-                //                DebugMode = true,
-                //#else
-                //                DebugMode = false,
-                //#endif
+                DebugMode = debugMode,
                 EnableFeatures = enableFeatures,
             });
         }
@@ -46,10 +89,10 @@ namespace Tmpi.Pyrene
         /// </summary>
         private void ConfigCsvSerialization()
         {
-            string itemDelimiterString = ConfigurationManager.AppSettings["CsvConfig.ItemDelimiterString"];
+            string itemDelimiterString = GetAppSettingOrDefault<string>("CsvConfig.ItemDelimiterString");
             CsvConfig.ItemDelimiterString = itemDelimiterString ?? string.Empty;
 
-            string itemSeparatorString = ConfigurationManager.AppSettings["CsvConfig.ItemSeparatorString"];
+            string itemSeparatorString = GetAppSettingOrDefault<string>("CsvConfig.ItemSeparatorString");
             if (!string.IsNullOrEmpty(itemSeparatorString))
             {
                 CsvConfig.ItemSeperatorString = itemSeparatorString;
@@ -61,7 +104,9 @@ namespace Tmpi.Pyrene
         /// </summary>
         private void ConfigJsonSerialization()
         {
-            JsConfig.DateHandler = DateHandler.ISO8601;
+            var dateHandler = GetAppSettingOrDefault("JsConfig.DateHandler", DateHandler.ISO8601);
+            JsConfig.DateHandler = dateHandler;
+
             JsConfig.ExcludeDefaultValues = true;
         }
 
@@ -71,39 +116,24 @@ namespace Tmpi.Pyrene
         /// <param name="container"></param>
         private void ConfigOrmLite(Container container)
         {
-            ConnectionStringSettings settings = null;
+            string connectionStringName = GetAppSettingOrDefault<string>("OrmLiteConfig.ConnectionStringName");
 
-            string connectionStringName = ConfigurationManager.AppSettings["OrmLiteConfig.ConnectionStringName"];
-            if (string.IsNullOrWhiteSpace(connectionStringName))
-            {
-                int count = ConfigurationManager.ConnectionStrings.Count;
-                if (count > 0)
-                {
-                    settings = ConfigurationManager.ConnectionStrings[count - 1];
-                }
-            }
-            else
-            {
-                settings = ConfigurationManager.ConnectionStrings[connectionStringName];
-            }
+            string providerName;
+            string connectionString = GetConnectionStringOrLast(connectionStringName, out providerName);
 
-            if (settings == null)
-            {
-                throw new Exception(string.Format("La chaîne de connexion '{0}' est introuvable.", connectionStringName));
-            }
-
-            string connectionString = settings.ConnectionString;
             container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(connectionString, SqlServerDialect.Provider));
 
             //SqlServerDialect.Provider.RegisterConverter<short>(new SqlServerSmallintConverter());
 
-            int commandTimeout = 30;
-            int.TryParse(ConfigurationManager.AppSettings["OrmLiteConfig.CommandTimeout"], out commandTimeout);
+            int commandTimeout = GetAppSettingOrDefault("OrmLiteConfig.CommandTimeout", 30);
             OrmLiteConfig.CommandTimeout = commandTimeout;
 
             ConfigOrmLiteFilters();
         }
 
+        /// <summary>
+        /// Configure les filtres OrmLite.
+        /// </summary>
         private void ConfigOrmLiteFilters()
         {
             OrmLiteConfig.InsertFilter = (dbCmd, row) =>
@@ -112,7 +142,7 @@ namespace Tmpi.Pyrene
                 if (auditRow != null)
                 {
                     auditRow.DatCreation = DateTime.UtcNow;
-                    auditRow.CleCreateur = 123;
+                    auditRow.CleCreateur = 123465;
                 }
             };
 
@@ -122,7 +152,7 @@ namespace Tmpi.Pyrene
                 if (auditRow != null)
                 {
                     auditRow.DatEdition = DateTime.UtcNow;
-                    auditRow.CleEditeur = 123;
+                    auditRow.CleEditeur = 123456;
                 }
             };
         }
@@ -132,13 +162,12 @@ namespace Tmpi.Pyrene
         /// </summary>
         private void ConfigCorsPlugin()
         {
-            bool corsFeatureEnabled = false;
-            bool.TryParse(ConfigurationManager.AppSettings["Plugins.CorsFeature"], out corsFeatureEnabled);
+            bool corsFeatureEnabled = GetAppSettingOrDefault("Plugins.CorsFeature", false);
             if (corsFeatureEnabled)
             {
                 var allowOriginWhitelist = new[] { CorsFeature.DefaultOrigin };
 
-                string text = ConfigurationManager.AppSettings["Plugins.CorsFeature.AllowOriginWhitelist"];
+                string text = GetAppSettingOrDefault<string>("Plugins.CorsFeature.AllowOriginWhitelist");
                 if (!string.IsNullOrWhiteSpace(text))
                 {
                     allowOriginWhitelist = text.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
@@ -164,8 +193,7 @@ namespace Tmpi.Pyrene
         /// </summary>
         private void ConfigSwaggerPlugin()
         {
-            bool swaggerFeatureEnabled = false;
-            bool.TryParse(ConfigurationManager.AppSettings["Plugins.SwaggerFeature"], out swaggerFeatureEnabled);
+            bool swaggerFeatureEnabled = GetAppSettingOrDefault("Plugins.SwaggerFeature", false);
             if (swaggerFeatureEnabled)
             {
                 Plugins.Add(new SwaggerFeature
@@ -181,16 +209,20 @@ namespace Tmpi.Pyrene
         /// <param name="container"></param>
         private void ConfigValidationPlugin(Container container)
         {
-            Plugins.Add(new ValidationFeature());
-            container.RegisterValidators(ServiceAssemblies);
+            bool validationFeatureEnabled = GetAppSettingOrDefault("Plugins.ValidationFeature", true);
+            if (validationFeatureEnabled)
+            {
+                Plugins.Add(new ValidationFeature());
+                container.RegisterValidators(ServiceAssemblies);
+            }
         }
 
         /// <summary>
-        /// Configure le plugin Razor.
+        /// Configure le module Audit.NET.
         /// </summary>
-        private void ConfigRazorPlugin()
+        private void ConfigAuditNet()
         {
-            Plugins.Add(new RazorFormat());
+            Audit.Core.Configuration.CreationPolicy = EventCreationPolicy.Manual;
         }
 
         public override void Configure(Container container)
@@ -202,10 +234,11 @@ namespace Tmpi.Pyrene
             ConfigCorsPlugin();
             ConfigSwaggerPlugin();
             ConfigValidationPlugin(container);
-            ConfigRazorPlugin();
 
             ConfigCsvSerialization();
             ConfigJsonSerialization();
+
+            ConfigAuditNet();
         }
     }
 }

@@ -195,6 +195,7 @@ namespace <#= fileNamespace #>
         {
 			string requestClassName = item.RequestClass.Name;
 			string pocoClassName = item.PocoClass.Name;
+			string pocoClassNameClean = pocoClassName;
 			if (pocoClassName == "Service")
             {
 				pocoClassName = "ServiceModel.Types." + pocoClassName;
@@ -395,7 +396,7 @@ namespace <#= fileNamespace #>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(<#= requestClassName #> request)
 		{
-			using (var scope = AuditScope.Create("<#= pocoClassName #>:Delete", () => request))
+			using (var scope = AuditScope.Create("<#= pocoClassNameClean #>:Delete", () => request))
 			{
 				int count = Db.DeleteById<<#= pocoClassName #>>(request.<#= pkProp.Name #>);
 				if (count == 0)
@@ -458,7 +459,7 @@ namespace <#= fileNamespace #>
                 }
 #>
 
-				using (var scope = AuditScope.Create("<#= pocoClassName #>:Update", () => entity))
+				using (var scope = AuditScope.Create("<#= pocoClassNameClean #>:Update", () => entity))
 				{
 					int count = Db.UpdateOnly(entity, q);
 					if (count == 0)
@@ -541,7 +542,7 @@ namespace <#= fileNamespace #>
 
 				if (request.<#= pkProp.Name #> == 0)
 				{
-					using (var scope = AuditScope.Create("<#= pocoClassName #>:Insert", () => request))
+					using (var scope = AuditScope.Create("<#= pocoClassNameClean #>:Insert", () => request))
 					{
 						long id = Db.Insert(request, selectIdentity: true);
 						request.<#= pkProp.Name #> = (int)id;
@@ -551,7 +552,7 @@ namespace <#= fileNamespace #>
 				}
 				else
 				{
-					using (var scope = AuditScope.Create("<#= pocoClassName #>:Update", () => request))
+					using (var scope = AuditScope.Create("<#= pocoClassNameClean #>:Update", () => request))
 					{
 						int count = Db.Update(request);
 						if (count == 0)
