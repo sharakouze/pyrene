@@ -24,7 +24,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// Retourne une collection des entités <see cref="Exercice"/>.
 	/// </summary>
 	[Route("/Exercice", HttpVerbs.Get, Summary = "Retourne une collection des entités Exercice", Notes = SwaggerDescriptions.SelectRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Exercice spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Exercice ne contient pas tous les champs demandés")]
 	public partial class SelectExercice : IReturn<SelectExerciceResponse>, IGet
 	{
 		/// <summary>
@@ -62,10 +62,10 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// <summary>
 	/// Réponse à la requête <see cref="SelectExercice"/>.
 	/// </summary>
-	public partial class SelectExerciceResponse
+	public partial class SelectExerciceResponse : IHasResponseStatus
 	{
 		/// <summary>
-		/// Erreur éventuelle.
+		/// Détail de l'erreur éventuelle.
 		/// </summary>
 		public ResponseStatus ResponseStatus { get; set; }
 
@@ -142,7 +142,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// Retourne le résultat d'une recherche sur les entités <see cref="Exercice"/>.
 	/// </summary>
 	[Route("/Exercice/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Exercice", Notes = SwaggerDescriptions.SearchRequestNotes)]
-	public partial class SearchExercice : IReturn<List<BaseEntity>>, IGet
+	public partial class SearchExercice : IReturn<SearchExerciceResponse>, IGet
 	{
 		/// <summary>
 		/// Texte à rechercher.
@@ -155,6 +155,22 @@ namespace Tmpi.Pyrene.ServiceModel
 		/// </summary>
 		[ApiMember(Description = "Nombre maximum de résultats à retourner", DataType = SwaggerDataTypes.Int)]
 		public int Max { get; set; }
+	}
+
+	/// <summary>
+	/// Réponse à la requête <see cref="SearchExercice"/>.
+	/// </summary>
+	public partial class SearchExerciceResponse : IHasResponseStatus
+	{
+		/// <summary>
+		/// Détail de l'erreur éventuelle.
+		/// </summary>
+		public ResponseStatus ResponseStatus { get; set; }
+
+		/// <summary>
+		/// Résultat de la recherche.
+		/// </summary>
+		public List<BaseEntity> Results { get; set; }
 	}
 
 }

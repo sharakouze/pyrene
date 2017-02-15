@@ -22,6 +22,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 	[Schema("Gen")]
 	[Route("/Personne", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Personne à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité Personne spécifiée est un doublon")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité Personne spécifiée est introuvable")]
 	public partial class Personne : IReturn<Personne>, IPost, IAuditable
 	{
 		/// <summary>

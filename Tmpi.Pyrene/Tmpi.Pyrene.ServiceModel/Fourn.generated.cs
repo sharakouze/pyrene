@@ -24,7 +24,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// Retourne une collection des entités <see cref="Fourn"/>.
 	/// </summary>
 	[Route("/Fourn", HttpVerbs.Get, Summary = "Retourne une collection des entités Fourn", Notes = SwaggerDescriptions.SelectRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Fourn spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Fourn ne contient pas tous les champs demandés")]
 	public partial class SelectFourn : IReturn<SelectFournResponse>, IGet
 	{
 		/// <summary>
@@ -62,10 +62,10 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// <summary>
 	/// Réponse à la requête <see cref="SelectFourn"/>.
 	/// </summary>
-	public partial class SelectFournResponse
+	public partial class SelectFournResponse : IHasResponseStatus
 	{
 		/// <summary>
-		/// Erreur éventuelle.
+		/// Détail de l'erreur éventuelle.
 		/// </summary>
 		public ResponseStatus ResponseStatus { get; set; }
 
@@ -142,7 +142,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// Retourne le résultat d'une recherche sur les entités <see cref="Fourn"/>.
 	/// </summary>
 	[Route("/Fourn/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Fourn", Notes = SwaggerDescriptions.SearchRequestNotes)]
-	public partial class SearchFourn : IReturn<List<BaseEntity>>, IGet
+	public partial class SearchFourn : IReturn<SearchFournResponse>, IGet
 	{
 		/// <summary>
 		/// Texte à rechercher.
@@ -155,6 +155,22 @@ namespace Tmpi.Pyrene.ServiceModel
 		/// </summary>
 		[ApiMember(Description = "Nombre maximum de résultats à retourner", DataType = SwaggerDataTypes.Int)]
 		public int Max { get; set; }
+	}
+
+	/// <summary>
+	/// Réponse à la requête <see cref="SearchFourn"/>.
+	/// </summary>
+	public partial class SearchFournResponse : IHasResponseStatus
+	{
+		/// <summary>
+		/// Détail de l'erreur éventuelle.
+		/// </summary>
+		public ResponseStatus ResponseStatus { get; set; }
+
+		/// <summary>
+		/// Résultat de la recherche.
+		/// </summary>
+		public List<BaseEntity> Results { get; set; }
 	}
 
 }

@@ -24,7 +24,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// Retourne une collection des entités <see cref="FournBanque"/>.
 	/// </summary>
 	[Route("/Fourn/{CleFourn}/Banque", HttpVerbs.Get, Summary = "Retourne une collection des entités FournBanque", Notes = SwaggerDescriptions.SelectRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité FournBanque spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité FournBanque ne contient pas tous les champs demandés")]
 	public partial class SelectFournBanque : IReturn<SelectFournBanqueResponse>, IGet
 	{
 		/// <summary>
@@ -68,10 +68,10 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// <summary>
 	/// Réponse à la requête <see cref="SelectFournBanque"/>.
 	/// </summary>
-	public partial class SelectFournBanqueResponse
+	public partial class SelectFournBanqueResponse : IHasResponseStatus
 	{
 		/// <summary>
-		/// Erreur éventuelle.
+		/// Détail de l'erreur éventuelle.
 		/// </summary>
 		public ResponseStatus ResponseStatus { get; set; }
 

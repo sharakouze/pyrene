@@ -24,6 +24,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 	[CompositeIndex(true, nameof(CodProfil), nameof(ClePersonne))]
 	[Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité PersonneProfil à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité PersonneProfil spécifiée est un doublon")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité PersonneProfil spécifiée est introuvable")]
 	public partial class PersonneProfil : IReturn<PersonneProfil>, IPost, IAuditable
 	{
 		/// <summary>

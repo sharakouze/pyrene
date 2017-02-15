@@ -23,6 +23,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 	[CompositeIndex(true, nameof(TypCompteur), nameof(CleService))]
 	[Route("/Compteur", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Compteur à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité Compteur spécifiée est un doublon")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité Compteur spécifiée est introuvable")]
 	public partial class Compteur : IReturn<Compteur>, IPost, IAuditable
 	{
 		/// <summary>

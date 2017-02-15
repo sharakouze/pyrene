@@ -24,7 +24,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// Retourne une collection des entités <see cref="PersonneProfil"/>.
 	/// </summary>
 	[Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Get, Summary = "Retourne une collection des entités PersonneProfil", Notes = SwaggerDescriptions.SelectRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité PersonneProfil spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité PersonneProfil ne contient pas tous les champs demandés")]
 	public partial class SelectPersonneProfil : IReturn<SelectPersonneProfilResponse>, IGet
 	{
 		/// <summary>
@@ -68,10 +68,10 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// <summary>
 	/// Réponse à la requête <see cref="SelectPersonneProfil"/>.
 	/// </summary>
-	public partial class SelectPersonneProfilResponse
+	public partial class SelectPersonneProfilResponse : IHasResponseStatus
 	{
 		/// <summary>
-		/// Erreur éventuelle.
+		/// Détail de l'erreur éventuelle.
 		/// </summary>
 		public ResponseStatus ResponseStatus { get; set; }
 

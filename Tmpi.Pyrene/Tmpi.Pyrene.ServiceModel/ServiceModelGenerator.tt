@@ -17,6 +17,7 @@
     - Commentaires sur les [References] ?
 	- Possibilité d'avoir 0 PKey ?
 	- Namespace par rapport au schéma
+	- Patch => IReturnVoid ?
 	****************/
 
 	/*********************/
@@ -266,8 +267,10 @@ namespace <#= pocoNamespace #>
             if (AddApiAttributes)
             {
 				string entityNotUniqueResp = string.Format("L'entité {0} spécifiée est un doublon", entityName);
+				string entityNotFoundResp = string.Format("L'entité {0} spécifiée est introuvable", entityName);
 #>
 	[ApiResponse(HttpStatusCode.Conflict, "<#= entityNotUniqueResp #>")]
+	[ApiResponse(HttpStatusCode.NotFound, "<#= entityNotFoundResp #>")]
 <#
             }
         }
@@ -549,9 +552,9 @@ namespace <#= msgNamespace #>
 <#
 			    if (AddApiAttributes)
                 {
-					string entityNotFoundResp = string.Format("L'entité {0} spécifiée est introuvable", entityName);
+					string entityFieldsNotFoundResp = string.Format("L'entité {0} ne contient pas tous les champs demandés", entityName);
 #>
-	[ApiResponse(HttpStatusCode.NotFound, "<#= entityNotFoundResp #>")]
+	[ApiResponse(HttpStatusCode.BadRequest, "<#= entityFieldsNotFoundResp #>")]
 <#
                 }
 			}
@@ -662,10 +665,10 @@ namespace <#= msgNamespace #>
 	/// <summary>
 	/// <#= FormatXmlDoc("Réponse à la requête {0}.", selectTableClassName) #>
 	/// </summary>
-	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #>Response
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #>Response : IHasResponseStatus
 	{
 		/// <summary>
-		/// <#= FormatXmlDoc("Erreur éventuelle.") #>
+		/// <#= FormatXmlDoc("Détail de l'erreur éventuelle.") #>
 		/// </summary>
 		public ResponseStatus ResponseStatus { get; set; }
 
@@ -964,7 +967,7 @@ namespace <#= msgNamespace #>
 <#
 			}
 #>
-	public <#= MakeClassesPartial ? "partial " : "" #>class <#= searchClassName #> : IReturn<List<BaseEntity>>, IGet
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= searchClassName #> : IReturn<<#= searchClassName #>Response>, IGet
 	{
 		/// <summary>
 		/// <#= FormatXmlDoc(textPropDescription) #>
@@ -991,6 +994,22 @@ namespace <#= msgNamespace #>
                 }
 #>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int Max { get; set; }
+	}
+
+	/// <summary>
+	/// <#= FormatXmlDoc("Réponse à la requête {0}.", searchClassName) #>
+	/// </summary>
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= searchClassName #>Response : IHasResponseStatus
+	{
+		/// <summary>
+		/// <#= FormatXmlDoc("Détail de l'erreur éventuelle.") #>
+		/// </summary>
+		public ResponseStatus ResponseStatus { get; set; }
+
+		/// <summary>
+		/// <#= FormatXmlDoc("Résultat de la recherche.") #>
+		/// </summary>
+		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>List<BaseEntity> Results { get; set; }
 	}
 
 <#

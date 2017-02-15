@@ -24,7 +24,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// Retourne une collection des entités <see cref="TVA"/>.
 	/// </summary>
 	[Route("/TVA", HttpVerbs.Get, Summary = "Retourne une collection des entités TVA", Notes = SwaggerDescriptions.SelectRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité TVA spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité TVA ne contient pas tous les champs demandés")]
 	public partial class SelectTVA : IReturn<SelectTVAResponse>, IGet
 	{
 		/// <summary>
@@ -62,10 +62,10 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// <summary>
 	/// Réponse à la requête <see cref="SelectTVA"/>.
 	/// </summary>
-	public partial class SelectTVAResponse
+	public partial class SelectTVAResponse : IHasResponseStatus
 	{
 		/// <summary>
-		/// Erreur éventuelle.
+		/// Détail de l'erreur éventuelle.
 		/// </summary>
 		public ResponseStatus ResponseStatus { get; set; }
 
@@ -142,7 +142,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// Retourne le résultat d'une recherche sur les entités <see cref="TVA"/>.
 	/// </summary>
 	[Route("/TVA/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités TVA", Notes = SwaggerDescriptions.SearchRequestNotes)]
-	public partial class SearchTVA : IReturn<List<BaseEntity>>, IGet
+	public partial class SearchTVA : IReturn<SearchTVAResponse>, IGet
 	{
 		/// <summary>
 		/// Texte à rechercher.
@@ -155,6 +155,22 @@ namespace Tmpi.Pyrene.ServiceModel
 		/// </summary>
 		[ApiMember(Description = "Nombre maximum de résultats à retourner", DataType = SwaggerDataTypes.Int)]
 		public int Max { get; set; }
+	}
+
+	/// <summary>
+	/// Réponse à la requête <see cref="SearchTVA"/>.
+	/// </summary>
+	public partial class SearchTVAResponse : IHasResponseStatus
+	{
+		/// <summary>
+		/// Détail de l'erreur éventuelle.
+		/// </summary>
+		public ResponseStatus ResponseStatus { get; set; }
+
+		/// <summary>
+		/// Résultat de la recherche.
+		/// </summary>
+		public List<BaseEntity> Results { get; set; }
 	}
 
 }

@@ -24,7 +24,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// Retourne une collection des entités <see cref="CompteurValeur"/>.
 	/// </summary>
 	[Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Get, Summary = "Retourne une collection des entités CompteurValeur", Notes = SwaggerDescriptions.SelectRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité CompteurValeur spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité CompteurValeur ne contient pas tous les champs demandés")]
 	public partial class SelectCompteurValeur : IReturn<SelectCompteurValeurResponse>, IGet
 	{
 		/// <summary>
@@ -68,10 +68,10 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// <summary>
 	/// Réponse à la requête <see cref="SelectCompteurValeur"/>.
 	/// </summary>
-	public partial class SelectCompteurValeurResponse
+	public partial class SelectCompteurValeurResponse : IHasResponseStatus
 	{
 		/// <summary>
-		/// Erreur éventuelle.
+		/// Détail de l'erreur éventuelle.
 		/// </summary>
 		public ResponseStatus ResponseStatus { get; set; }
 
