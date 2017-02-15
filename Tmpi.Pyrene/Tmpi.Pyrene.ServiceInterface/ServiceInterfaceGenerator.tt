@@ -148,6 +148,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Audit.Core;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.Common;
@@ -394,11 +395,16 @@ namespace <#= fileNamespace #>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(<#= requestClassName #> request)
 		{
-			int count = Db.DeleteById<<#= pocoClassName #>>(request.<#= pkProp.Name #>);
-			if (count == 0)
+			using (var scope = AuditScope.Create("<#= pocoClassName #>:Delete", () => request))
 			{
-				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+				int count = Db.DeleteById<<#= pocoClassName #>>(request.<#= pkProp.Name #>);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+				}
+
+				scope.Save();
 			}
 		}
 
@@ -452,11 +458,16 @@ namespace <#= fileNamespace #>
                 }
 #>
 
-				int count = Db.UpdateOnly(entity, q);
-				if (count == 0)
+				using (var scope = AuditScope.Create("<#= pocoClassName #>:Update", () => entity))
 				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+					int count = Db.UpdateOnly(entity, q);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+					}
+
+					scope.Save();
 				}
 			}
 		}
@@ -473,7 +484,7 @@ namespace <#= fileNamespace #>
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns></returns>
-		public List<BaseEntity> Get(<#= requestClassName #> request)
+		public <#= requestClassName #>Response Get(<#= requestClassName #> request)
 		{
 			if (string.IsNullOrWhiteSpace(request.Text))
 			{
@@ -489,7 +500,11 @@ namespace <#= fileNamespace #>
 			}
 
 			var items = Db.Select<BaseEntity>(q);
-			return items;
+
+			return new <#= requestClassName #>Response
+			{
+				Results = items
+			};
 		}
 
 <#
@@ -526,16 +541,26 @@ namespace <#= fileNamespace #>
 
 				if (request.<#= pkProp.Name #> == 0)
 				{
-					long id = Db.Insert(request, selectIdentity: true);
-					request.<#= pkProp.Name #> = (int)id;
+					using (var scope = AuditScope.Create("<#= pocoClassName #>:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.<#= pkProp.Name #> = (int)id;
+
+						scope.Save();
+					}
 				}
 				else
 				{
-					int count = Db.Update(request);
-					if (count == 0)
+					using (var scope = AuditScope.Create("<#= pocoClassName #>:Update", () => request))
 					{
-						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+						}
+
+						scope.Save();
 					}
 				}
 

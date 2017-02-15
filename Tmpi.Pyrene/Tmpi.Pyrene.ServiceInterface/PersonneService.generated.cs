@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Audit.Core;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.Common;
@@ -65,11 +66,16 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeletePersonne request)
 		{
-			int count = Db.DeleteById<Personne>(request.ClePersonne);
-			if (count == 0)
+			using (var scope = AuditScope.Create("Personne:Delete", () => request))
 			{
-				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
+				int count = Db.DeleteById<Personne>(request.ClePersonne);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
+				}
+
+				scope.Save();
 			}
 		}
 
@@ -190,11 +196,16 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeletePersonneProfil request)
 		{
-			int count = Db.DeleteById<PersonneProfil>(request.CleProfil);
-			if (count == 0)
+			using (var scope = AuditScope.Create("PersonneProfil:Delete", () => request))
 			{
-				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneProfil), request.CleProfil));
+				int count = Db.DeleteById<PersonneProfil>(request.CleProfil);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneProfil), request.CleProfil));
+				}
+
+				scope.Save();
 			}
 		}
 
@@ -205,11 +216,16 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeletePersonneSignature request)
 		{
-			int count = Db.DeleteById<PersonneSignature>(request.ClePersonne);
-			if (count == 0)
+			using (var scope = AuditScope.Create("PersonneSignature:Delete", () => request))
 			{
-				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
+				int count = Db.DeleteById<PersonneSignature>(request.ClePersonne);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
+				}
+
+				scope.Save();
 			}
 		}
 
@@ -315,11 +331,16 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Personne)));
 				}
 
-				int count = Db.UpdateOnly(entity, q);
-				if (count == 0)
+				using (var scope = AuditScope.Create("Personne:Update", () => entity))
 				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
+					int count = Db.UpdateOnly(entity, q);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
+					}
+
+					scope.Save();
 				}
 			}
 		}
@@ -363,11 +384,16 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(PersonneProfil)));
 				}
 
-				int count = Db.UpdateOnly(entity, q);
-				if (count == 0)
+				using (var scope = AuditScope.Create("PersonneProfil:Update", () => entity))
 				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneProfil), request.CleProfil));
+					int count = Db.UpdateOnly(entity, q);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneProfil), request.CleProfil));
+					}
+
+					scope.Save();
 				}
 			}
 		}
@@ -399,11 +425,16 @@ namespace Tmpi.Pyrene.ServiceInterface
 			lock (_personneSignatureLock)
 			{
 
-				int count = Db.UpdateOnly(entity, q);
-				if (count == 0)
+				using (var scope = AuditScope.Create("PersonneSignature:Update", () => entity))
 				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
+					int count = Db.UpdateOnly(entity, q);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
+					}
+
+					scope.Save();
 				}
 			}
 		}
@@ -428,16 +459,26 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 				if (request.ClePersonne == 0)
 				{
-					long id = Db.Insert(request, selectIdentity: true);
-					request.ClePersonne = (int)id;
+					using (var scope = AuditScope.Create("Personne:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.ClePersonne = (int)id;
+
+						scope.Save();
+					}
 				}
 				else
 				{
-					int count = Db.Update(request);
-					if (count == 0)
+					using (var scope = AuditScope.Create("Personne:Update", () => request))
 					{
-						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
+						}
+
+						scope.Save();
 					}
 				}
 
@@ -471,16 +512,26 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 				if (request.CleProfil == 0)
 				{
-					long id = Db.Insert(request, selectIdentity: true);
-					request.CleProfil = (int)id;
+					using (var scope = AuditScope.Create("PersonneProfil:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.CleProfil = (int)id;
+
+						scope.Save();
+					}
 				}
 				else
 				{
-					int count = Db.Update(request);
-					if (count == 0)
+					using (var scope = AuditScope.Create("PersonneProfil:Update", () => request))
 					{
-						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneProfil), request.CleProfil));
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneProfil), request.CleProfil));
+						}
+
+						scope.Save();
 					}
 				}
 
@@ -502,16 +553,26 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 				if (request.ClePersonne == 0)
 				{
-					long id = Db.Insert(request, selectIdentity: true);
-					request.ClePersonne = (int)id;
+					using (var scope = AuditScope.Create("PersonneSignature:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.ClePersonne = (int)id;
+
+						scope.Save();
+					}
 				}
 				else
 				{
-					int count = Db.Update(request);
-					if (count == 0)
+					using (var scope = AuditScope.Create("PersonneSignature:Update", () => request))
 					{
-						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
+						}
+
+						scope.Save();
 					}
 				}
 

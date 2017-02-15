@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Audit.Core;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.Common;
@@ -61,11 +62,16 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeleteService request)
 		{
-			int count = Db.DeleteById<ServiceModel.Types.Service>(request.CleService);
-			if (count == 0)
+			using (var scope = AuditScope.Create("ServiceModel.Types.Service:Delete", () => request))
 			{
-				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
+				int count = Db.DeleteById<ServiceModel.Types.Service>(request.CleService);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
+				}
+
+				scope.Save();
 			}
 		}
 
@@ -125,11 +131,16 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(ServiceModel.Types.Service)));
 				}
 
-				int count = Db.UpdateOnly(entity, q);
-				if (count == 0)
+				using (var scope = AuditScope.Create("ServiceModel.Types.Service:Update", () => entity))
 				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
+					int count = Db.UpdateOnly(entity, q);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
+					}
+
+					scope.Save();
 				}
 			}
 		}
@@ -139,7 +150,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns></returns>
-		public List<BaseEntity> Get(SearchService request)
+		public SearchServiceResponse Get(SearchService request)
 		{
 			if (string.IsNullOrWhiteSpace(request.Text))
 			{
@@ -155,7 +166,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 			}
 
 			var items = Db.Select<BaseEntity>(q);
-			return items;
+
+			return new SearchServiceResponse
+			{
+				Results = items
+			};
 		}
 
 		/// <summary>
@@ -209,16 +224,26 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 				if (request.CleService == 0)
 				{
-					long id = Db.Insert(request, selectIdentity: true);
-					request.CleService = (int)id;
+					using (var scope = AuditScope.Create("ServiceModel.Types.Service:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.CleService = (int)id;
+
+						scope.Save();
+					}
 				}
 				else
 				{
-					int count = Db.Update(request);
-					if (count == 0)
+					using (var scope = AuditScope.Create("ServiceModel.Types.Service:Update", () => request))
 					{
-						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
+						}
+
+						scope.Save();
 					}
 				}
 

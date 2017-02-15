@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Audit.Core;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using Tmpi.Pyrene.Common;
@@ -61,11 +62,16 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public void Delete(DeleteExercice request)
 		{
-			int count = Db.DeleteById<Exercice>(request.CleExercice);
-			if (count == 0)
+			using (var scope = AuditScope.Create("Exercice:Delete", () => request))
 			{
-				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Exercice), request.CleExercice));
+				int count = Db.DeleteById<Exercice>(request.CleExercice);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Exercice), request.CleExercice));
+				}
+
+				scope.Save();
 			}
 		}
 
@@ -89,16 +95,26 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 				if (request.CleExercice == 0)
 				{
-					long id = Db.Insert(request, selectIdentity: true);
-					request.CleExercice = (int)id;
+					using (var scope = AuditScope.Create("Exercice:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.CleExercice = (int)id;
+
+						scope.Save();
+					}
 				}
 				else
 				{
-					int count = Db.Update(request);
-					if (count == 0)
+					using (var scope = AuditScope.Create("Exercice:Update", () => request))
 					{
-						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Exercice), request.CleExercice));
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Exercice), request.CleExercice));
+						}
+
+						scope.Save();
 					}
 				}
 
@@ -162,11 +178,16 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Exercice)));
 				}
 
-				int count = Db.UpdateOnly(entity, q);
-				if (count == 0)
+				using (var scope = AuditScope.Create("Exercice:Update", () => entity))
 				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Exercice), request.CleExercice));
+					int count = Db.UpdateOnly(entity, q);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Exercice), request.CleExercice));
+					}
+
+					scope.Save();
 				}
 			}
 		}
@@ -176,7 +197,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
 		/// <returns></returns>
-		public List<BaseEntity> Get(SearchExercice request)
+		public SearchExerciceResponse Get(SearchExercice request)
 		{
 			if (string.IsNullOrWhiteSpace(request.Text))
 			{
@@ -192,7 +213,11 @@ namespace Tmpi.Pyrene.ServiceInterface
 			}
 
 			var items = Db.Select<BaseEntity>(q);
-			return items;
+
+			return new SearchExerciceResponse
+			{
+				Results = items
+			};
 		}
 
 		/// <summary>
