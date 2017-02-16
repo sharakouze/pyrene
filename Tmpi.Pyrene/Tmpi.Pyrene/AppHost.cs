@@ -4,6 +4,7 @@ using ServiceStack;
 using ServiceStack.Api.Swagger;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
+using ServiceStack.Razor;
 using ServiceStack.Text;
 using ServiceStack.Validation;
 using System;
@@ -63,6 +64,9 @@ namespace Tmpi.Pyrene
         }
         #endregion
 
+        /// <summary>
+        /// Configure le AppHost.
+        /// </summary>
         private void ConfigHost()
         {
             var enableFeatures = Feature.All.Remove(Feature.Soap);
@@ -218,6 +222,14 @@ namespace Tmpi.Pyrene
         }
 
         /// <summary>
+        /// Configure le plugin Razor.
+        /// </summary>
+        private void ConfigRazorPlugin()
+        {
+            Plugins.Add(new RazorFormat());
+        }
+
+        /// <summary>
         /// Configure Audit.NET.
         /// </summary>
         private void ConfigAuditNet()
@@ -234,6 +246,7 @@ namespace Tmpi.Pyrene
             ConfigCorsPlugin();
             ConfigSwaggerPlugin();
             ConfigValidationPlugin(container);
+            ConfigRazorPlugin();
 
             ConfigCsvSerialization();
             ConfigJsonSerialization();
