@@ -121,9 +121,9 @@ namespace Tmpi.Pyrene
             string providerName;
             string connectionString = GetConnectionStringOrLast(connectionStringName, out providerName);
 
-            container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(connectionString, SqlServerDialect.Provider));
-
             //SqlServerDialect.Provider.RegisterConverter<short>(new SqlServerSmallintConverter());
+
+            container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(connectionString, SqlServerDialect.Provider));
 
             int commandTimeout = GetAppSettingOrDefault("OrmLiteConfig.CommandTimeout", 30);
             OrmLiteConfig.CommandTimeout = commandTimeout;
@@ -218,7 +218,7 @@ namespace Tmpi.Pyrene
         }
 
         /// <summary>
-        /// Configure le module Audit.NET.
+        /// Configure Audit.NET.
         /// </summary>
         private void ConfigAuditNet()
         {
