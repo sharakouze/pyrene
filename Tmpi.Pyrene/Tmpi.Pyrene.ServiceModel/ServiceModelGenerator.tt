@@ -43,6 +43,9 @@
 	// Extension des fichiers générés
 	string FileExtension = ".generated.cs";
 
+	// tableau de numéros d'avertissement à désactiver ; null ou vide pour ignorer.
+	int[] PragmaWarningDisable = new [] { 1591 };
+
     // if true: Changes the primary key property name to Id.
     bool UseIdAsPK = false;
 
@@ -124,7 +127,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-#pragma warning disable 1591
+<#
+	if (PragmaWarningDisable != null && PragmaWarningDisable.Any())
+    {
+		string strWarningList = string.Join(", ", PragmaWarningDisable.Select(n => n.ToString()));
+#>
+#pragma warning disable <#= strWarningList #>
+<#
+    }
+#>
 
 using System;
 using System.Collections.Generic;
