@@ -1,7 +1,4 @@
 ﻿<#@ assembly name="System.Core" #>
-<#@ assembly name="System.Data.Linq" #>
-<#@ assembly name="System.Xml" #>
-<#@ assembly name="System.Xml.Linq" #>
 <#@ assembly name="EnvDTE" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.IO" #>
