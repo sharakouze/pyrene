@@ -58,7 +58,7 @@
 
 	string sourceNamespace = VisualStudioHelper.GetDefaultNamespace(srcProject);
 
-	Manager manager = Manager.Create(Host, GenerationEnvironment);
+	Manager manager = Manager.Create(this);
 	manager.StartHeader();
 #>
 //------------------------------------------------------------------------------

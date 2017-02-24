@@ -114,7 +114,7 @@
 
 #>
 <#
-    var manager = Manager.Create(Host, GenerationEnvironment);
+    var manager = Manager.Create(this);
     manager.StartHeader();
 #>
 //------------------------------------------------------------------------------
