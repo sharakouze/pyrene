@@ -1,27 +1,25 @@
 ﻿<#@ assembly name="System.Core" #>
 <#@ assembly name="EnvDTE"#>
 <#@ assembly name="EnvDTE80" #>
-<#@ import namespace="System" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="System.Linq" #>
 <#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
 <#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
-<# 
-	// create an instance of the AutomationHelper class so 
-	// that it is accessible from everywhere within the template
-	this.VisualStudioHelper = new AutomationHelper(this.Host);
-#>
 <#+
-/// <summary>
-/// Object that provides functionality for automating Visual Studio.
-/// </summary>
-public AutomationHelper VisualStudioHelper;
-
 /// <summary>
 /// This class provides functionality for automating Visual Studio.
 /// </summary>
 public class AutomationHelper 
 {
+	public static AutomationHelper Create(GeneratedTextTransformation tt)
+	{
+        if (tt == null)
+        {
+            throw new ArgumentNullException("tt");
+        }
+		return new AutomationHelper(tt.Host);
+	}
+
 	/// <summary>
 	/// Creates a new instance of this class
 	/// </summary>
@@ -144,23 +142,20 @@ public class AutomationHelper
 	/// <summary>
 	/// Obtient le namespace du repertoire courant.
 	/// </summary>
-	public string CurrentFileNamespace
+	public string GetCurrentFileNamespace()
     {
-		get
-        {
-			var project = CurrentProject;
-			var defaultNamespace = GetDefaultNamespace(project);
+		var project = CurrentProject;
+		var defaultNamespace = GetDefaultNamespace(project);
 
-			var fullPath = project.Properties.Item("FullPath").Value.ToString();
-			if (fullPath.EndsWith("\\"))
-			{
-				fullPath = fullPath.Substring(0, fullPath.Length - 1);
-			}
-			var templateDir = Path.GetDirectoryName(Host.TemplateFile);
-			var subNamespace = templateDir.Replace(fullPath, string.Empty).Replace("\\", ".");
+		var fullPath = project.Properties.Item("FullPath").Value.ToString();
+		if (fullPath.EndsWith("\\"))
+		{
+			fullPath = fullPath.Substring(0, fullPath.Length - 1);
+		}
+		var templateDir = Path.GetDirectoryName(Host.TemplateFile);
+		var subNamespace = templateDir.Replace(fullPath, string.Empty).Replace("\\", ".");
 		
-			return string.Concat(defaultNamespace, subNamespace);
-        }
+		return string.Concat(defaultNamespace, subNamespace);
     }
 	#endregion
 

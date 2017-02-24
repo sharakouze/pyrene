@@ -114,7 +114,7 @@
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceInterfaceGenerator.cs">
+    <Compile Include="ServiceInterfaceGenerator.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
@@ -139,7 +139,7 @@
   <ItemGroup>
     <Content Include="ServiceInterfaceGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ServiceInterfaceGenerator.cs</LastGenOutput>
+      <LastGenOutput>ServiceInterfaceGenerator.generated.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>

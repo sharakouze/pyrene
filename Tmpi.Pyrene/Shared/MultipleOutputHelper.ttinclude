@@ -1,15 +1,15 @@
 ﻿<#@ assembly name="System.Core" #>
 <#@ assembly name="EnvDTE" #>
-<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
 <#+
 // https://raw.github.com/damieng/DamienGKit
 // http://damieng.com/blog/2009/11/06/multiple-outputs-from-t4-made-easy-revisited
 // Manager class records the various blocks so it can split them up
-class Manager
+public class Manager
 {
     private class Block
 	{

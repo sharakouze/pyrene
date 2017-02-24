@@ -1,0 +1,38 @@
+﻿@model SelectCompteur
+
+@{
+    Layout = null;
+
+    var m = Model;
+    var response = Gateway.Send(new SelectCompteur
+    {
+    });
+
+    var grid1 = new System.Web.Helpers.WebGrid(response.Results);
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    @grid1.GetHtml(
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    true,
+    false,
+    null,
+    grid1.Columns(
+        grid1.Column("Code","Code")
+        )
+    );
+</body>
+</html>

@@ -1,3 +1,4 @@
+/*
 import { Component, OnInit } from '@angular/core';
 import { Hero } from './hero';
 
@@ -10,3 +11,4 @@ import { Hero } from './hero';
 })
 export class HeroListComponent implements OnInit {
 }
+*/

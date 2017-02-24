@@ -1,8 +1,7 @@
 ﻿<#@ template language="C#" hostspecific="true" debug="true" #>
-<#@ output extension=".cs" #>
-<#@ assembly name="EnvDTE.dll" #>
-<#@ assembly name="System.Core.dll" #>
-<#@ import namespace="EnvDTE" #>
+<#@ output extension=".generated.cs" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="EnvDTE" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="System.Linq" #>
@@ -29,6 +28,11 @@
 
 	// true pour générer chaque classe dans un fichier séparé.
 	bool SplitIntoMultipleFiles = true;
+	// Extension des fichiers générés
+	string FileExtension = ".generated.cs";
+
+	// tableau de numéros d'avertissement à désactiver ; null ou vide pour ignorer.
+	int[] PragmaWarningDisable = new [] { 1591 };
     
     // true pour créer les validors de la ValidationFeature
     bool CreateValidators = true;

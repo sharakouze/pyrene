@@ -229,123 +229,7 @@ public class FKey
     }
 }
 
-
-static Regex rxCleanUp = new Regex(@"[^\w\d_]", RegexOptions.Compiled);
-
-static string[] cs_keywords = { "abstract", "event", "new", "struct", "as", "explicit", "null",
-	 "switch", "base", "extern", "object", "this", "bool", "false", "operator", "throw",
-	 "break", "finally", "out", "true", "byte", "fixed", "override", "try", "case", "float",
-	 "params", "typeof", "catch", "for", "private", "uint", "char", "foreach", "protected",
-	 "ulong", "checked", "goto", "public", "unchecked", "class", "if", "readonly", "unsafe",
-	 "const", "implicit", "ref", "ushort", "continue", "in", "return", "using", "decimal",
-	 "int", "sbyte", "virtual", "default", "interface", "sealed", "volatile", "delegate",
-	 "internal", "short", "void", "do", "is", "sizeof", "while", "double", "lock",
-	 "stackalloc", "else", "long", "static", "enum", "namespace", "string" };
-
-static Func<string, string> CleanUp = (str) =>
-{
-	str = rxCleanUp.Replace(str, "_");
-
-	if (char.IsDigit(str[0]))
-	{
-		str = "_" + str;
-	}
-	else if (cs_keywords.Contains(str))
-	{
-		str = "@" + str;
-	}
-
-    return str;
-};
-
-
-
-public string GetColumnDefaultValue(Column col)
-{
-        string sysType=string.Format("\"{0}\"",col.DefaultValue);
-        switch (col.PropertyType.ToLower())
-        {
-			case "long":
-			case "int":
-			case "double":
-			case "decimal":
-			case "bool":
-                sysType= col.DefaultValue.ToString().Replace("'","").Replace("\"","");
-                break;
-            case "guid":
-                sysType=  string.Format("\"{0}\"",col.DefaultValue);
-                 break;
-            case "datetime":
-			{
-				if (col.DefaultValue.ToLower() == "current_time" || col.DefaultValue.ToLower() == "current_date"|| col.DefaultValue.ToLower() == "current_timestamp")
-					sysType=  "SystemMethods.CurrentDateTime";
-				else
-                	sysType=  "\"" +col.DefaultValue+"\"";
-                break;
-			}
-        }
-        return sysType;
-}
-
-Tables LoadTables(string connectionString, string schemaName = null, bool includeViews = false)
-{
-	var reader = new SqlServerSchemaReader();
-	var tables = reader.ReadSchema(connectionString, schemaName, includeViews);
-
-    var rxClean = new Regex("^(Equals|GetHashCode|GetType|ToString|repo|Save|IsNew|Insert|Update|Delete|Exists|SingleOrDefault|Single|First|FirstOrDefault|Fetch|Page|Query)$");
-    foreach (var tbl in tables)
-    {
-        foreach (var c in tbl.Columns)
-        {
-            c.PropertyName = rxClean.Replace(c.PropertyName, "_$1");
-
-            // Make sure property name doesn't clash with class name
-            if (c.PropertyName == tbl.ClassName)
-            {
-                c.PropertyName = "_" + c.PropertyName;
-            }
-        }
-    }
-
-    return tables;
-}
-
-
-static int GetDatatypePrecision(string type)
-{
-	int startPos = type.IndexOf(",");
-	if (startPos < 0)
-		return -1;
-	int endPos = type.IndexOf(")");
-	if (endPos < 0)
-		return -1;
-	string typePrecisionStr = type.Substring(startPos+1,endPos-startPos-1);
-	int result = -1;
-	if (int.TryParse(typePrecisionStr,out result))
-		return result;
-	else
-		return -1;
-}
-
-static int GetDatatypeSize(string type)
-{
-	int startPos = type.IndexOf("(");
-	if (startPos < 0)
-		return -1;
-	int endPos = type.IndexOf(",");
-	if (endPos < 0)
-	{
-		endPos = type.IndexOf(")");
-	}
-	string typeSizeStr = type.Substring(startPos+1,endPos-startPos-1);
-	int result = -1;
-	if (int.TryParse(typeSizeStr,out result))
-		return result;
-	else
-		return -1;
-}
-
-abstract class SchemaReader
+public abstract class SchemaReader
 {
 	protected readonly DbProviderFactory _factory;
 	
@@ -357,11 +241,61 @@ abstract class SchemaReader
 	public abstract Tables ReadSchema(string connectionString, string schemaName, bool includeViews);
 }
 
-class SqlServerSchemaReader : SchemaReader
+public class SqlServerSchemaReader : SchemaReader
 {
 	public SqlServerSchemaReader()
 		: base("System.Data.SqlClient")
 	{
+	}
+
+	private static Regex rxCleanUp = new Regex(@"[^\w\d_]", RegexOptions.Compiled);
+
+	private static string[] cs_keywords = { "abstract", "event", "new", "struct", "as", "explicit", "null",
+		 "switch", "base", "extern", "object", "this", "bool", "false", "operator", "throw",
+		 "break", "finally", "out", "true", "byte", "fixed", "override", "try", "case", "float",
+		 "params", "typeof", "catch", "for", "private", "uint", "char", "foreach", "protected",
+		 "ulong", "checked", "goto", "public", "unchecked", "class", "if", "readonly", "unsafe",
+		 "const", "implicit", "ref", "ushort", "continue", "in", "return", "using", "decimal",
+		 "int", "sbyte", "virtual", "default", "interface", "sealed", "volatile", "delegate",
+		 "internal", "short", "void", "do", "is", "sizeof", "while", "double", "lock",
+		 "stackalloc", "else", "long", "static", "enum", "namespace", "string" };
+
+	private static Func<string, string> CleanUp = (str) =>
+	{
+		str = rxCleanUp.Replace(str, "_");
+
+		if (char.IsDigit(str[0]))
+		{
+			str = "_" + str;
+		}
+		else if (cs_keywords.Contains(str))
+		{
+			str = "@" + str;
+		}
+
+		return str;
+	};
+
+	public Tables LoadTables(string connectionString, string schemaName = null, bool includeViews = false)
+	{
+		var tables = ReadSchema(connectionString, schemaName, includeViews);
+
+		var rxClean = new Regex("^(Equals|GetHashCode|GetType|ToString|repo|Save|IsNew|Insert|Update|Delete|Exists|SingleOrDefault|Single|First|FirstOrDefault|Fetch|Page|Query)$");
+		foreach (var tbl in tables)
+		{
+			foreach (var c in tbl.Columns)
+			{
+				c.PropertyName = rxClean.Replace(c.PropertyName, "_$1");
+
+				// Make sure property name doesn't clash with class name
+				if (c.PropertyName == tbl.ClassName)
+				{
+					c.PropertyName = "_" + c.PropertyName;
+				}
+			}
+		}
+
+		return tables;
 	}
 
 	public override Tables ReadSchema(string connectionString, string schemaName, bool includeViews)

@@ -7,6 +7,7 @@
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="System.Linq" #>
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\VisualStudioHelper.ttinclude" #>
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\SqlSchemaReader.ttinclude" #>
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\Config.ttinclude" #>
 <#
@@ -25,8 +26,8 @@
 	// schema a extraire ou vide pour tous les schémas
 	string SchemaName = "";
 
-    // Namespace des fichiers générés.
-	string BaseNamespace = "Tmpi.Pyrene.ServiceModel";
+    // Namespace des fichiers générés ; si null ou vide namespace courant.
+	string BaseNamespace = "";
 	// {0} = BaseNamespace
     string NamespacePocos = "{0}.Types";
     string NamespaceMessages = "{0}";
@@ -148,7 +149,8 @@ using ServiceStack.Model;
 	manager.EndBlock(); // end header
     
     // Read schema
-    var allTables = LoadTables(ConnectionString, SchemaName, false);
+	var sqlReader = new SqlServerSchemaReader();
+    var allTables = sqlReader.LoadTables(ConnectionString, SchemaName, false);
     if (TweakSchema != null)
     {
         TweakSchema(allTables);
@@ -167,6 +169,12 @@ using ServiceStack.Model;
 <#
 		allTables.Clear();
     }
+
+	if (string.IsNullOrEmpty(BaseNamespace))
+	{
+		var vsHelper = AutomationHelper.Create(this);
+		BaseNamespace = vsHelper.GetCurrentFileNamespace();
+	}
 
     foreach (var table in allTables)
     {
