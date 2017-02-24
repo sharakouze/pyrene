@@ -46,23 +46,25 @@
 
 #>
 <#
+	var vsHelper = AutomationHelper.Create(this);
+
 	// namespace
 	string fileNamespace = Namespace;
 	if (string.IsNullOrWhiteSpace(fileNamespace))
     {
-		fileNamespace = VisualStudioHelper.CurrentFileNamespace;
+		fileNamespace = vsHelper.GetCurrentFileNamespace();
 	}
 
 	// get a reference to the project of this t4 template
-	Project srcProject = VisualStudioHelper.CurrentProject;
+	var srcProject = vsHelper.CurrentProject;
 	if (!string.IsNullOrWhiteSpace(SourceProject))
     {
-		srcProject = VisualStudioHelper.GetProject(SourceProject);
+		srcProject = vsHelper.GetProject(SourceProject);
     }
 
-	string sourceNamespace = VisualStudioHelper.GetDefaultNamespace(srcProject);
+	string sourceNamespace = vsHelper.GetDefaultNamespace(srcProject);
 
-	Manager manager = Manager.Create(this);
+	var manager = Manager.Create(this);
 	manager.StartHeader();
 #>
 //------------------------------------------------------------------------------
@@ -75,17 +77,23 @@
 //------------------------------------------------------------------------------
 
 <#
+	if (PragmaWarningDisable != null && PragmaWarningDisable.Any())
+    {
+		string strWarningList = string.Join(", ", PragmaWarningDisable.Select(n => n.ToString()));
+#>
+#pragma warning disable <#= strWarningList #>
+
+<#
+    }
+
 	manager.EndBlock(); // end header
 
-	Dictionary<string, List<RequestItem>> dicRequest = new Dictionary<string, List<RequestItem>>();
+	var dicRequest = new Dictionary<string, List<RequestItem>>();
 
     // get all class items from the code model
-    List<CodeClass> allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(srcProject.CodeModel.CodeElements, vsCMElement.vsCMElementClass, false)
-		.OfType<CodeClass>()
-		.OrderBy(c => c.Name)
-		.ToList();
+    var allClasses = vsHelper.CodeModel.GetAllClasses(srcProject).OrderBy(c => c.Name).ToList();
 
-    foreach (CodeClass codeClass in allClasses)
+    foreach (var codeClass in allClasses)
     {
 		bool included = ClassFilterInclude == null || ClassFilterInclude.IsMatch(codeClass.Name);
 		bool excluded = ClassFilterExclude != null && ClassFilterExclude.IsMatch(codeClass.Name);
@@ -120,22 +128,22 @@
 			pocoClassName = codeClass.Name;
 		}
 
-		List<CodeAttribute> lstRouteAttrs = VisualStudioHelper.CodeModel.GetAllClassAttributes(codeClass)
+		var lstRouteAttrs = vsHelper.CodeModel.GetAllClassAttributes(codeClass)
 			.Where(attr => attr.FullName == "ServiceStack.RouteAttribute")
 			.ToList();
 		if (lstRouteAttrs.Any() && !string.IsNullOrEmpty(pocoClassName))
         {
-			List<RequestItem> items = dicRequest.Where(kvp => pocoClassName.StartsWith(kvp.Key)).Select(kvp => kvp.Value).SingleOrDefault();
+			var items = dicRequest.Where(kvp => pocoClassName.StartsWith(kvp.Key)).Select(kvp => kvp.Value).SingleOrDefault();
 			if (items == null)
 			{
 				items = new List<RequestItem>();
 				dicRequest.Add(pocoClassName, items);
 			}
 
-			RequestItem item = new RequestItem();
+			var item = new RequestItem();
 			item.RequestClass = codeClass;
 			item.PocoClass = allClasses.SingleOrDefault(c => c.Name == pocoClassName);
-			foreach (CodeAttribute routeAttr in lstRouteAttrs)
+			foreach (var routeAttr in lstRouteAttrs)
 			{
 				item.LstRouteParts.Add(GetRouteParts(routeAttr));
 			}
@@ -146,7 +154,7 @@
 	foreach (var kvp in dicRequest)
 	{
 		string serviceClassName = kvp.Key + "Service";
-		manager.StartNewFile(serviceClassName + ".generated.cs");
+		manager.StartNewFile(serviceClassName + FileExtension);
 #>
 using System;
 using System.Collections.Generic;
@@ -173,7 +181,7 @@ namespace <#= fileNamespace #>
 	/// Service qui traite les requêtes sur les entités <see cref="<#= entityName #>"/>.
 	/// </summary>
 <#
-		List<string> lstSeeAlso = kvp.Value.Select(i => i.PocoClass.Name).Distinct().ToList();
+		var lstSeeAlso = kvp.Value.Select(i => i.PocoClass.Name).Distinct().ToList();
 		foreach (string str in lstSeeAlso.Where(s => s != kvp.Key))
         {
 #>
@@ -193,9 +201,9 @@ namespace <#= fileNamespace #>
 #>
 
 <#
-		Dictionary<string, List<string>> dicPocoUnicityMethods = new Dictionary<string, List<string>>();
+		var dicPocoUnicityMethods = new Dictionary<string, List<string>>();
 
-		foreach (RequestItem item in kvp.Value)
+		foreach (var item in kvp.Value)
         {
 			string requestClassName = item.RequestClass.Name;
 			string pocoClassName = item.PocoClass.Name;
@@ -211,8 +219,8 @@ namespace <#= fileNamespace #>
 				stdColFormat = ReplaceFirst(item.PocoClass.Name, kvp.Key, "{0}");
             }
 
-			IEnumerable<CodeProperty> allPocoProperties = VisualStudioHelper.CodeModel.GetAllProperties(item.PocoClass);
-			CodeProperty pkProp = GetPrimaryKeyProperty(allPocoProperties);
+			var allPocoProperties = vsHelper.CodeModel.GetAllProperties(item.PocoClass);
+			var pkProp = GetPrimaryKeyProperty(vsHelper, allPocoProperties);
 
 			if (!dicPocoUnicityMethods.ContainsKey(item.PocoClass.Name) && (pkProp != null))
             {
@@ -222,8 +230,8 @@ namespace <#= fileNamespace #>
 
 				dicPocoUnicityMethods.Add(item.PocoClass.Name, new List<string>());
 
-				List<CodeProperty[]> lstIdxProps = GetUniqueProperties(item.PocoClass, allPocoProperties);
-				foreach (CodeProperty[] lstProps in lstIdxProps)
+				var lstIdxProps = GetUniqueProperties(vsHelper, item.PocoClass, allPocoProperties);
+				foreach (var lstProps in lstIdxProps)
 				{
 					string methodName = item.PocoClass.Name + "_" + string.Join("_", lstProps.Select(p => p.Name)) + "_EstUnique";
 					dicPocoUnicityMethods[item.PocoClass.Name].Add(methodName);
@@ -252,7 +260,7 @@ namespace <#= fileNamespace #>
 						=> (t2.<#= pkProp.Name #> == model.<#= pkProp.Name #>);
 
 <#
-						foreach (CodeProperty prop in lstProps)
+						foreach (var prop in lstProps)
 						{
 #>
 					if (!fields.Contains(nameof(<#= pocoClassName #>.<#= prop.Name #>), StringComparer.OrdinalIgnoreCase))
@@ -274,7 +282,7 @@ namespace <#= fileNamespace #>
 			
 <#
                     }
-					foreach (CodeProperty prop in lstProps)
+					foreach (var prop in lstProps)
                     {
 #>
 			if (fields == null || fields.Contains(nameof(<#= pocoClassName #>.<#= prop.Name #>), StringComparer.OrdinalIgnoreCase))
@@ -584,14 +592,14 @@ namespace <#= fileNamespace #>
 
         if (CreateValidators)
         {
-            foreach (RequestItem item in kvp.Value)
+            foreach (var item in kvp.Value)
             {
                 if (item.RequestClass == item.PocoClass)
                 {
 					string pocoClassName = item.PocoClass.Name;
 					Dictionary<string, List<string>> dicValidation = new Dictionary<string, List<string>>();
 
-                    var allPropsAttributes = VisualStudioHelper.CodeModel.GetAllPropertiesAttributes(item.RequestClass);
+                    var allPropsAttributes = vsHelper.CodeModel.GetAllPropertiesAttributes(item.RequestClass);
                     foreach (var prop in allPropsAttributes)
                     {
                         var lstValidation = new List<string>();
@@ -697,12 +705,12 @@ class RequestItem
 		
 	public List<List<string>> LstRouteParts { get; set; }
 
-	public CodeClass PocoClass { get; set; }
+	public EnvDTE.CodeClass PocoClass { get; set; }
 
-	public CodeClass RequestClass { get; set; }
+	public EnvDTE.CodeClass RequestClass { get; set; }
 }
 
-private string GetFirstOccurenceOfProperty(IEnumerable<CodeProperty> lstProperties, params string[] propertyNames)
+private string GetFirstOccurenceOfProperty(IEnumerable<EnvDTE.CodeProperty> lstProperties, params string[] propertyNames)
 {
 	IEnumerable<string> lst = lstProperties.Select(p => p.Name);
 
@@ -729,7 +737,7 @@ private string ReplaceFirst(string text, string search, string replace)
 	return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
 }
 
-private string ToProperType(CodeTypeRef type, params string[] namespaces)
+private string ToProperType(EnvDTE.CodeTypeRef type, params string[] namespaces)
 {
 	if (type == null)
     {
@@ -760,7 +768,7 @@ private string ToCamelCase(string str)
 	return str.Substring(0, 1).ToLower() + str.Substring(1);
 }
 
-private List<string> GetRouteParts(CodeAttribute routeAttr)
+private List<string> GetRouteParts(EnvDTE.CodeAttribute routeAttr)
 {
 	string[] parameters = routeAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -801,12 +809,12 @@ private string GetIdFromRouteParts(List<string> parts, string pocoClassName)
 	return id ?? "";
 }
 
-private CodeProperty GetPrimaryKeyProperty(IEnumerable<CodeProperty> lstProperties)
+private EnvDTE.CodeProperty GetPrimaryKeyProperty(AutomationHelper vsHelper, IEnumerable<EnvDTE.CodeProperty> lstProperties)
 {
-	foreach (CodeProperty property in lstProperties)
+	foreach (var property in lstProperties)
     {
-		bool isPk = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(property.Attributes, vsCMElement.vsCMElementAttribute, false)
-			.OfType<CodeAttribute>()
+		bool isPk = vsHelper.CodeModel.GetAllCodeElementsOfType(property.Attributes, EnvDTE.vsCMElement.vsCMElementAttribute, false)
+			.OfType<EnvDTE.CodeAttribute>()
 			.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.PrimaryKeyAttribute")
 			.Any();
 		if (isPk)
@@ -818,15 +826,15 @@ private CodeProperty GetPrimaryKeyProperty(IEnumerable<CodeProperty> lstProperti
 	return null;
 }
 
-private List<CodeProperty[]> GetUniqueProperties(CodeClass codeClass, IEnumerable<CodeProperty> lstProperties)
+private List<EnvDTE.CodeProperty[]> GetUniqueProperties(AutomationHelper vsHelper, EnvDTE.CodeClass codeClass, IEnumerable<EnvDTE.CodeProperty> lstProperties)
 {
-	List<CodeProperty[]> lstIdxProps = new List<CodeProperty[]>();
+	var lstIdxProps = new List<EnvDTE.CodeProperty[]>();
 
 	// [CompositeIndex(true, ...)]
-	IEnumerable<CodeAttribute> compositeIdxAttrs = VisualStudioHelper.CodeModel.GetAllClassAttributes(codeClass)
+	var compositeIdxAttrs = vsHelper.CodeModel.GetAllClassAttributes(codeClass)
 		.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.CompositeIndexAttribute")
 		.ToList();
-	foreach (CodeAttribute idxAttr in compositeIdxAttrs)
+	foreach (var idxAttr in compositeIdxAttrs)
     {
 		List<string> parameters = idxAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
 		
@@ -839,7 +847,7 @@ private List<CodeProperty[]> GetUniqueProperties(CodeClass codeClass, IEnumerabl
 		bool.TryParse(str1, out unique);
 		if (unique)
         {
-			List<CodeProperty> lstProps = new List<CodeProperty>();
+			var lstProps = new List<EnvDTE.CodeProperty>();
 			foreach (string par in parameters)
             {
 				string strParam = "";
@@ -854,7 +862,7 @@ private List<CodeProperty[]> GetUniqueProperties(CodeClass codeClass, IEnumerabl
 
 				if (!string.IsNullOrEmpty(strParam))
                 {
-    				CodeProperty prop = lstProperties.SingleOrDefault(p => p.Name == strParam);
+    				var prop = lstProperties.SingleOrDefault(p => p.Name == strParam);
 					if (prop != null)
                     {
 						lstProps.Add(prop);
@@ -867,13 +875,13 @@ private List<CodeProperty[]> GetUniqueProperties(CodeClass codeClass, IEnumerabl
     }
 	
 	// [Index(true)]
-	foreach (CodeProperty property in lstProperties)
+	foreach (var property in lstProperties)
     {
-		IEnumerable<CodeAttribute> idxAttrs = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(property.Attributes, vsCMElement.vsCMElementAttribute, false)
-			.OfType<CodeAttribute>()
+		var idxAttrs = vsHelper.CodeModel.GetAllCodeElementsOfType(property.Attributes, EnvDTE.vsCMElement.vsCMElementAttribute, false)
+			.OfType<EnvDTE.CodeAttribute>()
 			.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.IndexAttribute")
 			.ToList();
-		foreach (CodeAttribute idxAttr in idxAttrs)
+		foreach (var idxAttr in idxAttrs)
         {
 			List<string> parameters = idxAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
 

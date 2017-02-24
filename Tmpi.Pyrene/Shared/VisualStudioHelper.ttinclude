@@ -288,6 +288,11 @@ public class VsCodeModel
         return ret;
     }
 
+	public IEnumerable<EnvDTE.CodeClass> GetAllClasses(EnvDTE.Project project)
+	{
+		return GetAllCodeElementsOfType(project.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementClass, false).OfType<EnvDTE.CodeClass>();
+	}
+
 	/// <summary>
 	/// Recursively gets all methods and functions implemented either by the class itself, or one of its base classes.
 	/// </summary>

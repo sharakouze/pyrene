@@ -7,6 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+#pragma warning disable 1591
+
 using ServiceStack.FluentValidation;
 using Tmpi.Pyrene.ServiceModel;
 using Tmpi.Pyrene.ServiceModel.Types;
