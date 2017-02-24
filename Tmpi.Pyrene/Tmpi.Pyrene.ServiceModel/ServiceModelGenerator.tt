@@ -1,5 +1,5 @@
 ﻿<#@ template language="C#" hostspecific="true" debug="true" #>
-<#@ output extension=".cs" #>
+<#@ output extension=".generated.cs" encoding="utf-8" #>
 <#@ assembly name="System" #>
 <#@ assembly name="System.Configuration" #>
 <#@ assembly name="System.Core" #>

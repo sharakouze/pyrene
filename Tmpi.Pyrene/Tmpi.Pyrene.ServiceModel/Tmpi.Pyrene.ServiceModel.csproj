@@ -82,7 +82,7 @@
     <Compile Include="Service.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="ServiceModelGenerator.cs">
+    <Compile Include="ServiceModelGenerator.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
@@ -147,7 +147,7 @@
   <ItemGroup>
     <Content Include="ServiceModelGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ServiceModelGenerator.cs</LastGenOutput>
+      <LastGenOutput>ServiceModelGenerator.generated.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>

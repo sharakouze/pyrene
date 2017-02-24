@@ -1,0 +1,44 @@
+﻿<#@ template language="C#" hostSpecific="true" debug="true" #>
+<#@ output extension=".generated.cs" encoding="utf-8" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" #>
+<#
+	/*********************/
+	/** CUSTOM SETTINGS **/
+	/*********************/
+#>
+<#
+    var manager = Manager.Create(Host, GenerationEnvironment);
+    
+	var lst = new List<string>() { "Service", "Compteur", "TVA", "Personne" };
+	foreach (var cls in lst)
+    {
+		// HTML
+		manager.StartNewFile(cls + ".component.html");
+#>
+<table>
+	<tr><td></td></tr>
+</table>
+<#
+		manager.EndBlock();
+
+		// Typescript
+		manager.StartNewFile(cls + ".component.ts");
+#>
+import { Component, OnInit } from '@angular/core';
+import { Hero } from './hero';
+
+@Component({
+	moduleId: module.id,
+	selector: 'hero-list',
+	templateUrl: './hero-list.component.html',
+	providers: [ HeroService ],
+	styles: ['.error {color:red;}']
+})
+export class HeroListComponent implements OnInit {
+}
+<#
+		manager.EndBlock();
+	}
+
+	manager.Process(true);
+#>

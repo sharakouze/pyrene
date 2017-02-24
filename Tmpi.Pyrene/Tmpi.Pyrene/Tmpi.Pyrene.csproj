@@ -143,9 +143,6 @@
     <Content Include="packages.config" />
     <Content Include="CustomAppSettings.config" />
     <Content Include="CustomConnectionStrings.config" />
-    <Content Include="default.cshtml" />
-    <Content Include="Views\SelectCompteur.cshtml" />
-    <Content Include="Views\GetCompteur.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -155,6 +152,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="src\Compteur.component.html">
+      <DependentUpon>SimpleListComponentGenerator.tt</DependentUpon>
+    </Content>
+    <Content Include="src\Personne.component.html">
+      <DependentUpon>SimpleListComponentGenerator.tt</DependentUpon>
+    </Content>
+    <Content Include="src\Service.component.html">
+      <DependentUpon>SimpleListComponentGenerator.tt</DependentUpon>
+    </Content>
+    <Content Include="src\SimpleListComponentGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SimpleListComponentGenerator.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="src\TVA.component.html">
+      <DependentUpon>SimpleListComponentGenerator.tt</DependentUpon>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -169,6 +182,11 @@
     </Compile>
     <Compile Include="Licenses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\SimpleListComponentGenerator.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SimpleListComponentGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="SwaggerConfig.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -183,8 +201,24 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <TypeScriptCompile Include="src\Compteur.component.ts">
+      <DependentUpon>SimpleListComponentGenerator.tt</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\dtos.dtos.ts" />
+    <TypeScriptCompile Include="src\Personne.component.ts">
+      <DependentUpon>SimpleListComponentGenerator.tt</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\Service.component.ts">
+      <DependentUpon>SimpleListComponentGenerator.tt</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\TVA.component.ts">
+      <DependentUpon>SimpleListComponentGenerator.tt</DependentUpon>
+    </TypeScriptCompile>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
