@@ -28,14 +28,15 @@ public class AngularComponentGenerator
 import { Injectable } from '@angular/core';
 import { JsonServiceClient } from 'servicestack-client';
 
+import { AppSettings } from '../appsettings';
 import { Select<#= entityName #>, Select<#= entityName #>Response } from '../dtos';
 
 @Injectable()
 export class <#= entityName #>Service {
-	select<#= entityName #>(fields: string, sort: string, skip?: number, take?: number): Promise<Select<#= entityName #>Response> {
+	select<#= entityName #>(fields: string, sort: string[], skip?: number, take?: number): Promise<Select<#= entityName #>Response> {
 		const req = new Select<#= entityName #>();
 		req.Fields = fields;
-		req.Sort = [sort];
+		req.Sort = sort;
 		if (skip) {
 			req.Skip = skip;
 		}

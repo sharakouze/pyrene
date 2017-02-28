@@ -145,6 +145,7 @@
     <Content Include="CustomConnectionStrings.config" />
     <Content Include="package.json" />
     <Content Include="src\AngularComponentGenerator.ttinclude" />
+    <Content Include="tsconfig.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -201,6 +202,7 @@
     <Folder Include="src\Fourn\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="src\appsettings.ts" />
     <TypeScriptCompile Include="src\Compteur\compteur-list.component.ts">
       <DependentUpon>CompteurComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
