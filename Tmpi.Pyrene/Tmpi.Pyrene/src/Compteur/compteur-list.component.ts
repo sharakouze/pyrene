@@ -1,19 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { JsonServiceClient } from 'servicestack-client';
-import { SelectCompteur } from '../dtos';
+
+import { CompteurService } from './compteur.service';
+import { SelectCompteurResponse } from '../dtos';
 
 @Component({
 	selector: 'compteur-list',
-	templateUrl: 'compteur-list.component.html'
+	templateUrl: 'compteur-list.component.html',
+	providers: [CompteurService]
 })
 export class CompteurListComponent implements OnInit {
-	ngOnInit() {
-		this.loadCompteurList();
+	result: SelectCompteurResponse;
+
+	constructor(private compteurService: CompteurService) {
 	}
 
-	load() {
-	var req = new Select{0}();
-	var client = new JsonServiceClient();
-	client.get(req);
+	ngOnInit() {
+		this.load();
+	}
+
+	load(): void {
+		this.compteurService.selectCompteur('','',null,0);
 	}
 }

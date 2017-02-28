@@ -3,7 +3,7 @@
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" #>
-<#@ include file="..\AngularComponentHelper.ttinclude" #>
+<#@ include file="..\AngularComponentGenerator.ttinclude" #>
 <#
 	/*********************/
 	/** CUSTOM SETTINGS **/
@@ -21,25 +21,32 @@
     };
 #>
 <#
-    var manager = Manager.Create(Host, GenerationEnvironment);
-    
-	string fileName = EntityName.ToLower() + "-list";
+    var manager = Manager.Create(this);
 
-	// HTML
-	manager.StartNewFile(fileName + ".component.html");
-#>
-<table>
-	<tr><td></td></tr>
-</table>
-<#
+	var angular = new AngularComponentGenerator(this);
+
+	// SERVICE
+	string serviceFileName = EntityName.ToLower() + ".service.ts";
+	manager.StartNewFile(serviceFileName);
+
+	angular.GenerateService(EntityName);
+
+	manager.EndBlock();
+    
+	// COMPONENT.HTML
+	string htmlFileName = EntityName.ToLower() + "-list.component.html";
+	manager.StartNewFile(htmlFileName);
+
+	angular.SimpleListHtml(DatagridColumns);
+
 	manager.EndBlock();
 
-	// Typescript
-	manager.StartNewFile(fileName + ".component.ts");
+	// COMPONENT.TS
+	string tsFileName = EntityName.ToLower() + "-list.component.ts";
+	manager.StartNewFile(tsFileName);
 
-	string ts = AngularComponentHelper.GenerateSimpleListTs(EntityName, DatagridColumns.Keys);
-#>
-<#= ts #><#
+	angular.SimpleListTs(EntityName, DatagridColumns.Keys);
+
 	manager.EndBlock();
 
 	manager.Process(true);

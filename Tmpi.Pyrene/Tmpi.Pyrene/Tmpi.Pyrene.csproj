@@ -144,10 +144,7 @@
     <Content Include="CustomAppSettings.config" />
     <Content Include="CustomConnectionStrings.config" />
     <Content Include="package.json" />
-    <Content Include="src\Compteur\compteur-list.component.html">
-      <DependentUpon>CompteurComponentGenerator.tt</DependentUpon>
-    </Content>
-    <Content Include="src\AngularComponentHelper.ttinclude" />
+    <Content Include="src\AngularComponentGenerator.ttinclude" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -157,6 +154,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="src\Compteur\compteur-list.component.html">
+      <DependentUpon>CompteurComponentGenerator.tt</DependentUpon>
+    </Content>
     <Content Include="src\Compteur\CompteurComponentGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CompteurComponentGenerator.generated.cs</LastGenOutput>
@@ -202,6 +202,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\Compteur\compteur-list.component.ts">
+      <DependentUpon>CompteurComponentGenerator.tt</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\Compteur\compteur.service.ts">
       <DependentUpon>CompteurComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\dtos.ts" />

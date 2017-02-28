@@ -1,0 +1,116 @@
+﻿<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
+<#+
+public class AngularComponentGenerator
+{
+	private readonly TextTransformation _tt;
+
+	public AngularComponentGenerator(TextTransformation tt)
+    {
+        if (tt == null)
+        {
+            throw new ArgumentNullException("tt");
+        }
+		_tt = tt;
+    }
+
+	public void Write(string textToAppend)
+    {
+		_tt.Write(textToAppend);
+	}
+
+	public void GenerateService(string entityName)
+    {
+		string entityNameLower = entityName.ToLower();
+
+#>
+import { Injectable } from '@angular/core';
+import { JsonServiceClient } from 'servicestack-client';
+
+import { Select<#= entityName #>, Select<#= entityName #>Response } from '../dtos';
+
+@Injectable()
+export class <#= entityName #>Service {
+	select<#= entityName #>(fields: string, sort: string, skip?: number, take?: number): Promise<Select<#= entityName #>Response> {
+		const req = new Select<#= entityName #>();
+		req.Fields = fields;
+		req.Sort = [sort];
+		if (skip) {
+			req.Skip = skip;
+		}
+		if (take) {
+			req.Take = take;
+		}
+
+		const client = new JsonServiceClient('');
+		return client.get(req);
+	}
+}
+<#+
+    }
+
+	public void SimpleListHtml(Dictionary<string, string> columns)
+    {
+#>
+<table>
+	<tr>
+<#+
+		foreach (var kvp in columns)
+        {
+#>
+		<th><#= kvp.Value #></th>
+<#+
+        }
+#>
+	</tr>
+	<tr *ngFor="let cpt of result.Result">
+<#+
+		foreach (var kvp in columns)
+        {
+#>
+		<td>{{cpt.<#= kvp.Key #>}}</td>
+<#+
+        }
+#>
+	</tr>
+</table>
+<#+
+    }
+
+	public void SimpleListTs(string entityName, IEnumerable<string> fields)
+	{
+		string entityNameLower = entityName.ToLower();
+
+		string fieldsStr = null;
+		fieldsStr = string.Join(",", fields);
+
+#>
+import { Component, OnInit } from '@angular/core';
+
+import { <#= entityName #>Service } from './<#= entityNameLower #>.service';
+import { Select<#= entityName #>Response } from '../dtos';
+
+@Component({
+	selector: '<#= entityNameLower #>-list',
+	templateUrl: '<#= entityNameLower #>-list.component.html',
+	providers: [<#= entityName #>Service]
+})
+export class <#= entityName #>ListComponent implements OnInit {
+	result: Select<#= entityName #>Response;
+
+	constructor(private <#= entityNameLower #>Service: <#= entityName #>Service) {
+	}
+
+	ngOnInit() {
+		this.load<#= "" #>();
+	}
+
+	load<#= "" #>(): void {
+		this.<#= entityNameLower #>Service.select();
+	}
+}
+<#+
+    }
+}
+#>
