@@ -1,0 +1,61 @@
+﻿<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text" #>
+<#+
+public class AngularComponentHelper
+{
+	public static void GenerateSimpleListHtml()
+    {
+
+    }
+	
+	public static string GenerateSimpleListTs(string entityName, IEnumerable<string> fields)
+    {
+		var ts = new StringBuilder();
+
+		string selectRequestName = string.Format("Select{0}", entityName);
+		string selectorName = string.Format("{0}-list", entityName.ToLower());
+		string templateUrlName = string.Format("{0}-list.component.html", entityName.ToLower());
+		string className = string.Format("{0}ListComponent", entityName);
+		string loadMethodName = string.Format("load{0}List", entityName);
+
+		// IMPORT
+		ts.AppendLine("import { Component, OnInit } from '@angular/core';");
+		ts.AppendLine("import { JsonServiceClient } from 'servicestack-client';");
+
+		ts.Append("import { "); ts.Append(selectRequestName); ts.AppendLine(" } from '../dtos';");
+
+		ts.AppendLine();
+
+		// @COMPONENT
+		ts.AppendLine("@Component({");
+		
+		ts.Append("	selector: '"); ts.Append(selectorName); ts.AppendLine("',");
+
+		ts.Append("	templateUrl: '"); ts.Append(templateUrlName); ts.AppendLine("'");
+
+		ts.AppendLine("})");
+
+		// CLASS
+		ts.Append("export class "); ts.Append(className); ts.AppendLine(" implements OnInit {");
+
+		ts.AppendLine("	ngOnInit() {");
+		ts.Append("		this."); ts.Append(loadMethodName); ts.AppendLine("();");
+		ts.AppendLine("	}");
+		
+		ts.AppendLine();
+
+		ts.AppendLine("	load() {");
+
+		ts.AppendLine("	var req = new Select{0}();");
+
+		ts.AppendLine("	var client = new JsonServiceClient('');");
+		ts.AppendLine("	client.get(req);");
+
+		ts.AppendLine("	}");
+		ts.AppendLine("}");
+
+		return ts.ToString();
+    }
+}
+#>

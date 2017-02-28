@@ -12,4 +12,3 @@ import { Hero } from './hero';
 export class HeroListComponent implements OnInit {
 }
 */
-//# sourceMappingURL=Personne.component.js.map

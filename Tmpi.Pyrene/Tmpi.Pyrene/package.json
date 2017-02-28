@@ -1,0 +1,11 @@
+{
+  "name": "myproject",
+  "version": "1.0.0",
+  "dependencies": {
+    "@angular/common": "2.x.x",
+    "@angular/compiler": "2.x.x",
+    "@angular/core": "2.x.x",
+    "@angular/forms": "2.x.x",
+    "servicestack-client" : "latest"
+  }
+}
