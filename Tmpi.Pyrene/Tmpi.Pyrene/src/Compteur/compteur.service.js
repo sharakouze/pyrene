@@ -6,6 +6,9 @@ System.register(["@angular/core", "servicestack-client", "../appsettings", "../d
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
+    var __metadata = (this && this.__metadata) || function (k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+    };
     var __moduleName = context_1 && context_1.id;
     var core_1, servicestack_client_1, appsettings_1, dtos_1, CompteurService;
     return {
@@ -25,7 +28,8 @@ System.register(["@angular/core", "servicestack-client", "../appsettings", "../d
         ],
         execute: function () {
             CompteurService = (function () {
-                function CompteurService() {
+                function CompteurService(appConfig) {
+                    this.appConfig = appConfig;
                 }
                 CompteurService.prototype.selectCompteur = function (fields, sort, skip, take) {
                     var req = new dtos_1.SelectCompteur();
@@ -37,13 +41,14 @@ System.register(["@angular/core", "servicestack-client", "../appsettings", "../d
                     if (take) {
                         req.Take = take;
                     }
-                    var client = new servicestack_client_1.JsonServiceClient(appsettings_1.AppSettings.Url);
+                    var client = new servicestack_client_1.JsonServiceClient('');
                     return client.get(req);
                 };
                 return CompteurService;
             }());
             CompteurService = __decorate([
-                core_1.Injectable()
+                core_1.Injectable(),
+                __metadata("design:paramtypes", [appsettings_1.AppSettings])
             ], CompteurService);
             exports_1("CompteurService", CompteurService);
         }

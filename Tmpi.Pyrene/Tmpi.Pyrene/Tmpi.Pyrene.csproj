@@ -210,6 +210,7 @@
       <DependentUpon>CompteurComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\dtos.ts" />
+    <TypeScriptCompile Include="src\serviceclientfactory.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

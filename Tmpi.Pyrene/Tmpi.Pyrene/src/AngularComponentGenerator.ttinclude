@@ -33,6 +33,9 @@ import { Select<#= entityName #>, Select<#= entityName #>Response } from '../dto
 
 @Injectable()
 export class <#= entityName #>Service {
+	constructor(private appConfig: AppSettings) {
+	}
+
 	select<#= entityName #>(fields: string, sort: string[], skip?: number, take?: number): Promise<Select<#= entityName #>Response> {
 		const req = new Select<#= entityName #>();
 		req.Fields = fields;
@@ -44,7 +47,7 @@ export class <#= entityName #>Service {
 			req.Take = take;
 		}
 
-		const client = new JsonServiceClient('');
+		const client = new JsonServiceClient(this.appConfig.ApiEndpointUrl);
 		return client.get(req);
 	}
 }
@@ -108,7 +111,7 @@ export class <#= entityName #>ListComponent implements OnInit {
 	}
 
 	load<#= "" #>(): void {
-		this.<#= entityNameLower #>Service.select();
+		//this.<#= entityNameLower #>Service.select();
 	}
 }
 <#+

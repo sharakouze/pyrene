@@ -112,6 +112,7 @@ namespace Tmpi.Pyrene
             JsConfig.DateHandler = dateHandler;
 
             JsConfig.ExcludeDefaultValues = true;
+            JsConfig.EmitCamelCaseNames = false;
         }
 
         /// <summary>

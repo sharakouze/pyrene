@@ -15,6 +15,9 @@ import { SelectCompteur, SelectCompteurResponse } from '../dtos';
 
 @Injectable()
 export class CompteurService {
+	constructor(private appConfig: AppSettings) {
+	}
+
 	selectCompteur(fields: string, sort: string[], skip?: number, take?: number): Promise<SelectCompteurResponse> {
 		const req = new SelectCompteur();
 		req.Fields = fields;
@@ -26,7 +29,7 @@ export class CompteurService {
 			req.Take = take;
 		}
 
-        const client = new JsonServiceClient(AppSettings.Url);
+		const client = new JsonServiceClient('');
 		return client.get(req);
 	}
 }

@@ -6,6 +6,7 @@
     "@angular/compiler": "2.x.x",
     "@angular/core": "2.x.x",
     "@angular/forms": "2.x.x",
-    "servicestack-client" : "latest"
+    "rxjs": "5.2.0",
+    "servicestack-client": "latest"
   }
 }

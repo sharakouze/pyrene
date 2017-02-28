@@ -28,6 +28,6 @@ export class CompteurListComponent implements OnInit {
 	}
 
 	load(): void {
-		this.compteurService.select();
+		//this.compteurService.select();
 	}
 }

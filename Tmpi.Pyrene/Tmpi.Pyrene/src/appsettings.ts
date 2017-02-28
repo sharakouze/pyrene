@@ -1,3 +1,3 @@
 ﻿export class AppSettings {
-    static Url;
+    static ApiEndpointUrl: string;
 }
