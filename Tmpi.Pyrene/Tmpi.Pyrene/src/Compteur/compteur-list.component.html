@@ -7,11 +7,11 @@
 		<th>Type</th>
 		<th>Service</th>
 	</tr>
-	<tr *ngFor="let cpt of result.Result">
-		<td>{{cpt.CodCompteur}}</td>
-		<td>{{cpt.LibCompteur}}</td>
-		<td>{{cpt.EstActif}}</td>
-		<td>{{cpt.TypCompteur}}</td>
-		<td>{{cpt.Service.CodService}}</td>
+	<tr *ngFor="let obj of compteur.data">
+		<td>{{obj.CodCompteur}}</td>
+		<td>{{obj.LibCompteur}}</td>
+		<td>{{obj.EstActif}}</td>
+		<td>{{obj.TypCompteur}}</td>
+		<td>{{obj.Service.CodService}}</td>
 	</tr>
 </table>

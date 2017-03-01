@@ -24,11 +24,22 @@ System.register(["@angular/core", "./compteur.service"], function (exports_1, co
             CompteurListComponent = (function () {
                 function CompteurListComponent(compteurService) {
                     this.compteurService = compteurService;
+                    this.compteur = {
+                        result: null,
+                        sort: 'CodCompteur',
+                        pageIndex: 0,
+                        pageSize: 20
+                    };
                 }
                 CompteurListComponent.prototype.ngOnInit = function () {
-                    this.load();
+                    this.loadCompteur();
                 };
-                CompteurListComponent.prototype.load = function () {
+                CompteurListComponent.prototype.loadCompteur = function () {
+                    var _this = this;
+                    var fields = 'CodCompteur,LibCompteur,EstActif,TypCompteur,Service(CodService)';
+                    var skip = this.compteur.pageIndex * this.compteur.pageSize;
+                    this.compteurService.selectCompteur(fields, [this.compteur.sort], skip, this.compteur.pageSize)
+                        .then(function (r) { return _this.compteur.result = r; });
                 };
                 return CompteurListComponent;
             }());

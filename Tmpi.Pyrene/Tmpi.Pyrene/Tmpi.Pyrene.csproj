@@ -140,11 +140,15 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="default.html" />
     <Content Include="packages.config" />
     <Content Include="CustomAppSettings.config" />
     <Content Include="CustomConnectionStrings.config" />
     <Content Include="package.json" />
-    <Content Include="src\AngularComponentGenerator.ttinclude" />
+    <Content Include="src\Compteur\compteur-list.component.html">
+      <DependentUpon>CompteurGenerator.tt</DependentUpon>
+    </Content>
+    <Content Include="src\NgComponentGenerator.ttinclude" />
     <Content Include="tsconfig.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -155,12 +159,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="src\Compteur\compteur-list.component.html">
-      <DependentUpon>CompteurComponentGenerator.tt</DependentUpon>
-    </Content>
-    <Content Include="src\Compteur\CompteurComponentGenerator.tt">
+    <Content Include="src\Compteur\CompteurGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CompteurComponentGenerator.generated.cs</LastGenOutput>
+      <LastGenOutput>CompteurGenerator.generated.cs</LastGenOutput>
     </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -176,10 +177,10 @@
     </Compile>
     <Compile Include="Licenses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Compteur\CompteurComponentGenerator.generated.cs">
+    <Compile Include="src\Compteur\CompteurGenerator.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CompteurComponentGenerator.tt</DependentUpon>
+      <DependentUpon>CompteurGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="SwaggerConfig.cs" />
   </ItemGroup>
@@ -202,15 +203,17 @@
     <Folder Include="src\Fourn\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="src\app.ts" />
     <TypeScriptCompile Include="src\appsettings.ts" />
     <TypeScriptCompile Include="src\Compteur\compteur-list.component.ts">
-      <DependentUpon>CompteurComponentGenerator.tt</DependentUpon>
+      <DependentUpon>CompteurGenerator.tt</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\Compteur\compteur.service.ts">
-      <DependentUpon>CompteurComponentGenerator.tt</DependentUpon>
+      <DependentUpon>CompteurGenerator.tt</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\dtos.ts" />
-    <TypeScriptCompile Include="src\serviceclientfactory.ts" />
+    <TypeScriptCompile Include="src\paged-data.ts" />
+    <TypeScriptCompile Include="src\service-client.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

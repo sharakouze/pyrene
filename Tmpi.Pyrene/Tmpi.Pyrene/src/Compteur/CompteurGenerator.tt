@@ -3,7 +3,7 @@
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" #>
-<#@ include file="..\AngularComponentGenerator.ttinclude" #>
+<#@ include file="..\NgComponentGenerator.ttinclude" #>
 <#
 	/*********************/
 	/** CUSTOM SETTINGS **/
@@ -27,13 +27,12 @@
 #>
 <#
     var manager = Manager.Create(this);
-
-	var angular = new AngularComponentGenerator(this);
+	var ng = new NgComponentGenerator(this, EntityName);
 
 	if (CreateService)
     {
 		// SERVICE
-		string serviceFileName = EntityName.ToLower() + ".service.ts";
+		string serviceFileName = ng.DashCaseEntityName + ".service.ts";
 		manager.StartNewFile(serviceFileName);
 #>
 //------------------------------------------------------------------------------
@@ -46,7 +45,7 @@
 //------------------------------------------------------------------------------
 
 <#
-		angular.GenerateService(EntityName);
+		ng.GenerateService();
 
 		manager.EndBlock();
     }
@@ -54,12 +53,12 @@
 	if (CreateComponentHtml)
     {
 		// COMPONENT.HTML
-		string htmlFileName = EntityName.ToLower() + "-list.component.html";
+		string htmlFileName = ng.DashCaseEntityName + "-list.component.html";
 		manager.StartNewFile(htmlFileName);
 #>
 <!-- auto-generated -->
 <#
-		angular.SimpleListHtml(DatagridColumns);
+		ng.SimpleListHtml(DatagridColumns);
 
 		manager.EndBlock();
     }
@@ -67,7 +66,7 @@
 	if (CreateComponentTs)
     {
 		// COMPONENT.TS
-		string tsFileName = EntityName.ToLower() + "-list.component.ts";
+		string tsFileName = ng.DashCaseEntityName + "-list.component.ts";
 		manager.StartNewFile(tsFileName);
 #>
 //------------------------------------------------------------------------------
@@ -80,7 +79,7 @@
 //------------------------------------------------------------------------------
 
 <#
-		angular.SimpleListTs(EntityName, DatagridColumns.Keys);
+		ng.SimpleListTs(DatagridColumns.Keys);
 
 		manager.EndBlock();
     }

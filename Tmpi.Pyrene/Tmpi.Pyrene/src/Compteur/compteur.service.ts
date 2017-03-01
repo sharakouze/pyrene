@@ -8,16 +8,12 @@
 //------------------------------------------------------------------------------
 
 import { Injectable } from '@angular/core';
-import { JsonServiceClient } from 'servicestack-client';
 
-import { AppSettings } from '../appsettings';
-import { SelectCompteur, SelectCompteurResponse } from '../dtos';
+import { ServiceClient } from '../service-client';
+import { SelectCompteur, SelectCompteurResponse, DeleteCompteur } from '../dtos';
 
 @Injectable()
-export class CompteurService {
-	constructor(private appConfig: AppSettings) {
-	}
-
+export class CompteurService extends ServiceClient {
 	selectCompteur(fields: string, sort: string[], skip?: number, take?: number): Promise<SelectCompteurResponse> {
 		const req = new SelectCompteur();
 		req.Fields = fields;
@@ -29,7 +25,14 @@ export class CompteurService {
 			req.Take = take;
 		}
 
-		const client = new JsonServiceClient('');
-		return client.get(req);
+		return this.client.get(req);
 	}
+
+	deleteCompteur(id: number): Promise<void> {
+		const req = new DeleteCompteur();
+		req.CleCompteur = id;
+
+		return this.client.delete(req);
+	}
+
 }
