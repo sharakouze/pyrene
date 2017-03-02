@@ -142,7 +142,7 @@ public class AutomationHelper
 	/// <summary>
 	/// Obtient le namespace du repertoire courant.
 	/// </summary>
-	public string GetCurrentFileNamespace()
+	public string GetTemplateFileNamespace()
     {
 		var project = CurrentProject;
 		var defaultNamespace = GetDefaultNamespace(project);

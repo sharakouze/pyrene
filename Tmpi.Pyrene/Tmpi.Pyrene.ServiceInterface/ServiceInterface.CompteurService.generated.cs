@@ -21,7 +21,7 @@ using Tmpi.Pyrene.Common.Linq;
 using Tmpi.Pyrene.ServiceModel;
 using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace Tmpi.Pyrene.ServiceInterface
+namespace 
 {
 	/// <summary>
 	/// Service qui traite les requêtes sur les entités <see cref="Compteur"/>.
@@ -31,7 +31,6 @@ namespace Tmpi.Pyrene.ServiceInterface
 	{
 		private static readonly object _compteurLock = new object();
 		private static readonly object _compteurValeurLock = new object();
-
 		/// <summary>
 		/// Teste l'unicité d'une entité <see cref="Compteur"/>.
 		/// </summary>

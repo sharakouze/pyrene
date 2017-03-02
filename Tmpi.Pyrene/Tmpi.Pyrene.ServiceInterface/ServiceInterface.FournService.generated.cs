@@ -21,7 +21,7 @@ using Tmpi.Pyrene.Common.Linq;
 using Tmpi.Pyrene.ServiceModel;
 using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace Tmpi.Pyrene.ServiceInterface
+namespace 
 {
 	/// <summary>
 	/// Service qui traite les requêtes sur les entités <see cref="Fourn"/>.
@@ -33,7 +33,6 @@ namespace Tmpi.Pyrene.ServiceInterface
 		private static readonly object _fournLock = new object();
 		private static readonly object _fournBanqueLock = new object();
 		private static readonly object _fournContactLock = new object();
-
 		/// <summary>
 		/// Teste l'unicité d'une entité <see cref="Fourn"/>.
 		/// </summary>

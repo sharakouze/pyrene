@@ -13,27 +13,21 @@ using ServiceStack.FluentValidation;
 using Tmpi.Pyrene.ServiceModel;
 using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace Tmpi.Pyrene.ServiceInterface
+namespace 
 {
 	/// <summary>
-	/// Validation pour la requête <see cref="FournBanque"/>.
+	/// Validation pour la requête <see cref="plop"/>.
 	/// </summary>
-	public partial class FournBanqueValidator : AbstractValidator<FournBanque>
+	public partial class plopValidator : AbstractValidator<plop>
 	{
 		/// <summary>
-		/// Initialise une nouvelle instance de la classe <see cref="FournBanqueValidator" />.
+		/// Initialise une nouvelle instance de la classe <see cref="plopValidator" />.
 		/// </summary>
-		public FournBanqueValidator()
+		public plopValidator()
 		{
-			RuleFor(x => x.CodIBAN)
+			RuleFor(x => x.TypMime)
 				.NotEmpty()
-				.Length(0, 34);
-			RuleFor(x => x.CodBIC)
-				.NotEmpty()
-				.Length(0, 11);
-			RuleFor(x => x.LibEtablissement)
-				.NotEmpty()
-				.Length(0, 200);
+				.Length(0, 255);
 
 			SetRules();
 		}

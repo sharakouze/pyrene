@@ -5,19 +5,19 @@
 <#@ assembly name="EnvDTE" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Configuration" #>
-<#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="System.Linq" #>
-<#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" #>
-<#@ include file="$(MSBuildProjectDirectory)\..\Shared\VisualStudioHelper.ttinclude" #>
-<#@ include file="$(MSBuildProjectDirectory)\..\Shared\SqlSchemaReader.ttinclude" #>
-<#@ include file="$(MSBuildProjectDirectory)\..\Shared\Config.ttinclude" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" once="true" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\VisualStudioHelper.ttinclude" once="true" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\SqlSchemaReader.ttinclude" once="true" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\CustomConfig.ttinclude" once="true" #>
 <#
 	/***** TODO *****
-	- DefaultAttribute
-    - Commentaires sur les [References] ?
-	- Possibilité d'avoir 0 PKey ?
+	- [DefaultAttribute]
+    - Commentaires sur les [References]
+	- Possibilité d'avoir 0 PKey
 	- Namespace par rapport au schéma
-	- Patch => IReturnVoid ?
+	- Patch => IReturnVoid ou IReturn<T>
 	****************/
 
 	/*********************/
@@ -44,6 +44,7 @@
     bool SplitIntoMultipleFiles = true;
 	// Extension des fichiers générés
 	string FileExtension = ".generated.cs";
+	string FilePrefix = "ServiceModel.";
 
 	// tableau de numéros d'avertissement à désactiver ; null ou vide pour ignorer.
 	int[] PragmaWarningDisable = new [] { 1591 };
@@ -103,8 +104,8 @@
     {	
 		foreach (var table in tables)
         {
-			string stdColFormat = GetStandardColumnFormat(table);
-			SetColumnsDescription(table, stdColFormat);
+			string stdColFormat = ServiceModelUtils.GetStandardColumnFormat(table);
+			ServiceModelUtils.SetColumnsDescription(table, stdColFormat);
         }
 
 		tables.RemoveAll(t => t.Name == "__RefactorLog");
@@ -174,7 +175,7 @@ using ServiceStack.Model;
 	if (string.IsNullOrEmpty(BaseNamespace))
 	{
 		var vsHelper = AutomationHelper.Create(this);
-		BaseNamespace = vsHelper.GetCurrentFileNamespace();
+		BaseNamespace = vsHelper.GetTemplateFileNamespace();
 	}
 
     foreach (var table in allTables)
@@ -186,8 +187,8 @@ using ServiceStack.Model;
 		/****************/
 
 		string pocoNamespace = string.Format(NamespacePocos, BaseNamespace);
-		string pocoFileName = GetGeneratedFilename(table.ClassName, pocoNamespace, BaseNamespace);
-        manager.StartNewFile(pocoFileName + FileExtension);
+		string pocoFileName = ServiceModelUtils.GetGeneratedFilename(table.ClassName, pocoNamespace, BaseNamespace);
+        manager.StartNewFile(FilePrefix + pocoFileName + FileExtension);
 
 #>
 
@@ -267,7 +268,7 @@ namespace <#= pocoNamespace #>
             }
         }
 
-		var lstPlaceholderCols = GetRouteColumns(table, TransformRoutePath);
+		var lstPlaceholderCols = ServiceModelUtils.GetRouteColumns(table, TransformRoutePath);
 
 		string entityName = table.ClassName; // GetEntityName(lstPlaceholderCols);
 
@@ -276,7 +277,7 @@ namespace <#= pocoNamespace #>
 			bool postExcluded = PostTableFilterExclude != null && PostTableFilterExclude.IsMatch(table.ClassName);
             if (!postExcluded)
             {
-				string strRoute = GetStrRoutePath(lstPlaceholderCols, false, false);
+				string strRoute = ServiceModelUtils.GetStrRoutePath(lstPlaceholderCols, false, false);
 #>
 	[Route("<#= strRoute #>", HttpVerbs.Post, Summary = "<#= string.Format("Ajoute ou remplace une entité {0} à partir de son id", entityName) #>", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 <#
@@ -310,7 +311,7 @@ namespace <#= pocoNamespace #>
             {
 #>
 		/// <summary>
-		/// <#= FormatXmlDoc(col.Description) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc(col.Description) #>
 		/// </summary>
 <#
 			}
@@ -343,7 +344,7 @@ namespace <#= pocoNamespace #>
 				foreach (string str in remarks)
                 {
 #>
-		/// <#= FormatXmlDoc(str) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc(str) #>
 <#
                 }
 #>
@@ -431,7 +432,7 @@ namespace <#= pocoNamespace #>
 
 			if (AddApiAttributes)
             {
-				var dicApiMemberProps = GetApiMemberProps(col, allEnums.Values, lstInterfaces);
+				var dicApiMemberProps = ServiceModelUtils.GetApiMemberProps(col, allEnums.Values, lstInterfaces);
 				if (dicApiMemberProps != null)
                 {
 					if (lstPlaceholderCols.Any(c => c.PropertyName == col.PropertyName))
@@ -468,7 +469,7 @@ namespace <#= pocoNamespace #>
 					string propName = string.Format(format, colFkey.ReferencedTable.ClassName);
 #>
 		/// <summary>
-		/// <#= FormatXmlDoc("Entité référencée par <see cref=\"" + col.PropertyName + "\"/>.") #>
+		/// <#= ServiceModelUtils.FormatXmlDoc("Entité référencée par <see cref=\"" + col.PropertyName + "\"/>.") #>
 		/// </summary>
 		[Reference]
 		public <#= MakePocoPropertiesVirtual ? "virtual " : "" #><#= colFkey.ReferencedTable.ClassName #> <#= propName #> { get; set; }
@@ -529,8 +530,8 @@ namespace <#= pocoNamespace #>
         }
 
 		string msgNamespace = string.Format(NamespaceMessages, BaseNamespace);
-		string msgFileName = GetGeneratedFilename(table.ClassName, msgNamespace, BaseNamespace);
-		manager.StartNewFile(msgFileName + FileExtension);
+		string msgFileName = ServiceModelUtils.GetGeneratedFilename(table.ClassName, msgNamespace, BaseNamespace);
+		manager.StartNewFile(FilePrefix + msgFileName + FileExtension);
 
 		if (pocoNamespace != msgNamespace)
         {
@@ -559,12 +560,12 @@ namespace <#= msgNamespace #>
 
 #>
 	/// <summary>
-	/// <#= FormatXmlDoc(selectTableClassDescription, entityName) #>
+	/// <#= ServiceModelUtils.FormatXmlDoc(selectTableClassDescription, entityName) #>
 	/// </summary>
 <#
             if (AddRouteAttributes)
             {
-				string strRoute = GetStrRoutePath(lstPlaceholderCols, false, false);
+				string strRoute = ServiceModelUtils.GetStrRoutePath(lstPlaceholderCols, false, false);
 #>
 	[Route("<#= strRoute #>", HttpVerbs.Get, Summary = "<#= string.Format(selectTableClassDescription, entityName) #>", Notes = SwaggerDescriptions.SelectRequestNotes)]
 <#
@@ -598,13 +599,13 @@ namespace <#= msgNamespace #>
 				{
 #>
 		/// <summary>
-		/// <#= FormatXmlDoc(newCol.Description) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc(newCol.Description) #>
 		/// </summary>
 <#
 				}
 				if (AddApiAttributes)
 				{
-					var dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
+					var dicApiMemberProps = ServiceModelUtils.GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
 					if (dicApiMemberProps != null)
 					{
 						dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
@@ -621,7 +622,7 @@ namespace <#= msgNamespace #>
 
 #>
 		/// <summary>
-		/// <#= FormatXmlDoc(fieldsPropDescription) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc(fieldsPropDescription) #>
 		/// </summary>
 		/// <example>
 		/// CleCompteur,CodCompteur,LibCompteur,EstActif,Service(CodService,LibService)
@@ -637,7 +638,7 @@ namespace <#= msgNamespace #>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string Fields { get; set; }
 
 		/// <summary>
-		/// <#= FormatXmlDoc(skipPropDescription) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc(skipPropDescription) #>
 		/// </summary>
 <#
 			if (AddApiAttributes)
@@ -650,7 +651,7 @@ namespace <#= msgNamespace #>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int? Skip { get; set; }
 
 		/// <summary>
-		/// <#= FormatXmlDoc(takePropDescription) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc(takePropDescription) #>
 		/// </summary>
 <#
 			if (AddApiAttributes)
@@ -663,7 +664,7 @@ namespace <#= msgNamespace #>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int? Take { get; set; }
 
 		/// <summary>
-		/// <#= FormatXmlDoc(sortPropDescription) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc(sortPropDescription) #>
 		/// </summary>
 		/// <remarks>
 		/// En préfixant le nom du champ avec le caractère moins (-) le tri sera descendant.
@@ -681,22 +682,22 @@ namespace <#= msgNamespace #>
 	}
 
 	/// <summary>
-	/// <#= FormatXmlDoc("Réponse à la requête {0}.", selectTableClassName) #>
+	/// <#= ServiceModelUtils.FormatXmlDoc("Réponse à la requête {0}.", selectTableClassName) #>
 	/// </summary>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= selectTableClassName #>Response : IHasResponseStatus
 	{
 		/// <summary>
-		/// <#= FormatXmlDoc("Détail de l'erreur éventuelle.") #>
+		/// <#= ServiceModelUtils.FormatXmlDoc("Détail de l'erreur éventuelle.") #>
 		/// </summary>
 		public ResponseStatus ResponseStatus { get; set; }
 
 		/// <summary>
-		/// <#= FormatXmlDoc("Nombre total d'éléments disponibles.") #>
+		/// <#= ServiceModelUtils.FormatXmlDoc("Nombre total d'éléments disponibles.") #>
 		/// </summary>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>int TotalCount { get; set; }
 
 		/// <summary>
-		/// <#= FormatXmlDoc("Collection des entités {0}.", entityName) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc("Collection des entités {0}.", entityName) #>
 		/// </summary>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>List<<#= table.ClassName #>> Results { get; set; }
 	}
@@ -716,12 +717,12 @@ namespace <#= msgNamespace #>
 			string fieldsPropDescription = "Champs à retourner, ou null pour retourner tous les champs";
 #>
 	/// <summary>
-	/// <#= FormatXmlDoc(getTableClassDescription, entityName) #>
+	/// <#= ServiceModelUtils.FormatXmlDoc(getTableClassDescription, entityName) #>
 	/// </summary>
 <#
             if (AddRouteAttributes)
             {
-				string strRoute = GetStrRoutePath(lstPlaceholderCols);
+				string strRoute = ServiceModelUtils.GetStrRoutePath(lstPlaceholderCols);
 #>
 	[Route("<#= strRoute #>", HttpVerbs.Get, Summary = "<#= string.Format(getTableClassDescription, entityName) #>", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
 <#
@@ -753,13 +754,13 @@ namespace <#= msgNamespace #>
             {
 #>
 		/// <summary>
-		/// <#= FormatXmlDoc(newCol.Description) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc(newCol.Description) #>
 		/// </summary>
 <#
             }
 			if (AddApiAttributes)
             {
-				var dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
+				var dicApiMemberProps = ServiceModelUtils.GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
 				if (dicApiMemberProps != null)
                 {
 					dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
@@ -775,7 +776,7 @@ namespace <#= msgNamespace #>
 		}
 #>
 		/// <summary>
-		/// <#= FormatXmlDoc(fieldsPropDescription) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc(fieldsPropDescription) #>
 		/// </summary>
 <#
 			    if (AddApiAttributes)
@@ -802,12 +803,12 @@ namespace <#= msgNamespace #>
 			string deleteTableClassDescription = "Supprime une entité {0} à partir de son id";
 #>
 	/// <summary>
-	/// <#= FormatXmlDoc(deleteTableClassDescription, entityName) #>
+	/// <#= ServiceModelUtils.FormatXmlDoc(deleteTableClassDescription, entityName) #>
 	/// </summary>
 <#
             if (AddRouteAttributes)
             {
-				string strRoute = GetStrRoutePath(lstPlaceholderCols);
+				string strRoute = ServiceModelUtils.GetStrRoutePath(lstPlaceholderCols);
 #>
 	[Route("<#= strRoute #>", HttpVerbs.Delete, Summary = "<#= string.Format(deleteTableClassDescription, entityName) #>", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
 <#
@@ -838,13 +839,13 @@ namespace <#= msgNamespace #>
             {
 #>
 		/// <summary>
-		/// <#= FormatXmlDoc(newCol.Description) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc(newCol.Description) #>
 		/// </summary>
 <#
             }
 			if (AddApiAttributes)
             {
-				var dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
+				var dicApiMemberProps = ServiceModelUtils.GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
 				if (dicApiMemberProps != null)
                 {
 					dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
@@ -876,12 +877,12 @@ namespace <#= msgNamespace #>
 			string fieldsPropDescription = "Liste des modifications à appliquer";
 #>
 	/// <summary>
-	/// <#= FormatXmlDoc(patchTableClassDescription, entityName) #>
+	/// <#= ServiceModelUtils.FormatXmlDoc(patchTableClassDescription, entityName) #>
 	/// </summary>
 <#
             if (AddRouteAttributes)
             {
-				string strRoute = GetStrRoutePath(lstPlaceholderCols);
+				string strRoute = ServiceModelUtils.GetStrRoutePath(lstPlaceholderCols);
 #>
 	[Route("<#= strRoute #>", HttpVerbs.Patch, Summary = "<#= string.Format(patchTableClassDescription, entityName) #>", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
 <#
@@ -915,13 +916,13 @@ namespace <#= msgNamespace #>
             {
 #>
 		/// <summary>
-		/// <#= FormatXmlDoc(newCol.Description) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc(newCol.Description) #>
 		/// </summary>
 <#
             }
 			if (AddApiAttributes)
             {
-				var dicApiMemberProps = GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
+				var dicApiMemberProps = ServiceModelUtils.GetApiMemberProps(newCol, allEnums.Values, lstInterfaces);
 				if (dicApiMemberProps != null)
                 {
 					dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
@@ -937,7 +938,7 @@ namespace <#= msgNamespace #>
 		}
 #>
 		/// <summary>
-		/// <#= FormatXmlDoc(fieldsPropDescription) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc(fieldsPropDescription) #>
 		/// </summary>
 <#
 			    if (AddApiAttributes)
@@ -953,7 +954,7 @@ namespace <#= msgNamespace #>
 <#
 		}
 
-		string stdColFormat = GetStandardColumnFormat(table);
+		string stdColFormat = ServiceModelUtils.GetStandardColumnFormat(table);
 		bool hasPK = (table.PrimaryKey != null);
 		bool hasCodObjet = table.Columns.Any(c => c.PropertyType == "string" && c.PropertyName == string.Format(stdColFormat, "Cod"));
 		bool hasLibObjet = table.Columns.Any(c => c.PropertyType == "string" && c.PropertyName == string.Format(stdColFormat, "Lib"));
@@ -974,12 +975,12 @@ namespace <#= msgNamespace #>
 				string maxPropDescription = "Nombre maximum de résultats à retourner";
 #>
 	/// <summary>
-	/// <#= FormatXmlDoc(searchDescription, entityName) #>
+	/// <#= ServiceModelUtils.FormatXmlDoc(searchDescription, entityName) #>
 	/// </summary>
 <#
 			if (AddRouteAttributes)
             {
-				string strRouteBase = GetStrRoutePath(lstPlaceholderCols, false);
+				string strRouteBase = ServiceModelUtils.GetStrRoutePath(lstPlaceholderCols, false);
 #>
 	[Route("<#= strRouteBase #>/Recherche/{Text}", HttpVerbs.Get, Summary = "<#= string.Format(searchDescription, entityName) #>", Notes = SwaggerDescriptions.SearchRequestNotes)]
 <#
@@ -988,7 +989,7 @@ namespace <#= msgNamespace #>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= searchClassName #> : IReturn<<#= searchClassName #>Response>, IGet
 	{
 		/// <summary>
-		/// <#= FormatXmlDoc(textPropDescription) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc(textPropDescription) #>
 		/// </summary>
 <#
 			    if (AddApiAttributes)
@@ -1001,7 +1002,7 @@ namespace <#= msgNamespace #>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>string Text { get; set; }
 
 		/// <summary>
-		/// <#= FormatXmlDoc(maxPropDescription) #>
+		/// <#= ServiceModelUtils.FormatXmlDoc(maxPropDescription) #>
 		/// </summary>
 <#
 			    if (AddApiAttributes)
@@ -1015,17 +1016,17 @@ namespace <#= msgNamespace #>
 	}
 
 	/// <summary>
-	/// <#= FormatXmlDoc("Réponse à la requête {0}.", searchClassName) #>
+	/// <#= ServiceModelUtils.FormatXmlDoc("Réponse à la requête {0}.", searchClassName) #>
 	/// </summary>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= searchClassName #>Response : IHasResponseStatus
 	{
 		/// <summary>
-		/// <#= FormatXmlDoc("Détail de l'erreur éventuelle.") #>
+		/// <#= ServiceModelUtils.FormatXmlDoc("Détail de l'erreur éventuelle.") #>
 		/// </summary>
 		public ResponseStatus ResponseStatus { get; set; }
 
 		/// <summary>
-		/// <#= FormatXmlDoc("Résultat de la recherche.") #>
+		/// <#= ServiceModelUtils.FormatXmlDoc("Résultat de la recherche.") #>
 		/// </summary>
 		public <#= MakeMessagePropertiesVirtual ? "virtual " : "" #>List<BaseEntity> Results { get; set; }
 	}
@@ -1045,338 +1046,341 @@ namespace <#= msgNamespace #>
     manager.Process(SplitIntoMultipleFiles);
 #>
 <#+
-private string FormatXmlDoc(string str, params string[] crefs)
+public static class ServiceModelUtils
 {
-	if (string.IsNullOrEmpty(str))
-    {
-		return string.Empty;
-    }
-	if (crefs != null)
-    {
-		str = string.Format(str, crefs.Select(s => "<see cref=\"" + s + "\"/>").ToArray());
-    }
-	if (!str.EndsWith("."))
-    {
-		return str.Trim() + "."; 
-    }
-	return str;
-}
-
-private string GetGeneratedFilename(string filename, string fileNamespace, string baseNamespace)
-{
-	if (fileNamespace == baseNamespace)
-    {
-		return filename;
-    }
-
-	string str = fileNamespace.Replace(baseNamespace, "");
-	if (str.StartsWith("."))
-    {
-		str = str.Remove(0, 1);
-    }
-	if (!str.EndsWith("."))
-    {
-		str = str + ".";
-    }
-	return str + filename;
-}
-
-/// <summary>
-/// Retourne une chaine qui représente le format que doit avoir une colonne standard (CodObjet, LibObjet, TxtObjet...) dans une table.
-/// Exemple : GenService => "{0}Service" ; GenPersonneProfil => "{0}Profil" ...
-/// </summary>
-private string GetStandardColumnFormat(Table table)
-{
-	var parentFkey = GetParentFKey(table);
-	if (parentFkey != null)
+	public static string FormatXmlDoc(string str, params string[] crefs)
 	{
-		return parentFkey.FromTable.ClassName.Replace(parentFkey.ReferencedTable.ClassName, "{0}");
+		if (string.IsNullOrEmpty(str))
+		{
+			return string.Empty;
+		}
+		if (crefs != null)
+		{
+			str = string.Format(str, crefs.Select(s => "<see cref=\"" + s + "\"/>").ToArray());
+		}
+		if (!str.EndsWith("."))
+		{
+			return str.Trim() + "."; 
+		}
+		return str;
 	}
-	return "{0}" + table.Name;
-}
 
-private void SetColumnsDescription(Table table, string stdColFormat)
-{
-	foreach (var col in table.Columns)
-    {
-		if (string.IsNullOrWhiteSpace(col.Description))
-        {
-			if (col.IsPKey)
+	public static string GetGeneratedFilename(string filename, string fileNamespace, string baseNamespace)
+	{
+		if (fileNamespace == baseNamespace)
+		{
+			return filename;
+		}
+
+		string str = fileNamespace.Replace(baseNamespace, "");
+		if (str.StartsWith("."))
+		{
+			str = str.Remove(0, 1);
+		}
+		if (!str.EndsWith("."))
+		{
+			str = str + ".";
+		}
+		return str + filename;
+	}
+
+	/// <summary>
+	/// Retourne une chaine qui représente le format que doit avoir une colonne standard (CodObjet, LibObjet, TxtObjet...) dans une table.
+	/// Exemple : GenService => "{0}Service" ; GenPersonneProfil => "{0}Profil" ...
+	/// </summary>
+	public static string GetStandardColumnFormat(Table table)
+	{
+		var parentFkey = GetParentFKey(table);
+		if (parentFkey != null)
+		{
+			return parentFkey.FromTable.ClassName.Replace(parentFkey.ReferencedTable.ClassName, "{0}");
+		}
+		return "{0}" + table.Name;
+	}
+
+	public static void SetColumnsDescription(Table table, string stdColFormat)
+	{
+		foreach (var col in table.Columns)
+		{
+			if (string.IsNullOrWhiteSpace(col.Description))
 			{
-				col.Description = "Identifiant unique";
+				if (col.IsPKey)
+				{
+					col.Description = "Identifiant unique";
+				}
+				else if (col.PropertyName == string.Format(stdColFormat, "Cod"))
+				{
+					col.Description = "Code";
+				}
+				else if (col.PropertyName == string.Format(stdColFormat, "Lib"))
+				{
+					col.Description = "Désignation";
+				}
+				else if (col.PropertyName == string.Format(stdColFormat, "Txt"))
+				{
+					col.Description = "Commentaire ou description";
+				}
+				else
+				{
+					switch (col.PropertyName)
+					{
+						case "EstActif":
+							col.Description = "Actif ou inactif";
+							break;
+						case "DatCreation":
+							col.Description = "Date de création (immutable)";
+							break;
+						case "CleCreateur":
+							col.Description = "Identifiant unique de l'utilisateur responsable de la création (immutable)";
+							break;
+						case "DatEdition":
+							col.Description = "Date de dernière modification (immutable)";
+							break;
+						case "CleEditeur":
+							col.Description = "Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)";
+							break;
+						case "CodExterne":
+							col.Description = "Identifiant de synchronisation externe";
+							break;
+
+						case "NumTelep":
+							col.Description = "Numéro de téléphone";
+							break;
+						case "NumFax":
+							col.Description = "Numéro de fax";
+							break;
+						case "NumEmail":
+							col.Description = "Adresse email";
+							break;
+
+						case "AdrRue":
+							col.Description = "Rue";
+							break;
+						case "AdrCode":
+							col.Description = "Code postal";
+							break;
+						case "AdrCommune":
+							col.Description = "Ville ou commune";
+							break;
+						case "AdrPays":
+							col.Description = "Pays";
+							break;
+					}
+				}
 			}
-			else if (col.PropertyName == string.Format(stdColFormat, "Cod"))
+			/*
+			else if (!col.Description.EndsWith("."))
 			{
-				col.Description = "Code";
+				col.Description += ".";
 			}
-			else if (col.PropertyName == string.Format(stdColFormat, "Lib"))
+			*/
+
+			if (col.IsAutoIncrement || col.IsComputed)
 			{
-				col.Description = "Désignation";
+				string desc = col.Description + " (immutable)";
+				col.Description = desc.Trim();
 			}
-			else if (col.PropertyName == string.Format(stdColFormat, "Txt"))
+			bool isUniqueSingleCol = table.Indices
+				.Where(idx => idx.IsUnique == true && idx.IndexColumns.Count == 1 && idx.IndexColumns.Contains(col))
+				.Any();
+			if (isUniqueSingleCol)
 			{
-				col.Description = "Commentaire ou description";
+				string desc = col.Description + " (unique)";
+				col.Description = desc.Trim();
+			}
+		}
+	}
+
+	public static Dictionary<string, string> GetApiMemberProps(Column col, IEnumerable<string> lstEnums, List<string> lstInterfaces)
+	{
+		if (lstInterfaces.Contains("IAuditable") &&
+			(col.PropertyName == "DatCreation" || col.PropertyName == "CleCreateur" || col.PropertyName == "DatEdition" || col.PropertyName == "CleEditeur"))
+		{
+			return null;
+		}
+
+		var dicApiMemberProps = new Dictionary<string, string>();
+
+		if (!string.IsNullOrEmpty(col.Description))
+		{
+			string str = col.Description;
+			if (str.EndsWith(".") && !str.EndsWith("..."))
+			{
+				str = str.Remove(str.Length - 1, 1);
+			}
+			dicApiMemberProps.Add("Description", "\"" + str + "\"");
+		}
+                
+		string swagDataType = "";
+
+		if (lstEnums.Contains(col.PropertyType))
+		{
+			//swagDataType = "SwaggerDataTypes.String";
+		}
+		else if (col.PropertyType == "byte[]")
+		{
+			swagDataType = "SwaggerDataTypes.File";
+		}
+		else
+		{
+			swagDataType = "SwaggerDataTypes." + col.PropertyType.Substring(0,1).ToUpper() + col.PropertyType.Substring(1);
+		}
+
+		if (!string.IsNullOrEmpty(swagDataType))
+		{
+			dicApiMemberProps.Add("DataType", swagDataType);
+		}
+
+		if (col.IsNullable == false)
+		{
+			dicApiMemberProps.Add("IsRequired", "true");
+		}
+
+		return dicApiMemberProps;
+	}
+
+	/// <summary>
+	/// Retourne les colonnes qui identifient l'entité.
+	/// </summary>
+	public static List<Column> GetKeyColumns(Table table)
+	{
+		if (table.PrimaryKey != null)
+		{
+			return table.PrimaryKey.PKeyColumns;
+		}
+		return null;
+	}
+
+	/// <summary>
+	/// Retourne la FK pointant sur la table parent la plus proche avec un nom similaire.
+	/// </summary>
+	public static FKey GetParentFKey(Table table)
+	{
+		var fkey = table.ForeignKeys
+			.Where(fk => table.Name.StartsWith(fk.ReferencedTable.Name))
+			.Where(fk => table.Name != fk.ReferencedTable.Name)
+			.OrderByDescending(fk => fk.ReferencedTable.Name.Length) // si plusieurs parents, on prend celui avec le nom le plus long
+			.FirstOrDefault();
+		return fkey;
+	}
+
+	/// <summary>
+	/// Extraction des colonnes route path suivant les ForeignKeys/enfants
+	/// </summary>
+	public static List<Column> GetRouteColumns(Table table, bool recurseParents)
+	{
+		var lstCols = new List<Column>();
+
+		if (recurseParents)
+		{
+			var fkParent = GetParentFKey(table);
+			if (fkParent != null)
+			{
+				var parentTable = fkParent.ReferencedTable;
+
+				var lst = GetRouteColumns(parentTable, recurseParents);
+				lstCols.AddRange(lst);
+			}
+		}
+
+		var parentCols = GetKeyColumns(table);
+		if (parentCols != null)
+		{
+			lstCols.AddRange(parentCols);
+		}
+
+		return lstCols;
+	}
+
+	public static string ReplaceFirst(string text, string search, string replace)
+	{
+		int pos = text.IndexOf(search);
+		if (pos < 0)
+		{
+			return text;
+		}
+		return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
+	}
+
+	public static string GetStrRoutePath(List<Column> lstCols, bool keepEnd = true, bool removeUselessCols = true)
+	{
+		string strRoute = "";
+		string currentTable = "";
+
+		var lastCol = lstCols.Last();
+		var tbl = lastCol.ParentTable;
+
+		foreach (var phCol in lstCols)
+		{
+			if (phCol.ParentTable.ClassName != currentTable)
+			{
+				string newTableName = phCol.ParentTable.ClassName;
+				if (currentTable != "")
+				{
+					newTableName = ReplaceFirst(phCol.ParentTable.ClassName, currentTable, ""); 
+				}
+				strRoute += "/" + newTableName;
+
+				currentTable = phCol.ParentTable.ClassName;
+			}
+
+			string strCol = "{" + phCol.PropertyName + "}";
+			if (!strRoute.Contains(strCol))
+			{
+				if (removeUselessCols && lastCol.IsPKey && phCol != lastCol)
+				{
+					continue;
+				}
+				if (keepEnd || (phCol.ParentTable != tbl))
+				{
+					strRoute += "/";
+					strRoute += strCol;
+				}
+			}
+		}
+
+		return strRoute;
+	}
+
+	public static string GetEntityName(List<Column> lstCols)
+	{
+		var parts = new List<string>();
+
+		string currentTable = "";
+		foreach (var phCol in lstCols)
+		{
+			if (phCol.ParentTable.ClassName != currentTable)
+			{
+				string newTableName = phCol.ParentTable.ClassName;
+				if (currentTable != "")
+				{
+					newTableName = ReplaceFirst(phCol.ParentTable.ClassName, currentTable, "");
+				}
+			
+				parts.Add(newTableName);
+
+				currentTable = phCol.ParentTable.ClassName;
+			}
+		}
+	
+		if (parts.Count == 0)
+		{
+			return "";
+		}
+		else
+		{
+			string res = parts.Last();
+
+			if (parts.Count == 1)
+			{
+				return res;
 			}
 			else
 			{
-				switch (col.PropertyName)
-				{
-					case "EstActif":
-						col.Description = "Actif ou inactif";
-						break;
-					case "DatCreation":
-						col.Description = "Date de création (immutable)";
-						break;
-					case "CleCreateur":
-						col.Description = "Identifiant unique de l'utilisateur responsable de la création (immutable)";
-						break;
-					case "DatEdition":
-						col.Description = "Date de dernière modification (immutable)";
-						break;
-					case "CleEditeur":
-						col.Description = "Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)";
-						break;
-					case "CodExterne":
-						col.Description = "Identifiant de synchronisation externe";
-						break;
-
-					case "NumTelep":
-						col.Description = "Numéro de téléphone";
-						break;
-					case "NumFax":
-						col.Description = "Numéro de fax";
-						break;
-					case "NumEmail":
-						col.Description = "Adresse email";
-						break;
-
-					case "AdrRue":
-						col.Description = "Rue";
-						break;
-					case "AdrCode":
-						col.Description = "Code postal";
-						break;
-					case "AdrCommune":
-						col.Description = "Ville ou commune";
-						break;
-					case "AdrPays":
-						col.Description = "Pays";
-						break;
-				}
+				string parentRes = string.Join("/", parts.Where(p => p != res));
+				return string.Format("{0} ({1})", res, parentRes);
 			}
-        }
-		/*
-		else if (!col.Description.EndsWith("."))
-		{
-			col.Description += ".";
 		}
-		*/
-
-		if (col.IsAutoIncrement || col.IsComputed)
-        {
-			string desc = col.Description + " (immutable)";
-			col.Description = desc.Trim();
-        }
-		bool isUniqueSingleCol = table.Indices
-			.Where(idx => idx.IsUnique == true && idx.IndexColumns.Count == 1 && idx.IndexColumns.Contains(col))
-			.Any();
-		if (isUniqueSingleCol)
-        {
-			string desc = col.Description + " (unique)";
-			col.Description = desc.Trim();
-        }
-    }
-}
-
-private Dictionary<string, string> GetApiMemberProps(Column col, IEnumerable<string> lstEnums, List<string> lstInterfaces)
-{
-    if (lstInterfaces.Contains("IAuditable") &&
-		(col.PropertyName == "DatCreation" || col.PropertyName == "CleCreateur" || col.PropertyName == "DatEdition" || col.PropertyName == "CleEditeur"))
-    {
-        return null;
-    }
-
-    var dicApiMemberProps = new Dictionary<string, string>();
-
-    if (!string.IsNullOrEmpty(col.Description))
-    {
-		string str = col.Description;
-		if (str.EndsWith(".") && !str.EndsWith("..."))
-        {
-			str = str.Remove(str.Length - 1, 1);
-        }
-        dicApiMemberProps.Add("Description", "\"" + str + "\"");
-    }
-                
-    string swagDataType = "";
-
-    if (lstEnums.Contains(col.PropertyType))
-    {
-        //swagDataType = "SwaggerDataTypes.String";
-    }
-    else if (col.PropertyType == "byte[]")
-    {
-        swagDataType = "SwaggerDataTypes.File";
-    }
-    else
-    {
-        swagDataType = "SwaggerDataTypes." + col.PropertyType.Substring(0,1).ToUpper() + col.PropertyType.Substring(1);
-    }
-
-    if (!string.IsNullOrEmpty(swagDataType))
-    {
-        dicApiMemberProps.Add("DataType", swagDataType);
-    }
-
-    if (col.IsNullable == false)
-    {
-        dicApiMemberProps.Add("IsRequired", "true");
-    }
-
-	return dicApiMemberProps;
-}
-
-/// <summary>
-/// Retourne les colonnes qui identifient l'entité.
-/// </summary>
-private List<Column> GetKeyColumns(Table table)
-{
-	if (table.PrimaryKey != null)
-    {
-		return table.PrimaryKey.PKeyColumns;
-    }
-	return null;
-}
-
-/// <summary>
-/// Retourne la FK pointant sur la table parent la plus proche avec un nom similaire.
-/// </summary>
-private FKey GetParentFKey(Table table)
-{
-    var fkey = table.ForeignKeys
-		.Where(fk => table.Name.StartsWith(fk.ReferencedTable.Name))
-		.Where(fk => table.Name != fk.ReferencedTable.Name)
-		.OrderByDescending(fk => fk.ReferencedTable.Name.Length) // si plusieurs parents, on prend celui avec le nom le plus long
-		.FirstOrDefault();
-	return fkey;
-}
-
-/// <summary>
-/// Extraction des colonnes route path suivant les ForeignKeys/enfants
-/// </summary>
-private List<Column> GetRouteColumns(Table table, bool recurseParents)
-{
-	var lstCols = new List<Column>();
-
-	if (recurseParents)
-    {
-		var fkParent = GetParentFKey(table);
-		if (fkParent != null)
-		{
-			var parentTable = fkParent.ReferencedTable;
-
-			var lst = GetRouteColumns(parentTable, recurseParents);
-			lstCols.AddRange(lst);
-		}
-    }
-
-	var parentCols = GetKeyColumns(table);
-    if (parentCols != null)
-	{
-		lstCols.AddRange(parentCols);
-    }
-
-	return lstCols;
-}
-
-private string ReplaceFirst(string text, string search, string replace)
-{
-	int pos = text.IndexOf(search);
-	if (pos < 0)
-	{
-		return text;
 	}
-	return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
-}
-
-private string GetStrRoutePath(List<Column> lstCols, bool keepEnd = true, bool removeUselessCols = true)
-{
-	string strRoute = "";
-	string currentTable = "";
-
-	var lastCol = lstCols.Last();
-	var tbl = lastCol.ParentTable;
-
-	foreach (var phCol in lstCols)
-    {
-		if (phCol.ParentTable.ClassName != currentTable)
-        {
-			string newTableName = phCol.ParentTable.ClassName;
-			if (currentTable != "")
-            {
-				newTableName = ReplaceFirst(phCol.ParentTable.ClassName, currentTable, ""); 
-            }
-			strRoute += "/" + newTableName;
-
-			currentTable = phCol.ParentTable.ClassName;
-        }
-
-		string strCol = "{" + phCol.PropertyName + "}";
-		if (!strRoute.Contains(strCol))
-        {
-			if (removeUselessCols && lastCol.IsPKey && phCol != lastCol)
-            {
-				continue;
-            }
-			if (keepEnd || (phCol.ParentTable != tbl))
-			{
-				strRoute += "/";
-				strRoute += strCol;
-			}
-        }
-    }
-
-	return strRoute;
-}
-
-private string GetEntityName(List<Column> lstCols)
-{
-	var parts = new List<string>();
-
-	string currentTable = "";
-	foreach (var phCol in lstCols)
-    {
-		if (phCol.ParentTable.ClassName != currentTable)
-        {
-			string newTableName = phCol.ParentTable.ClassName;
-			if (currentTable != "")
-            {
-				newTableName = ReplaceFirst(phCol.ParentTable.ClassName, currentTable, "");
-            }
-			
-			parts.Add(newTableName);
-
-			currentTable = phCol.ParentTable.ClassName;
-        }
-    }
-	
-	if (parts.Count == 0)
-    {
-		return "";
-    }
-	else
-    {
-		string res = parts.Last();
-
-		if (parts.Count == 1)
-        {
-			return res;
-        }
-		else
-		{
-			string parentRes = string.Join("/", parts.Where(p => p != res));
-			return string.Format("{0} ({1})", res, parentRes);
-        }
-    }
 }
 #>

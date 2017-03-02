@@ -148,7 +148,6 @@
     <Content Include="src\Compteur\compteur-list.component.html">
       <DependentUpon>CompteurGenerator.tt</DependentUpon>
     </Content>
-    <Content Include="src\NgComponentGenerator.ttinclude" />
     <Content Include="tsconfig.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

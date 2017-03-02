@@ -13,43 +13,28 @@ using ServiceStack.FluentValidation;
 using Tmpi.Pyrene.ServiceModel;
 using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace Tmpi.Pyrene.ServiceInterface
+namespace 
 {
 	/// <summary>
-	/// Validation pour la requête <see cref="Service"/>.
+	/// Validation pour la requête <see cref="plop"/>.
 	/// </summary>
-	public partial class ServiceValidator : AbstractValidator<Service>
+	public partial class plopValidator : AbstractValidator<plop>
 	{
 		/// <summary>
-		/// Initialise une nouvelle instance de la classe <see cref="ServiceValidator" />.
+		/// Initialise une nouvelle instance de la classe <see cref="plopValidator" />.
 		/// </summary>
-		public ServiceValidator()
+		public plopValidator()
 		{
-			RuleFor(x => x.CodService)
+			RuleFor(x => x.CodExercice)
 				.NotEmpty()
 				.Length(0, 100);
-			RuleFor(x => x.LibService)
+			RuleFor(x => x.LibExercice)
 				.NotEmpty()
 				.Length(0, 200);
-			RuleFor(x => x.TxtService)
+			RuleFor(x => x.TxtExercice)
 				.Length(0, 500);
 			RuleFor(x => x.CodExterne)
 				.Length(0, 100);
-			RuleFor(x => x.AdrRue)
-				.Length(0, 200);
-			RuleFor(x => x.AdrCode)
-				.Length(0, 10);
-			RuleFor(x => x.AdrCommune)
-				.Length(0, 100);
-			RuleFor(x => x.AdrPays)
-				.Length(0, 100);
-			RuleFor(x => x.NumTelep)
-				.Length(0, 25);
-			RuleFor(x => x.NumFax)
-				.Length(0, 25);
-			RuleFor(x => x.NumEmail)
-				.Length(0, 100)
-				.EmailAddress();
 
 			SetRules();
 		}
