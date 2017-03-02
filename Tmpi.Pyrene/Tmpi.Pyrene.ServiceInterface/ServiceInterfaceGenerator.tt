@@ -51,6 +51,11 @@
 
 #>
 <#
+	GenerationEnvironment.Clear();
+#>
+// <#= DateTime.Now.ToString("s") #>
+
+<#
 	var vsHelper = AutomationHelper.Create(this);
 
 	// namespace
