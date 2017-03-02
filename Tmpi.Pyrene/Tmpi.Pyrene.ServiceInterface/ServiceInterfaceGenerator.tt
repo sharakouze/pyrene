@@ -165,75 +165,23 @@
 		string serviceFileName = ServiceInterfaceUtils.GetGeneratedFilename(serviceClassName, serviceNamespace, BaseNamespace);
 		manager.StartNewFile(FilePrefix + serviceFileName + FileExtension);
 
-		sig.WriteService(kvp.Key, kvp.Value, sourceNamespace, serviceNamespace);
+		sig.WriteService(kvp.Key, sourceNamespace, serviceNamespace, kvp.Value);
 
 		manager.EndBlock(); // end newfile
 
         if (CreateValidators)
         {
-            foreach (var item in kvp.Value)
-            {
-                if (item.RequestClass == item.PocoClass)
-                {
-					string pocoClassName = item.PocoClass.Name;
-					Dictionary<string, List<string>> dicValidation = new Dictionary<string, List<string>>();
+			string validatorNamespace = string.Format(NamespaceValidators, BaseNamespace);
+			string validatorClassName = kvp.Key;
+			string validatorFileName = ServiceInterfaceUtils.GetGeneratedFilename(validatorClassName, validatorNamespace, BaseNamespace);
+			manager.StartNewFile(FilePrefix + validatorFileName + FileExtension);
 
-                    var allPropsAttributes = vsHelper.CodeModel.GetAllPropertiesAttributes(item.RequestClass);
-                    foreach (var prop in allPropsAttributes)
-                    {
-                        var lstValidation = new List<string>();
+			var requests = kvp.Value.Where(item => item.RequestClass == item.PocoClass);
+			sig.WriteValidator(sourceNamespace, validatorNamespace, requests, ValidatorsWithMessage);
 
-                        if (prop.Value.Any(attr => attr.FullName == "ServiceStack.DataAnnotations.RequiredAttribute"))
-                        {
-                            if (prop.Key.Type.AsFullName == "System.String")
-                            {
-                                string str = ".NotEmpty()";
-                                if (ValidatorsWithMessage)
-                                {
-                                    str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_NotEmpty)", pocoClassName, prop.Key.Name);
-                                }
-                                lstValidation.Add(str);
-                            }
-                        }
-                        var strLengthAttr = prop.Value.FirstOrDefault(attr => attr.FullName == "ServiceStack.DataAnnotations.StringLengthAttribute");
-                        if (strLengthAttr != null)
-                        {
-                            int min = 0;
-                            int max = Convert.ToInt32(strLengthAttr.Value);
-                            string str = string.Format(".Length({0}, {1})", min, max);
-                            if (ValidatorsWithMessage)
-                            {
-                                str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_Length, {2}, {3})", pocoClassName, prop.Key.Name, min, max);
-                            }
-                            lstValidation.Add(str);
-                        }
-
-                        if (prop.Key.Name == "NumEmail")
-                        {
-                            lstValidation.Add(".EmailAddress()");
-                        }
-
-						if (lstValidation.Any())
-                        {
-							dicValidation.Add(prop.Key.Name, lstValidation);
-                        }
-					}
-
-					if (dicValidation.Any())
-                    {
-						string validatorNamespace = string.Format(NamespaceValidators, BaseNamespace);
-						string validatorClassName = pocoClassName + "Validator";
-						string validatorFileName = ServiceInterfaceUtils.GetGeneratedFilename(validatorClassName, validatorNamespace, BaseNamespace);
-						manager.StartNewFile(FilePrefix + validatorFileName + FileExtension);
-
-						sig.WriteValidator(sourceNamespace, validatorNamespace, item.PocoClass.Name, dicValidation);
-
-						manager.EndBlock(); // end newfile
-                    } 
-                }
-            } // end foreach
+			manager.EndBlock(); // end newfile
         }
-    } // end forach
+    } // end foreach
 
 	manager.Process(SplitIntoMultipleFiles);
 #>

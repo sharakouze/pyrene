@@ -16,18 +16,25 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceInterface.Validators
 {
 	/// <summary>
-	/// Validation pour la requête <see cref="PersonneSignature"/>.
+	/// Validation pour la requête <see cref="Mandat"/>.
 	/// </summary>
-	public partial class PersonneSignatureValidator : AbstractValidator<PersonneSignature>
+	public partial class MandatValidator : AbstractValidator<Mandat>
 	{
 		/// <summary>
-		/// Initialise une nouvelle instance de la classe <see cref="PersonneSignatureValidator" />.
+		/// Initialise une nouvelle instance de la classe <see cref="MandatValidator" />.
 		/// </summary>
-		public PersonneSignatureValidator()
+		public MandatValidator()
 		{
-			RuleFor(x => x.TypMime)
+			RuleFor(x => x.CodMandat)
 				.NotEmpty()
-				.Length(0, 255);
+				.Length(0, 100);
+			RuleFor(x => x.LibMandat)
+				.NotEmpty()
+				.Length(0, 200);
+			RuleFor(x => x.TxtMandat)
+				.Length(0, 500);
+			RuleFor(x => x.CodExterne)
+				.Length(0, 100);
 
 			SetRules();
 		}
@@ -37,4 +44,5 @@ namespace Tmpi.Pyrene.ServiceInterface.Validators
 		/// </summary>
 		partial void SetRules();
 	}
+
 }

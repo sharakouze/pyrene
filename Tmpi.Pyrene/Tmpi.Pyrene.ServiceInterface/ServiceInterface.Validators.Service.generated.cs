@@ -16,25 +16,40 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceInterface.Validators
 {
 	/// <summary>
-	/// Validation pour la requête <see cref="Exercice"/>.
+	/// Validation pour la requête <see cref="Service"/>.
 	/// </summary>
-	public partial class ExerciceValidator : AbstractValidator<Exercice>
+	public partial class ServiceValidator : AbstractValidator<Service>
 	{
 		/// <summary>
-		/// Initialise une nouvelle instance de la classe <see cref="ExerciceValidator" />.
+		/// Initialise une nouvelle instance de la classe <see cref="ServiceValidator" />.
 		/// </summary>
-		public ExerciceValidator()
+		public ServiceValidator()
 		{
-			RuleFor(x => x.CodExercice)
+			RuleFor(x => x.CodService)
 				.NotEmpty()
 				.Length(0, 100);
-			RuleFor(x => x.LibExercice)
+			RuleFor(x => x.LibService)
 				.NotEmpty()
 				.Length(0, 200);
-			RuleFor(x => x.TxtExercice)
+			RuleFor(x => x.TxtService)
 				.Length(0, 500);
 			RuleFor(x => x.CodExterne)
 				.Length(0, 100);
+			RuleFor(x => x.AdrRue)
+				.Length(0, 200);
+			RuleFor(x => x.AdrCode)
+				.Length(0, 10);
+			RuleFor(x => x.AdrCommune)
+				.Length(0, 100);
+			RuleFor(x => x.AdrPays)
+				.Length(0, 100);
+			RuleFor(x => x.NumTelep)
+				.Length(0, 25);
+			RuleFor(x => x.NumFax)
+				.Length(0, 25);
+			RuleFor(x => x.NumEmail)
+				.Length(0, 100)
+				.EmailAddress();
 
 			SetRules();
 		}
@@ -44,4 +59,5 @@ namespace Tmpi.Pyrene.ServiceInterface.Validators
 		/// </summary>
 		partial void SetRules();
 	}
+
 }

@@ -53,4 +53,51 @@ namespace Tmpi.Pyrene.ServiceInterface.Validators
 		/// </summary>
 		partial void SetRules();
 	}
+
+	/// <summary>
+	/// Validation pour la requête <see cref="PersonneProfil"/>.
+	/// </summary>
+	public partial class PersonneProfilValidator : AbstractValidator<PersonneProfil>
+	{
+		/// <summary>
+		/// Initialise une nouvelle instance de la classe <see cref="PersonneProfilValidator" />.
+		/// </summary>
+		public PersonneProfilValidator()
+		{
+			RuleFor(x => x.CodProfil)
+				.NotEmpty()
+				.Length(0, 100);
+
+			SetRules();
+		}
+
+		/// <summary>
+		/// Définit des règles de validation supplémentaires.
+		/// </summary>
+		partial void SetRules();
+	}
+
+	/// <summary>
+	/// Validation pour la requête <see cref="PersonneSignature"/>.
+	/// </summary>
+	public partial class PersonneSignatureValidator : AbstractValidator<PersonneSignature>
+	{
+		/// <summary>
+		/// Initialise une nouvelle instance de la classe <see cref="PersonneSignatureValidator" />.
+		/// </summary>
+		public PersonneSignatureValidator()
+		{
+			RuleFor(x => x.TypMime)
+				.NotEmpty()
+				.Length(0, 255);
+
+			SetRules();
+		}
+
+		/// <summary>
+		/// Définit des règles de validation supplémentaires.
+		/// </summary>
+		partial void SetRules();
+	}
+
 }

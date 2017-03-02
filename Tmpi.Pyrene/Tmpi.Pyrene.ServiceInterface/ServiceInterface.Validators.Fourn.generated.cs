@@ -65,4 +65,70 @@ namespace Tmpi.Pyrene.ServiceInterface.Validators
 		/// </summary>
 		partial void SetRules();
 	}
+
+	/// <summary>
+	/// Validation pour la requête <see cref="FournBanque"/>.
+	/// </summary>
+	public partial class FournBanqueValidator : AbstractValidator<FournBanque>
+	{
+		/// <summary>
+		/// Initialise une nouvelle instance de la classe <see cref="FournBanqueValidator" />.
+		/// </summary>
+		public FournBanqueValidator()
+		{
+			RuleFor(x => x.CodIBAN)
+				.NotEmpty()
+				.Length(0, 34);
+			RuleFor(x => x.CodBIC)
+				.NotEmpty()
+				.Length(0, 11);
+			RuleFor(x => x.LibEtablissement)
+				.NotEmpty()
+				.Length(0, 200);
+
+			SetRules();
+		}
+
+		/// <summary>
+		/// Définit des règles de validation supplémentaires.
+		/// </summary>
+		partial void SetRules();
+	}
+
+	/// <summary>
+	/// Validation pour la requête <see cref="FournContact"/>.
+	/// </summary>
+	public partial class FournContactValidator : AbstractValidator<FournContact>
+	{
+		/// <summary>
+		/// Initialise une nouvelle instance de la classe <see cref="FournContactValidator" />.
+		/// </summary>
+		public FournContactValidator()
+		{
+			RuleFor(x => x.NomContact)
+				.NotEmpty()
+				.Length(0, 100);
+			RuleFor(x => x.PreContact)
+				.Length(0, 100);
+			RuleFor(x => x.TxtContact)
+				.Length(0, 500);
+			RuleFor(x => x.NumTelep)
+				.Length(0, 25);
+			RuleFor(x => x.NumFax)
+				.Length(0, 25);
+			RuleFor(x => x.NumEmail)
+				.Length(0, 100)
+				.EmailAddress();
+			RuleFor(x => x.LibFonction)
+				.Length(0, 100);
+
+			SetRules();
+		}
+
+		/// <summary>
+		/// Définit des règles de validation supplémentaires.
+		/// </summary>
+		partial void SetRules();
+	}
+
 }

@@ -29,7 +29,7 @@ public class ServiceInterfaceGenerator
 
 	public bool MakeClassesPartial { get; set; }
 
-	public void WriteService(string baseEntityName, IEnumerable<RequestItem> requests, string sourceNamespace, string fileNamespace)
+	public void WriteService(string baseEntityName, string sourceNamespace, string fileNamespace, IEnumerable<RequestItem> requests)
     {
 #>
 using System;
@@ -466,7 +466,8 @@ namespace <#= fileNamespace #>
 <#+
     }
 
-	public void WriteValidator(string sourceNamespace, string fileNamespace, string pocoClassName, Dictionary<string, List<string>> dicValidation)
+	public void WriteValidator(string sourceNamespace, string fileNamespace, IEnumerable<RequestItem> requests,
+		bool validatorsWithMessage = false)
     {
 #>
 using ServiceStack.FluentValidation;
@@ -475,6 +476,56 @@ using <#= sourceNamespace #>.Types;
 
 namespace <#= fileNamespace #>
 {
+<#+
+		foreach (var item in requests)
+        {
+			Dictionary<string, List<string>> dicValidation = new Dictionary<string, List<string>>();
+			string pocoClassName = item.PocoClass.Name;
+
+			var allPropsAttributes = vsHelper.CodeModel.GetAllPropertiesAttributes(item.RequestClass);
+			foreach (var prop in allPropsAttributes)
+			{
+				var lstValidation = new List<string>();
+
+				if (prop.Value.Any(attr => attr.FullName == "ServiceStack.DataAnnotations.RequiredAttribute"))
+				{
+					if (prop.Key.Type.AsFullName == "System.String")
+					{
+						string str = ".NotEmpty()";
+						if (validatorsWithMessage)
+						{
+							str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_NotEmpty)", pocoClassName, prop.Key.Name);
+						}
+						lstValidation.Add(str);
+					}
+				}
+				var strLengthAttr = prop.Value.FirstOrDefault(attr => attr.FullName == "ServiceStack.DataAnnotations.StringLengthAttribute");
+				if (strLengthAttr != null)
+				{
+					int min = 0;
+					int max = Convert.ToInt32(strLengthAttr.Value);
+					string str = string.Format(".Length({0}, {1})", min, max);
+					if (validatorsWithMessage)
+					{
+						str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_Length, {2}, {3})", pocoClassName, prop.Key.Name, min, max);
+					}
+					lstValidation.Add(str);
+				}
+
+				if (prop.Key.Name == "NumEmail")
+				{
+					lstValidation.Add(".EmailAddress()");
+				}
+
+				if (lstValidation.Any())
+				{
+					dicValidation.Add(prop.Key.Name, lstValidation);
+				}
+			}
+
+			if (dicValidation.Any())
+			{
+#>
 	/// <summary>
 	/// Validation pour la requête <see cref="<#= pocoClassName #>"/>.
 	/// </summary>
@@ -509,6 +560,11 @@ namespace <#= fileNamespace #>
 		/// </summary>
 		partial void SetRules();
 	}
+
+<#+
+			}
+        }
+#>
 }
 <#+
 	}

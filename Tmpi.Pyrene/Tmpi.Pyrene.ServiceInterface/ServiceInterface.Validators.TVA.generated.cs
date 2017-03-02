@@ -44,4 +44,5 @@ namespace Tmpi.Pyrene.ServiceInterface.Validators
 		/// </summary>
 		partial void SetRules();
 	}
+
 }

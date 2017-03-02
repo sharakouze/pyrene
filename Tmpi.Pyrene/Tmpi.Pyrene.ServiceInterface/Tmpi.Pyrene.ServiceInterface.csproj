@@ -93,37 +93,25 @@
     <Compile Include="ServiceInterface.TVAService.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="ServiceInterface.Validators.CompteurValidator.generated.cs">
+    <Compile Include="ServiceInterface.Validators.Compteur.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="ServiceInterface.Validators.ExerciceValidator.generated.cs">
+    <Compile Include="ServiceInterface.Validators.Exercice.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="ServiceInterface.Validators.FournBanqueValidator.generated.cs">
+    <Compile Include="ServiceInterface.Validators.Fourn.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="ServiceInterface.Validators.FournContactValidator.generated.cs">
+    <Compile Include="ServiceInterface.Validators.Mandat.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="ServiceInterface.Validators.FournValidator.generated.cs">
+    <Compile Include="ServiceInterface.Validators.Personne.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="ServiceInterface.Validators.MandatValidator.generated.cs">
+    <Compile Include="ServiceInterface.Validators.Service.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="ServiceInterface.Validators.PersonneProfilValidator.generated.cs">
-      <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ServiceInterface.Validators.PersonneSignatureValidator.generated.cs">
-      <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ServiceInterface.Validators.PersonneValidator.generated.cs">
-      <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ServiceInterface.Validators.ServiceValidator.generated.cs">
-      <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ServiceInterface.Validators.TVAValidator.generated.cs">
+    <Compile Include="ServiceInterface.Validators.TVA.generated.cs">
       <DependentUpon>ServiceInterfaceGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="ServiceInterfaceGenerator.generated.cs">
