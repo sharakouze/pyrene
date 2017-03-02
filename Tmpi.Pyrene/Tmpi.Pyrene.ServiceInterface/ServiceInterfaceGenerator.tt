@@ -176,8 +176,8 @@
 			string validatorFileName = ServiceInterfaceUtils.GetGeneratedFilename(validatorClassName, validatorNamespace, BaseNamespace);
 			manager.StartNewFile(FilePrefix + validatorFileName + FileExtension);
 
-			var requests = kvp.Value.Where(item => item.RequestClass == item.PocoClass);
-			sig.WriteValidator(sourceNamespace, validatorNamespace, requests, ValidatorsWithMessage);
+			var validatorRequests = kvp.Value.Where(item => item.RequestClass == item.PocoClass);
+			sig.WriteValidator(sourceNamespace, validatorNamespace, validatorRequests, ValidatorsWithMessage);
 
 			manager.EndBlock(); // end newfile
         }
