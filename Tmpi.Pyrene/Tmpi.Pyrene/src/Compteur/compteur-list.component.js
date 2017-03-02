@@ -25,8 +25,7 @@ System.register(["@angular/core", "./compteur.service"], function (exports_1, co
                 function CompteurListComponent(compteurService) {
                     this.compteurService = compteurService;
                     this.compteur = {
-                        result: null,
-                        sort: 'CodCompteur',
+                        sort: 'LibCompteur',
                         pageIndex: 0,
                         pageSize: 20
                     };
@@ -39,7 +38,10 @@ System.register(["@angular/core", "./compteur.service"], function (exports_1, co
                     var fields = 'CodCompteur,LibCompteur,EstActif,TypCompteur,Service(CodService)';
                     var skip = this.compteur.pageIndex * this.compteur.pageSize;
                     this.compteurService.selectCompteur(fields, [this.compteur.sort], skip, this.compteur.pageSize)
-                        .then(function (r) { return _this.compteur.result = r; });
+                        .then(function (r) { return _this.compteur.data = r.Results; });
+                };
+                CompteurListComponent.prototype.deleteCompteur = function (id) {
+                    this.compteurService.deleteCompteur(id);
                 };
                 return CompteurListComponent;
             }());

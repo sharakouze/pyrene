@@ -148,6 +148,11 @@
     <Content Include="src\Compteur\compteur-list.component.html">
       <DependentUpon>CompteurGenerator.tt</DependentUpon>
     </Content>
+    <Content Include="src\Compteur\CompteurGenerator.generated.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CompteurGenerator.tt</DependentUpon>
+    </Content>
     <Content Include="tsconfig.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -160,7 +165,7 @@
     <Content Include="Global.asax" />
     <Content Include="src\Compteur\CompteurGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CompteurGenerator.generated.cs</LastGenOutput>
+      <LastGenOutput>CompteurGenerator.generated.txt</LastGenOutput>
     </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -176,11 +181,6 @@
     </Compile>
     <Compile Include="Licenses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Compteur\CompteurGenerator.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CompteurGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="SwaggerConfig.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -202,7 +202,6 @@
     <Folder Include="src\Fourn\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\app.ts" />
     <TypeScriptCompile Include="src\appsettings.ts" />
     <TypeScriptCompile Include="src\Compteur\compteur-list.component.ts">
       <DependentUpon>CompteurGenerator.tt</DependentUpon>

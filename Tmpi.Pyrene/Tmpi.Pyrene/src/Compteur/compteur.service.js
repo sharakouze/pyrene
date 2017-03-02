@@ -43,6 +43,11 @@ System.register(["@angular/core", "../service-client", "../dtos"], function (exp
                     }
                     return this.client.get(req);
                 };
+                CompteurService.prototype.deleteCompteur = function (id) {
+                    var req = new dtos_1.DeleteCompteur();
+                    req.CleCompteur = id;
+                    return this.client.delete(req);
+                };
                 return CompteurService;
             }(service_client_1.ServiceClient));
             CompteurService = __decorate([
