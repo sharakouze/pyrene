@@ -116,13 +116,19 @@
 		}
     };
 
+	bool Timestamping = true;
+
 #>
 <#
 	GenerationEnvironment.Clear();
+	if (Timestamping)
+	{
 #>
 // <#= DateTime.Now.ToString("s") #>
 
 <#
+	}
+
     var manager = Manager.Create(this);
     manager.StartHeader();
 #>

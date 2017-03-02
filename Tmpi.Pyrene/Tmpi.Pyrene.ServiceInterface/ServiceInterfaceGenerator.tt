@@ -49,13 +49,19 @@
 	Regex ClassFilterInclude = null;
 	Regex ClassFilterExclude = null;
 
+	bool Timestamping = true;
+
 #>
 <#
 	GenerationEnvironment.Clear();
+	if (Timestamping)
+	{
 #>
 // <#= DateTime.Now.ToString("s") #>
 
 <#
+	}
+
 	var vsHelper = AutomationHelper.Create(this);
 
 	// namespace
