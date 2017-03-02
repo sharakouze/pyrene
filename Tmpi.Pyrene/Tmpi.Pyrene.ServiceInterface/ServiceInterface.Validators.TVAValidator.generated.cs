@@ -13,33 +13,27 @@ using ServiceStack.FluentValidation;
 using Tmpi.Pyrene.ServiceModel;
 using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace 
+namespace Tmpi.Pyrene.ServiceInterface.Validators
 {
 	/// <summary>
-	/// Validation pour la requête <see cref="plop"/>.
+	/// Validation pour la requête <see cref="TVA"/>.
 	/// </summary>
-	public partial class plopValidator : AbstractValidator<plop>
+	public partial class TVAValidator : AbstractValidator<TVA>
 	{
 		/// <summary>
-		/// Initialise une nouvelle instance de la classe <see cref="plopValidator" />.
+		/// Initialise une nouvelle instance de la classe <see cref="TVAValidator" />.
 		/// </summary>
-		public plopValidator()
+		public TVAValidator()
 		{
-			RuleFor(x => x.NomContact)
+			RuleFor(x => x.CodTVA)
 				.NotEmpty()
 				.Length(0, 100);
-			RuleFor(x => x.PreContact)
-				.Length(0, 100);
-			RuleFor(x => x.TxtContact)
+			RuleFor(x => x.LibTVA)
+				.NotEmpty()
+				.Length(0, 200);
+			RuleFor(x => x.TxtTVA)
 				.Length(0, 500);
-			RuleFor(x => x.NumTelep)
-				.Length(0, 25);
-			RuleFor(x => x.NumFax)
-				.Length(0, 25);
-			RuleFor(x => x.NumEmail)
-				.Length(0, 100)
-				.EmailAddress();
-			RuleFor(x => x.LibFonction)
+			RuleFor(x => x.CodExterne)
 				.Length(0, 100);
 
 			SetRules();

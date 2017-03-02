@@ -21,7 +21,7 @@ using Tmpi.Pyrene.Common.Linq;
 using Tmpi.Pyrene.ServiceModel;
 using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace 
+namespace Tmpi.Pyrene.ServiceInterface
 {
 	/// <summary>
 	/// Service qui traite les requêtes sur les entités <see cref="TVA"/>.

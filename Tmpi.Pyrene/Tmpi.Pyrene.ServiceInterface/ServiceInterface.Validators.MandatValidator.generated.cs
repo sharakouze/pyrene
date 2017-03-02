@@ -13,20 +13,27 @@ using ServiceStack.FluentValidation;
 using Tmpi.Pyrene.ServiceModel;
 using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace 
+namespace Tmpi.Pyrene.ServiceInterface.Validators
 {
 	/// <summary>
-	/// Validation pour la requête <see cref="plop"/>.
+	/// Validation pour la requête <see cref="Mandat"/>.
 	/// </summary>
-	public partial class plopValidator : AbstractValidator<plop>
+	public partial class MandatValidator : AbstractValidator<Mandat>
 	{
 		/// <summary>
-		/// Initialise une nouvelle instance de la classe <see cref="plopValidator" />.
+		/// Initialise une nouvelle instance de la classe <see cref="MandatValidator" />.
 		/// </summary>
-		public plopValidator()
+		public MandatValidator()
 		{
-			RuleFor(x => x.CodProfil)
+			RuleFor(x => x.CodMandat)
 				.NotEmpty()
+				.Length(0, 100);
+			RuleFor(x => x.LibMandat)
+				.NotEmpty()
+				.Length(0, 200);
+			RuleFor(x => x.TxtMandat)
+				.Length(0, 500);
+			RuleFor(x => x.CodExterne)
 				.Length(0, 100);
 
 			SetRules();

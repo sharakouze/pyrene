@@ -13,49 +13,31 @@ using ServiceStack.FluentValidation;
 using Tmpi.Pyrene.ServiceModel;
 using Tmpi.Pyrene.ServiceModel.Types;
 
-namespace 
+namespace Tmpi.Pyrene.ServiceInterface.Validators
 {
 	/// <summary>
-	/// Validation pour la requête <see cref="plop"/>.
+	/// Validation pour la requête <see cref="Compteur"/>.
 	/// </summary>
-	public partial class plopValidator : AbstractValidator<plop>
+	public partial class CompteurValidator : AbstractValidator<Compteur>
 	{
 		/// <summary>
-		/// Initialise une nouvelle instance de la classe <see cref="plopValidator" />.
+		/// Initialise une nouvelle instance de la classe <see cref="CompteurValidator" />.
 		/// </summary>
-		public plopValidator()
+		public CompteurValidator()
 		{
-			RuleFor(x => x.CodFourn)
+			RuleFor(x => x.CodCompteur)
 				.NotEmpty()
 				.Length(0, 100);
-			RuleFor(x => x.LibFourn)
+			RuleFor(x => x.LibCompteur)
 				.NotEmpty()
 				.Length(0, 200);
-			RuleFor(x => x.TxtFourn)
+			RuleFor(x => x.TxtCompteur)
 				.Length(0, 500);
 			RuleFor(x => x.CodExterne)
 				.Length(0, 100);
-			RuleFor(x => x.AdrRue)
-				.Length(0, 200);
-			RuleFor(x => x.AdrCode)
-				.Length(0, 10);
-			RuleFor(x => x.AdrCommune)
+			RuleFor(x => x.ValFormatNumero)
+				.NotEmpty()
 				.Length(0, 100);
-			RuleFor(x => x.AdrPays)
-				.Length(0, 100);
-			RuleFor(x => x.NumTelep)
-				.Length(0, 25);
-			RuleFor(x => x.NumFax)
-				.Length(0, 25);
-			RuleFor(x => x.NumEmail)
-				.Length(0, 100)
-				.EmailAddress();
-			RuleFor(x => x.CodCompta)
-				.Length(0, 100);
-			RuleFor(x => x.NumClient)
-				.Length(0, 100);
-			RuleFor(x => x.NumTVAIntra)
-				.Length(0, 25);
 
 			SetRules();
 		}

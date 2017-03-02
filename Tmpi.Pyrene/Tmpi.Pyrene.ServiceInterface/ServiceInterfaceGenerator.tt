@@ -19,7 +19,10 @@
 	/*********************/
 
 	// Namespace des fichiers générés. Si vide DefaultNamespace du projet/répertoire courant.
-	string Namespace = "";
+	string BaseNamespace = "";
+	// {0} = BaseNamespace
+    string NamespaceServices = "{0}";
+    string NamespaceValidators = "{0}.Validators";
 
 	// Limite le traitement aux classes dans ce projet.
 	string SourceProject = "Tmpi.Pyrene.ServiceModel";
@@ -51,10 +54,9 @@
 	var vsHelper = AutomationHelper.Create(this);
 
 	// namespace
-	string fileNamespace = Namespace;
-	if (string.IsNullOrWhiteSpace(fileNamespace))
+	if (string.IsNullOrWhiteSpace(BaseNamespace))
     {
-		fileNamespace = vsHelper.GetTemplateFileNamespace();
+		BaseNamespace = vsHelper.GetTemplateFileNamespace();
 	}
 
 	// get a reference to the project of this t4 template
@@ -158,10 +160,12 @@
 
 	foreach (var kvp in dicRequest)
 	{
+		string serviceNamespace = string.Format(NamespaceServices, BaseNamespace);
 		string serviceClassName = kvp.Key + "Service";
-		manager.StartNewFile(FilePrefix + serviceClassName + FileExtension);
+		string serviceFileName = ServiceInterfaceUtils.GetGeneratedFilename(serviceClassName, serviceNamespace, BaseNamespace);
+		manager.StartNewFile(FilePrefix + serviceFileName + FileExtension);
 
-		sig.WriteService(kvp.Key, kvp.Value, sourceNamespace, Namespace);
+		sig.WriteService(kvp.Key, kvp.Value, sourceNamespace, serviceNamespace);
 
 		manager.EndBlock(); // end newfile
 
@@ -217,9 +221,12 @@
 
 					if (dicValidation.Any())
                     {
-						manager.StartNewFile(FilePrefix + pocoClassName + "Validator" + FileExtension);
+						string validatorNamespace = string.Format(NamespaceValidators, BaseNamespace);
+						string validatorClassName = pocoClassName + "Validator";
+						string validatorFileName = ServiceInterfaceUtils.GetGeneratedFilename(validatorClassName, validatorNamespace, BaseNamespace);
+						manager.StartNewFile(FilePrefix + validatorFileName + FileExtension);
 
-						sig.WriteValidator(sourceNamespace, Namespace, "plop", dicValidation);
+						sig.WriteValidator(sourceNamespace, validatorNamespace, item.PocoClass.Name, dicValidation);
 
 						manager.EndBlock(); // end newfile
                     } 
@@ -229,4 +236,27 @@
     } // end forach
 
 	manager.Process(SplitIntoMultipleFiles);
+#>
+<#+
+public static class ServiceInterfaceUtils
+{
+	public static string GetGeneratedFilename(string filename, string fileNamespace, string baseNamespace)
+	{
+		if (fileNamespace == baseNamespace)
+		{
+			return filename;
+		}
+
+		string str = fileNamespace.Replace(baseNamespace, "");
+		if (str.StartsWith("."))
+		{
+			str = str.Remove(0, 1);
+		}
+		if (!str.EndsWith("."))
+		{
+			str = str + ".";
+		}
+		return str + filename;
+	}
+}
 #>
