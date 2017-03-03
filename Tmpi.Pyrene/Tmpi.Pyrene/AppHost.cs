@@ -223,14 +223,6 @@ namespace Tmpi.Pyrene
         }
 
         /// <summary>
-        /// Configure le plugin Razor.
-        /// </summary>
-        private void ConfigRazorPlugin()
-        {
-            Plugins.Add(new RazorFormat());
-        }
-
-        /// <summary>
         /// Configure Audit.NET.
         /// </summary>
         private void ConfigAuditNet()
@@ -247,7 +239,6 @@ namespace Tmpi.Pyrene
             ConfigCorsPlugin();
             ConfigSwaggerPlugin();
             ConfigValidationPlugin(container);
-            ConfigRazorPlugin();
 
             ConfigCsvSerialization();
             ConfigJsonSerialization();

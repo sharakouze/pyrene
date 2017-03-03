@@ -102,73 +102,11 @@
     }
 
 	manager.EndBlock(); // end header
-
-	var dicRequest = new Dictionary<string, List<RequestItem>>();
-
-    // get all class items from the code model
-    var allClasses = vsHelper.CodeModel.GetAllClasses(srcProject).OrderBy(c => c.Name).ToList();
-
-    foreach (var codeClass in allClasses)
-    {
-		bool included = ClassFilterInclude == null || ClassFilterInclude.IsMatch(codeClass.Name);
-		bool excluded = ClassFilterExclude != null && ClassFilterExclude.IsMatch(codeClass.Name);
-		if (!included || excluded)
-        {
-			continue;
-        }
-
-		string pocoClassName = null;
-        if (codeClass.Name.StartsWith("Get"))
-        {
-			pocoClassName = codeClass.Name.Substring(3);
-        }
-        else if (codeClass.Name.StartsWith("Delete"))
-        {
- 			pocoClassName = codeClass.Name.Substring(6);
-        }
-        else if (codeClass.Name.StartsWith("Patch"))
-        {
-            pocoClassName = codeClass.Name.Substring(5);
-        }
-        else if (codeClass.Name.StartsWith("Search"))
-        {
-			pocoClassName = codeClass.Name.Substring(6);
-        }
-        else if (codeClass.Name.StartsWith("Select"))
-        {
-			pocoClassName = codeClass.Name.Substring(6);
-        }
-		else
-		{
-			pocoClassName = codeClass.Name;
-		}
-
-		var lstRouteAttrs = vsHelper.CodeModel.GetAllClassAttributes(codeClass)
-			.Where(attr => attr.FullName == "ServiceStack.RouteAttribute")
-			.ToList();
-		if (lstRouteAttrs.Any() && !string.IsNullOrEmpty(pocoClassName))
-        {
-			var items = dicRequest.Where(kvp => pocoClassName.StartsWith(kvp.Key)).Select(kvp => kvp.Value).SingleOrDefault();
-			if (items == null)
-			{
-				items = new List<RequestItem>();
-				dicRequest.Add(pocoClassName, items);
-			}
-
-			var item = new RequestItem();
-			item.RequestClass = codeClass;
-			item.PocoClass = allClasses.SingleOrDefault(c => c.Name == pocoClassName);
-			foreach (var routeAttr in lstRouteAttrs)
-			{
-				item.LstRouteParts.Add(GetRouteParts(routeAttr));
-			}
-			items.Add(item);
-        }
-    } // end foreach
-
-	var sig = new ServiceInterfaceGenerator(this);
+	
+	var sig = new ServiceInterfaceGenerator(this, vsHelper);
 	sig.MakeClassesPartial = MakeClassesPartial;
 
+	var dicRequest = sig.GetRequests(srcProject, ClassFilterInclude, ClassFilterExclude);
 	foreach (var kvp in dicRequest)
 	{
 		string serviceNamespace = string.Format(NamespaceServices, BaseNamespace);
@@ -216,6 +154,51 @@ public static class ServiceInterfaceUtils
 			str = str + ".";
 		}
 		return str + filename;
+	}
+
+	private static string ToProperType(EnvDTE.CodeTypeRef type, params string[] namespaces)
+	{
+		if (type == null)
+		{
+			return "";
+		}
+
+		string str = type.AsString;
+		if (namespaces != null)
+		{
+			foreach (string ns in namespaces)
+			{
+				str = str.Replace(ns + ".", "");
+			}
+		}
+		return str;
+	}
+
+	private static string GetIdFromRouteParts(List<string> parts, string pocoClassName)
+	{
+		List<string> lstId = new List<string>();
+		string currentEntity = pocoClassName;
+
+		foreach (string str in parts)
+		{
+			if (str.StartsWith("{") && str.EndsWith("}"))
+			{
+				if (currentEntity == pocoClassName)
+				{
+					string propName = str.Remove(0, 1); // Supprime le premier {
+					propName = propName.Remove(propName.Length - 1, 1); // Supprime le dernier }
+				
+					lstId.Add(propName);
+				}
+			}
+			else
+			{
+				currentEntity += str;
+			}
+		}
+
+		string id = lstId.SingleOrDefault();
+		return id ?? "";
 	}
 }
 #>

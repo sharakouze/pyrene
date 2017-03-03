@@ -9,14 +9,14 @@
 public class ServiceInterfaceGenerator
 {
 	private readonly TextTransformation _tt;
-	private AutomationHelper vsHelper;
+	private AutomationHelper _vsHelper;
 
 	private void Write(string textToAppend)
     {
 		_tt.Write(textToAppend);
 	}
 
-	public ServiceInterfaceGenerator(GeneratedTextTransformation tt)
+	public ServiceInterfaceGenerator(TextTransformation tt, AutomationHelper vsHelper = null)
     {
         if (tt == null)
         {
@@ -24,10 +24,96 @@ public class ServiceInterfaceGenerator
         }
 		_tt = tt;
 
-		vsHelper = AutomationHelper.Create(tt);
+		if (vsHelper == null)
+        {
+			vsHelper = AutomationHelper.Create(tt as GeneratedTextTransformation);
+        }
+		_vsHelper = vsHelper;
     }
 
 	public bool MakeClassesPartial { get; set; }
+
+	public Dictionary<string, List<RequestItem>> GetRequests(EnvDTE.Project srcProject, Regex classFilterInclude, Regex classFilterExclude)
+    {
+		var dicRequest = new Dictionary<string, List<RequestItem>>();
+
+		// get all class items from the code model
+		var allClasses = _vsHelper.CodeModel.GetAllClasses(srcProject).OrderBy(c => c.Name).ToList();
+
+		foreach (var codeClass in allClasses)
+		{
+			bool included = classFilterInclude == null || classFilterInclude.IsMatch(codeClass.Name);
+			bool excluded = classFilterExclude != null && classFilterExclude.IsMatch(codeClass.Name);
+			if (!included || excluded)
+			{
+				continue;
+			}
+
+			string pocoClassName = null;
+			if (codeClass.Name.StartsWith("Get"))
+			{
+				pocoClassName = codeClass.Name.Substring(3);
+			}
+			else if (codeClass.Name.StartsWith("Delete"))
+			{
+ 				pocoClassName = codeClass.Name.Substring(6);
+			}
+			else if (codeClass.Name.StartsWith("Patch"))
+			{
+				pocoClassName = codeClass.Name.Substring(5);
+			}
+			else if (codeClass.Name.StartsWith("Search"))
+			{
+				pocoClassName = codeClass.Name.Substring(6);
+			}
+			else if (codeClass.Name.StartsWith("Select"))
+			{
+				pocoClassName = codeClass.Name.Substring(6);
+			}
+			else
+			{
+				pocoClassName = codeClass.Name;
+			}
+
+			var lstRouteAttrs = _vsHelper.CodeModel.GetAllClassAttributes(codeClass)
+				.Where(attr => attr.FullName == "ServiceStack.RouteAttribute")
+				.ToList();
+			if (lstRouteAttrs.Any() && !string.IsNullOrEmpty(pocoClassName))
+			{
+				var items = dicRequest.Where(kvp => pocoClassName.StartsWith(kvp.Key)).Select(kvp => kvp.Value).SingleOrDefault();
+				if (items == null)
+				{
+					items = new List<RequestItem>();
+					dicRequest.Add(pocoClassName, items);
+				}
+
+				var item = new RequestItem();
+				item.RequestClass = codeClass;
+				item.PocoClass = allClasses.SingleOrDefault(c => c.Name == pocoClassName);
+				foreach (var routeAttr in lstRouteAttrs)
+				{
+					item.LstRouteParts.Add(GetRouteParts(routeAttr));
+				}
+				items.Add(item);
+			}
+		} // end foreach
+
+		return dicRequest;
+    }
+
+	private List<string> GetRouteParts(EnvDTE.CodeAttribute routeAttr)
+	{
+		string[] parameters = routeAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+		string paramPath = parameters[0].Trim();
+
+		if (paramPath.StartsWith("\"") && paramPath.EndsWith("\""))
+		{
+			paramPath = paramPath.Substring(1, paramPath.Length - 2);
+		}
+
+		return paramPath.Split(new [] { '/' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+	}
 
 	public void WriteService(string baseEntityName, string sourceNamespace, string fileNamespace, IEnumerable<RequestItem> requests)
     {
@@ -95,8 +181,8 @@ namespace <#= fileNamespace #>
 				stdColFormat = ReplaceFirst(item.PocoClass.Name, baseEntityName, "{0}");
             }
 
-			var allPocoProperties = vsHelper.CodeModel.GetAllProperties(item.PocoClass);
-			var pkProp = GetPrimaryKeyProperty(vsHelper, allPocoProperties);
+			var allPocoProperties = _vsHelper.CodeModel.GetAllProperties(item.PocoClass);
+			var pkProp = GetPrimaryKeyProperty(_vsHelper, allPocoProperties);
 
 			if (!dicPocoUnicityMethods.ContainsKey(item.PocoClass.Name) && (pkProp != null))
             {
@@ -106,7 +192,7 @@ namespace <#= fileNamespace #>
 
 				dicPocoUnicityMethods.Add(item.PocoClass.Name, new List<string>());
 
-				var lstIdxProps = GetUniqueProperties(vsHelper, item.PocoClass, allPocoProperties);
+				var lstIdxProps = GetUniqueProperties(_vsHelper, item.PocoClass, allPocoProperties);
 				foreach (var lstProps in lstIdxProps)
 				{
 					string methodName = item.PocoClass.Name + "_" + string.Join("_", lstProps.Select(p => p.Name)) + "_EstUnique";
@@ -482,7 +568,7 @@ namespace <#= fileNamespace #>
 			Dictionary<string, List<string>> dicValidation = new Dictionary<string, List<string>>();
 			string pocoClassName = item.PocoClass.Name;
 
-			var allPropsAttributes = vsHelper.CodeModel.GetAllPropertiesAttributes(item.RequestClass);
+			var allPropsAttributes = _vsHelper.CodeModel.GetAllPropertiesAttributes(item.RequestClass);
 			foreach (var prop in allPropsAttributes)
 			{
 				var lstValidation = new List<string>();
@@ -716,64 +802,5 @@ public class RequestItem
 	public EnvDTE.CodeClass PocoClass { get; set; }
 
 	public EnvDTE.CodeClass RequestClass { get; set; }
-}
-
-private string ToProperType(EnvDTE.CodeTypeRef type, params string[] namespaces)
-{
-	if (type == null)
-    {
-		return "";
-    }
-
-	string str = type.AsString;
-	if (namespaces != null)
-    {
-		foreach (string ns in namespaces)
-        {
-			str = str.Replace(ns + ".", "");
-        }
-    }
-	return str;
-}
-
-private List<string> GetRouteParts(EnvDTE.CodeAttribute routeAttr)
-{
-	string[] parameters = routeAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-	string paramPath = parameters[0].Trim();
-
-	if (paramPath.StartsWith("\"") && paramPath.EndsWith("\""))
-    {
-		paramPath = paramPath.Substring(1, paramPath.Length - 2);
-    }
-
-	return paramPath.Split(new [] { '/' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-}
-
-private string GetIdFromRouteParts(List<string> parts, string pocoClassName)
-{
-	List<string> lstId = new List<string>();
-	string currentEntity = pocoClassName;
-
-	foreach (string str in parts)
-    {
-		if (str.StartsWith("{") && str.EndsWith("}"))
-        {
-			if (currentEntity == pocoClassName)
-            {
-				string propName = str.Remove(0, 1); // Supprime le premier {
-				propName = propName.Remove(propName.Length - 1, 1); // Supprime le dernier }
-				
-				lstId.Add(propName);
-            }
-        }
-		else
-		{
-			currentEntity += str;
-        }
-    }
-
-	string id = lstId.SingleOrDefault();
-	return id ?? "";
 }
 #>
