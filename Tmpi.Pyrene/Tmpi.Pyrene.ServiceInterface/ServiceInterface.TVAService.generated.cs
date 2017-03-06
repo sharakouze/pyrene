@@ -57,23 +57,81 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime l'entité <see cref="TVA"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="TVA"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="TVA"/> ajoutée.</returns>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public void Delete(DeleteTVA request)
+		/// <exception cref="HttpError.Conflict"></exception>
+		public TVA Post(TVA request)
 		{
-			using (var scope = AuditScope.Create("TVA:Delete", () => request))
+			lock (_tvaLock)
 			{
-				int count = Db.DeleteById<TVA>(request.CleTVA);
-				if (count == 0)
+				bool unique1 = TVA_CodTVA_EstUnique(request);
+				if (!unique1)
 				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(TVA), request.CleTVA));
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(TVA)));
 				}
 
-				scope.Save();
+				if (request.CleTVA == 0)
+				{
+					using (var scope = AuditScope.Create("TVA:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.CleTVA = (int)id;
+
+						scope.Save();
+					}
+				}
+				else
+				{
+					using (var scope = AuditScope.Create("TVA:Update", () => request))
+					{
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(TVA), request.CleTVA));
+						}
+
+						scope.Save();
+					}
+				}
+
+				return request;
 			}
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="TVA"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="TVA"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectTVAResponse Get(SelectTVA request)
+		{
+			var q = Db.From<TVA>()
+				.Limit(request.Skip, request.Take);
+
+			if (request.Sort.IsNullOrEmpty())
+			{
+				q.OrderBy(x => x.LibTVA); // Tri par défaut.
+			}
+			else
+			{
+				q.OrderByFields(request.Sort);
+			}
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectTVAResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
 		}
 
 		/// <summary>
@@ -97,6 +155,26 @@ namespace Tmpi.Pyrene.ServiceInterface
 			}
 
 			return entity;
+		}
+
+		/// <summary>
+		/// Supprime l'entité <see cref="TVA"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeleteTVA request)
+		{
+			using (var scope = AuditScope.Create("TVA:Delete", () => request))
+			{
+				int count = Db.DeleteById<TVA>(request.CleTVA);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(TVA), request.CleTVA));
+				}
+
+				scope.Save();
+			}
 		}
 
 		/// <summary>
@@ -172,84 +250,6 @@ namespace Tmpi.Pyrene.ServiceInterface
 			{
 				Results = items
 			};
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="TVA"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="TVA"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public SelectTVAResponse Get(SelectTVA request)
-		{
-			var q = Db.From<TVA>()
-				.Limit(request.Skip, request.Take);
-
-			if (request.Sort.IsNullOrEmpty())
-			{
-				q.OrderBy(x => x.LibTVA); // Tri par défaut.
-			}
-			else
-			{
-				q.OrderByFields(request.Sort);
-			}
-
-			long count = Db.Count(q);
-			var lst = Db.LoadSelect(q);
-
-			return new SelectTVAResponse
-			{
-				TotalCount = (int)count,
-				Results = lst
-			};
-		}
-
-		/// <summary>
-		/// Ajoute ou remplace l'entité <see cref="TVA"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="TVA"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public TVA Post(TVA request)
-		{
-			lock (_tvaLock)
-			{
-				bool unique1 = TVA_CodTVA_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(TVA)));
-				}
-
-				if (request.CleTVA == 0)
-				{
-					using (var scope = AuditScope.Create("TVA:Insert", () => request))
-					{
-						long id = Db.Insert(request, selectIdentity: true);
-						request.CleTVA = (int)id;
-
-						scope.Save();
-					}
-				}
-				else
-				{
-					using (var scope = AuditScope.Create("TVA:Update", () => request))
-					{
-						int count = Db.Update(request);
-						if (count == 0)
-						{
-							throw HttpError.NotFound(
-								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(TVA), request.CleTVA));
-						}
-
-						scope.Save();
-					}
-				}
-
-				return request;
-			}
 		}
 
 	}

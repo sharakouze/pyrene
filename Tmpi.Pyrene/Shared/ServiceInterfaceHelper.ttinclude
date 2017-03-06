@@ -5,117 +5,29 @@
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
 <#@ include file="VisualStudioHelper.ttinclude" once="true" #>
+<#@ include file="ServiceModelHelper.ttinclude" once="true" #>
 <#+
-public class ServiceInterfaceGenerator
+public class ServiceInterfaceHelper
 {
 	private readonly TextTransformation _tt;
-	private AutomationHelper _vsHelper;
 
 	private void Write(string textToAppend)
     {
 		_tt.Write(textToAppend);
 	}
 
-	public ServiceInterfaceGenerator(TextTransformation tt, AutomationHelper vsHelper = null)
+	public ServiceInterfaceHelper(TextTransformation tt)
     {
         if (tt == null)
         {
             throw new ArgumentNullException("tt");
         }
 		_tt = tt;
-
-		if (vsHelper == null)
-        {
-			vsHelper = AutomationHelper.Create(tt as GeneratedTextTransformation);
-        }
-		_vsHelper = vsHelper;
     }
 
 	public bool MakeClassesPartial { get; set; }
 
-	public Dictionary<string, List<RequestItem>> GetRequests(EnvDTE.Project srcProject, Regex classFilterInclude, Regex classFilterExclude)
-    {
-		var dicRequest = new Dictionary<string, List<RequestItem>>();
-
-		// get all class items from the code model
-		var allClasses = _vsHelper.CodeModel.GetAllClasses(srcProject).OrderBy(c => c.Name).ToList();
-
-		foreach (var codeClass in allClasses)
-		{
-			bool included = classFilterInclude == null || classFilterInclude.IsMatch(codeClass.Name);
-			bool excluded = classFilterExclude != null && classFilterExclude.IsMatch(codeClass.Name);
-			if (!included || excluded)
-			{
-				continue;
-			}
-
-			string pocoClassName = null;
-			if (codeClass.Name.StartsWith("Get"))
-			{
-				pocoClassName = codeClass.Name.Substring(3);
-			}
-			else if (codeClass.Name.StartsWith("Delete"))
-			{
- 				pocoClassName = codeClass.Name.Substring(6);
-			}
-			else if (codeClass.Name.StartsWith("Patch"))
-			{
-				pocoClassName = codeClass.Name.Substring(5);
-			}
-			else if (codeClass.Name.StartsWith("Search"))
-			{
-				pocoClassName = codeClass.Name.Substring(6);
-			}
-			else if (codeClass.Name.StartsWith("Select"))
-			{
-				pocoClassName = codeClass.Name.Substring(6);
-			}
-			else
-			{
-				pocoClassName = codeClass.Name;
-			}
-
-			var lstRouteAttrs = _vsHelper.CodeModel.GetAllClassAttributes(codeClass)
-				.Where(attr => attr.FullName == "ServiceStack.RouteAttribute")
-				.ToList();
-			if (lstRouteAttrs.Any() && !string.IsNullOrEmpty(pocoClassName))
-			{
-				var items = dicRequest.Where(kvp => pocoClassName.StartsWith(kvp.Key)).Select(kvp => kvp.Value).SingleOrDefault();
-				if (items == null)
-				{
-					items = new List<RequestItem>();
-					dicRequest.Add(pocoClassName, items);
-				}
-
-				var item = new RequestItem();
-				item.RequestClass = codeClass;
-				item.PocoClass = allClasses.SingleOrDefault(c => c.Name == pocoClassName);
-				foreach (var routeAttr in lstRouteAttrs)
-				{
-					item.LstRouteParts.Add(GetRouteParts(routeAttr));
-				}
-				items.Add(item);
-			}
-		} // end foreach
-
-		return dicRequest;
-    }
-
-	private List<string> GetRouteParts(EnvDTE.CodeAttribute routeAttr)
-	{
-		string[] parameters = routeAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-		string paramPath = parameters[0].Trim();
-
-		if (paramPath.StartsWith("\"") && paramPath.EndsWith("\""))
-		{
-			paramPath = paramPath.Substring(1, paramPath.Length - 2);
-		}
-
-		return paramPath.Split(new [] { '/' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-	}
-
-	public void WriteService(string baseEntityName, string sourceNamespace, string fileNamespace, IEnumerable<RequestItem> requests)
+	public void WriteService(string baseEntityName, string sourceNamespace, string fileNamespace, IEnumerable<RequestClass> requests)
     {
 #>
 using System;
@@ -143,7 +55,7 @@ namespace <#= fileNamespace #>
 	/// Service qui traite les requêtes sur les entités <see cref="<#= entityName #>"/>.
 	/// </summary>
 <#+
-		var lstSeeAlso = requests.Select(i => i.PocoClass.Name).Distinct().ToList();
+		var lstSeeAlso = requests.Select(i => i.PocoClassName).Distinct().ToList();
 		foreach (string str in lstSeeAlso.Where(s => s != baseEntityName))
         {
 #>
@@ -167,36 +79,42 @@ namespace <#= fileNamespace #>
 
 		foreach (var item in requests)
         {
-			string requestClassName = item.RequestClass.Name;
-			string pocoClassName = item.PocoClass.Name;
+			string requestClassName = item.Name;
+			string pocoClassName = item.PocoClassName;
 			string pocoClassNameClean = pocoClassName;
 			if (pocoClassName == "Service")
             {
 				pocoClassName = "ServiceModel.Types." + pocoClassName;
             }
 
-			string stdColFormat = "{0}" + item.PocoClass.Name;
-			if (item.PocoClass.Name != baseEntityName)
+			var pocoClass = requests.SingleOrDefault(r => r.Name == item.PocoClassName);
+
+			string stdColFormat = "{0}" + item.PocoClassName;
+			if (item.PocoClassName != baseEntityName)
             {
-				stdColFormat = ReplaceFirst(item.PocoClass.Name, baseEntityName, "{0}");
+				stdColFormat = ReplaceFirst(item.PocoClassName, baseEntityName, "{0}");
             }
 
-			var allPocoProperties = _vsHelper.CodeModel.GetAllProperties(item.PocoClass);
-			var pkProp = GetPrimaryKeyProperty(_vsHelper, allPocoProperties);
+			string pkPropName = null;
 
-			if (!dicPocoUnicityMethods.ContainsKey(item.PocoClass.Name) && (pkProp != null))
+			var pocoPkProp = pocoClass.Properties.SingleOrDefault(p => p.IsPrimaryKey);
+			if (pocoPkProp != null)
+            {
+				pkPropName = pocoPkProp.Name;
+            }
+
+			if (!dicPocoUnicityMethods.ContainsKey(item.PocoClassName) && !string.IsNullOrEmpty(pkPropName))
             {
 				/*************/
 				/** UNICITE **/
 				/*************/
 
-				dicPocoUnicityMethods.Add(item.PocoClass.Name, new List<string>());
+				dicPocoUnicityMethods.Add(item.PocoClassName, new List<string>());
 
-				var lstIdxProps = GetUniqueProperties(_vsHelper, item.PocoClass, allPocoProperties);
-				foreach (var lstProps in lstIdxProps)
+				foreach (var lstProps in pocoClass.UniqueConstraints)
 				{
-					string methodName = item.PocoClass.Name + "_" + string.Join("_", lstProps.Select(p => p.Name)) + "_EstUnique";
-					dicPocoUnicityMethods[item.PocoClass.Name].Add(methodName);
+					string methodName = item.PocoClassName + "_" + string.Join("_", lstProps) + "_EstUnique";
+					dicPocoUnicityMethods[item.PocoClassName].Add(methodName);
 #>
 		/// <summary>
 		/// Teste l'unicité d'une entité <see cref="<#= pocoClassName #>"/>.
@@ -209,26 +127,26 @@ namespace <#= fileNamespace #>
 			var q = Db.From<<#= pocoClassName #>>();
 
 <#+
-					if (lstProps.Length > 1)
+					if (lstProps.Count() > 1)
                     {
 #>
 			if (fields != null)
 			{
-				var uniqueFields = new[] { <#= string.Join(", ", lstProps.Select(p => "nameof(" + pocoClassName + "." + p.Name + ")")) #> };
+				var uniqueFields = new[] { <#= string.Join(", ", lstProps.Select(p => "nameof(" + pocoClassName + "." + p + ")")) #> };
 				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
 				{
-					// INNER JOIN <#= pocoClassName #> t2 ON t2.<#= pkProp.Name #>=xxx [...]
+					// INNER JOIN <#= pocoClassName #> t2 ON t2.<#= pkPropName #>=xxx [...]
 					Expression<Func<<#= pocoClassName #>, <#= pocoClassName #>, bool>> joinExpr = (t1, t2)
-						=> (t2.<#= pkProp.Name #> == model.<#= pkProp.Name #>);
+						=> (t2.<#= pkPropName #> == model.<#= pkPropName #>);
 
 <#+
-						foreach (var prop in lstProps)
+						foreach (string propName in lstProps)
 						{
 #>
-					if (!fields.Contains(nameof(<#= pocoClassName #>.<#= prop.Name #>), StringComparer.OrdinalIgnoreCase))
+					if (!fields.Contains(nameof(<#= pocoClassName #>.<#= propName #>), StringComparer.OrdinalIgnoreCase))
 					{
-						// [...] AND t1.<#= prop.Name #>=t2.<#= prop.Name #>
-						joinExpr = joinExpr.And((t1, t2) => t1.<#= prop.Name #> == t2.<#= prop.Name #>);
+						// [...] AND t1.<#= propName #>=t2.<#= propName #>
+						joinExpr = joinExpr.And((t1, t2) => t1.<#= propName #> == t2.<#= propName #>);
 					}
 <#+
 						}
@@ -244,15 +162,15 @@ namespace <#= fileNamespace #>
 			
 <#+
                     }
-					foreach (var prop in lstProps)
+					foreach (string propName in lstProps)
                     {
 #>
-			if (fields == null || fields.Contains(nameof(<#= pocoClassName #>.<#= prop.Name #>), StringComparer.OrdinalIgnoreCase))
+			if (fields == null || fields.Contains(nameof(<#= pocoClassName #>.<#= propName #>), StringComparer.OrdinalIgnoreCase))
 			{
-				q.Where(t1 => t1.<#= prop.Name #> == model.<#= prop.Name #>);
+				q.Where(t1 => t1.<#= propName #> == model.<#= propName #>);
 			}
 <#+
-						if (lstProps.Length == 1)
+						if (lstProps.Count() == 1)
                         {
 #>
 			else
@@ -264,9 +182,9 @@ namespace <#= fileNamespace #>
                     }
 #>
 
-			if (model.<#= pkProp.Name #> != 0)
+			if (model.<#= pkPropName #> != 0)
 			{
-				q.Where(t1 => t1.<#= pkProp.Name #> != model.<#= pkProp.Name #>);
+				q.Where(t1 => t1.<#= pkPropName #> != model.<#= pkPropName #>);
 			}
 
 			return !Db.Exists(q);
@@ -276,7 +194,7 @@ namespace <#= fileNamespace #>
 				}
             }
 
-			if (pkProp != null)
+			if (!string.IsNullOrEmpty(pkPropName))
             {
 				if (requestClassName.StartsWith("Select"))
                 {
@@ -300,11 +218,11 @@ namespace <#= fileNamespace #>
 			if (request.Sort.IsNullOrEmpty())
 			{
 <#+ 
-	string propName = GetFirstOccurenceOfProperty(allPocoProperties, 
+	string propName = GetFirstOccurenceOfProperty(pocoClass.Properties.Select(p => p.Name), 
 		string.Format(stdColFormat, "Lib"), string.Format(stdColFormat, "Cod"), string.Format(stdColFormat, "Num"), string.Format(stdColFormat, "Nom"));
 	if (string.IsNullOrEmpty(propName))
     {
-		propName = pkProp.Name;
+		propName = pkPropName;
     }
 #>
 				q.OrderBy(x => x.<#= propName #>); // Tri par défaut.
@@ -343,13 +261,13 @@ namespace <#= fileNamespace #>
 		{
 			//ModelDefinitionHelper.UndefinedFields<<#= pocoClassName #>>(request.Fields);
 
-			var q = Db.From<<#= pocoClassName #>>().Where(x => x.<#= pkProp.Name #> == request.<#= pkProp.Name #>).Select(request.Fields);
+			var q = Db.From<<#= pocoClassName #>>().Where(x => x.<#= pkPropName #> == request.<#= pkPropName #>).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
 			{
 				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkPropName #>));
 			}
 
 			return entity;
@@ -372,11 +290,11 @@ namespace <#= fileNamespace #>
 		{
 			using (var scope = AuditScope.Create("<#= pocoClassNameClean #>:Delete", () => request))
 			{
-				int count = Db.DeleteById<<#= pocoClassName #>>(request.<#= pkProp.Name #>);
+				int count = Db.DeleteById<<#= pocoClassName #>>(request.<#= pkPropName #>);
 				if (count == 0)
 				{
 					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkPropName #>));
 				}
 
 				scope.Save();
@@ -413,13 +331,13 @@ namespace <#= fileNamespace #>
 			var entity = new <#= pocoClassName #>();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
 
-			var q = Db.From<<#= pocoClassName #>>().Where(x => x.<#= pkProp.Name #> == request.<#= pkProp.Name #>).Update(patchDic.Keys);
+			var q = Db.From<<#= pocoClassName #>>().Where(x => x.<#= pkPropName #> == request.<#= pkPropName #>).Update(patchDic.Keys);
 
-			lock (_<#= ToCamelCase(item.PocoClass.Name) #>Lock)
+			lock (_<#= ToCamelCase(item.PocoClassName) #>Lock)
 			{
 <#+ 
 				int i = 1;
-				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == item.PocoClass.Name).SelectMany(k => k.Value))
+				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == item.PocoClassName).SelectMany(k => k.Value))
                 {
 #>
 				bool unique<#= i.ToString() #> = <#= meth #>(entity, patchDic.Keys);
@@ -439,7 +357,7 @@ namespace <#= fileNamespace #>
 					if (count == 0)
 					{
 						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkPropName #>));
 					}
 
 					scope.Save();
@@ -496,11 +414,11 @@ namespace <#= fileNamespace #>
 		/// <exception cref="HttpError.Conflict"></exception>
 		public <#= pocoClassName #> Post(<#= pocoClassName #> request)
 		{
-			lock (_<#= ToCamelCase(item.PocoClass.Name) #>Lock)
+			lock (_<#= ToCamelCase(item.PocoClassName) #>Lock)
 			{
 <#+ 
 				int i = 1;
-				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == item.PocoClass.Name).SelectMany(k => k.Value))
+				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == item.PocoClassName).SelectMany(k => k.Value))
                 {
 #>
 				bool unique<#= i.ToString() #> = <#= meth #>(request);
@@ -514,12 +432,12 @@ namespace <#= fileNamespace #>
                 }
 #>
 
-				if (request.<#= pkProp.Name #> == 0)
+				if (request.<#= pkPropName #> == 0)
 				{
 					using (var scope = AuditScope.Create("<#= pocoClassNameClean #>:Insert", () => request))
 					{
 						long id = Db.Insert(request, selectIdentity: true);
-						request.<#= pkProp.Name #> = (int)id;
+						request.<#= pkPropName #> = (int)id;
 
 						scope.Save();
 					}
@@ -532,7 +450,7 @@ namespace <#= fileNamespace #>
 						if (count == 0)
 						{
 							throw HttpError.NotFound(
-								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkProp.Name #>));
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkPropName #>));
 						}
 
 						scope.Save();
@@ -552,7 +470,7 @@ namespace <#= fileNamespace #>
 <#+
     }
 
-	public void WriteValidator(string sourceNamespace, string fileNamespace, IEnumerable<RequestItem> requests,
+	public void WriteValidator(string sourceNamespace, string fileNamespace, IEnumerable<RequestClass> dtos,
 		bool validatorsWithMessage = false)
     {
 #>
@@ -563,49 +481,50 @@ using <#= sourceNamespace #>.Types;
 namespace <#= fileNamespace #>
 {
 <#+
-		foreach (var item in requests)
+		foreach (var item in dtos)
         {
-			Dictionary<string, List<string>> dicValidation = new Dictionary<string, List<string>>();
-			string pocoClassName = item.PocoClass.Name;
+			var dicValidation = new Dictionary<string, List<string>>();
+			string className = item.Name;
 
-			var allPropsAttributes = _vsHelper.CodeModel.GetAllPropertiesAttributes(item.RequestClass);
-			foreach (var prop in allPropsAttributes)
+			foreach (var prop in item.Properties)
 			{
 				var lstValidation = new List<string>();
 
-				if (prop.Value.Any(attr => attr.FullName == "ServiceStack.DataAnnotations.RequiredAttribute"))
+				if (prop.IsRequired)
 				{
-					if (prop.Key.Type.AsFullName == "System.String")
+					if (prop.TypeFullName == "System.String")
 					{
 						string str = ".NotEmpty()";
 						if (validatorsWithMessage)
 						{
-							str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_NotEmpty)", pocoClassName, prop.Key.Name);
+							str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_NotEmpty)", className, prop.Name);
 						}
 						lstValidation.Add(str);
 					}
 				}
-				var strLengthAttr = prop.Value.FirstOrDefault(attr => attr.FullName == "ServiceStack.DataAnnotations.StringLengthAttribute");
-				if (strLengthAttr != null)
+				if (prop.MaxLength > 0)
 				{
-					int min = 0;
-					int max = Convert.ToInt32(strLengthAttr.Value);
-					string str = string.Format(".Length({0}, {1})", min, max);
-					if (validatorsWithMessage)
+					if (prop.TypeFullName == "System.String")
 					{
-						str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_Length, {2}, {3})", pocoClassName, prop.Key.Name, min, max);
-					}
-					lstValidation.Add(str);
+						int min = 0;
+						int max = prop.MaxLength;
+						string str = string.Format(".Length({0}, {1})", min, max);
+						if (validatorsWithMessage)
+						{
+							str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_Length, {2}, {3})", className, prop.Name, min, max);
+						}
+						lstValidation.Add(str);
+                    }
 				}
 
-				if (prop.Key.Name == "NumEmail")
+				if (prop.Name == "NumEmail")
 				{
 					lstValidation.Add(".EmailAddress()");
 				}
 
 				if (lstValidation.Any())
 				{
-					dicValidation.Add(prop.Key.Name, lstValidation);
+					dicValidation.Add(prop.Name, lstValidation);
 				}
 			}
 
@@ -613,14 +532,14 @@ namespace <#= fileNamespace #>
 			{
 #>
 	/// <summary>
-	/// Validation pour la requête <see cref="<#= pocoClassName #>"/>.
+	/// Validation pour la requête <see cref="<#= className #>"/>.
 	/// </summary>
-	public <#= MakeClassesPartial ? "partial " : "" #>class <#= pocoClassName #>Validator : AbstractValidator<<#= pocoClassName #>>
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= className #>Validator : AbstractValidator<<#= className #>>
 	{
 		/// <summary>
-		/// Initialise une nouvelle instance de la classe <see cref="<#= pocoClassName #>Validator" />.
+		/// Initialise une nouvelle instance de la classe <see cref="<#= className #>Validator" />.
 		/// </summary>
-		public <#= pocoClassName #>Validator()
+		public <#= className #>Validator()
 		{
 <#+
 						foreach (var kvp2 in dicValidation)
@@ -678,107 +597,12 @@ namespace <#= fileNamespace #>
 		return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
 	}
 
-	private EnvDTE.CodeProperty GetPrimaryKeyProperty(AutomationHelper vsHelper, IEnumerable<EnvDTE.CodeProperty> lstProperties)
+	private string GetFirstOccurenceOfProperty(IEnumerable<string> lstProperties, params string[] propertyNames)
 	{
-		foreach (var property in lstProperties)
-		{
-			bool isPk = vsHelper.CodeModel.GetAllCodeElementsOfType(property.Attributes, EnvDTE.vsCMElement.vsCMElementAttribute, false)
-				.OfType<EnvDTE.CodeAttribute>()
-				.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.PrimaryKeyAttribute")
-				.Any();
-			if (isPk)
-			{
-				return property;
-			}
-		}
-
-		return null;
-	}
-
-	private List<EnvDTE.CodeProperty[]> GetUniqueProperties(AutomationHelper vsHelper, EnvDTE.CodeClass codeClass, IEnumerable<EnvDTE.CodeProperty> lstProperties)
-	{
-		var lstIdxProps = new List<EnvDTE.CodeProperty[]>();
-
-		// [CompositeIndex(true, ...)]
-		var compositeIdxAttrs = vsHelper.CodeModel.GetAllClassAttributes(codeClass)
-			.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.CompositeIndexAttribute")
-			.ToList();
-		foreach (var idxAttr in compositeIdxAttrs)
-		{
-			List<string> parameters = idxAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
-		
-			string str1 = parameters.SingleOrDefault(p => p.StartsWith("Unique"));
-			if (string.IsNullOrEmpty(str1))
-			{
-				str1 = parameters.FirstOrDefault();
-			}
-			bool unique = false;
-			bool.TryParse(str1, out unique);
-			if (unique)
-			{
-				var lstProps = new List<EnvDTE.CodeProperty>();
-				foreach (string par in parameters)
-				{
-					string strParam = "";
-					if (par.StartsWith("nameof(") && par.EndsWith(")"))
-					{
-						strParam = par.Substring(7, par.Length - 8);
-					}
-					else if (par.StartsWith("\"") && par.EndsWith("\""))
-					{
-						strParam = par.Substring(1, par.Length - 2);
-					}
-
-					if (!string.IsNullOrEmpty(strParam))
-					{
-    					var prop = lstProperties.SingleOrDefault(p => p.Name == strParam);
-						if (prop != null)
-						{
-							lstProps.Add(prop);
-						}
-					}
-				}
-
-				lstIdxProps.Add(lstProps.ToArray());
-			}
-		}
-	
-		// [Index(true)]
-		foreach (var property in lstProperties)
-		{
-			var idxAttrs = vsHelper.CodeModel.GetAllCodeElementsOfType(property.Attributes, EnvDTE.vsCMElement.vsCMElementAttribute, false)
-				.OfType<EnvDTE.CodeAttribute>()
-				.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.IndexAttribute")
-				.ToList();
-			foreach (var idxAttr in idxAttrs)
-			{
-				List<string> parameters = idxAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
-
-				string str1 = parameters.SingleOrDefault(p => p.StartsWith("Unique"));
-				if (string.IsNullOrEmpty(str1))
-				{
-					str1 = parameters.FirstOrDefault();
-				}
-				bool unique = false;
-				bool.TryParse(str1, out unique);
-				if (unique)
-				{
-					lstIdxProps.Add(new [] { property });
-				}
-			}
-		}
-
-		return lstIdxProps;
-	}
-
-	private string GetFirstOccurenceOfProperty(IEnumerable<EnvDTE.CodeProperty> lstProperties, params string[] propertyNames)
-	{
-		IEnumerable<string> lst = lstProperties.Select(p => p.Name);
-
 		string propName = null;
 		foreach (string prop in propertyNames)
 		{
-			propName = lst.FirstOrDefault(p => p == prop);
+			propName = lstProperties.FirstOrDefault(p => p == prop);
 			if (!string.IsNullOrEmpty(propName))
 			{
 				break;
@@ -787,20 +611,5 @@ namespace <#= fileNamespace #>
 
 		return propName;
 	}
-}
-#>
-<#+
-public class RequestItem
-{
-	public RequestItem()
-    {
-		LstRouteParts = new List<List<string>>();
-    }
-		
-	public List<List<string>> LstRouteParts { get; set; }
-
-	public EnvDTE.CodeClass PocoClass { get; set; }
-
-	public EnvDTE.CodeClass RequestClass { get; set; }
 }
 #>

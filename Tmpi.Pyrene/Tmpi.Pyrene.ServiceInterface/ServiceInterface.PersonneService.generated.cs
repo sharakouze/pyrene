@@ -26,57 +26,51 @@ namespace Tmpi.Pyrene.ServiceInterface
 	/// <summary>
 	/// Service qui traite les requêtes sur les entités <see cref="Personne"/>.
 	/// </summary>
-	/// <seealso cref="PersonneProfil"/>
 	/// <seealso cref="PersonneSignature"/>
+	/// <seealso cref="PersonneProfil"/>
 	public partial class PersonneService : ServiceStack.Service
 	{
-		private static readonly object _personneLock = new object();
-		private static readonly object _personneProfilLock = new object();
 		private static readonly object _personneSignatureLock = new object();
+		private static readonly object _personneProfilLock = new object();
+		private static readonly object _personneLock = new object();
 		/// <summary>
-		/// Teste l'unicité d'une entité <see cref="Personne"/>.
-		/// </summary>
-		/// <param name="model"></param>
-		/// <param name="fields"></param>
-		/// <returns></returns>
-		protected bool Personne_CodPersonne_EstUnique(Personne model, IEnumerable<string> fields = null)
-		{
-			var q = Db.From<Personne>();
-
-			if (fields == null || fields.Contains(nameof(Personne.CodPersonne), StringComparer.OrdinalIgnoreCase))
-			{
-				q.Where(t1 => t1.CodPersonne == model.CodPersonne);
-			}
-			else
-			{
-				return true;
-			}
-
-			if (model.ClePersonne != 0)
-			{
-				q.Where(t1 => t1.ClePersonne != model.ClePersonne);
-			}
-
-			return !Db.Exists(q);
-		}
-
-		/// <summary>
-		/// Supprime l'entité <see cref="Personne"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="PersonneSignature"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="PersonneSignature"/> ajoutée.</returns>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public void Delete(DeletePersonne request)
+		/// <exception cref="HttpError.Conflict"></exception>
+		public PersonneSignature Post(PersonneSignature request)
 		{
-			using (var scope = AuditScope.Create("Personne:Delete", () => request))
+			lock (_personneSignatureLock)
 			{
-				int count = Db.DeleteById<Personne>(request.ClePersonne);
-				if (count == 0)
+
+				if (request.ClePersonne == 0)
 				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
+					using (var scope = AuditScope.Create("PersonneSignature:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.ClePersonne = (int)id;
+
+						scope.Save();
+					}
+				}
+				else
+				{
+					using (var scope = AuditScope.Create("PersonneSignature:Update", () => request))
+					{
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
+						}
+
+						scope.Save();
+					}
 				}
 
-				scope.Save();
+				return request;
 			}
 		}
 
@@ -191,66 +185,161 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime l'entité <see cref="PersonneProfil"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="PersonneProfil"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="PersonneProfil"/> ajoutée.</returns>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public void Delete(DeletePersonneProfil request)
+		/// <exception cref="HttpError.Conflict"></exception>
+		public PersonneProfil Post(PersonneProfil request)
 		{
-			using (var scope = AuditScope.Create("PersonneProfil:Delete", () => request))
+			lock (_personneProfilLock)
 			{
-				int count = Db.DeleteById<PersonneProfil>(request.CleProfil);
-				if (count == 0)
+				bool unique1 = PersonneProfil_ClePersonne_CleService_EstUnique(request);
+				if (!unique1)
 				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneProfil), request.CleProfil));
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(PersonneProfil)));
+				}
+				bool unique2 = PersonneProfil_CodProfil_ClePersonne_EstUnique(request);
+				if (!unique2)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(PersonneProfil)));
 				}
 
-				scope.Save();
+				if (request.CleProfil == 0)
+				{
+					using (var scope = AuditScope.Create("PersonneProfil:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.CleProfil = (int)id;
+
+						scope.Save();
+					}
+				}
+				else
+				{
+					using (var scope = AuditScope.Create("PersonneProfil:Update", () => request))
+					{
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneProfil), request.CleProfil));
+						}
+
+						scope.Save();
+					}
+				}
+
+				return request;
 			}
 		}
 
 		/// <summary>
-		/// Supprime l'entité <see cref="PersonneSignature"/> spécifiée dans la requête.
+		/// Teste l'unicité d'une entité <see cref="Personne"/>.
+		/// </summary>
+		/// <param name="model"></param>
+		/// <param name="fields"></param>
+		/// <returns></returns>
+		protected bool Personne_CodPersonne_EstUnique(Personne model, IEnumerable<string> fields = null)
+		{
+			var q = Db.From<Personne>();
+
+			if (fields == null || fields.Contains(nameof(Personne.CodPersonne), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(t1 => t1.CodPersonne == model.CodPersonne);
+			}
+			else
+			{
+				return true;
+			}
+
+			if (model.ClePersonne != 0)
+			{
+				q.Where(t1 => t1.ClePersonne != model.ClePersonne);
+			}
+
+			return !Db.Exists(q);
+		}
+
+		/// <summary>
+		/// Ajoute ou remplace l'entité <see cref="Personne"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="Personne"/> ajoutée.</returns>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public void Delete(DeletePersonneSignature request)
+		/// <exception cref="HttpError.Conflict"></exception>
+		public Personne Post(Personne request)
 		{
-			using (var scope = AuditScope.Create("PersonneSignature:Delete", () => request))
+			lock (_personneLock)
 			{
-				int count = Db.DeleteById<PersonneSignature>(request.ClePersonne);
-				if (count == 0)
+				bool unique1 = Personne_CodPersonne_EstUnique(request);
+				if (!unique1)
 				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Personne)));
 				}
 
-				scope.Save();
+				if (request.ClePersonne == 0)
+				{
+					using (var scope = AuditScope.Create("Personne:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.ClePersonne = (int)id;
+
+						scope.Save();
+					}
+				}
+				else
+				{
+					using (var scope = AuditScope.Create("Personne:Update", () => request))
+					{
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
+						}
+
+						scope.Save();
+					}
+				}
+
+				return request;
 			}
 		}
 
 		/// <summary>
-		/// Retourne l'entité <see cref="Personne"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="PersonneProfil"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="Personne"/> trouvée.</returns>
+		/// <returns>Entité <see cref="PersonneProfil"/> trouvée.</returns>
 		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public Personne Get(GetPersonne request)
+		public SelectPersonneProfilResponse Get(SelectPersonneProfil request)
 		{
-			//ModelDefinitionHelper.UndefinedFields<Personne>(request.Fields);
+			var q = Db.From<PersonneProfil>()
+				.Limit(request.Skip, request.Take);
 
-			var q = Db.From<Personne>().Where(x => x.ClePersonne == request.ClePersonne).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
+			if (request.Sort.IsNullOrEmpty())
 			{
-				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
+				q.OrderBy(x => x.CodProfil); // Tri par défaut.
+			}
+			else
+			{
+				q.OrderByFields(request.Sort);
 			}
 
-			return entity;
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectPersonneProfilResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
 		}
 
 		/// <summary>
@@ -277,72 +366,22 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Retourne l'entité <see cref="PersonneSignature"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="PersonneProfil"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="PersonneSignature"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public PersonneSignature Get(GetPersonneSignature request)
+		public void Delete(DeletePersonneProfil request)
 		{
-			//ModelDefinitionHelper.UndefinedFields<PersonneSignature>(request.Fields);
-
-			var q = Db.From<PersonneSignature>().Where(x => x.ClePersonne == request.ClePersonne).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
+			using (var scope = AuditScope.Create("PersonneProfil:Delete", () => request))
 			{
-				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
-			}
-
-			return entity;
-		}
-
-		/// <summary>
-		/// Met à jour l'entité <see cref="Personne"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Patch(PatchPersonne request)
-		{
-			if (request.Operations.IsNullOrEmpty())
-			{
-				throw new ArgumentNullException(nameof(request.Operations));
-			}
-
-			var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
-
-			//ModelDefinitionHelper.UndefinedFields<Personne>(patchDic.Keys);
-
-			var entity = new Personne();
-			PatchHelper.PopulateFromPatch(entity, patchDic);
-
-			var q = Db.From<Personne>().Where(x => x.ClePersonne == request.ClePersonne).Update(patchDic.Keys);
-
-			lock (_personneLock)
-			{
-				bool unique1 = Personne_CodPersonne_EstUnique(entity, patchDic.Keys);
-				if (!unique1)
+				int count = Db.DeleteById<PersonneProfil>(request.CleProfil);
+				if (count == 0)
 				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Personne)));
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneProfil), request.CleProfil));
 				}
 
-				using (var scope = AuditScope.Create("Personne:Update", () => entity))
-				{
-					int count = Db.UpdateOnly(entity, q);
-					if (count == 0)
-					{
-						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
-					}
-
-					scope.Save();
-				}
+				scope.Save();
 			}
 		}
 
@@ -400,6 +439,80 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
+		/// Retourne l'entité <see cref="PersonneSignature"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="PersonneSignature"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectPersonneSignatureResponse Get(SelectPersonneSignature request)
+		{
+			var q = Db.From<PersonneSignature>()
+				.Limit(request.Skip, request.Take);
+
+			if (request.Sort.IsNullOrEmpty())
+			{
+				q.OrderBy(x => x.ClePersonne); // Tri par défaut.
+			}
+			else
+			{
+				q.OrderByFields(request.Sort);
+			}
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectPersonneSignatureResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="PersonneSignature"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="PersonneSignature"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public PersonneSignature Get(GetPersonneSignature request)
+		{
+			//ModelDefinitionHelper.UndefinedFields<PersonneSignature>(request.Fields);
+
+			var q = Db.From<PersonneSignature>().Where(x => x.ClePersonne == request.ClePersonne).Select(request.Fields);
+
+			var entity = Db.Single(q);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
+			}
+
+			return entity;
+		}
+
+		/// <summary>
+		/// Supprime l'entité <see cref="PersonneSignature"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeletePersonneSignature request)
+		{
+			using (var scope = AuditScope.Create("PersonneSignature:Delete", () => request))
+			{
+				int count = Db.DeleteById<PersonneSignature>(request.ClePersonne);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
+				}
+
+				scope.Save();
+			}
+		}
+
+		/// <summary>
 		/// Met à jour l'entité <see cref="PersonneSignature"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
@@ -441,147 +554,6 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace l'entité <see cref="Personne"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="Personne"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public Personne Post(Personne request)
-		{
-			lock (_personneLock)
-			{
-				bool unique1 = Personne_CodPersonne_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Personne)));
-				}
-
-				if (request.ClePersonne == 0)
-				{
-					using (var scope = AuditScope.Create("Personne:Insert", () => request))
-					{
-						long id = Db.Insert(request, selectIdentity: true);
-						request.ClePersonne = (int)id;
-
-						scope.Save();
-					}
-				}
-				else
-				{
-					using (var scope = AuditScope.Create("Personne:Update", () => request))
-					{
-						int count = Db.Update(request);
-						if (count == 0)
-						{
-							throw HttpError.NotFound(
-								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
-						}
-
-						scope.Save();
-					}
-				}
-
-				return request;
-			}
-		}
-
-		/// <summary>
-		/// Ajoute ou remplace l'entité <see cref="PersonneProfil"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="PersonneProfil"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public PersonneProfil Post(PersonneProfil request)
-		{
-			lock (_personneProfilLock)
-			{
-				bool unique1 = PersonneProfil_ClePersonne_CleService_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(PersonneProfil)));
-				}
-				bool unique2 = PersonneProfil_CodProfil_ClePersonne_EstUnique(request);
-				if (!unique2)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(PersonneProfil)));
-				}
-
-				if (request.CleProfil == 0)
-				{
-					using (var scope = AuditScope.Create("PersonneProfil:Insert", () => request))
-					{
-						long id = Db.Insert(request, selectIdentity: true);
-						request.CleProfil = (int)id;
-
-						scope.Save();
-					}
-				}
-				else
-				{
-					using (var scope = AuditScope.Create("PersonneProfil:Update", () => request))
-					{
-						int count = Db.Update(request);
-						if (count == 0)
-						{
-							throw HttpError.NotFound(
-								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneProfil), request.CleProfil));
-						}
-
-						scope.Save();
-					}
-				}
-
-				return request;
-			}
-		}
-
-		/// <summary>
-		/// Ajoute ou remplace l'entité <see cref="PersonneSignature"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="PersonneSignature"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public PersonneSignature Post(PersonneSignature request)
-		{
-			lock (_personneSignatureLock)
-			{
-
-				if (request.ClePersonne == 0)
-				{
-					using (var scope = AuditScope.Create("PersonneSignature:Insert", () => request))
-					{
-						long id = Db.Insert(request, selectIdentity: true);
-						request.ClePersonne = (int)id;
-
-						scope.Save();
-					}
-				}
-				else
-				{
-					using (var scope = AuditScope.Create("PersonneSignature:Update", () => request))
-					{
-						int count = Db.Update(request);
-						if (count == 0)
-						{
-							throw HttpError.NotFound(
-								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(PersonneSignature), request.ClePersonne));
-						}
-
-						scope.Save();
-					}
-				}
-
-				return request;
-			}
-		}
-
-		/// <summary>
 		/// Retourne l'entité <see cref="Personne"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
@@ -613,65 +585,93 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Retourne l'entité <see cref="PersonneProfil"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="Personne"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="PersonneProfil"/> trouvée.</returns>
+		/// <returns>Entité <see cref="Personne"/> trouvée.</returns>
 		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public SelectPersonneProfilResponse Get(SelectPersonneProfil request)
+		public Personne Get(GetPersonne request)
 		{
-			var q = Db.From<PersonneProfil>()
-				.Limit(request.Skip, request.Take);
+			//ModelDefinitionHelper.UndefinedFields<Personne>(request.Fields);
 
-			if (request.Sort.IsNullOrEmpty())
+			var q = Db.From<Personne>().Where(x => x.ClePersonne == request.ClePersonne).Select(request.Fields);
+
+			var entity = Db.Single(q);
+			if (entity == null)
 			{
-				q.OrderBy(x => x.CodProfil); // Tri par défaut.
+				throw HttpError.NotFound(
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
 			}
-			else
-			{
-				q.OrderByFields(request.Sort);
-			}
 
-			long count = Db.Count(q);
-			var lst = Db.LoadSelect(q);
-
-			return new SelectPersonneProfilResponse
-			{
-				TotalCount = (int)count,
-				Results = lst
-			};
+			return entity;
 		}
 
 		/// <summary>
-		/// Retourne l'entité <see cref="PersonneSignature"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="Personne"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="PersonneSignature"/> trouvée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeletePersonne request)
+		{
+			using (var scope = AuditScope.Create("Personne:Delete", () => request))
+			{
+				int count = Db.DeleteById<Personne>(request.ClePersonne);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
+				}
+
+				scope.Save();
+			}
+		}
+
+		/// <summary>
+		/// Met à jour l'entité <see cref="Personne"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
 		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public SelectPersonneSignatureResponse Get(SelectPersonneSignature request)
+		/// <exception cref="HttpError.Conflict"></exception>
+		public void Patch(PatchPersonne request)
 		{
-			var q = Db.From<PersonneSignature>()
-				.Limit(request.Skip, request.Take);
-
-			if (request.Sort.IsNullOrEmpty())
+			if (request.Operations.IsNullOrEmpty())
 			{
-				q.OrderBy(x => x.ClePersonne); // Tri par défaut.
-			}
-			else
-			{
-				q.OrderByFields(request.Sort);
+				throw new ArgumentNullException(nameof(request.Operations));
 			}
 
-			long count = Db.Count(q);
-			var lst = Db.LoadSelect(q);
+			var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
 
-			return new SelectPersonneSignatureResponse
+			//ModelDefinitionHelper.UndefinedFields<Personne>(patchDic.Keys);
+
+			var entity = new Personne();
+			PatchHelper.PopulateFromPatch(entity, patchDic);
+
+			var q = Db.From<Personne>().Where(x => x.ClePersonne == request.ClePersonne).Update(patchDic.Keys);
+
+			lock (_personneLock)
 			{
-				TotalCount = (int)count,
-				Results = lst
-			};
+				bool unique1 = Personne_CodPersonne_EstUnique(entity, patchDic.Keys);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Personne)));
+				}
+
+				using (var scope = AuditScope.Create("Personne:Update", () => entity))
+				{
+					int count = Db.UpdateOnly(entity, q);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Personne), request.ClePersonne));
+					}
+
+					scope.Save();
+				}
+			}
 		}
 
 	}

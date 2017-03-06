@@ -1,0 +1,262 @@
+﻿<#@ assembly name="System.Core" #>
+<#@ assembly name="EnvDTE" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ include file="VisualStudioHelper.ttinclude" once="true" #>
+<#+
+public class ServiceModelHelper
+{
+	private readonly AutomationHelper _vsHelper;
+
+	public ServiceModelHelper(GeneratedTextTransformation tt)
+    {
+        if (tt == null)
+        {
+            throw new ArgumentNullException("tt");
+        }
+		_vsHelper = AutomationHelper.Create(tt);
+    }
+
+	public List<RequestClass> GetRequests(string projectName, Regex classFilterInclude, Regex classFilterExclude)
+    {
+		var project = _vsHelper.GetProject(projectName);
+		if (project != null)
+        {
+			return GetRequests(project, classFilterInclude, classFilterExclude);
+        }
+
+		return null;
+    }
+	public List<RequestClass> GetRequests(EnvDTE.Project project, Regex classFilterInclude, Regex classFilterExclude)
+    {
+		var lstRequests = new List<RequestClass>();
+
+		// get all class items from the code model
+		var allClasses = _vsHelper.CodeModel.GetAllClasses(project).ToList();
+		foreach (var codeClass in allClasses)
+		{
+			bool included = classFilterInclude == null || classFilterInclude.IsMatch(codeClass.Name);
+			bool excluded = classFilterExclude != null && classFilterExclude.IsMatch(codeClass.Name);
+			if (!included || excluded)
+			{
+				continue;
+			}
+
+			string pocoClassName = null;
+			if (codeClass.Name.StartsWith("Get"))
+			{
+				pocoClassName = codeClass.Name.Substring(3);
+			}
+			else if (codeClass.Name.StartsWith("Delete"))
+			{
+ 				pocoClassName = codeClass.Name.Substring(6);
+			}
+			else if (codeClass.Name.StartsWith("Patch"))
+			{
+				pocoClassName = codeClass.Name.Substring(5);
+			}
+			else if (codeClass.Name.StartsWith("Search"))
+			{
+				pocoClassName = codeClass.Name.Substring(6);
+			}
+			else if (codeClass.Name.StartsWith("Select"))
+			{
+				pocoClassName = codeClass.Name.Substring(6);
+			}
+			else
+			{
+				pocoClassName = codeClass.Name;
+			}
+
+			if (!string.IsNullOrEmpty(pocoClassName))
+            {
+				var lstClassAttributes = _vsHelper.CodeModel.GetAllClassAttributes(codeClass);
+
+				var lstRouteAttrs = lstClassAttributes.Where(attr => attr.FullName == "ServiceStack.RouteAttribute")
+					.ToList();
+				if (lstRouteAttrs.Any())
+				{
+					var reqItem = MapCodeClassToRequestClass(codeClass, lstClassAttributes);
+
+					if (allClasses.Any(c => c.Name == pocoClassName))
+                    {
+						reqItem.PocoClassName = pocoClassName;
+                    }
+					
+					foreach (var routeAttr in lstRouteAttrs)
+					{
+						reqItem.LstRouteParts.Add(GetRouteParts(routeAttr));
+					}
+
+					string baseEntityName = reqItem.LstRouteParts.First().First();
+					if (allClasses.Any(c => c.Name == baseEntityName))
+                    {
+						reqItem.BaseEntityName = baseEntityName;
+                    }
+
+					lstRequests.Add(reqItem);
+				}
+            }
+		} // end foreach
+
+		return lstRequests;
+    }
+
+	private List<string> GetRouteParts(EnvDTE.CodeAttribute routeAttr)
+	{
+		string[] parameters = routeAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+		string paramPath = parameters[0].Trim();
+
+		if (paramPath.StartsWith("\"") && paramPath.EndsWith("\""))
+		{
+			paramPath = paramPath.Substring(1, paramPath.Length - 2);
+		}
+
+		return paramPath.Split(new [] { '/' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+	}
+
+	private RequestClass MapCodeClassToRequestClass(EnvDTE.CodeClass codeClass, IEnumerable<EnvDTE.CodeAttribute> lstClassAttributes = null)
+    {
+		var req = new RequestClass();
+		req.Name = codeClass.Name;
+
+		var allProperties = _vsHelper.CodeModel.GetAllProperties(codeClass);
+		foreach (var property in allProperties)
+        {
+			var propItem = new RequestProperty();
+			propItem.Name = property.Name;
+			propItem.TypeFullName = property.Type.AsFullName;
+
+			var allAttributes = _vsHelper.CodeModel.GetAllCodeElementsOfType(property.Attributes, EnvDTE.vsCMElement.vsCMElementAttribute, false)
+				.OfType<EnvDTE.CodeAttribute>()
+				.ToList();
+
+			bool isPk = allAttributes
+				.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.PrimaryKeyAttribute")
+				.Any();
+			propItem.IsPrimaryKey = isPk;
+
+			bool isReq = allAttributes
+				.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.RequiredAttribute")
+				.Any();
+			propItem.IsRequired = isReq;
+
+			var strLengthAttr = allAttributes.FirstOrDefault(attr => attr.FullName == "ServiceStack.DataAnnotations.StringLengthAttribute");
+			if (strLengthAttr != null)
+            {
+				int max = Convert.ToInt32(strLengthAttr.Value);
+				propItem.MaxLength = max;
+			}
+
+			// [Index(true)]
+			var idxAttrs = allAttributes
+				.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.IndexAttribute")
+				.ToList();
+			foreach (var idxAttr in idxAttrs)
+			{
+				var parameters = idxAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
+
+				string str1 = parameters.SingleOrDefault(p => p.StartsWith("Unique"));
+				if (string.IsNullOrEmpty(str1))
+				{
+					str1 = parameters.FirstOrDefault();
+				}
+				bool unique = false;
+				bool.TryParse(str1, out unique);
+				if (unique)
+				{
+					req.UniqueConstraints.Add(new [] { property.Name });
+				}
+			}
+
+			req.Properties.Add(propItem);
+        }
+
+		if (lstClassAttributes == null)
+        {
+			lstClassAttributes = _vsHelper.CodeModel.GetAllClassAttributes(codeClass);
+		}
+
+		// [CompositeIndex(true, ...)]
+		var compositeIdxAttrs = lstClassAttributes.Where(attr => attr.FullName == "ServiceStack.DataAnnotations.CompositeIndexAttribute")
+			.ToList();
+		foreach (var idxAttr in compositeIdxAttrs)
+		{
+			var parameters = idxAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
+		
+			string str1 = parameters.SingleOrDefault(p => p.StartsWith("Unique"));
+			if (string.IsNullOrEmpty(str1))
+			{
+				str1 = parameters.FirstOrDefault();
+			}
+			bool unique = false;
+			bool.TryParse(str1, out unique);
+			if (unique)
+			{
+				var lstProps = new List<string>();
+				foreach (string par in parameters)
+				{
+					string strParam = "";
+					if (par.StartsWith("nameof(") && par.EndsWith(")"))
+					{
+						strParam = par.Substring(7, par.Length - 8);
+					}
+					else if (par.StartsWith("\"") && par.EndsWith("\""))
+					{
+						strParam = par.Substring(1, par.Length - 2);
+					}
+
+					if (!string.IsNullOrEmpty(strParam))
+					{
+    					var prop = allProperties.SingleOrDefault(p => p.Name == strParam);
+						if (prop != null)
+						{
+							lstProps.Add(prop.Name);
+						}
+					}
+				}
+
+				req.UniqueConstraints.Add(lstProps.ToArray());
+			}
+		}
+
+		return req;
+    }
+}
+
+public class RequestClass
+{
+	public RequestClass()
+    {
+		LstRouteParts = new List<List<string>>();
+ 		Properties = new List<RequestProperty>();
+		UniqueConstraints = new List<string[]>();
+	}
+
+	public string Name { get; set; }
+		
+	public string BaseEntityName { get; set; }
+
+	public string PocoClassName { get; set; }
+
+	public List<RequestProperty> Properties { get; set; }
+
+	public List<string[]> UniqueConstraints { get; set; }
+
+	public List<List<string>> LstRouteParts { get; set; }
+}
+
+public class RequestProperty
+{
+	public string Name { get; set; }
+
+	public string TypeFullName { get; set; }
+
+	public bool IsPrimaryKey { get; set; }
+
+	public bool IsRequired { get; set; }
+
+	public int MaxLength { get; set; }
+}
+#>

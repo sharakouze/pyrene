@@ -30,56 +30,9 @@ namespace Tmpi.Pyrene.ServiceInterface
 	/// <seealso cref="FournContact"/>
 	public partial class FournService : ServiceStack.Service
 	{
-		private static readonly object _fournLock = new object();
 		private static readonly object _fournBanqueLock = new object();
 		private static readonly object _fournContactLock = new object();
-		/// <summary>
-		/// Teste l'unicité d'une entité <see cref="Fourn"/>.
-		/// </summary>
-		/// <param name="model"></param>
-		/// <param name="fields"></param>
-		/// <returns></returns>
-		protected bool Fourn_CodFourn_EstUnique(Fourn model, IEnumerable<string> fields = null)
-		{
-			var q = Db.From<Fourn>();
-
-			if (fields == null || fields.Contains(nameof(Fourn.CodFourn), StringComparer.OrdinalIgnoreCase))
-			{
-				q.Where(t1 => t1.CodFourn == model.CodFourn);
-			}
-			else
-			{
-				return true;
-			}
-
-			if (model.CleFourn != 0)
-			{
-				q.Where(t1 => t1.CleFourn != model.CleFourn);
-			}
-
-			return !Db.Exists(q);
-		}
-
-		/// <summary>
-		/// Supprime l'entité <see cref="Fourn"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public void Delete(DeleteFourn request)
-		{
-			using (var scope = AuditScope.Create("Fourn:Delete", () => request))
-			{
-				int count = Db.DeleteById<Fourn>(request.CleFourn);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Fourn), request.CleFourn));
-				}
-
-				scope.Save();
-			}
-		}
-
+		private static readonly object _fournLock = new object();
 		/// <summary>
 		/// Teste l'unicité d'une entité <see cref="FournBanque"/>.
 		/// </summary>
@@ -136,22 +89,49 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime l'entité <see cref="FournBanque"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="FournBanque"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="FournBanque"/> ajoutée.</returns>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public void Delete(DeleteFournBanque request)
+		/// <exception cref="HttpError.Conflict"></exception>
+		public FournBanque Post(FournBanque request)
 		{
-			using (var scope = AuditScope.Create("FournBanque:Delete", () => request))
+			lock (_fournBanqueLock)
 			{
-				int count = Db.DeleteById<FournBanque>(request.CleBanque);
-				if (count == 0)
+				bool unique1 = FournBanque_CleFourn_CodIBAN_EstUnique(request);
+				if (!unique1)
 				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournBanque), request.CleBanque));
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(FournBanque)));
 				}
 
-				scope.Save();
+				if (request.CleBanque == 0)
+				{
+					using (var scope = AuditScope.Create("FournBanque:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.CleBanque = (int)id;
+
+						scope.Save();
+					}
+				}
+				else
+				{
+					using (var scope = AuditScope.Create("FournBanque:Update", () => request))
+					{
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournBanque), request.CleBanque));
+						}
+
+						scope.Save();
+					}
+				}
+
+				return request;
 			}
 		}
 
@@ -211,23 +191,77 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime l'entité <see cref="FournContact"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="FournContact"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="FournContact"/> ajoutée.</returns>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public void Delete(DeleteFournContact request)
+		/// <exception cref="HttpError.Conflict"></exception>
+		public FournContact Post(FournContact request)
 		{
-			using (var scope = AuditScope.Create("FournContact:Delete", () => request))
+			lock (_fournContactLock)
 			{
-				int count = Db.DeleteById<FournContact>(request.CleContact);
-				if (count == 0)
+				bool unique1 = FournContact_CleFourn_NomContact_EstUnique(request);
+				if (!unique1)
 				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournContact), request.CleContact));
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(FournContact)));
 				}
 
-				scope.Save();
+				if (request.CleContact == 0)
+				{
+					using (var scope = AuditScope.Create("FournContact:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.CleContact = (int)id;
+
+						scope.Save();
+					}
+				}
+				else
+				{
+					using (var scope = AuditScope.Create("FournContact:Update", () => request))
+					{
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournContact), request.CleContact));
+						}
+
+						scope.Save();
+					}
+				}
+
+				return request;
 			}
+		}
+
+		/// <summary>
+		/// Teste l'unicité d'une entité <see cref="Fourn"/>.
+		/// </summary>
+		/// <param name="model"></param>
+		/// <param name="fields"></param>
+		/// <returns></returns>
+		protected bool Fourn_CodFourn_EstUnique(Fourn model, IEnumerable<string> fields = null)
+		{
+			var q = Db.From<Fourn>();
+
+			if (fields == null || fields.Contains(nameof(Fourn.CodFourn), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(t1 => t1.CodFourn == model.CodFourn);
+			}
+			else
+			{
+				return true;
+			}
+
+			if (model.CleFourn != 0)
+			{
+				q.Where(t1 => t1.CleFourn != model.CleFourn);
+			}
+
+			return !Db.Exists(q);
 		}
 
 		/// <summary>
@@ -278,97 +312,34 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace l'entité <see cref="FournBanque"/> spécifiée dans la requête.
+		/// Retourne l'entité <see cref="Fourn"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="FournBanque"/> ajoutée.</returns>
+		/// <returns>Entité <see cref="Fourn"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public FournBanque Post(FournBanque request)
+		public SelectFournResponse Get(SelectFourn request)
 		{
-			lock (_fournBanqueLock)
+			var q = Db.From<Fourn>()
+				.Limit(request.Skip, request.Take);
+
+			if (request.Sort.IsNullOrEmpty())
 			{
-				bool unique1 = FournBanque_CleFourn_CodIBAN_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(FournBanque)));
-				}
-
-				if (request.CleBanque == 0)
-				{
-					using (var scope = AuditScope.Create("FournBanque:Insert", () => request))
-					{
-						long id = Db.Insert(request, selectIdentity: true);
-						request.CleBanque = (int)id;
-
-						scope.Save();
-					}
-				}
-				else
-				{
-					using (var scope = AuditScope.Create("FournBanque:Update", () => request))
-					{
-						int count = Db.Update(request);
-						if (count == 0)
-						{
-							throw HttpError.NotFound(
-								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournBanque), request.CleBanque));
-						}
-
-						scope.Save();
-					}
-				}
-
-				return request;
+				q.OrderBy(x => x.LibFourn); // Tri par défaut.
 			}
-		}
-
-		/// <summary>
-		/// Ajoute ou remplace l'entité <see cref="FournContact"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="FournContact"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public FournContact Post(FournContact request)
-		{
-			lock (_fournContactLock)
+			else
 			{
-				bool unique1 = FournContact_CleFourn_NomContact_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(FournContact)));
-				}
-
-				if (request.CleContact == 0)
-				{
-					using (var scope = AuditScope.Create("FournContact:Insert", () => request))
-					{
-						long id = Db.Insert(request, selectIdentity: true);
-						request.CleContact = (int)id;
-
-						scope.Save();
-					}
-				}
-				else
-				{
-					using (var scope = AuditScope.Create("FournContact:Update", () => request))
-					{
-						int count = Db.Update(request);
-						if (count == 0)
-						{
-							throw HttpError.NotFound(
-								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournContact), request.CleContact));
-						}
-
-						scope.Save();
-					}
-				}
-
-				return request;
+				q.OrderByFields(request.Sort);
 			}
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectFournResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
 		}
 
 		/// <summary>
@@ -395,49 +366,23 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Retourne l'entité <see cref="FournBanque"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="Fourn"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="FournBanque"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public FournBanque Get(GetFournBanque request)
+		public void Delete(DeleteFourn request)
 		{
-			//ModelDefinitionHelper.UndefinedFields<FournBanque>(request.Fields);
-
-			var q = Db.From<FournBanque>().Where(x => x.CleBanque == request.CleBanque).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
+			using (var scope = AuditScope.Create("Fourn:Delete", () => request))
 			{
-				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournBanque), request.CleBanque));
+				int count = Db.DeleteById<Fourn>(request.CleFourn);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Fourn), request.CleFourn));
+				}
+
+				scope.Save();
 			}
-
-			return entity;
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="FournContact"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="FournContact"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public FournContact Get(GetFournContact request)
-		{
-			//ModelDefinitionHelper.UndefinedFields<FournContact>(request.Fields);
-
-			var q = Db.From<FournContact>().Where(x => x.CleContact == request.CleContact).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournContact), request.CleContact));
-			}
-
-			return entity;
 		}
 
 		/// <summary>
@@ -484,6 +429,108 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 					scope.Save();
 				}
+			}
+		}
+
+		/// <summary>
+		/// Retourne le résultat d'une recherche.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns></returns>
+		public SearchFournResponse Get(SearchFourn request)
+		{
+			if (string.IsNullOrWhiteSpace(request.Text))
+			{
+				return null;
+			}
+
+			var q = Db.From<Fourn>()
+				.Where(x => x.LibFourn.Contains(request.Text))
+				.Select(x => new { CleObjet = x.CleFourn,  CodObjet = x.CodFourn, LibObjet = x.LibFourn });
+			if (request.Max > 0)
+			{
+				q.Limit(request.Max);
+			}
+
+			var items = Db.Select<BaseEntity>(q);
+
+			return new SearchFournResponse
+			{
+				Results = items
+			};
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="FournBanque"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="FournBanque"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectFournBanqueResponse Get(SelectFournBanque request)
+		{
+			var q = Db.From<FournBanque>()
+				.Limit(request.Skip, request.Take);
+
+			if (request.Sort.IsNullOrEmpty())
+			{
+				q.OrderBy(x => x.CleBanque); // Tri par défaut.
+			}
+			else
+			{
+				q.OrderByFields(request.Sort);
+			}
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectFournBanqueResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="FournBanque"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="FournBanque"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public FournBanque Get(GetFournBanque request)
+		{
+			//ModelDefinitionHelper.UndefinedFields<FournBanque>(request.Fields);
+
+			var q = Db.From<FournBanque>().Where(x => x.CleBanque == request.CleBanque).Select(request.Fields);
+
+			var entity = Db.Single(q);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournBanque), request.CleBanque));
+			}
+
+			return entity;
+		}
+
+		/// <summary>
+		/// Supprime l'entité <see cref="FournBanque"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeleteFournBanque request)
+		{
+			using (var scope = AuditScope.Create("FournBanque:Delete", () => request))
+			{
+				int count = Db.DeleteById<FournBanque>(request.CleBanque);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournBanque), request.CleBanque));
+				}
+
+				scope.Save();
 			}
 		}
 
@@ -535,6 +582,80 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
+		/// Retourne l'entité <see cref="FournContact"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="FournContact"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectFournContactResponse Get(SelectFournContact request)
+		{
+			var q = Db.From<FournContact>()
+				.Limit(request.Skip, request.Take);
+
+			if (request.Sort.IsNullOrEmpty())
+			{
+				q.OrderBy(x => x.NomContact); // Tri par défaut.
+			}
+			else
+			{
+				q.OrderByFields(request.Sort);
+			}
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectFournContactResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="FournContact"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="FournContact"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public FournContact Get(GetFournContact request)
+		{
+			//ModelDefinitionHelper.UndefinedFields<FournContact>(request.Fields);
+
+			var q = Db.From<FournContact>().Where(x => x.CleContact == request.CleContact).Select(request.Fields);
+
+			var entity = Db.Single(q);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournContact), request.CleContact));
+			}
+
+			return entity;
+		}
+
+		/// <summary>
+		/// Supprime l'entité <see cref="FournContact"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeleteFournContact request)
+		{
+			using (var scope = AuditScope.Create("FournContact:Delete", () => request))
+			{
+				int count = Db.DeleteById<FournContact>(request.CleContact);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(FournContact), request.CleContact));
+				}
+
+				scope.Save();
+			}
+		}
+
+		/// <summary>
 		/// Met à jour l'entité <see cref="FournContact"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
@@ -579,127 +700,6 @@ namespace Tmpi.Pyrene.ServiceInterface
 					scope.Save();
 				}
 			}
-		}
-
-		/// <summary>
-		/// Retourne le résultat d'une recherche.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns></returns>
-		public SearchFournResponse Get(SearchFourn request)
-		{
-			if (string.IsNullOrWhiteSpace(request.Text))
-			{
-				return null;
-			}
-
-			var q = Db.From<Fourn>()
-				.Where(x => x.LibFourn.Contains(request.Text))
-				.Select(x => new { CleObjet = x.CleFourn,  CodObjet = x.CodFourn, LibObjet = x.LibFourn });
-			if (request.Max > 0)
-			{
-				q.Limit(request.Max);
-			}
-
-			var items = Db.Select<BaseEntity>(q);
-
-			return new SearchFournResponse
-			{
-				Results = items
-			};
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="Fourn"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="Fourn"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public SelectFournResponse Get(SelectFourn request)
-		{
-			var q = Db.From<Fourn>()
-				.Limit(request.Skip, request.Take);
-
-			if (request.Sort.IsNullOrEmpty())
-			{
-				q.OrderBy(x => x.LibFourn); // Tri par défaut.
-			}
-			else
-			{
-				q.OrderByFields(request.Sort);
-			}
-
-			long count = Db.Count(q);
-			var lst = Db.LoadSelect(q);
-
-			return new SelectFournResponse
-			{
-				TotalCount = (int)count,
-				Results = lst
-			};
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="FournBanque"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="FournBanque"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public SelectFournBanqueResponse Get(SelectFournBanque request)
-		{
-			var q = Db.From<FournBanque>()
-				.Limit(request.Skip, request.Take);
-
-			if (request.Sort.IsNullOrEmpty())
-			{
-				q.OrderBy(x => x.CleBanque); // Tri par défaut.
-			}
-			else
-			{
-				q.OrderByFields(request.Sort);
-			}
-
-			long count = Db.Count(q);
-			var lst = Db.LoadSelect(q);
-
-			return new SelectFournBanqueResponse
-			{
-				TotalCount = (int)count,
-				Results = lst
-			};
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="FournContact"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="FournContact"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public SelectFournContactResponse Get(SelectFournContact request)
-		{
-			var q = Db.From<FournContact>()
-				.Limit(request.Skip, request.Take);
-
-			if (request.Sort.IsNullOrEmpty())
-			{
-				q.OrderBy(x => x.NomContact); // Tri par défaut.
-			}
-			else
-			{
-				q.OrderByFields(request.Sort);
-			}
-
-			long count = Db.Count(q);
-			var lst = Db.LoadSelect(q);
-
-			return new SelectFournContactResponse
-			{
-				TotalCount = (int)count,
-				Results = lst
-			};
 		}
 
 	}

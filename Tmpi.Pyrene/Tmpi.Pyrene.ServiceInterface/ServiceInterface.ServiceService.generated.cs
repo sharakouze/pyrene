@@ -57,23 +57,81 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Supprime l'entité <see cref="ServiceModel.Types.Service"/> spécifiée dans la requête.
+		/// Ajoute ou remplace l'entité <see cref="ServiceModel.Types.Service"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="ServiceModel.Types.Service"/> ajoutée.</returns>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public void Delete(DeleteService request)
+		/// <exception cref="HttpError.Conflict"></exception>
+		public ServiceModel.Types.Service Post(ServiceModel.Types.Service request)
 		{
-			using (var scope = AuditScope.Create("Service:Delete", () => request))
+			lock (_serviceLock)
 			{
-				int count = Db.DeleteById<ServiceModel.Types.Service>(request.CleService);
-				if (count == 0)
+				bool unique1 = Service_CodService_EstUnique(request);
+				if (!unique1)
 				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(ServiceModel.Types.Service)));
 				}
 
-				scope.Save();
+				if (request.CleService == 0)
+				{
+					using (var scope = AuditScope.Create("Service:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.CleService = (int)id;
+
+						scope.Save();
+					}
+				}
+				else
+				{
+					using (var scope = AuditScope.Create("Service:Update", () => request))
+					{
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
+						}
+
+						scope.Save();
+					}
+				}
+
+				return request;
 			}
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="ServiceModel.Types.Service"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="ServiceModel.Types.Service"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectServiceResponse Get(SelectService request)
+		{
+			var q = Db.From<ServiceModel.Types.Service>()
+				.Limit(request.Skip, request.Take);
+
+			if (request.Sort.IsNullOrEmpty())
+			{
+				q.OrderBy(x => x.LibService); // Tri par défaut.
+			}
+			else
+			{
+				q.OrderByFields(request.Sort);
+			}
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectServiceResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
 		}
 
 		/// <summary>
@@ -97,6 +155,26 @@ namespace Tmpi.Pyrene.ServiceInterface
 			}
 
 			return entity;
+		}
+
+		/// <summary>
+		/// Supprime l'entité <see cref="ServiceModel.Types.Service"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeleteService request)
+		{
+			using (var scope = AuditScope.Create("Service:Delete", () => request))
+			{
+				int count = Db.DeleteById<ServiceModel.Types.Service>(request.CleService);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
+				}
+
+				scope.Save();
+			}
 		}
 
 		/// <summary>
@@ -172,84 +250,6 @@ namespace Tmpi.Pyrene.ServiceInterface
 			{
 				Results = items
 			};
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="ServiceModel.Types.Service"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="ServiceModel.Types.Service"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public SelectServiceResponse Get(SelectService request)
-		{
-			var q = Db.From<ServiceModel.Types.Service>()
-				.Limit(request.Skip, request.Take);
-
-			if (request.Sort.IsNullOrEmpty())
-			{
-				q.OrderBy(x => x.LibService); // Tri par défaut.
-			}
-			else
-			{
-				q.OrderByFields(request.Sort);
-			}
-
-			long count = Db.Count(q);
-			var lst = Db.LoadSelect(q);
-
-			return new SelectServiceResponse
-			{
-				TotalCount = (int)count,
-				Results = lst
-			};
-		}
-
-		/// <summary>
-		/// Ajoute ou remplace l'entité <see cref="ServiceModel.Types.Service"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="ServiceModel.Types.Service"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public ServiceModel.Types.Service Post(ServiceModel.Types.Service request)
-		{
-			lock (_serviceLock)
-			{
-				bool unique1 = Service_CodService_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(ServiceModel.Types.Service)));
-				}
-
-				if (request.CleService == 0)
-				{
-					using (var scope = AuditScope.Create("Service:Insert", () => request))
-					{
-						long id = Db.Insert(request, selectIdentity: true);
-						request.CleService = (int)id;
-
-						scope.Save();
-					}
-				}
-				else
-				{
-					using (var scope = AuditScope.Create("Service:Update", () => request))
-					{
-						int count = Db.Update(request);
-						if (count == 0)
-						{
-							throw HttpError.NotFound(
-								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
-						}
-
-						scope.Save();
-					}
-				}
-
-				return request;
-			}
 		}
 
 	}

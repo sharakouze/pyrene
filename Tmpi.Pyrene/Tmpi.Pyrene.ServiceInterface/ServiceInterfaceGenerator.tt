@@ -7,7 +7,8 @@
 <#@ import namespace="System.Linq" #>
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" once="true" #>
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\VisualStudioHelper.ttinclude" once="true" #>
-<#@ include file="$(MSBuildProjectDirectory)\..\Shared\ServiceInterfaceGenerator.ttinclude" once="true" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\ServiceModelHelper.ttinclude" once="true" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\ServiceInterfaceHelper.ttinclude" once="true" #>
 <#
 	/***** TODO *****
 	- Trace des fields introuvables dans Get et Patch
@@ -103,30 +104,31 @@
 
 	manager.EndBlock(); // end header
 	
-	var sig = new ServiceInterfaceGenerator(this, vsHelper);
-	sig.MakeClassesPartial = MakeClassesPartial;
+	var svcInterface = new ServiceInterfaceHelper(this);
+	svcInterface.MakeClassesPartial = MakeClassesPartial;
 
-	var dicRequest = sig.GetRequests(srcProject, ClassFilterInclude, ClassFilterExclude);
-	foreach (var kvp in dicRequest)
+	var svcModel = new ServiceModelHelper(this);
+	var lstRequests = svcModel.GetRequests(srcProject, ClassFilterInclude, ClassFilterExclude);
+	foreach (var grpRequest in lstRequests.GroupBy(r => r.BaseEntityName))
 	{
 		string serviceNamespace = string.Format(NamespaceServices, BaseNamespace);
-		string serviceClassName = kvp.Key + "Service";
+		string serviceClassName = grpRequest.Key + "Service";
 		string serviceFileName = ServiceInterfaceUtils.GetGeneratedFilename(serviceClassName, serviceNamespace, BaseNamespace);
 		manager.StartNewFile(FilePrefix + serviceFileName + FileExtension);
 
-		sig.WriteService(kvp.Key, sourceNamespace, serviceNamespace, kvp.Value);
+		svcInterface.WriteService(grpRequest.Key, sourceNamespace, serviceNamespace, grpRequest);
 
 		manager.EndBlock(); // end newfile
 
         if (CreateValidators)
         {
 			string validatorNamespace = string.Format(NamespaceValidators, BaseNamespace);
-			string validatorClassName = kvp.Key;
+			string validatorClassName = grpRequest.Key;
 			string validatorFileName = ServiceInterfaceUtils.GetGeneratedFilename(validatorClassName, validatorNamespace, BaseNamespace);
 			manager.StartNewFile(FilePrefix + validatorFileName + FileExtension);
 
-			var validatorRequests = kvp.Value.Where(item => item.RequestClass == item.PocoClass);
-			sig.WriteValidator(sourceNamespace, validatorNamespace, validatorRequests, ValidatorsWithMessage);
+			var validatorRequests = grpRequest.Where(item => item.Name == item.PocoClassName);
+			svcInterface.WriteValidator(sourceNamespace, validatorNamespace, validatorRequests, ValidatorsWithMessage);
 
 			manager.EndBlock(); // end newfile
         }
