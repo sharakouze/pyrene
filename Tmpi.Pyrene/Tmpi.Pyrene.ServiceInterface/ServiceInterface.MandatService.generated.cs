@@ -30,7 +30,9 @@ namespace Tmpi.Pyrene.ServiceInterface
 	public partial class MandatService : ServiceStack.Service
 	{
 		private static readonly object _mandatLock = new object();
+
 		private static readonly object _mandatMandataireLock = new object();
+
 		/// <summary>
 		/// Teste l'unicité d'une entité <see cref="Mandat"/>.
 		/// </summary>
@@ -114,55 +116,22 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
-		/// Ajoute ou remplace l'entité <see cref="Mandat"/> spécifiée dans la requête.
+		/// Supprime l'entité <see cref="Mandat"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="Mandat"/> ajoutée.</returns>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public Mandat Post(Mandat request)
+		public void Delete(DeleteMandat request)
 		{
-			lock (_mandatLock)
+			using (var scope = AuditScope.Create("Mandat:Delete", () => request))
 			{
-				bool unique1 = Mandat_CodMandat_EstUnique(request);
-				if (!unique1)
+				int count = Db.DeleteById<Mandat>(request.CleMandat);
+				if (count == 0)
 				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Mandat)));
-				}
-				bool unique2 = Mandat_TypMandat_NivMandat_EstUnique(request);
-				if (!unique2)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Mandat)));
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Mandat), request.CleMandat));
 				}
 
-				if (request.CleMandat == 0)
-				{
-					using (var scope = AuditScope.Create("Mandat:Insert", () => request))
-					{
-						long id = Db.Insert(request, selectIdentity: true);
-						request.CleMandat = (int)id;
-
-						scope.Save();
-					}
-				}
-				else
-				{
-					using (var scope = AuditScope.Create("Mandat:Update", () => request))
-					{
-						int count = Db.Update(request);
-						if (count == 0)
-						{
-							throw HttpError.NotFound(
-								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Mandat), request.CleMandat));
-						}
-
-						scope.Save();
-					}
-				}
-
-				return request;
+				scope.Save();
 			}
 		}
 
@@ -231,6 +200,125 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
+		/// Supprime l'entité <see cref="MandatMandataire"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeleteMandatMandataire request)
+		{
+			using (var scope = AuditScope.Create("MandatMandataire:Delete", () => request))
+			{
+				int count = Db.DeleteById<MandatMandataire>(request.CleMandataire);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(MandatMandataire), request.CleMandataire));
+				}
+
+				scope.Save();
+			}
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="Mandat"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="Mandat"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public Mandat Get(GetMandat request)
+		{
+			//ModelDefinitionHelper.UndefinedFields<Mandat>(request.Fields);
+
+			var q = Db.From<Mandat>().Where(x => x.CleMandat == request.CleMandat).Select(request.Fields);
+
+			var entity = Db.Single(q);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Mandat), request.CleMandat));
+			}
+
+			return entity;
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="MandatMandataire"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="MandatMandataire"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public MandatMandataire Get(GetMandatMandataire request)
+		{
+			//ModelDefinitionHelper.UndefinedFields<MandatMandataire>(request.Fields);
+
+			var q = Db.From<MandatMandataire>().Where(x => x.CleMandataire == request.CleMandataire).Select(request.Fields);
+
+			var entity = Db.Single(q);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(MandatMandataire), request.CleMandataire));
+			}
+
+			return entity;
+		}
+
+		/// <summary>
+		/// Ajoute ou remplace l'entité <see cref="Mandat"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="Mandat"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.Conflict"></exception>
+		public Mandat Post(Mandat request)
+		{
+			lock (_mandatLock)
+			{
+				bool unique1 = Mandat_CodMandat_EstUnique(request);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Mandat)));
+				}
+				bool unique2 = Mandat_TypMandat_NivMandat_EstUnique(request);
+				if (!unique2)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Mandat)));
+				}
+
+				if (request.CleMandat == 0)
+				{
+					using (var scope = AuditScope.Create("Mandat:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.CleMandat = (int)id;
+
+						scope.Save();
+					}
+				}
+				else
+				{
+					using (var scope = AuditScope.Create("Mandat:Update", () => request))
+					{
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Mandat), request.CleMandat));
+						}
+
+						scope.Save();
+					}
+				}
+
+				return request;
+			}
+		}
+
+		/// <summary>
 		/// Ajoute ou remplace l'entité <see cref="MandatMandataire"/> spécifiée dans la requête.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
@@ -274,201 +362,6 @@ namespace Tmpi.Pyrene.ServiceInterface
 				}
 
 				return request;
-			}
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="MandatMandataire"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="MandatMandataire"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public SelectMandatMandataireResponse Get(SelectMandatMandataire request)
-		{
-			var q = Db.From<MandatMandataire>()
-				.Limit(request.Skip, request.Take);
-
-			if (request.Sort.IsNullOrEmpty())
-			{
-				q.OrderBy(x => x.CleMandataire); // Tri par défaut.
-			}
-			else
-			{
-				q.OrderByFields(request.Sort);
-			}
-
-			long count = Db.Count(q);
-			var lst = Db.LoadSelect(q);
-
-			return new SelectMandatMandataireResponse
-			{
-				TotalCount = (int)count,
-				Results = lst
-			};
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="MandatMandataire"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="MandatMandataire"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public MandatMandataire Get(GetMandatMandataire request)
-		{
-			//ModelDefinitionHelper.UndefinedFields<MandatMandataire>(request.Fields);
-
-			var q = Db.From<MandatMandataire>().Where(x => x.CleMandataire == request.CleMandataire).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(MandatMandataire), request.CleMandataire));
-			}
-
-			return entity;
-		}
-
-		/// <summary>
-		/// Supprime l'entité <see cref="MandatMandataire"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public void Delete(DeleteMandatMandataire request)
-		{
-			using (var scope = AuditScope.Create("MandatMandataire:Delete", () => request))
-			{
-				int count = Db.DeleteById<MandatMandataire>(request.CleMandataire);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(MandatMandataire), request.CleMandataire));
-				}
-
-				scope.Save();
-			}
-		}
-
-		/// <summary>
-		/// Met à jour l'entité <see cref="MandatMandataire"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Patch(PatchMandatMandataire request)
-		{
-			if (request.Operations.IsNullOrEmpty())
-			{
-				throw new ArgumentNullException(nameof(request.Operations));
-			}
-
-			var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
-
-			//ModelDefinitionHelper.UndefinedFields<MandatMandataire>(patchDic.Keys);
-
-			var entity = new MandatMandataire();
-			PatchHelper.PopulateFromPatch(entity, patchDic);
-
-			var q = Db.From<MandatMandataire>().Where(x => x.CleMandataire == request.CleMandataire).Update(patchDic.Keys);
-
-			lock (_mandatMandataireLock)
-			{
-				bool unique1 = MandatMandataire_CleMandat_ClePersonne_CleService_EstUnique(entity, patchDic.Keys);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(MandatMandataire)));
-				}
-
-				using (var scope = AuditScope.Create("MandatMandataire:Update", () => entity))
-				{
-					int count = Db.UpdateOnly(entity, q);
-					if (count == 0)
-					{
-						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(MandatMandataire), request.CleMandataire));
-					}
-
-					scope.Save();
-				}
-			}
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="Mandat"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="Mandat"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public SelectMandatResponse Get(SelectMandat request)
-		{
-			var q = Db.From<Mandat>()
-				.Limit(request.Skip, request.Take);
-
-			if (request.Sort.IsNullOrEmpty())
-			{
-				q.OrderBy(x => x.LibMandat); // Tri par défaut.
-			}
-			else
-			{
-				q.OrderByFields(request.Sort);
-			}
-
-			long count = Db.Count(q);
-			var lst = Db.LoadSelect(q);
-
-			return new SelectMandatResponse
-			{
-				TotalCount = (int)count,
-				Results = lst
-			};
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="Mandat"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="Mandat"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public Mandat Get(GetMandat request)
-		{
-			//ModelDefinitionHelper.UndefinedFields<Mandat>(request.Fields);
-
-			var q = Db.From<Mandat>().Where(x => x.CleMandat == request.CleMandat).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Mandat), request.CleMandat));
-			}
-
-			return entity;
-		}
-
-		/// <summary>
-		/// Supprime l'entité <see cref="Mandat"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public void Delete(DeleteMandat request)
-		{
-			using (var scope = AuditScope.Create("Mandat:Delete", () => request))
-			{
-				int count = Db.DeleteById<Mandat>(request.CleMandat);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Mandat), request.CleMandat));
-				}
-
-				scope.Save();
 			}
 		}
 
@@ -526,6 +419,53 @@ namespace Tmpi.Pyrene.ServiceInterface
 		}
 
 		/// <summary>
+		/// Met à jour l'entité <see cref="MandatMandataire"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.Conflict"></exception>
+		public void Patch(PatchMandatMandataire request)
+		{
+			if (request.Operations.IsNullOrEmpty())
+			{
+				throw new ArgumentNullException(nameof(request.Operations));
+			}
+
+			var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
+
+			//ModelDefinitionHelper.UndefinedFields<MandatMandataire>(patchDic.Keys);
+
+			var entity = new MandatMandataire();
+			PatchHelper.PopulateFromPatch(entity, patchDic);
+
+			var q = Db.From<MandatMandataire>().Where(x => x.CleMandataire == request.CleMandataire).Update(patchDic.Keys);
+
+			lock (_mandatMandataireLock)
+			{
+				bool unique1 = MandatMandataire_CleMandat_ClePersonne_CleService_EstUnique(entity, patchDic.Keys);
+				if (!unique1)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(MandatMandataire)));
+				}
+
+				using (var scope = AuditScope.Create("MandatMandataire:Update", () => entity))
+				{
+					int count = Db.UpdateOnly(entity, q);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(MandatMandataire), request.CleMandataire));
+					}
+
+					scope.Save();
+				}
+			}
+		}
+
+		/// <summary>
 		/// Retourne le résultat d'une recherche.
 		/// </summary>
 		/// <param name="request">Requête à traiter.</param>
@@ -550,6 +490,68 @@ namespace Tmpi.Pyrene.ServiceInterface
 			return new SearchMandatResponse
 			{
 				Results = items
+			};
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="Mandat"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="Mandat"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectMandatResponse Get(SelectMandat request)
+		{
+			var q = Db.From<Mandat>()
+				.Limit(request.Skip, request.Take);
+
+			if (request.Sort.IsNullOrEmpty())
+			{
+				q.OrderBy(x => x.LibMandat); // Tri par défaut.
+			}
+			else
+			{
+				q.OrderByFields(request.Sort);
+			}
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectMandatResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="MandatMandataire"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="MandatMandataire"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectMandatMandataireResponse Get(SelectMandatMandataire request)
+		{
+			var q = Db.From<MandatMandataire>()
+				.Limit(request.Skip, request.Take);
+
+			if (request.Sort.IsNullOrEmpty())
+			{
+				q.OrderBy(x => x.CleMandataire); // Tri par défaut.
+			}
+			else
+			{
+				q.OrderByFields(request.Sort);
+			}
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectMandatMandataireResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
 			};
 		}
 

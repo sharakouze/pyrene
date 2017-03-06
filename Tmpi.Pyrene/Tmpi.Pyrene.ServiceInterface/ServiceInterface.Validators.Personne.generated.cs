@@ -16,18 +16,34 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceInterface.Validators
 {
 	/// <summary>
-	/// Validation pour la requête <see cref="PersonneSignature"/>.
+	/// Validation pour la requête <see cref="Personne"/>.
 	/// </summary>
-	public partial class PersonneSignatureValidator : AbstractValidator<PersonneSignature>
+	public partial class PersonneValidator : AbstractValidator<Personne>
 	{
 		/// <summary>
-		/// Initialise une nouvelle instance de la classe <see cref="PersonneSignatureValidator" />.
+		/// Initialise une nouvelle instance de la classe <see cref="PersonneValidator" />.
 		/// </summary>
-		public PersonneSignatureValidator()
+		public PersonneValidator()
 		{
-			RuleFor(x => x.TypMime)
+			RuleFor(x => x.CodPersonne)
 				.NotEmpty()
-				.Length(0, 255);
+				.Length(0, 100);
+			RuleFor(x => x.NomPersonne)
+				.NotEmpty()
+				.Length(0, 100);
+			RuleFor(x => x.PrePersonne)
+				.Length(0, 100);
+			RuleFor(x => x.TxtPersonne)
+				.Length(0, 500);
+			RuleFor(x => x.CodExterne)
+				.Length(0, 100);
+			RuleFor(x => x.NumTelep)
+				.Length(0, 25);
+			RuleFor(x => x.NumFax)
+				.Length(0, 25);
+			RuleFor(x => x.NumEmail)
+				.Length(0, 100)
+				.EmailAddress();
 
 			SetRules();
 		}
@@ -62,34 +78,18 @@ namespace Tmpi.Pyrene.ServiceInterface.Validators
 	}
 
 	/// <summary>
-	/// Validation pour la requête <see cref="Personne"/>.
+	/// Validation pour la requête <see cref="PersonneSignature"/>.
 	/// </summary>
-	public partial class PersonneValidator : AbstractValidator<Personne>
+	public partial class PersonneSignatureValidator : AbstractValidator<PersonneSignature>
 	{
 		/// <summary>
-		/// Initialise une nouvelle instance de la classe <see cref="PersonneValidator" />.
+		/// Initialise une nouvelle instance de la classe <see cref="PersonneSignatureValidator" />.
 		/// </summary>
-		public PersonneValidator()
+		public PersonneSignatureValidator()
 		{
-			RuleFor(x => x.CodPersonne)
+			RuleFor(x => x.TypMime)
 				.NotEmpty()
-				.Length(0, 100);
-			RuleFor(x => x.NomPersonne)
-				.NotEmpty()
-				.Length(0, 100);
-			RuleFor(x => x.PrePersonne)
-				.Length(0, 100);
-			RuleFor(x => x.TxtPersonne)
-				.Length(0, 500);
-			RuleFor(x => x.CodExterne)
-				.Length(0, 100);
-			RuleFor(x => x.NumTelep)
-				.Length(0, 25);
-			RuleFor(x => x.NumFax)
-				.Length(0, 25);
-			RuleFor(x => x.NumEmail)
-				.Length(0, 100)
-				.EmailAddress();
+				.Length(0, 255);
 
 			SetRules();
 		}

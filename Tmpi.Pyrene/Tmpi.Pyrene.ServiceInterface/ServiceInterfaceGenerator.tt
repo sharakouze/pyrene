@@ -116,7 +116,7 @@
 		string serviceFileName = ServiceInterfaceUtils.GetGeneratedFilename(serviceClassName, serviceNamespace, BaseNamespace);
 		manager.StartNewFile(FilePrefix + serviceFileName + FileExtension);
 
-		svcInterface.WriteService(grpRequest.Key, sourceNamespace, serviceNamespace, grpRequest);
+		svcInterface.WriteService(grpRequest.Key, sourceNamespace, serviceNamespace, grpRequest.OrderBy(r => r.Name));
 
 		manager.EndBlock(); // end newfile
 
@@ -127,7 +127,7 @@
 			string validatorFileName = ServiceInterfaceUtils.GetGeneratedFilename(validatorClassName, validatorNamespace, BaseNamespace);
 			manager.StartNewFile(FilePrefix + validatorFileName + FileExtension);
 
-			var validatorRequests = grpRequest.Where(item => item.Name == item.PocoClassName);
+			var validatorRequests = grpRequest.Where(r => r.Name == r.PocoClassName).OrderBy(r => r.Name);
 			svcInterface.WriteValidator(sourceNamespace, validatorNamespace, validatorRequests, ValidatorsWithMessage);
 
 			manager.EndBlock(); // end newfile

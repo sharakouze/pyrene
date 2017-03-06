@@ -1,10 +1,8 @@
 ﻿<#@ assembly name="System.Core" #>
-<#@ assembly name="EnvDTE" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
-<#@ include file="VisualStudioHelper.ttinclude" once="true" #>
 <#@ include file="ServiceModelHelper.ttinclude" once="true" #>
 <#+
 public class ServiceInterfaceHelper
@@ -70,11 +68,10 @@ namespace <#= fileNamespace #>
         {
 #>
 		private static readonly object _<#= ToCamelCase(str) #>Lock = new object();
-<#+
-        }
-#>
 
 <#+
+        }
+
 		var dicPocoUnicityMethods = new Dictionary<string, List<string>>();
 
 		foreach (var item in requests)
@@ -542,15 +539,15 @@ namespace <#= fileNamespace #>
 		public <#= className #>Validator()
 		{
 <#+
-						foreach (var kvp2 in dicValidation)
+						foreach (var kvp in dicValidation)
                         {
 #>
-			RuleFor(x => x.<#= kvp2.Key #>)
+			RuleFor(x => x.<#= kvp.Key #>)
 <#+
-                            for (int i = 0; i < kvp2.Value.Count; i++)
+                            for (int i = 0; i < kvp.Value.Count; i++)
                             {
 #>
-				<#= kvp2.Value[i] #><#= i == kvp2.Value.Count - 1 ? ";" : "" #>
+				<#= kvp.Value[i] #><#= i == kvp.Value.Count - 1 ? ";" : "" #>
 <#+
                             }
                         }

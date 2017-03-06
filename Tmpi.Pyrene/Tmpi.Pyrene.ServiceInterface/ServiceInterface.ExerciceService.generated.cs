@@ -29,6 +29,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 	public partial class ExerciceService : ServiceStack.Service
 	{
 		private static readonly object _exerciceLock = new object();
+
 		/// <summary>
 		/// Teste l'unicité d'une entité <see cref="Exercice"/>.
 		/// </summary>
@@ -54,6 +55,26 @@ namespace Tmpi.Pyrene.ServiceInterface
 			}
 
 			return !Db.Exists(q);
+		}
+
+		/// <summary>
+		/// Supprime l'entité <see cref="Exercice"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public void Delete(DeleteExercice request)
+		{
+			using (var scope = AuditScope.Create("Exercice:Delete", () => request))
+			{
+				int count = Db.DeleteById<Exercice>(request.CleExercice);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Exercice), request.CleExercice));
+				}
+
+				scope.Save();
+			}
 		}
 
 		/// <summary>
@@ -110,37 +131,6 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <returns>Entité <see cref="Exercice"/> trouvée.</returns>
 		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
 		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public SelectExerciceResponse Get(SelectExercice request)
-		{
-			var q = Db.From<Exercice>()
-				.Limit(request.Skip, request.Take);
-
-			if (request.Sort.IsNullOrEmpty())
-			{
-				q.OrderBy(x => x.LibExercice); // Tri par défaut.
-			}
-			else
-			{
-				q.OrderByFields(request.Sort);
-			}
-
-			long count = Db.Count(q);
-			var lst = Db.LoadSelect(q);
-
-			return new SelectExerciceResponse
-			{
-				TotalCount = (int)count,
-				Results = lst
-			};
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="Exercice"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="Exercice"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
 		public Exercice Get(GetExercice request)
 		{
 			//ModelDefinitionHelper.UndefinedFields<Exercice>(request.Fields);
@@ -155,26 +145,6 @@ namespace Tmpi.Pyrene.ServiceInterface
 			}
 
 			return entity;
-		}
-
-		/// <summary>
-		/// Supprime l'entité <see cref="Exercice"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public void Delete(DeleteExercice request)
-		{
-			using (var scope = AuditScope.Create("Exercice:Delete", () => request))
-			{
-				int count = Db.DeleteById<Exercice>(request.CleExercice);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Exercice), request.CleExercice));
-				}
-
-				scope.Save();
-			}
 		}
 
 		/// <summary>
@@ -249,6 +219,37 @@ namespace Tmpi.Pyrene.ServiceInterface
 			return new SearchExerciceResponse
 			{
 				Results = items
+			};
+		}
+
+		/// <summary>
+		/// Retourne l'entité <see cref="Exercice"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="Exercice"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public SelectExerciceResponse Get(SelectExercice request)
+		{
+			var q = Db.From<Exercice>()
+				.Limit(request.Skip, request.Take);
+
+			if (request.Sort.IsNullOrEmpty())
+			{
+				q.OrderBy(x => x.LibExercice); // Tri par défaut.
+			}
+			else
+			{
+				q.OrderByFields(request.Sort);
+			}
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new SelectExerciceResponse
+			{
+				TotalCount = (int)count,
+				Results = lst
 			};
 		}
 
