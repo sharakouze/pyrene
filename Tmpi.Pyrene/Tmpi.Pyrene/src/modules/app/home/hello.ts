@@ -1,6 +1,6 @@
 ﻿import { Component, Input, OnChanges } from '@angular/core';
 import { JsonServiceClient } from 'servicestack-client';
-import { Hello } from '../../../dtos';
+//import { Hello } from '../../../dtos';
 
 var client = new JsonServiceClient('/');
 
@@ -19,14 +19,14 @@ export class HelloComponent {
     }
 
     nameChanged(newValue) {
-        if (newValue != null && newValue.length > 0) {
-            var req = new Hello();
-            req.name = newValue;
-            client.get(req).then(r => {
-                this.result = r.result
-            });
-        } else {
-            this.result = '';
-        }
+        //if (newValue != null && newValue.length > 0) {
+        //    var req = new Hello();
+        //    req.name = newValue;
+        //    client.get(req).then(r => {
+        //        this.result = r.result
+        //    });
+        //} else {
+        //    this.result = '';
+        //}
     }
 }

@@ -1,0 +1,129 @@
+{
+  "main": "bundles/forms.umd.js",
+  "format": "cjs",
+  "meta": {
+    "*.json": {
+      "format": "json"
+    },
+    "index.d.ts": {
+      "format": "esm"
+    },
+    "index.js": {
+      "format": "esm"
+    },
+    "src/directives.js": {
+      "format": "esm"
+    },
+    "src/directives/abstract_control_directive.js": {
+      "format": "esm"
+    },
+    "src/directives/abstract_form_group_directive.js": {
+      "format": "esm"
+    },
+    "src/directives/checkbox_value_accessor.js": {
+      "format": "esm"
+    },
+    "src/directives/control_container.js": {
+      "format": "esm"
+    },
+    "src/directives/control_value_accessor.js": {
+      "format": "esm"
+    },
+    "src/directives/default_value_accessor.js": {
+      "format": "esm"
+    },
+    "src/directives/error_examples.js": {
+      "format": "esm"
+    },
+    "src/directives/ng_control.js": {
+      "format": "esm"
+    },
+    "src/directives/ng_control_status.js": {
+      "format": "esm"
+    },
+    "src/directives/ng_form.js": {
+      "format": "esm"
+    },
+    "src/directives/ng_model.js": {
+      "format": "esm"
+    },
+    "src/directives/ng_model_group.js": {
+      "format": "esm"
+    },
+    "src/directives/normalize_validator.js": {
+      "format": "esm"
+    },
+    "src/directives/number_value_accessor.js": {
+      "format": "esm"
+    },
+    "src/directives/radio_control_value_accessor.js": {
+      "format": "esm"
+    },
+    "src/directives/range_value_accessor.js": {
+      "format": "esm"
+    },
+    "src/directives/reactive_directives/form_control_directive.js": {
+      "format": "esm"
+    },
+    "src/directives/reactive_directives/form_control_name.js": {
+      "format": "esm"
+    },
+    "src/directives/reactive_directives/form_group_directive.js": {
+      "format": "esm"
+    },
+    "src/directives/reactive_directives/form_group_name.js": {
+      "format": "esm"
+    },
+    "src/directives/reactive_errors.js": {
+      "format": "esm"
+    },
+    "src/directives/select_control_value_accessor.js": {
+      "format": "esm"
+    },
+    "src/directives/select_multiple_control_value_accessor.js": {
+      "format": "esm"
+    },
+    "src/directives/shared.js": {
+      "format": "esm"
+    },
+    "src/directives/template_driven_errors.js": {
+      "format": "esm"
+    },
+    "src/directives/validators.js": {
+      "format": "esm"
+    },
+    "src/facade/async.js": {
+      "format": "esm"
+    },
+    "src/facade/collection.js": {
+      "format": "esm"
+    },
+    "src/facade/lang.js": {
+      "format": "esm"
+    },
+    "src/form_builder.js": {
+      "format": "esm"
+    },
+    "src/form_providers.js": {
+      "format": "esm"
+    },
+    "src/forms.d.ts": {
+      "format": "esm"
+    },
+    "src/forms.js": {
+      "format": "esm"
+    },
+    "src/model.js": {
+      "format": "esm"
+    },
+    "src/private_import_core.js": {
+      "format": "esm"
+    },
+    "src/validators.js": {
+      "format": "esm"
+    },
+    "src/version.js": {
+      "format": "esm"
+    }
+  }
+}

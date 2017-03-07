@@ -9,9 +9,9 @@
 
 import { Component, OnInit } from '@angular/core';
 
-import { PagedData } from './paged-data';
+import { PagedData } from '../../paged-data';
 import { MandatService } from './mandat.service';
-import { Mandat } from './dtos';
+import { Mandat } from '../../dtos';
 
 @Component({
 	selector: 'mandat-list',

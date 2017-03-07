@@ -1,0 +1,16 @@
+{
+  "main": "bundles/compiler.umd.js",
+  "meta": {
+    "src/*.js": {
+      "deps": [
+        "reflect-metadata",
+        "zone.js"
+      ]
+    }
+  },
+  "map": {
+    "@angular/compiler": ".",
+    "./testing": "./bundles/compiler-testing.umd.js"
+  },
+  "format": "cjs"
+}

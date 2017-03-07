@@ -1,0 +1,108 @@
+{
+  "main": "Rx.js",
+  "format": "cjs",
+  "meta": {
+    "*.json": {
+      "format": "json"
+    },
+    "bundles/Rx.min.js": {
+      "format": "amd"
+    },
+    "src/Rx.ts": {
+      "format": "esm"
+    },
+    "src/add/observable/if.ts": {
+      "format": "esm"
+    },
+    "src/add/observable/throw.ts": {
+      "format": "esm"
+    },
+    "src/observable/bindCallback.ts": {
+      "format": "esm"
+    },
+    "src/observable/bindNodeCallback.ts": {
+      "format": "esm"
+    },
+    "src/observable/concat.ts": {
+      "format": "esm"
+    },
+    "src/observable/defer.ts": {
+      "format": "esm"
+    },
+    "src/observable/dom/webSocket.ts": {
+      "format": "esm"
+    },
+    "src/observable/empty.ts": {
+      "format": "esm"
+    },
+    "src/observable/forkJoin.ts": {
+      "format": "esm"
+    },
+    "src/observable/from.ts": {
+      "format": "esm"
+    },
+    "src/observable/fromEvent.ts": {
+      "format": "esm"
+    },
+    "src/observable/fromEventPattern.ts": {
+      "format": "esm"
+    },
+    "src/observable/fromPromise.ts": {
+      "format": "esm"
+    },
+    "src/observable/if.ts": {
+      "format": "esm"
+    },
+    "src/observable/interval.ts": {
+      "format": "esm"
+    },
+    "src/observable/merge.ts": {
+      "format": "esm"
+    },
+    "src/observable/never.ts": {
+      "format": "esm"
+    },
+    "src/observable/of.ts": {
+      "format": "esm"
+    },
+    "src/observable/pairs.ts": {
+      "format": "esm"
+    },
+    "src/observable/range.ts": {
+      "format": "esm"
+    },
+    "src/observable/throw.ts": {
+      "format": "esm"
+    },
+    "src/observable/timer.ts": {
+      "format": "esm"
+    },
+    "src/observable/using.ts": {
+      "format": "esm"
+    },
+    "src/observable/zip.ts": {
+      "format": "esm"
+    },
+    "src/scheduler/QueueScheduler.ts": {
+      "format": "esm"
+    },
+    "src/scheduler/animationFrame.ts": {
+      "format": "esm"
+    },
+    "src/scheduler/asap.ts": {
+      "format": "esm"
+    },
+    "src/scheduler/async.ts": {
+      "format": "esm"
+    },
+    "src/scheduler/queue.ts": {
+      "format": "esm"
+    },
+    "src/util/Map.ts": {
+      "format": "esm"
+    },
+    "src/util/noop.ts": {
+      "format": "esm"
+    }
+  }
+}

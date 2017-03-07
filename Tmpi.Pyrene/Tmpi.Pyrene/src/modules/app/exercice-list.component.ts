@@ -9,9 +9,9 @@
 
 import { Component, OnInit } from '@angular/core';
 
-import { PagedData } from './paged-data';
+import { PagedData } from '../../paged-data';
 import { ExerciceService } from './exercice.service';
-import { Exercice } from './dtos';
+import { Exercice } from '../../dtos';
 
 @Component({
 	selector: 'exercice-list',

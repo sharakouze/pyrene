@@ -9,8 +9,8 @@
 
 import { Injectable } from '@angular/core';
 
-import { ServiceClient } from './service-client';
-import { SelectTVA, SelectTVAResponse, DeleteTVA } from './dtos';
+import { ServiceClient } from '../../service-client';
+import { SelectTVA, SelectTVAResponse, DeleteTVA } from '../../dtos';
 
 @Injectable()
 export class TVAService extends ServiceClient {

@@ -1,0 +1,9 @@
+{
+  "main": "Reflect.js",
+  "map": {
+    "crypto": {
+      "node": "@node/crypto",
+      "default": "@empty"
+    }
+  }
+}

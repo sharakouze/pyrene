@@ -1,0 +1,17 @@
+{
+  "main": "src/index.js",
+  "format": "cjs",
+  "meta": {
+    "*.json": {
+      "format": "json"
+    },
+    "src/index.js": {
+      "globals": {
+        "Buffer": "buffer/global"
+      }
+    }
+  },
+  "map": {
+    "./src": "./src/index.js"
+  }
+}

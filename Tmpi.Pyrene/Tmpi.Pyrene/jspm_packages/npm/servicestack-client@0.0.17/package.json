@@ -1,0 +1,61 @@
+{
+  "name": "servicestack-client",
+  "title": "ServiceStack JavaScript Utils",
+  "version": "0.0.17",
+  "description": "ServiceStack's TypeScript library providing convenience utilities in developing web apps. Integrates with ServiceStack's Server features including ServiceClient, Server Events, Error Handling and Validation",
+  "homepage": "https://github.com/ServiceStack/servicestack-client",
+  "bugs": "https://github.com/ServiceStack/Issues",
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "ServiceStack Inc",
+    "email": "team@servicestack.net",
+    "url": "https://servicestack.net"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ServiceStack/servicestack-client.git"
+  },
+  "scripts": {
+    "pretest": "node_modules/.bin/tsc",
+    "test": "mocha -t 5000 ./tests/*.js"
+  },
+  "files": [
+    "src/index.js",
+    "src/index.js.map",
+    "src/index.ts",
+    "src/index.d.ts"
+  ],
+  "keywords": [
+    "servicestack",
+    "utils",
+    "validation",
+    "ajax",
+    "serverevents",
+    "error-handling"
+  ],
+  "licenses": [],
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "dependencies": {
+    "@types/isomorphic-fetch": "0.0.31",
+    "es6-shim": "^0.35.1",
+    "isomorphic-fetch": "^2.2.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3",
+    "typescript": "^2.0.10"
+  },
+  "jspm": {
+    "directories": {},
+    "dependencies": {
+      "es6-shim": ">=0.35.0",
+      "isomorphic-fetch": ">=2.2.1"
+    },
+    "devDependencies": {
+      "typescript": "^2.0.10",
+      "chai": "^3.5.0",
+      "mocha": "^2.5.3"
+    }
+  }
+}

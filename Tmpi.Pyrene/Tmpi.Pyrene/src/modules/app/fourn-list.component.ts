@@ -9,9 +9,9 @@
 
 import { Component, OnInit } from '@angular/core';
 
-import { PagedData } from './paged-data';
+import { PagedData } from '../../paged-data';
 import { FournService } from './fourn.service';
-import { Fourn } from './dtos';
+import { Fourn } from '../../dtos';
 
 @Component({
 	selector: 'fourn-list',

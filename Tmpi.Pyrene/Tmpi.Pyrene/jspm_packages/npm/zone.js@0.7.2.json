@@ -1,0 +1,76 @@
+{
+  "main": "dist/zone-node.js",
+  "format": "cjs",
+  "meta": {
+    "*": {
+      "globals": {
+        "process": "process"
+      }
+    },
+    "*.json": {
+      "format": "json"
+    },
+    "dist/async-test.js": {
+      "format": "amd"
+    },
+    "dist/fake-async-test.js": {
+      "format": "amd"
+    },
+    "dist/jasmine-patch.js": {
+      "format": "amd"
+    },
+    "dist/jasmine-patch.min.js": {
+      "format": "amd"
+    },
+    "dist/long-stack-trace-zone.js": {
+      "format": "amd"
+    },
+    "dist/long-stack-trace-zone.min.js": {
+      "format": "amd"
+    },
+    "dist/mocha-patch.js": {
+      "format": "amd"
+    },
+    "dist/mocha-patch.min.js": {
+      "format": "amd"
+    },
+    "dist/proxy.js": {
+      "format": "amd"
+    },
+    "dist/proxy.min.js": {
+      "format": "amd"
+    },
+    "dist/sync-test.js": {
+      "format": "amd"
+    },
+    "dist/task-tracking.js": {
+      "format": "amd"
+    },
+    "dist/task-tracking.min.js": {
+      "format": "amd"
+    },
+    "dist/wtf.js": {
+      "format": "amd"
+    },
+    "dist/wtf.min.js": {
+      "format": "amd"
+    },
+    "dist/zone.js": {
+      "format": "amd"
+    },
+    "dist/zone.min.js": {
+      "format": "amd"
+    },
+    "lib/browser/event-target.ts": {
+      "format": "esm"
+    },
+    "lib/browser/rollup-main.ts": {
+      "format": "esm"
+    }
+  },
+  "map": {
+    "./dist/zone-node.js": {
+      "browser": "./dist/zone.js"
+    }
+  }
+}

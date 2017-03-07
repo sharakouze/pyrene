@@ -9,8 +9,8 @@
 
 import { Injectable } from '@angular/core';
 
-import { ServiceClient } from './service-client';
-import { SelectFourn, SelectFournResponse, DeleteFourn } from './dtos';
+import { ServiceClient } from '../../service-client';
+import { SelectFourn, SelectFournResponse, DeleteFourn } from '../../dtos';
 
 @Injectable()
 export class FournService extends ServiceClient {

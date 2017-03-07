@@ -9,8 +9,8 @@
 
 import { Injectable } from '@angular/core';
 
-import { ServiceClient } from './service-client';
-import { SelectMandat, SelectMandatResponse, DeleteMandat } from './dtos';
+import { ServiceClient } from '../../service-client';
+import { SelectMandat, SelectMandatResponse, DeleteMandat } from '../../dtos';
 
 @Injectable()
 export class MandatService extends ServiceClient {
