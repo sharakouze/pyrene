@@ -16,7 +16,7 @@
 	string SourceProject = "Tmpi.Pyrene.ServiceModel";
 
 	// Extension des fichiers générés
-	string FileSuffix = ".generated";
+	string FileSuffix = "";
 	string FilePrefix = "";
 
 	// RegExp pour filtrer globalement les classes traitées, null pour tout inclure et/ou ne rien exclure.

@@ -1,5 +1,5 @@
 {
-  "name": "Angular2App2",
+  "name": "Tmpi.Pyrene",
   "version": "0.0.1",
   "scripts": {
     "postinstall": "cmd /c wwwroot_build\\00-npm-postinstall.bat"

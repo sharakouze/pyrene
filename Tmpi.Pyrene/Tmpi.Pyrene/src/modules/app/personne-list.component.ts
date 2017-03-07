@@ -9,9 +9,9 @@
 
 import { Component, OnInit } from '@angular/core';
 
-import { PagedData } from '../paged-data';
+import { PagedData } from './paged-data';
 import { PersonneService } from './personne.service';
-import { Personne } from '/dtos';
+import { Personne } from './dtos';
 
 @Component({
 	selector: 'personne-list',

@@ -82,8 +82,8 @@ public class AngularGeneration
 
 import { Injectable } from '@angular/core';
 
-import { ServiceClient } from '/service-client';
-import { <#= string.Join(", ", lstDtos) #> } from '/dtos';
+import { ServiceClient } from './service-client';
+import { <#= string.Join(", ", lstDtos) #> } from './dtos';
 
 @Injectable()
 export class <#= EntityName #>Service extends ServiceClient {
@@ -219,9 +219,9 @@ export class <#= EntityName #>Service extends ServiceClient {
 
 import { Component, OnInit } from '@angular/core';
 
-import { PagedData } from '../paged-data';
+import { PagedData } from './paged-data';
 import { <#= EntityName #>Service } from './<#= DashCaseEntityName #>.service';
-import { <#= EntityName #> } from '/dtos';
+import { <#= EntityName #> } from './dtos';
 
 @Component({
 	selector: '<#= DashCaseEntityName #>-list',

@@ -9,9 +9,9 @@
 
 import { Component, OnInit } from '@angular/core';
 
-import { PagedData } from '../paged-data';
+import { PagedData } from './paged-data';
 import { TVAService } from './tva.service';
-import { TVA } from '/dtos';
+import { TVA } from './dtos';
 
 @Component({
 	selector: 'tva-list',

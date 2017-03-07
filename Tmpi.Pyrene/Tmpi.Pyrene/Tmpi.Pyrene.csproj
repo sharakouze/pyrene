@@ -105,34 +105,35 @@
     <Content Include="css\app.css" />
     <Content Include="packages.config" />
     <Content Include="package.json" />
-    <Content Include="src\compteur-list.component.generated.html">
+    <Content Include="src\modules\app\compteur-list.component.html">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </Content>
-    <Content Include="src\exercice-list.component.generated.html">
+    <Content Include="src\modules\app\exercice-list.component.html">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </Content>
-    <Content Include="src\fourn-list.component.generated.html">
+    <Content Include="src\modules\app\fourn-list.component.html">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </Content>
-    <Content Include="src\mandat-list.component.generated.html">
+    <Content Include="src\modules\app\home\hello.html" />
+    <Content Include="src\modules\app\mandat-list.component.html">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </Content>
-    <Content Include="src\NgComponentGenerator.generated.txt">
+    <Content Include="src\modules\app\NgComponentGenerator.generated.txt">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Content>
-    <Content Include="src\NgComponentGenerator.tt">
+    <Content Include="src\modules\app\NgComponentGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>NgComponentGenerator.generated.txt</LastGenOutput>
     </Content>
-    <Content Include="src\personne-list.component.generated.html">
+    <Content Include="src\modules\app\personne-list.component.html">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </Content>
-    <Content Include="src\service-list.component.generated.html">
+    <Content Include="src\modules\app\service-list.component.html">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </Content>
-    <Content Include="src\tva-list.component.generated.html">
+    <Content Include="src\modules\app\tva-list.component.html">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </Content>
     <Content Include="tsconfig.json" />
@@ -167,65 +168,62 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\appsettings.ts" />
-    <TypeScriptCompile Include="src\compteur-list.component.generated.ts">
+    <TypeScriptCompile Include="src\modules\app\compteur-list.component.ts">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\compteur.service.generated.ts">
+    <TypeScriptCompile Include="src\modules\app\compteur.service.ts">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\exercice-list.component.generated.ts">
+    <TypeScriptCompile Include="src\modules\app\exercice-list.component.ts">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\exercice.service.generated.ts">
+    <TypeScriptCompile Include="src\modules\app\exercice.service.ts">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\fourn-list.component.generated.ts">
+    <TypeScriptCompile Include="src\modules\app\fourn-list.component.ts">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\fourn.service.generated.ts">
+    <TypeScriptCompile Include="src\modules\app\fourn.service.ts">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\main.module.ts" />
     <TypeScriptCompile Include="src\app.ts" />
-    <TypeScriptCompile Include="src\mandat-list.component.generated.ts">
+    <TypeScriptCompile Include="src\modules\app\home\hello.ts" />
+    <TypeScriptCompile Include="src\modules\app\home\home.ts" />
+    <TypeScriptCompile Include="src\modules\app\mandat-list.component.ts">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\mandat.service.generated.ts">
+    <TypeScriptCompile Include="src\modules\app\mandat.service.ts">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\modules\app\app.module.ts" />
+    <TypeScriptCompile Include="src\modules\app\products\products.ts" />
+    <TypeScriptCompile Include="src\modules\app\technology\technology.ts" />
     <TypeScriptCompile Include="src\paged-data.ts" />
-    <TypeScriptCompile Include="src\personne-list.component.generated.ts">
+    <TypeScriptCompile Include="src\modules\app\personne-list.component.ts">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\personne.service.generated.ts">
+    <TypeScriptCompile Include="src\modules\app\personne.service.ts">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\service-client.ts" />
-    <TypeScriptCompile Include="src\service-list.component.generated.ts">
+    <TypeScriptCompile Include="src\modules\app\service-list.component.ts">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\service.service.generated.ts">
+    <TypeScriptCompile Include="src\modules\app\service.service.ts">
+      <DependentUpon>NgComponentGenerator.tt</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\common.d.ts" />
+    <TypeScriptCompile Include="src\dtos.ts" />
+    <TypeScriptCompile Include="src\main.ts" />
+    <TypeScriptCompile Include="src\modules\app\tva-list.component.ts">
+      <DependentUpon>NgComponentGenerator.tt</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\modules\app\tva.service.ts">
       <DependentUpon>NgComponentGenerator.tt</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\shared\footer.ts" />
     <TypeScriptCompile Include="src\shared\header.ts" />
-    <TypeScriptCompile Include="src\common.d.ts" />
-    <TypeScriptCompile Include="src\dtos.ts" />
-    <TypeScriptCompile Include="src\modules\app\home\hello.ts" />
-    <TypeScriptCompile Include="src\modules\app\home\home.ts" />
-    <TypeScriptCompile Include="src\modules\app\products\products.ts" />
-    <TypeScriptCompile Include="src\modules\app\technology\technology.ts" />
-    <TypeScriptCompile Include="src\main.ts" />
-    <TypeScriptCompile Include="src\tva-list.component.generated.ts">
-      <DependentUpon>NgComponentGenerator.tt</DependentUpon>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\tva.service.generated.ts">
-      <DependentUpon>NgComponentGenerator.tt</DependentUpon>
-    </TypeScriptCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="src\modules\app\home\hello.html" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="wwwroot_build\README.txt" />
@@ -246,6 +244,9 @@
       <Project>{e515a547-3e09-4f2e-b1f0-09d3e16fb36a}</Project>
       <Name>Tmpi.Pyrene.ServiceModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -57,7 +57,7 @@
                 fs.mkdirSync(configDir);
             }
             fs.writeFileSync(configPath, JSON.stringify({
-                "iisApp": "Angular2App2",
+                "iisApp": "Tmpi.Pyrene",
                 "serverAddress": "deploy-server.example.com",
                 "userName": "{WebDeployUserName}",
                 "password": "{WebDeployPassword}"
@@ -188,7 +188,7 @@
         });
     });
     gulp.task('www-msbuild', function () {
-        return gulp.src('../../Angular2App2.sln')
+        return gulp.src('../../Tmpi.Pyrene.sln')
             .pipe(nugetRestore())
             .pipe(msbuild({
                 targets: ['Clean', 'Build'],

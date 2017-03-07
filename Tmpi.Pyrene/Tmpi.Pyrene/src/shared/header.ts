@@ -27,7 +27,7 @@ import { routes } from '../modules/app/app.module';
     `
 })
 export class HeaderComponent {
-    title = 'Angular2App2';
+    title = 'Tmpi.Pyrene';
     routes = routes.filter((val) => val.path != '');
 
     constructor(private route: ActivatedRoute, private router: Router) {}

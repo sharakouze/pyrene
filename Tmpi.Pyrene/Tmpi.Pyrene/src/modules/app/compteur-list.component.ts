@@ -9,9 +9,9 @@
 
 import { Component, OnInit } from '@angular/core';
 
-import { PagedData } from '../paged-data';
+import { PagedData } from './paged-data';
 import { CompteurService } from './compteur.service';
-import { Compteur } from '/dtos';
+import { Compteur } from './dtos';
 
 @Component({
 	selector: 'compteur-list',

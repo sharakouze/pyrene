@@ -9,13 +9,13 @@
 
 import { Injectable } from '@angular/core';
 
-import { ServiceClient } from '/service-client';
-import { SelectPersonne, SelectPersonneResponse, DeletePersonne } from '/dtos';
+import { ServiceClient } from './service-client';
+import { SelectMandat, SelectMandatResponse, DeleteMandat } from './dtos';
 
 @Injectable()
-export class PersonneService extends ServiceClient {
-	selectPersonne(fields: string, sort: string[], skip?: number, take?: number): Promise<SelectPersonneResponse> {
-		const req = new SelectPersonne();
+export class MandatService extends ServiceClient {
+	selectMandat(fields: string, sort: string[], skip?: number, take?: number): Promise<SelectMandatResponse> {
+		const req = new SelectMandat();
 		req.Fields = fields;
 		req.Sort = sort;
 		if (skip) {
@@ -28,9 +28,9 @@ export class PersonneService extends ServiceClient {
 		return this.client.get(req);
 	}
 
-	deletePersonne(id: number): Promise<void> {
-		const req = new DeletePersonne();
-		req.ClePersonne = id;
+	deleteMandat(id: number): Promise<void> {
+		const req = new DeleteMandat();
+		req.CleMandat = id;
 
 		return this.client.delete(req);
 	}
