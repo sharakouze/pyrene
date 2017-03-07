@@ -1,9 +1,0 @@
-{
-  "name": "myproject",
-  "version": "1.0.0",
-  "devDependencies": {
-    "@angular/core": "^2.4.8",
-    "rxjs": "^5.2.0",
-    "zone.js": "^0.7.7"
-  }
-}

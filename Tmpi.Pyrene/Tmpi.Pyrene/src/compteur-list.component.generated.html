@@ -1,0 +1,17 @@
+<!-- auto-generated -->
+<table>
+	<tr>
+		<th>Code</th>
+		<th>Désignation</th>
+		<th>Actif</th>
+		<th>Type</th>
+		<th>Service</th>
+	</tr>
+	<tr *ngFor="let obj of compteur.data">
+		<td>{{obj.CodCompteur}}</td>
+		<td>{{obj.LibCompteur}}</td>
+		<td>{{obj.EstActif}}</td>
+		<td>{{obj.TypCompteur}}</td>
+		<td>{{obj.Service.CodService}}</td>
+	</tr>
+</table>

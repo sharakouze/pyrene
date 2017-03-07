@@ -1,0 +1,624 @@
+﻿<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
+<#@ include file="ServiceModelHelper.ttinclude" once="true" #>
+<#+
+public class ServiceInterfaceGeneration
+{
+	private readonly TextTransformation _tt;
+
+	private void Write(string textToAppend)
+    {
+		_tt.Write(textToAppend);
+	}
+
+	public ServiceInterfaceGeneration(TextTransformation tt)
+    {
+        if (tt == null)
+        {
+            throw new ArgumentNullException("tt");
+        }
+		_tt = tt;
+    }
+
+	public bool MakeClassesPartial { get; set; }
+
+	public void WriteService(string baseEntityName, string[] sourceNamespaces, string fileNamespace, IEnumerable<RequestClass> requests)
+    {
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using Audit.Core;
+using ServiceStack;
+using ServiceStack.OrmLite;
+using Tmpi.Pyrene.Common;
+using Tmpi.Pyrene.Common.Linq;
+<#+
+		foreach (string ns in sourceNamespaces)
+        {
+#>
+using <#= ns #>;
+<#+
+        }
+#>
+
+namespace <#= fileNamespace #>
+{
+<#+
+		string entityName = baseEntityName;
+		if (entityName == "Service")
+        {
+			entityName = "ServiceModel.Types." + entityName;
+        }
+#>
+	/// <summary>
+	/// Service qui traite les requêtes sur les entités <see cref="<#= entityName #>"/>.
+	/// </summary>
+<#+
+		var lstSeeAlso = requests.Select(i => i.PocoClassName).Distinct().ToList();
+		foreach (string str in lstSeeAlso.Where(s => s != baseEntityName))
+        {
+#>
+	/// <seealso cref="<#= str #>"/>
+<#+
+        }
+#>
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= baseEntityName #>Service : ServiceStack.Service
+	{
+<#+
+        foreach (string str in lstSeeAlso)
+        {
+#>
+		private static readonly object _<#= ToCamelCase(str) #>Lock = new object();
+
+<#+
+        }
+
+		var dicPocoUnicityMethods = new Dictionary<string, List<string>>();
+
+		foreach (var item in requests)
+        {
+			string requestClassName = item.Name;
+			string pocoClassName = item.PocoClassName;
+			string pocoClassNameClean = pocoClassName;
+			if (pocoClassName == "Service")
+            {
+				pocoClassName = "ServiceModel.Types." + pocoClassName;
+            }
+
+			var pocoClass = requests.SingleOrDefault(r => r.Name == item.PocoClassName);
+
+			string stdColFormat = "{0}" + item.PocoClassName;
+			if (item.PocoClassName != baseEntityName)
+            {
+				stdColFormat = ReplaceFirst(item.PocoClassName, baseEntityName, "{0}");
+            }
+
+			string pkPropName = null;
+
+			var pocoPkProp = pocoClass.Properties.SingleOrDefault(p => p.IsPrimaryKey);
+			if (pocoPkProp != null)
+            {
+				pkPropName = pocoPkProp.Name;
+            }
+
+			if (!dicPocoUnicityMethods.ContainsKey(item.PocoClassName) && !string.IsNullOrEmpty(pkPropName))
+            {
+				/*************/
+				/** UNICITE **/
+				/*************/
+
+				dicPocoUnicityMethods.Add(item.PocoClassName, new List<string>());
+
+				foreach (var lstProps in pocoClass.UniqueConstraints)
+				{
+					string methodName = item.PocoClassName + "_" + string.Join("_", lstProps) + "_EstUnique";
+					dicPocoUnicityMethods[item.PocoClassName].Add(methodName);
+#>
+		/// <summary>
+		/// Teste l'unicité d'une entité <see cref="<#= pocoClassName #>"/>.
+		/// </summary>
+		/// <param name="model"></param>
+		/// <param name="fields"></param>
+		/// <returns></returns>
+		protected bool <#= methodName #>(<#= pocoClassName #> model, IEnumerable<string> fields = null)
+		{
+			var q = Db.From<<#= pocoClassName #>>();
+
+<#+
+					if (lstProps.Count() > 1)
+                    {
+#>
+			if (fields != null)
+			{
+				var uniqueFields = new[] { <#= string.Join(", ", lstProps.Select(p => "nameof(" + pocoClassName + "." + p + ")")) #> };
+				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+				{
+					// INNER JOIN <#= pocoClassName #> t2 ON t2.<#= pkPropName #>=xxx [...]
+					Expression<Func<<#= pocoClassName #>, <#= pocoClassName #>, bool>> joinExpr = (t1, t2)
+						=> (t2.<#= pkPropName #> == model.<#= pkPropName #>);
+
+<#+
+						foreach (string propName in lstProps)
+						{
+#>
+					if (!fields.Contains(nameof(<#= pocoClassName #>.<#= propName #>), StringComparer.OrdinalIgnoreCase))
+					{
+						// [...] AND t1.<#= propName #>=t2.<#= propName #>
+						joinExpr = joinExpr.And((t1, t2) => t1.<#= propName #> == t2.<#= propName #>);
+					}
+<#+
+						}
+#>
+
+					q.Join<<#= pocoClassName #>>(joinExpr, Db.JoinAlias("t2"));
+				}
+				else
+				{
+					return true;
+				}
+			}
+			
+<#+
+                    }
+					foreach (string propName in lstProps)
+                    {
+#>
+			if (fields == null || fields.Contains(nameof(<#= pocoClassName #>.<#= propName #>), StringComparer.OrdinalIgnoreCase))
+			{
+				q.Where(t1 => t1.<#= propName #> == model.<#= propName #>);
+			}
+<#+
+						if (lstProps.Count() == 1)
+                        {
+#>
+			else
+			{
+				return true;
+			}
+<#+
+                        }
+                    }
+#>
+
+			if (model.<#= pkPropName #> != 0)
+			{
+				q.Where(t1 => t1.<#= pkPropName #> != model.<#= pkPropName #>);
+			}
+
+			return !Db.Exists(q);
+		}
+
+<#+
+				}
+            }
+
+			if (!string.IsNullOrEmpty(pkPropName))
+            {
+				if (requestClassName.StartsWith("Select"))
+                {
+					/************/
+					/** SELECT **/
+					/************/
+
+#>
+		/// <summary>
+		/// Retourne l'entité <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="<#= pocoClassName #>"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public <#= requestClassName #>Response Get(<#= requestClassName #> request)
+		{
+			var q = Db.From<<#= pocoClassName #>>()
+				.Limit(request.Skip, request.Take);
+
+			if (request.Sort.IsNullOrEmpty())
+			{
+<#+ 
+	string propName = GetFirstOccurenceOfProperty(pocoClass.Properties.Select(p => p.Name), 
+		string.Format(stdColFormat, "Lib"), string.Format(stdColFormat, "Cod"), string.Format(stdColFormat, "Num"), string.Format(stdColFormat, "Nom"));
+	if (string.IsNullOrEmpty(propName))
+    {
+		propName = pkPropName;
+    }
+#>
+				q.OrderBy(x => x.<#= propName #>); // Tri par défaut.
+			}
+			else
+			{
+				q.OrderByFields(request.Sort);
+			}
+
+			long count = Db.Count(q);
+			var lst = Db.LoadSelect(q);
+
+			return new <#= requestClassName #>Response
+			{
+				TotalCount = (int)count,
+				Results = lst
+			};
+		}
+
+<#+
+                }
+				else if (requestClassName.StartsWith("Get"))
+				{
+					/**************/
+					/** GET BYID **/
+					/**************/
+#>
+		/// <summary>
+		/// Retourne l'entité <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="<#= pocoClassName #>"/> trouvée.</returns>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public <#= pocoClassName #> Get(<#= requestClassName #> request)
+		{
+			//ModelDefinitionHelper.UndefinedFields<<#= pocoClassName #>>(request.Fields);
+
+			var q = Db.From<<#= pocoClassName #>>().Where(x => x.<#= pkPropName #> == request.<#= pkPropName #>).Select(request.Fields);
+
+			var entity = Db.Single(q);
+			if (entity == null)
+			{
+				throw HttpError.NotFound(
+					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkPropName #>));
+			}
+
+			return entity;
+		}
+
+<#+
+				}
+				else if (requestClassName.StartsWith("Delete"))
+				{
+					/*****************/
+					/** DELETE BYID **/
+					/*****************/
+#>
+		/// <summary>
+		/// Supprime l'entité <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		public void Delete(<#= requestClassName #> request)
+		{
+			using (var scope = AuditScope.Create("<#= pocoClassNameClean #>:Delete", () => request))
+			{
+				int count = Db.DeleteById<<#= pocoClassName #>>(request.<#= pkPropName #>);
+				if (count == 0)
+				{
+					throw HttpError.NotFound(
+						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkPropName #>));
+				}
+
+				scope.Save();
+			}
+		}
+
+<#+
+				}
+				else if (requestClassName.StartsWith("Patch"))
+				{
+					/****************/
+					/** PATCH BYID **/
+					/****************/
+#>
+		/// <summary>
+		/// Met à jour l'entité <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.Conflict"></exception>
+		public void Patch(<#= requestClassName #> request)
+		{
+			if (request.Operations.IsNullOrEmpty())
+			{
+				throw new ArgumentNullException(nameof(request.Operations));
+			}
+
+			var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
+
+			//ModelDefinitionHelper.UndefinedFields<<#= pocoClassName #>>(patchDic.Keys);
+
+			var entity = new <#= pocoClassName #>();
+			PatchHelper.PopulateFromPatch(entity, patchDic);
+
+			var q = Db.From<<#= pocoClassName #>>().Where(x => x.<#= pkPropName #> == request.<#= pkPropName #>).Update(patchDic.Keys);
+
+			lock (_<#= ToCamelCase(item.PocoClassName) #>Lock)
+			{
+<#+ 
+				int i = 1;
+				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == item.PocoClassName).SelectMany(k => k.Value))
+                {
+#>
+				bool unique<#= i.ToString() #> = <#= meth #>(entity, patchDic.Keys);
+				if (!unique<#= i.ToString() #>)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(<#= pocoClassName #>)));
+				}
+<#+ 
+					i++;
+                }
+#>
+
+				using (var scope = AuditScope.Create("<#= pocoClassNameClean #>:Update", () => entity))
+				{
+					int count = Db.UpdateOnly(entity, q);
+					if (count == 0)
+					{
+						throw HttpError.NotFound(
+							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkPropName #>));
+					}
+
+					scope.Save();
+				}
+			}
+		}
+
+<#+
+				}
+            }
+
+			if (requestClassName.StartsWith("Search"))
+            {
+#>
+		/// <summary>
+		/// Retourne le résultat d'une recherche.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns></returns>
+		public <#= requestClassName #>Response Get(<#= requestClassName #> request)
+		{
+			if (string.IsNullOrWhiteSpace(request.Text))
+			{
+				return null;
+			}
+
+			var q = Db.From<<#= pocoClassName #>>()
+				.Where(x => x.<#= string.Format(stdColFormat, "Lib") #>.Contains(request.Text))
+				.Select(x => new { CleObjet = x.<#= string.Format(stdColFormat, "Cle") #>,  CodObjet = x.<#= string.Format(stdColFormat, "Cod") #>, LibObjet = x.<#= string.Format(stdColFormat, "Lib") #> });
+			if (request.Max > 0)
+			{
+				q.Limit(request.Max);
+			}
+
+			var items = Db.Select<BaseEntity>(q);
+
+			return new <#= requestClassName #>Response
+			{
+				Results = items
+			};
+		}
+
+<#+
+            }
+			else if (requestClassName.StartsWith(baseEntityName))
+            {
+#>
+		/// <summary>
+		/// Ajoute ou remplace l'entité <see cref="<#= pocoClassName #>"/> spécifiée dans la requête.
+		/// </summary>
+		/// <param name="request">Requête à traiter.</param>
+		/// <returns>Entité <see cref="<#= pocoClassName #>"/> ajoutée.</returns>
+		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+		/// <exception cref="HttpError.Conflict"></exception>
+		public <#= pocoClassName #> Post(<#= pocoClassName #> request)
+		{
+			lock (_<#= ToCamelCase(item.PocoClassName) #>Lock)
+			{
+<#+ 
+				int i = 1;
+				foreach (var meth in dicPocoUnicityMethods.Where(k => k.Key == item.PocoClassName).SelectMany(k => k.Value))
+                {
+#>
+				bool unique<#= i.ToString() #> = <#= meth #>(request);
+				if (!unique<#= i.ToString() #>)
+				{
+					throw HttpError.Conflict(
+						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(<#= pocoClassName #>)));
+				}
+<#+ 
+					i++;
+                }
+#>
+
+				if (request.<#= pkPropName #> == 0)
+				{
+					using (var scope = AuditScope.Create("<#= pocoClassNameClean #>:Insert", () => request))
+					{
+						long id = Db.Insert(request, selectIdentity: true);
+						request.<#= pkPropName #> = (int)id;
+
+						scope.Save();
+					}
+				}
+				else
+				{
+					using (var scope = AuditScope.Create("<#= pocoClassNameClean #>:Update", () => request))
+					{
+						int count = Db.Update(request);
+						if (count == 0)
+						{
+							throw HttpError.NotFound(
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(<#= pocoClassName #>), request.<#= pkPropName #>));
+						}
+
+						scope.Save();
+					}
+				}
+
+				return request;
+			}
+		}
+
+<#+
+            }
+        } // end foreach
+#>
+	}
+}
+<#+
+    }
+
+	public void WriteValidator(string[] sourceNamespaces, string fileNamespace, IEnumerable<RequestClass> dtos,
+		bool validatorsWithMessage = false)
+    {
+#>
+using ServiceStack.FluentValidation;
+<#+
+		foreach (string ns in sourceNamespaces)
+        {
+#>
+using <#= ns #>;
+<#+
+        }
+#>
+
+namespace <#= fileNamespace #>
+{
+<#+
+		foreach (var item in dtos)
+        {
+			var dicValidation = new Dictionary<string, List<string>>();
+			string className = item.Name;
+
+			foreach (var prop in item.Properties)
+			{
+				var lstValidation = new List<string>();
+
+				if (prop.IsRequired)
+				{
+					if (prop.TypeFullName == "System.String")
+					{
+						string str = ".NotEmpty()";
+						if (validatorsWithMessage)
+						{
+							str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_NotEmpty)", className, prop.Name);
+						}
+						lstValidation.Add(str);
+					}
+				}
+				if (prop.MaxLength > 0)
+				{
+					if (prop.TypeFullName == "System.String")
+					{
+						int min = 0;
+						int max = prop.MaxLength;
+						string str = string.Format(".Length({0}, {1})", min, max);
+						if (validatorsWithMessage)
+						{
+							str += string.Format(".WithMessage(ValidationMessages.{0}_{1}_Length, {2}, {3})", className, prop.Name, min, max);
+						}
+						lstValidation.Add(str);
+                    }
+				}
+
+				if (prop.Name == "NumEmail")
+				{
+					lstValidation.Add(".EmailAddress()");
+				}
+
+				if (lstValidation.Any())
+				{
+					dicValidation.Add(prop.Name, lstValidation);
+				}
+			}
+
+			if (dicValidation.Any())
+			{
+#>
+	/// <summary>
+	/// Validation pour la requête <see cref="<#= className #>"/>.
+	/// </summary>
+	public <#= MakeClassesPartial ? "partial " : "" #>class <#= className #>Validator : AbstractValidator<<#= className #>>
+	{
+		/// <summary>
+		/// Initialise une nouvelle instance de la classe <see cref="<#= className #>Validator" />.
+		/// </summary>
+		public <#= className #>Validator()
+		{
+<#+
+						foreach (var kvp in dicValidation)
+                        {
+#>
+			RuleFor(x => x.<#= kvp.Key #>)
+<#+
+                            for (int i = 0; i < kvp.Value.Count; i++)
+                            {
+#>
+				<#= kvp.Value[i] #><#= i == kvp.Value.Count - 1 ? ";" : "" #>
+<#+
+                            }
+                        }
+               
+#>
+
+			SetRules();
+		}
+
+		/// <summary>
+		/// Définit des règles de validation supplémentaires.
+		/// </summary>
+		partial void SetRules();
+	}
+
+<#+
+			}
+        }
+#>
+}
+<#+
+	}
+
+	private string ToCamelCase(string str)
+	{
+		if (string.IsNullOrEmpty(str))
+		{
+			return "";
+		}
+		if (str == str.ToUpper())
+		{
+			return str.ToLower();
+		}
+		return str.Substring(0, 1).ToLower() + str.Substring(1);
+	}
+
+	private string ReplaceFirst(string text, string search, string replace)
+	{
+		int pos = text.IndexOf(search);
+		if (pos < 0)
+		{
+			return text;
+		}
+		return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
+	}
+
+	private string GetFirstOccurenceOfProperty(IEnumerable<string> lstProperties, params string[] propertyNames)
+	{
+		string propName = null;
+		foreach (string prop in propertyNames)
+		{
+			propName = lstProperties.FirstOrDefault(p => p == prop);
+			if (!string.IsNullOrEmpty(propName))
+			{
+				break;
+			}
+		}
+
+		return propName;
+	}
+}
+#>

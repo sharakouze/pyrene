@@ -2,13 +2,19 @@
 <#@ assembly name="EnvDTE" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
 <#@ include file="VisualStudioHelper.ttinclude" once="true" #>
 <#+
 public class ServiceModelHelper
 {
 	private readonly AutomationHelper _vsHelper;
 
-	public ServiceModelHelper(GeneratedTextTransformation tt)
+	public static ServiceModelHelper Create(GeneratedTextTransformation tt)
+    {
+		return new ServiceModelHelper(tt);
+    }
+
+	private ServiceModelHelper(GeneratedTextTransformation tt)
     {
         if (tt == null)
         {
@@ -85,14 +91,18 @@ public class ServiceModelHelper
 					
 					foreach (var routeAttr in lstRouteAttrs)
 					{
-						reqItem.LstRouteParts.Add(GetRouteParts(routeAttr));
+						reqItem.RouteParts.Add(GetRouteParts(routeAttr));
 					}
 
-					string baseEntityName = reqItem.LstRouteParts.First().First();
-					if (allClasses.Any(c => c.Name == baseEntityName))
+					var route1 = reqItem.RouteParts.FirstOrDefault();
+					if (route1 != null)
                     {
-						reqItem.BaseEntityName = baseEntityName;
-                    }
+						string baseEntityName = route1.FirstOrDefault();
+						if (allClasses.Any(c => c.Name == baseEntityName))
+						{
+							reqItem.BaseEntityName = baseEntityName;
+						}
+					}
 
 					lstRequests.Add(reqItem);
 				}
@@ -102,7 +112,7 @@ public class ServiceModelHelper
 		return lstRequests;
     }
 
-	private List<string> GetRouteParts(EnvDTE.CodeAttribute routeAttr)
+	private string[] GetRouteParts(EnvDTE.CodeAttribute routeAttr)
 	{
 		string[] parameters = routeAttr.Value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -113,7 +123,7 @@ public class ServiceModelHelper
 			paramPath = paramPath.Substring(1, paramPath.Length - 2);
 		}
 
-		return paramPath.Split(new [] { '/' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+		return paramPath.Split(new [] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 	}
 
 	private RequestClass MapCodeClassToRequestClass(EnvDTE.CodeClass codeClass, IEnumerable<EnvDTE.CodeAttribute> lstClassAttributes = null)
@@ -229,9 +239,9 @@ public class RequestClass
 {
 	public RequestClass()
     {
-		LstRouteParts = new List<List<string>>();
  		Properties = new List<RequestProperty>();
 		UniqueConstraints = new List<string[]>();
+		RouteParts = new List<string[]>();
 	}
 
 	public string Name { get; set; }
@@ -244,7 +254,7 @@ public class RequestClass
 
 	public List<string[]> UniqueConstraints { get; set; }
 
-	public List<List<string>> LstRouteParts { get; set; }
+	public List<string[]> RouteParts { get; set; }
 }
 
 public class RequestProperty

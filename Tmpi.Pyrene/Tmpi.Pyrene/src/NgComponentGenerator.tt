@@ -1,0 +1,158 @@
+﻿<#@ template language="C#" hostSpecific="true" debug="true" #>
+<#@ output extension=".generated.txt" encoding="utf-8" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Linq" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\ServiceModelHelper.ttinclude" once="true" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\AngularGeneration.ttinclude" #>
+<#
+	/*********************/
+	/** CUSTOM SETTINGS **/
+	/*********************/
+
+	// Limite le traitement aux classes dans ce projet.
+	string SourceProject = "Tmpi.Pyrene.ServiceModel";
+
+	// Extension des fichiers générés
+	string FileSuffix = ".generated";
+	string FilePrefix = "";
+
+	// RegExp pour filtrer globalement les classes traitées, null pour tout inclure et/ou ne rien exclure.
+	Regex ClassFilterInclude = null;
+	Regex ClassFilterExclude = null;
+
+	// pour filtrer sur chaque fonctionnalité par nom d'entité
+	Regex ServiceFilterExclude = null;
+	Regex ListComponentHtmlFilterExclude = null;
+	Regex ListComponentTsFilterExclude = null;
+
+	Dictionary<string, Dictionary<string, string>> EntityColumns = new Dictionary<string, Dictionary<string, string>>
+    {
+		{
+			"Compteur", new Dictionary<string, string> {
+				{ "CodCompteur", "Code" },
+				{ "LibCompteur", "Désignation" },
+				{ "EstActif", "Actif" },
+				{ "TypCompteur", "Type" },
+				{ "Service.CodService", "Service" }
+			}
+        }
+    };
+
+#>
+<#
+    var manager = Manager.Create(this);
+
+	var svcModel = ServiceModelHelper.Create(this);
+	var lstRequests = svcModel.GetRequests(SourceProject, ClassFilterInclude, ClassFilterExclude);
+	foreach (var grpRequest in lstRequests.GroupBy(r => r.BaseEntityName))
+    {
+		string entityName = grpRequest.Key;
+
+		bool canSelect = grpRequest.Any(r => r.Name.StartsWith("Select"));
+		bool canDelete = grpRequest.Any(r => r.Name.StartsWith("Delete"));
+		
+		var ng = new AngularGeneration(this, entityName);
+
+		bool serviceExcluded = ServiceFilterExclude != null && ServiceFilterExclude.IsMatch(entityName);
+		if (!serviceExcluded)
+		{
+			// SERVICE
+			string serviceFileName = FilePrefix + ng.DashCaseEntityName + ".service" + FileSuffix + ".ts";
+			manager.StartNewFile(serviceFileName);
+
+			ng.WriteService(canSelect, canDelete);
+
+			manager.EndBlock();
+		}
+
+		if (canSelect)
+        {
+			Dictionary<string, string> columns = null;
+			
+			EntityColumns.TryGetValue(entityName, out columns);
+			if (columns == null)
+			{
+				var poco = grpRequest.SingleOrDefault(r => r.Name == entityName);
+				if (poco != null)
+				{
+					columns = NgComponentUtils.GetDefaultColumns(poco);
+				}
+			}
+
+			bool listComponentHtmlFilterExcluded = ListComponentHtmlFilterExclude != null && ListComponentHtmlFilterExclude.IsMatch(entityName);
+			if (!listComponentHtmlFilterExcluded)
+			{
+				// COMPONENT.HTML
+				string htmlFileName = FilePrefix + ng.DashCaseEntityName + "-list.component" + FileSuffix + ".html";
+				manager.StartNewFile(htmlFileName);
+
+				ng.WriteSimpleListComponentHtml(columns);
+
+				manager.EndBlock();
+			}
+
+			bool listComponentTsFilterExcluded = ListComponentTsFilterExclude != null && ListComponentTsFilterExclude.IsMatch(entityName);
+			if (!listComponentTsFilterExcluded)
+			{
+				// COMPONENT.TS
+				string tsFileName = FilePrefix + ng.DashCaseEntityName + "-list.component" + FileSuffix + ".ts";
+				manager.StartNewFile(tsFileName);
+
+				ng.WriteSimpleListComponentTs(columns.Keys);
+
+				manager.EndBlock();
+			}
+        }
+    }
+
+	manager.Process(true);
+#>
+<#+
+public static class NgComponentUtils
+{
+	public static Dictionary<string, string> GetDefaultColumns(RequestClass poco)
+    {
+		var columns = new Dictionary<string, string>();
+
+		string entityName = poco.Name;
+
+		string codColName = string.Format("Cod{0}", entityName);
+		string numColName = string.Format("Num{0}", entityName);
+		string libColName = string.Format("Lib{0}", entityName);
+		string nomColName = string.Format("Nom{0}", entityName);
+		string estActifColName = "EstActif";
+
+		var cod = poco.Properties.FirstOrDefault(p => p.Name == codColName);
+		var num = poco.Properties.FirstOrDefault(p => p.Name == numColName);
+		var lib = poco.Properties.FirstOrDefault(p => p.Name == libColName);
+		var nom = poco.Properties.FirstOrDefault(p => p.Name == nomColName);
+		var estActif = poco.Properties.FirstOrDefault(p => p.Name == estActifColName);
+
+		if (cod != null)
+        {
+			columns.Add(cod.Name, "Code");
+        }
+		else if (num != null) 
+        {
+			columns.Add(num.Name, "Numéro");
+        }
+		if (lib != null)
+        {
+			columns.Add(lib.Name, "Désignation");
+        }
+		else if (nom != null) 
+        {
+			columns.Add(nom.Name, "Nom");
+        }
+		if (estActif != null)
+        {
+			columns.Add(estActif.Name, "Actif");
+        }
+
+		return columns;
+    }
+}
+#>

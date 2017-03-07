@@ -8,7 +8,7 @@
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\MultipleOutputHelper.ttinclude" once="true" #>
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\VisualStudioHelper.ttinclude" once="true" #>
 <#@ include file="$(MSBuildProjectDirectory)\..\Shared\ServiceModelHelper.ttinclude" once="true" #>
-<#@ include file="$(MSBuildProjectDirectory)\..\Shared\ServiceInterfaceHelper.ttinclude" once="true" #>
+<#@ include file="$(MSBuildProjectDirectory)\..\Shared\ServiceInterfaceGeneration.ttinclude" once="true" #>
 <#
 	/***** TODO *****
 	- Trace des fields introuvables dans Get et Patch
@@ -28,6 +28,9 @@
 	// Limite le traitement aux classes dans ce projet.
 	string SourceProject = "Tmpi.Pyrene.ServiceModel";
 	
+	// Using a ajouter. Si null ou vide, namespaces par défaut du SourceProject.
+	string[] SourceNamespaces = null;
+
 	// true pour générer des classes partial.
 	bool MakeClassesPartial = true;
 
@@ -78,7 +81,11 @@
 		srcProject = vsHelper.GetProject(SourceProject);
     }
 
-	string sourceNamespace = vsHelper.GetDefaultNamespace(srcProject);
+	if (SourceNamespaces == null || SourceNamespaces.Length == 0)
+    {
+		string ns = vsHelper.GetDefaultNamespace(srcProject);
+		SourceNamespaces = new[] { ns, ns + ".Types" };
+    }
 
 	var manager = Manager.Create(this);
 	manager.StartHeader();
@@ -104,10 +111,10 @@
 
 	manager.EndBlock(); // end header
 	
-	var svcInterface = new ServiceInterfaceHelper(this);
+	var svcInterface = new ServiceInterfaceGeneration(this);
 	svcInterface.MakeClassesPartial = MakeClassesPartial;
 
-	var svcModel = new ServiceModelHelper(this);
+	var svcModel = ServiceModelHelper.Create(this);
 	var lstRequests = svcModel.GetRequests(srcProject, ClassFilterInclude, ClassFilterExclude);
 	foreach (var grpRequest in lstRequests.GroupBy(r => r.BaseEntityName))
 	{
@@ -116,7 +123,7 @@
 		string serviceFileName = ServiceInterfaceUtils.GetGeneratedFilename(serviceClassName, serviceNamespace, BaseNamespace);
 		manager.StartNewFile(FilePrefix + serviceFileName + FileExtension);
 
-		svcInterface.WriteService(grpRequest.Key, sourceNamespace, serviceNamespace, grpRequest.OrderBy(r => r.Name));
+		svcInterface.WriteService(grpRequest.Key, SourceNamespaces, serviceNamespace, grpRequest.OrderBy(r => r.Name));
 
 		manager.EndBlock(); // end newfile
 
@@ -128,7 +135,7 @@
 			manager.StartNewFile(FilePrefix + validatorFileName + FileExtension);
 
 			var validatorRequests = grpRequest.Where(r => r.Name == r.PocoClassName).OrderBy(r => r.Name);
-			svcInterface.WriteValidator(sourceNamespace, validatorNamespace, validatorRequests, ValidatorsWithMessage);
+			svcInterface.WriteValidator(SourceNamespaces, validatorNamespace, validatorRequests, ValidatorsWithMessage);
 
 			manager.EndBlock(); // end newfile
         }

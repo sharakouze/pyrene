@@ -17,13 +17,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.ServiceModel", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.ServiceInterface", "Tmpi.Pyrene.ServiceInterface\Tmpi.Pyrene.ServiceInterface.csproj", "{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene", "Tmpi.Pyrene\Tmpi.Pyrene.csproj", "{5D4F7102-8811-420E-930C-98CC13182D29}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.Tests", "Tests\Tmpi.Pyrene.Tests\Tmpi.Pyrene.Tests.csproj", "{0B4B8990-9C79-44BC-A8FD-B6B55F43E59C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.Common", "Tmpi.Pyrene.Common\Tmpi.Pyrene.Common.csproj", "{E10042B4-7DA4-48D8-AE04-4D87A0317D0A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene.Common.Tests", "Tests\Tmpi.Pyrene.Common.Tests\Tmpi.Pyrene.Common.Tests.csproj", "{400FDFAB-4F70-4A34-A4B5-C785200A4D1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tmpi.Pyrene", "Tmpi.Pyrene\Tmpi.Pyrene.csproj", "{61B3A78A-25C1-4EE3-8384-CC26C947F7B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,18 +95,6 @@ Global
 		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}.Release|x64.Build.0 = Release|Any CPU
 		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}.Release|x86.ActiveCfg = Release|Any CPU
 		{813F65D3-22F1-41DB-84FC-7CFFFBEAD768}.Release|x86.Build.0 = Release|Any CPU
-		{5D4F7102-8811-420E-930C-98CC13182D29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D4F7102-8811-420E-930C-98CC13182D29}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D4F7102-8811-420E-930C-98CC13182D29}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5D4F7102-8811-420E-930C-98CC13182D29}.Debug|x64.Build.0 = Debug|Any CPU
-		{5D4F7102-8811-420E-930C-98CC13182D29}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{5D4F7102-8811-420E-930C-98CC13182D29}.Debug|x86.Build.0 = Debug|Any CPU
-		{5D4F7102-8811-420E-930C-98CC13182D29}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D4F7102-8811-420E-930C-98CC13182D29}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5D4F7102-8811-420E-930C-98CC13182D29}.Release|x64.ActiveCfg = Release|Any CPU
-		{5D4F7102-8811-420E-930C-98CC13182D29}.Release|x64.Build.0 = Release|Any CPU
-		{5D4F7102-8811-420E-930C-98CC13182D29}.Release|x86.ActiveCfg = Release|Any CPU
-		{5D4F7102-8811-420E-930C-98CC13182D29}.Release|x86.Build.0 = Release|Any CPU
 		{0B4B8990-9C79-44BC-A8FD-B6B55F43E59C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0B4B8990-9C79-44BC-A8FD-B6B55F43E59C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B4B8990-9C79-44BC-A8FD-B6B55F43E59C}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -143,6 +131,18 @@ Global
 		{400FDFAB-4F70-4A34-A4B5-C785200A4D1F}.Release|x64.Build.0 = Release|Any CPU
 		{400FDFAB-4F70-4A34-A4B5-C785200A4D1F}.Release|x86.ActiveCfg = Release|Any CPU
 		{400FDFAB-4F70-4A34-A4B5-C785200A4D1F}.Release|x86.Build.0 = Release|Any CPU
+		{61B3A78A-25C1-4EE3-8384-CC26C947F7B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61B3A78A-25C1-4EE3-8384-CC26C947F7B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61B3A78A-25C1-4EE3-8384-CC26C947F7B4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{61B3A78A-25C1-4EE3-8384-CC26C947F7B4}.Debug|x64.Build.0 = Debug|Any CPU
+		{61B3A78A-25C1-4EE3-8384-CC26C947F7B4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{61B3A78A-25C1-4EE3-8384-CC26C947F7B4}.Debug|x86.Build.0 = Debug|Any CPU
+		{61B3A78A-25C1-4EE3-8384-CC26C947F7B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61B3A78A-25C1-4EE3-8384-CC26C947F7B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61B3A78A-25C1-4EE3-8384-CC26C947F7B4}.Release|x64.ActiveCfg = Release|Any CPU
+		{61B3A78A-25C1-4EE3-8384-CC26C947F7B4}.Release|x64.Build.0 = Release|Any CPU
+		{61B3A78A-25C1-4EE3-8384-CC26C947F7B4}.Release|x86.ActiveCfg = Release|Any CPU
+		{61B3A78A-25C1-4EE3-8384-CC26C947F7B4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
