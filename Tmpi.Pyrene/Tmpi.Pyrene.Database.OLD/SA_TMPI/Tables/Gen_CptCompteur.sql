@@ -1,0 +1,27 @@
+﻿CREATE TABLE [SA_TMPI].[Gen_CptCompteur] (
+    [CleCompteur]    SMALLINT      IDENTITY (1, 1) NOT NULL,
+    [CleCompteur_C]  SMALLINT      NULL,
+    [CleCompteur_H]  SMALLINT      NOT NULL,
+    [CodCompteur]    VARCHAR (50)  NOT NULL,
+    [LibCompteur]    VARCHAR (100) NOT NULL,
+    [TxtCompteur]    VARCHAR (255) NULL,
+    [TypCompteur]    SMALLINT      NOT NULL,
+    [ClePeriode]     TINYINT       NULL,
+    [DatModif]       SMALLDATETIME NULL,
+    [CleOperateur]   SMALLINT      NULL,
+    [DatValidation]  DATETIME      NULL,
+    [CleValideur]    SMALLINT      NULL,
+    [EstActif]       BIT           CONSTRAINT [DF_Gen_CptCompteur_EstActif] DEFAULT ((1)) NOT NULL,
+    [TypPeriodicite] TINYINT       CONSTRAINT [DF_Gen_CptCompteur_TypPeriodicite] DEFAULT ((1)) NOT NULL,
+    [DatCreation]    SMALLDATETIME CONSTRAINT [DF_Gen_CptCompteur_DatCreation] DEFAULT (getdate()) NOT NULL,
+    [CleCreateur]    SMALLINT      CONSTRAINT [DF_Gen_CptCompteur_CleCreateur] DEFAULT ((0)) NOT NULL,
+    [CleExterne]     SMALLINT      NULL,
+    [CleOrigine]     SMALLINT      NULL,
+    [CleSecteur]     SMALLINT      NULL,
+    [CleService]     SMALLINT      NULL,
+    CONSTRAINT [PK_Gen_CptCompteur] PRIMARY KEY CLUSTERED ([CleCompteur] ASC),
+    CONSTRAINT [FK1_Gen_CptCompteur] FOREIGN KEY ([CleSecteur]) REFERENCES [SA_TMPI].[Gen_SocSecteur] ([CleSecteur]),
+    CONSTRAINT [FK2_Gen_CptCompteur] FOREIGN KEY ([CleService]) REFERENCES [SA_TMPI].[Gen_SocService] ([CleService]),
+    CONSTRAINT [UN_Gen_CptCompteur] UNIQUE NONCLUSTERED ([CleCompteur_H] ASC, [CodCompteur] ASC)
+);
+

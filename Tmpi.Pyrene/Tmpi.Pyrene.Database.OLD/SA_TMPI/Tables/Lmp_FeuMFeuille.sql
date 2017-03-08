@@ -1,0 +1,28 @@
+﻿CREATE TABLE [SA_TMPI].[Lmp_FeuMFeuille] (
+    [CleSecteur]      SMALLINT      NULL,
+    [CleService]      SMALLINT      NULL,
+    [CleMFeuille]     SMALLINT      IDENTITY (1, 1) NOT NULL,
+    [CleMFeuille_C]   SMALLINT      NULL,
+    [CleMFeuille_H]   SMALLINT      NOT NULL,
+    [CodMFeuille]     VARCHAR (50)  NOT NULL,
+    [LibMFeuille]     VARCHAR (100) NOT NULL,
+    [TxtMFeuille]     VARCHAR (255) NULL,
+    [CleMNumero]      SMALLINT      NOT NULL,
+    [CleEtat]         SMALLINT      CONSTRAINT [DF_Lmp_FeuMFeuille_CleEtat] DEFAULT ((0)) NOT NULL,
+    [EstToutDossier]  BIT           CONSTRAINT [DF_Lmp_FeuMFeuille_EstToutDossier] DEFAULT ((0)) NOT NULL,
+    [EstActif]        BIT           CONSTRAINT [DF_Lmp_FeuMFeuille_EstActif] DEFAULT ((1)) NOT NULL,
+    [DatCreation]     SMALLDATETIME CONSTRAINT [DF_Lmp_FeuMFeuille_DatCreation] DEFAULT (getdate()) NOT NULL,
+    [CleCreateur]     SMALLINT      CONSTRAINT [DF_Lmp_FeuMFeuille_CleCreateur] DEFAULT ((0)) NOT NULL,
+    [DatModif]        SMALLDATETIME NULL,
+    [CleOperateur]    SMALLINT      NULL,
+    [DatValidation]   SMALLDATETIME NULL,
+    [CleValideur]     SMALLINT      NULL,
+    [CleExterne]      INT           NULL,
+    [CleOrigine]      SMALLINT      NULL,
+    [CleCompetence_V] SMALLINT      NULL,
+    CONSTRAINT [PK_Lmp_FeuMFeuille] PRIMARY KEY CLUSTERED ([CleMFeuille] ASC),
+    CONSTRAINT [FK1_Lmp_FeuMFeuille] FOREIGN KEY ([CleSecteur]) REFERENCES [SA_TMPI].[Gen_SocSecteur] ([CleSecteur]),
+    CONSTRAINT [FK2_Lmp_FeuMFeuille] FOREIGN KEY ([CleService]) REFERENCES [SA_TMPI].[Gen_SocService] ([CleService]),
+    CONSTRAINT [UN_Lmp_FeuMFeuille] UNIQUE NONCLUSTERED ([CodMFeuille] ASC)
+);
+

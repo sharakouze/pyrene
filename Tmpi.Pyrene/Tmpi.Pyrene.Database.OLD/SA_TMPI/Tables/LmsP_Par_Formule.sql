@@ -1,0 +1,26 @@
+﻿CREATE TABLE [SA_TMPI].[LmsP_Par_Formule] (
+    [CleFormule]    SMALLINT      IDENTITY (1, 1) NOT NULL,
+    [CleFormule_C]  SMALLINT      NULL,
+    [CleFormule_H]  SMALLINT      NOT NULL,
+    [CodFormule]    VARCHAR (50)  NOT NULL,
+    [LibFormule]    VARCHAR (200) NOT NULL,
+    [TxtFormule]    VARCHAR (500) NULL,
+    [EstACompiler]  BIT           CONSTRAINT [DF_LmsP_Par_Formule_EstACompiler] DEFAULT ((1)) NOT NULL,
+    [EstComplexe]   BIT           CONSTRAINT [DF_LmsP_Par_Formule_EstComplexe] DEFAULT ((0)) NOT NULL,
+    [EstActif]      BIT           CONSTRAINT [DF_LmsP_Par_Formule_EstActif] DEFAULT ((1)) NOT NULL,
+    [DatCreation]   SMALLDATETIME CONSTRAINT [DF_LmsP_Par_Formule_DatCreation] DEFAULT (getdate()) NOT NULL,
+    [CleCreateur]   SMALLINT      CONSTRAINT [DF_LmsP_Par_Formule_CleCreateur] DEFAULT ((0)) NOT NULL,
+    [DatModif]      SMALLDATETIME NULL,
+    [CleOperateur]  SMALLINT      NULL,
+    [DatValidation] SMALLDATETIME NULL,
+    [CleValideur]   SMALLINT      NULL,
+    [CleExterne]    INT           NULL,
+    [CleOrigine]    INT           NULL,
+    [CleSecteur]    SMALLINT      NULL,
+    [CleService]    SMALLINT      NULL,
+    CONSTRAINT [PK_LmsP_Par_Formule] PRIMARY KEY CLUSTERED ([CleFormule] ASC),
+    CONSTRAINT [FK1_LmsP_Par_Formule] FOREIGN KEY ([CleSecteur]) REFERENCES [SA_TMPI].[Gen_SocSecteur] ([CleSecteur]),
+    CONSTRAINT [FK2_LmsP_Par_Formule] FOREIGN KEY ([CleService]) REFERENCES [SA_TMPI].[Gen_SocService] ([CleService]),
+    CONSTRAINT [UN_LmsP_Par_Formule] UNIQUE NONCLUSTERED ([CodFormule] ASC)
+);
+

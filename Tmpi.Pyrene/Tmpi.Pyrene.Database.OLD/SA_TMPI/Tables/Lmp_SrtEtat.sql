@@ -1,0 +1,26 @@
+﻿CREATE TABLE [SA_TMPI].[Lmp_SrtEtat] (
+    [TypEtat]             TINYINT       NOT NULL,
+    [CleEtat]             SMALLINT      IDENTITY (1, 1) NOT NULL,
+    [CleEtat_C]           SMALLINT      NULL,
+    [CleEtat_H]           SMALLINT      NOT NULL,
+    [CodEtat]             VARCHAR (50)  NOT NULL,
+    [LibEtat]             VARCHAR (100) NOT NULL,
+    [TxtEtat]             VARCHAR (255) NULL,
+    [EstActif]            BIT           CONSTRAINT [DF_Lmp_SrtEtat_EstActif] DEFAULT ((1)) NOT NULL,
+    [DatCreation]         SMALLDATETIME CONSTRAINT [DF_Lmp_SrtEtat_DatCreation] DEFAULT (getdate()) NOT NULL,
+    [CleCreateur]         SMALLINT      CONSTRAINT [DF_Lmp_SrtEtat_CleCreateur] DEFAULT ((0)) NOT NULL,
+    [DatModif]            SMALLDATETIME NULL,
+    [CleOperateur]        SMALLINT      NULL,
+    [DatValidation]       SMALLDATETIME NULL,
+    [CleValideur]         SMALLINT      NULL,
+    [CleExterne]          INT           NULL,
+    [CleOrigine]          SMALLINT      NULL,
+    [CleSecteur]          SMALLINT      NULL,
+    [CleService]          SMALLINT      NULL,
+    [CleEtatPersonnalise] INT           NULL,
+    CONSTRAINT [PK_Lmp_SrtEtat] PRIMARY KEY CLUSTERED ([CleEtat] ASC),
+    CONSTRAINT [FK1_Lmp_SrtEtat] FOREIGN KEY ([CleSecteur]) REFERENCES [SA_TMPI].[Gen_SocSecteur] ([CleSecteur]),
+    CONSTRAINT [FK2_Lmp_SrtEtat] FOREIGN KEY ([CleService]) REFERENCES [SA_TMPI].[Gen_SocService] ([CleService]),
+    CONSTRAINT [UN_Lmp_SrtEtat] UNIQUE NONCLUSTERED ([CodEtat] ASC)
+);
+

@@ -1,0 +1,726 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>Tmpi.Pyrene.Database.OLD</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{ec4124dd-f8d0-4bb0-957a-347dc75234b0}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>Tmpi.Pyrene.Database.OLD</RootNamespace>
+    <AssemblyName>Tmpi.Pyrene.Database.OLD</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="SA_TMPI\" />
+    <Folder Include="SA_TMPI\Tables\" />
+    <Folder Include="SA_TMPI\Defaults\" />
+    <Folder Include="Security\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="SA_TMPI\Tables\Gen_UniUnite.sql" />
+    <Build Include="SA_TMPI\Tables\t_ArtListe.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_Uni_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_TchContrainte.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_PntCttValeur.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_Tch_Serie.sql" />
+    <Build Include="SA_TMPI\Tables\t_ArtListeVal.sql" />
+    <Build Include="SA_TMPI\Tables\Lms0_DosEchantillon.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_AnlAnalyte.sql" />
+    <Build Include="SA_TMPI\Tables\t_ArtLocal.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr_Lms_DosAnalyse.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_ParCttContrainte.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_AnlMethode.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_PrdMatrice.sql" />
+    <Build Include="SA_TMPI\Tables\t_ArtNomenc.sql" />
+    <Build Include="SA_TMPI\Tables\Lms0_DosFacturation.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DosLot.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr_Lms_DosDossier.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_Anl_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_PrdCttValeur.sql" />
+    <Build Include="SA_TMPI\Tables\t_ArtSFamille.sql" />
+    <Build Include="SA_TMPI\Tables\Lms0_DosGroupeP.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr_Lms_DosEchant.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_Itv_CalCalendrier.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_CbrChamp.sql" />
+    <Build Include="SA_TMPI\Tables\t_ArtSpecif.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_PreDossier.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_CbrCode.sql" />
+    <Build Include="SA_TMPI\Tables\t_ArtStock.sql" />
+    <Build Include="SA_TMPI\Tables\Lms0_DosLot.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_ClsClasse.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_ArtLot.sql" />
+    <Build Include="SA_TMPI\Tables\t_Article.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DosFacturation.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_ComCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_Anl_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\t_ArticleMagasin.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_DosFacturation.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_PrePrelevement.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_ComValeur.sql" />
+    <Build Include="SA_TMPI\Tables\t_ArticleService.sql" />
+    <Build Include="SA_TMPI\Tables\Lms0_DosParametre.sql" />
+    <Build Include="SA_TMPI\Tables\t_ArticleTarif.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_Itv_CalJournee.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_EtaImprimante.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_DivCauseNA.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_AnlAnalyte.sql" />
+    <Build Include="SA_TMPI\Tables\t_BudAffect.sql" />
+    <Build Include="SA_TMPI\Tables\Lms0_DosPayeur.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_Dos_VldValidation.sql" />
+    <Build Include="SA_TMPI\Tables\Doc_DocDocument.sql" />
+    <Build Include="SA_TMPI\Tables\t_Budget.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_ResFacture.sql" />
+    <Build Include="SA_TMPI\Tables\Ope_OpeOperation.sql" />
+    <Build Include="SA_TMPI\Tables\t_BudgetALig.sql" />
+    <Build Include="SA_TMPI\Tables\Lms0_DosSortie.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_ItvCalendrier.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_FeuCritere.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_FeuCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_ClsClasse.sql" />
+    <Build Include="SA_TMPI\Tables\t_BudgetLig.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_FeuMFeuille.sql" />
+    <Build Include="SA_TMPI\Tables\t_BudgetRespon.sql" />
+    <Build Include="SA_TMPI\Tables\Sto9_FouMarche.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_FeuParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_FouRib.sql" />
+    <Build Include="SA_TMPI\Tables\t_BudgetService.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_Pes_BlocBordereau.sql" />
+    <Build Include="SA_TMPI\Tables\Sto9_FouTarif.sql" />
+    <Build Include="SA_TMPI\Tables\Ope_OpeTache.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_ForFormule.sql" />
+    <Build Include="SA_TMPI\Tables\Doc_DocFichier.sql" />
+    <Build Include="SA_TMPI\Tables\t_BudgetVersion.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_AppelTarif.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_ForLigne.sql" />
+    <Build Include="SA_TMPI\Tables\t_Cours.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_For_Referentiel.sql" />
+    <Build Include="SA_TMPI\Tables\t_Destock.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_GrcCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_ComCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\t_DestockLig.sql" />
+    <Build Include="SA_TMPI\Tables\Ope_OpeEtape.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_GrcGroupeC.sql" />
+    <Build Include="SA_TMPI\Tables\t_Devise.sql" />
+    <Build Include="SA_TMPI\Tables\Trn9_MsgConfirmation.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_RscEquipement.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_GrpGroupeP.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_ClcTroncon.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_GrpInterp.sql" />
+    <Build Include="SA_TMPI\Tables\t_Domaine.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_DemAlerte.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_GrpMatrice.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_TchSuivi.sql" />
+    <Build Include="SA_TMPI\Tables\t_DomaineRespon.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_DemCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Ope_OpeEngagement.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_GrpParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_StoMaintenance.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_SttDestockage.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_DicDictionnaire.sql" />
+    <Build Include="SA_TMPI\Tables\t_ECommande.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_DemDemande.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_MatMatrice.sql" />
+    <Build Include="SA_TMPI\Tables\t_ECommandeLig.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_DemGroupeP.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_SecRessource.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_Mat_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_ArtComposant.sql" />
+    <Build Include="SA_TMPI\Tables\t_EFacture.sql" />
+    <Build Include="SA_TMPI\Tables\Lsn_ImpTrace.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_DemParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_MetMethode.sql" />
+    <Build Include="SA_TMPI\Tables\t_EFactureBord.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_DemPoint.sql" />
+    <Build Include="SA_TMPI\Tables\Ope_OpeCommande.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_MetParametre.sql" />
+    <Build Include="SA_TMPI\Tables\t_EFactureLig.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_DemProduit.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_Met_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DemDemande.sql" />
+    <Build Include="SA_TMPI\Tables\t_EFacturePaiem.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_DemSyntParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_Met_Interpretation.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_DivCauseNA.sql" />
+    <Build Include="SA_TMPI\Tables\t_EReception.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_DemTache.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_MotMotif.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_ArtControle.sql" />
+    <Build Include="SA_TMPI\Tables\t_EReceptionLig.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_EchRecherche.sql" />
+    <Build Include="SA_TMPI\Tables\Ope_OpePaiement.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_ParMatrice.sql" />
+    <Build Include="SA_TMPI\Tables\t_EngMotif.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_MatFamille.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_ParParametre.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_ParComposant.sql" />
+    <Build Include="SA_TMPI\Tables\Aup_AutAnalyse.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_GrpGroupeP.sql" />
+    <Build Include="SA_TMPI\Tables\t_Engage.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_MsgConfirmation.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_SocSrvAffectation.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_ParValeur.sql" />
+    <Build Include="SA_TMPI\Tables\Aup_AutAutomate.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_LotComposant.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_DicLigne.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_DemDemande.sql" />
+    <Build Include="SA_TMPI\Tables\t_EquAtelier.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_Pda_Config.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_TrnReservation.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_Par_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\Aup_AutConfig.sql" />
+    <Build Include="SA_TMPI\Tables\t_EquAtelierRespon.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_Pda_Config_Cod.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_Par_Interp.sql" />
+    <Build Include="SA_TMPI\Tables\Aup_AutEquipement.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_GrpParametre.sql" />
+    <Build Include="SA_TMPI\Tables\t_EquContrat.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_Pda_Config_CodValeur.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_Par_Valeur.sql" />
+    <Build Include="SA_TMPI\Tables\Aup_AutInterp.sql" />
+    <Build Include="SA_TMPI\Tables\t_EquCritere.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_Pda_Config_Ligne.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_PrdCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Aup_AutParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DemPrelevement.sql" />
+    <Build Include="SA_TMPI\Tables\USys_Lms_SttChamp.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_Mat_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\t_EquEtat.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_Pda_Config_Test.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_PrdGroupeP.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_ResDossier.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_RscPersonne.sql" />
+    <Build Include="SA_TMPI\Tables\Aup_AutPropriete.sql" />
+    <Build Include="SA_TMPI\Tables\t_EquFamille.sql" />
+    <Build Include="SA_TMPI\Tables\AutP_AutErreur.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_PlnJournee.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_Par_Formule.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_PrdParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Aup_AutTransfert.sql" />
+    <Build Include="SA_TMPI\Tables\USys_Lms_SttCritere.sql" />
+    <Build Include="SA_TMPI\Tables\t_EquListe.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_TchAccompagnant.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_PlnPlanning.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_PrdProduit.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_ResPrelevement.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr9_DemAnaCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_MotPayeur.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_SecPersonne.sql" />
+    <Build Include="SA_TMPI\Tables\Aup_Aut_Propriete.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_MatMatrice.sql" />
+    <Build Include="SA_TMPI\Tables\t_EquListeVal.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_PntClasse.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_PrdRessource.sql" />
+    <Build Include="SA_TMPI\Tables\AutP_PrtPortoir.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DemEchantillon.sql" />
+    <Build Include="SA_TMPI\Tables\t_EquLocal.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_PntCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_PrdSortie.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_ResEchantillon.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr9_DemAnalyse.sql" />
+    <Build Include="SA_TMPI\Tables\AutP_Prt_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_TrsPointIdent.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_PlnPersonne.sql" />
+    <Build Include="SA_TMPI\Tables\t_EquSFamille.sql" />
+    <Build Include="SA_TMPI\Tables\Usys_EtatLigne.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_SpcParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Aut_AutAnalyse.sql" />
+    <Build Include="SA_TMPI\Tables\Aut9_TrvTravail.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_Met_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\t_EquSpecif.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_Art_Code.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_PntHabilitation.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_SpcSpecification.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_ResCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr9_DemCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Aut_AutConfig.sql" />
+    <Build Include="SA_TMPI\Tables\Aut9_TrvTache.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_DemLigne.sql" />
+    <Build Include="SA_TMPI\Tables\t_Equip.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_TrcContenu.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_PntMatrice.sql" />
+    <Build Include="SA_TMPI\Tables\StoP_MagArtAffectation.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_Spc_Interpretation.sql" />
+    <Build Include="SA_TMPI\Tables\Aut_McpCupule.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_FeuFeuille.sql" />
+    <Build Include="SA_TMPI\Tables\t_EquipMInterv.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_PntPhoto.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_SrtEtat.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr9_DemDemande.sql" />
+    <Build Include="SA_TMPI\Tables\Aut_McpEchantillon.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_MetMethode.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_ExpParametre.sql" />
+    <Build Include="SA_TMPI\Tables\t_EquipPiece.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_PntPoint.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_SrtExport.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_ResGroupeP.sql" />
+    <Build Include="SA_TMPI\Tables\Aut_PrtEchantillon.sql" />
+    <Build Include="SA_TMPI\Tables\t_EquipPlanif.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_PrlHabilitation.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_PntProduit.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_TbxTable.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_UniSubstrat.sql" />
+    <Build Include="SA_TMPI\Tables\Aut_SerEchantillon.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_PlnEquipement.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DemGroupeP.sql" />
+    <Build Include="SA_TMPI\Tables\t_Etat.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_PrlPreleveur.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_PntRessource.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_UniUniteT.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_ResParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr9_DemEchant.sql" />
+    <Build Include="SA_TMPI\Tables\Aut_Ser_Demande.sql" />
+    <Build Include="SA_TMPI\Tables\Aut_TrvTache.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_MotMotif.sql" />
+    <Build Include="SA_TMPI\Tables\t_FouMarche.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_PrlQualification.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_PntTypPoint.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_DosCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Aut_Ser_Dossier.sql" />
+    <Build Include="SA_TMPI\Tables\t_Fourn.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_PrlSecteurG.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_PntTypSite.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_TbxColonne.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_DosDossier.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_ResLot.sql" />
+    <Build Include="SA_TMPI\Tables\SAV_Personne_Manquante.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_SttFiltre.sql" />
+    <Build Include="SA_TMPI\Tables\Aut_TrvParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_Pnt_Habilitation.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_DosEchantillon.sql" />
+    <Build Include="SA_TMPI\Tables\SAV_Trn_Pnt_Habilitation.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr9_DemEchCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Aut_TrvTravail.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_ObjReferentiel.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_Pnt_Nature.sql" />
+    <Build Include="SA_TMPI\Tables\Bud_EfaPaiementLigne.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_DosGroupeP.sql" />
+    <Build Include="SA_TMPI\Tables\SAV_Trn_PntHabilitation.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_ActAction.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_MagJournal.sql" />
+    <Build Include="SA_TMPI\Tables\t_IFacture.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_TrnAnalyse.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_EfaTVA.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_DosParametre.sql" />
+    <Build Include="SA_TMPI\Tables\SAV_Trn_PntRessource.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr9_DemGroupe.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_ActPoste.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DemParametre.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_Par_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\t_IFactureLig.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_TrnCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_EfaImputation.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_DosSortie.sql" />
+    <Build Include="SA_TMPI\Tables\SAV_Trn_PntContrainte.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_EcoMarche.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_ActRubrique.sql" />
+    <Build Include="SA_TMPI\Tables\FctP_Pai_Type.sql" />
+    <Build Include="SA_TMPI\Tables\t_IFamille.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_TrnEchant.sql" />
+    <Build Include="SA_TMPI\Tables\SAV_Trp_Pnt_PrfContrainte.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_Act_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_TrnRessource.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr9_DemInterv.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_BdgAction.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_Par_Interp.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_TrnTache.sql" />
+    <Build Include="SA_TMPI\Tables\StoP_MagClient.sql" />
+    <Build Include="SA_TMPI\Tables\SAV_Lmp_PrlHabilitation.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_EcoNomenclature.sql" />
+    <Build Include="SA_TMPI\Tables\GenP_DivScenario.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_BdgBudget.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_DemArticle.sql" />
+    <Build Include="SA_TMPI\Tables\t_ILivraisonLot.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_TrnTournee.sql" />
+    <Build Include="SA_TMPI\Tables\SAV_Lmp_PrlQualification.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr9_DemLocal.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_BdgDepense.sql" />
+    <Build Include="SA_TMPI\Tables\t_IRetour.sql" />
+    <Build Include="SA_TMPI\Tables\Trp_Dem_CodeBarre.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_BdgEngagement.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_Par_Valeur.sql" />
+    <Build Include="SA_TMPI\Tables\t_IRetourLig.sql" />
+    <Build Include="SA_TMPI\Tables\Trp_Dem_CodeBarreChamp.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DosCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_EcoEngagement.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr9_DemMesureEnv.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_BdgMandat.sql" />
+    <Build Include="SA_TMPI\Tables\t_Imput.sql" />
+    <Build Include="SA_TMPI\Tables\Trp_Dem_CodeBarre_Champ.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DosDossier.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_BdgPersonne.sql" />
+    <Build Include="SA_TMPI\Tables\t_Interv.sql" />
+    <Build Include="SA_TMPI\Tables\Trp_Dem_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DosEchantillon.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr9_DemPrelev.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_BdgSection.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_ParParametre.sql" />
+    <Build Include="SA_TMPI\Tables\t_IntervICommande.sql" />
+    <Build Include="SA_TMPI\Tables\Trp_Dem_Origine.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_Menu.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DosFacGroupeP.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_BdgService.sql" />
+    <Build Include="SA_TMPI\Tables\t_IntervMO.sql" />
+    <Build Include="SA_TMPI\Tables\Trp_MtrMTournee.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DosGroupeP.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_Bdg_Critere.sql" />
+    <Build Include="SA_TMPI\Tables\t_Inventaire.sql" />
+    <Build Include="SA_TMPI\Tables\Trp_MtrPoint.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_ComValidation.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DosParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr9_DemPrlCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_Bdg_Section.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_ParValeur.sql" />
+    <Build Include="SA_TMPI\Tables\t_JournalStock.sql" />
+    <Build Include="SA_TMPI\Tables\Trp_Pnt_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_DemValidation.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DosSortie.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_LotControle.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_CrtFamille.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DemCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_DemReference.sql" />
+    <Build Include="SA_TMPI\Tables\t_Lot.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_FeuFeuille.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr9_DemStation.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_EngEngagement.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_RefReferentiel.sql" />
+    <Build Include="SA_TMPI\Tables\t_LotDetail.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_SttTrace.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_Imp_Resultat.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_FacFacture.sql" />
+    <Build Include="SA_TMPI\Tables\t_MO.sql" />
+    <Build Include="SA_TMPI\Tables\Trp_Pnt_SFamille.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_StaChamp.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_FacLigne.sql" />
+    <Build Include="SA_TMPI\Tables\t_Magasin.sql" />
+    <Build Include="SA_TMPI\Tables\Trp_Pnt_SecteurG.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_StaCritere.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_RscContrainte.sql" />
+    <Build Include="SA_TMPI\Tables\Bdg_FacMandat.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_Trs_TypIdent.sql" />
+    <Build Include="SA_TMPI\Tables\t_MagasinDomaine.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_Par_ForLigne.sql" />
+    <Build Include="SA_TMPI\Tables\Trp_Pnt_SecteurGCommune.sql" />
+    <Build Include="SA_TMPI\Tables\Lsn_Declenc.sql" />
+    <Build Include="SA_TMPI\Tables\Bud_EngNature.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_DosFacGroupeP.sql" />
+    <Build Include="SA_TMPI\Tables\t_MagasinRespon.sql" />
+    <Build Include="SA_TMPI\Tables\Trp_PrcProcedure.sql" />
+    <Build Include="SA_TMPI\Tables\Fct_FacFacture.sql" />
+    <Build Include="SA_TMPI\Tables\Lsn_Demande.sql" />
+    <Build Include="SA_TMPI\Tables\Fct_FacPaiement.sql" />
+    <Build Include="SA_TMPI\Tables\Bud_EngageLig.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_SecContrainte.sql" />
+    <Build Include="SA_TMPI\Tables\t_SArt.sql" />
+    <Build Include="SA_TMPI\Tables\Lsn_Itr_Table.sql" />
+    <Build Include="SA_TMPI\Tables\Doc_DocFamille.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_TrsTiers.sql" />
+    <Build Include="SA_TMPI\Tables\t_SArtArticle.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_IcoValidation.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_MenuPerso.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_Acc_Liste.sql" />
+    <Build Include="SA_TMPI\Tables\Lsn_LsnDemande.sql" />
+    <Build Include="SA_TMPI\Tables\Doc_DocSFamille.sql" />
+    <Build Include="SA_TMPI\Tables\SAV_Trp_SecContrainte.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_RscProduit.sql" />
+    <Build Include="SA_TMPI\Tables\u_Compteur.sql" />
+    <Build Include="SA_TMPI\Tables\t_SArtCritere.sql" />
+    <Build Include="SA_TMPI\Tables\Lsn_LsnLiaison.sql" />
+    <Build Include="SA_TMPI\Tables\Equ_EquAffect.sql" />
+    <Build Include="SA_TMPI\Tables\SAV_Lmp_PrlContrainte.sql" />
+    <Build Include="SA_TMPI\Tables\u_CompteurVal.sql" />
+    <Build Include="SA_TMPI\Tables\t_Unite.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_ImpImport.sql" />
+    <Build Include="SA_TMPI\Tables\Lsn_MLsnAcces.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DosPayeur.sql" />
+    <Build Include="SA_TMPI\Tables\Fcp_TarArticle.sql" />
+    <Build Include="SA_TMPI\Tables\u_Etiquette_A.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_LivLivraison.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_UniUnite.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_AccProprietaire.sql" />
+    <Build Include="SA_TMPI\Tables\Lsn_MLsnMLiaison.sql" />
+    <Build Include="SA_TMPI\Tables\Fcp_TarTarif.sql" />
+    <Build Include="SA_TMPI\Tables\u_Etiquette_E.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_ImpResultat.sql" />
+    <Build Include="SA_TMPI\Tables\Trp_SecSecteur.sql" />
+    <Build Include="SA_TMPI\Tables\Lsn_MLsnParam.sql" />
+    <Build Include="SA_TMPI\Tables\Fcp_TarVersion.sql" />
+    <Build Include="SA_TMPI\Tables\u_Objet_U.sql" />
+    <Build Include="SA_TMPI\Tables\Trp_SecSecteurG.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_TchTache.sql" />
+    <Build Include="SA_TMPI\Tables\Fct_FacTVA.sql" />
+    <Build Include="SA_TMPI\Tables\Lsn_MLsnPerso.sql" />
+    <Build Include="SA_TMPI\Tables\Fcp_Tar_Article.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_Pnt_CalCalendrier.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_AccGestionnaire.sql" />
+    <Build Include="SA_TMPI\Tables\Lsn_MLsnRequete.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_DosPayeur.sql" />
+    <Build Include="SA_TMPI\Tables\Fct_DevArticle.sql" />
+    <Build Include="SA_TMPI\Tables\Lsp_MLiaisonDroit.sql" />
+    <Build Include="SA_TMPI\Tables\Fct_DevDevis.sql" />
+    <Build Include="SA_TMPI\Tables\Fct_FacLigne.sql" />
+    <Build Include="SA_TMPI\Tables\Fct_DevPrelevement.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_DemDemande.sql" />
+    <Build Include="SA_TMPI\Tables\Gdt_MlgAdresse.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_LivLigne.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_PrdCttContrainte.sql" />
+    <Build Include="SA_TMPI\Tables\Gdt_MlgCritere.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_Pnt_CalJournee.sql" />
+    <Build Include="SA_TMPI\Tables\Gdt_MlgMailing.sql" />
+    <Build Include="SA_TMPI\Tables\Trn9_TrnTournee.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_DemPrelevement.sql" />
+    <Build Include="SA_TMPI\Tables\Gdt_PstPostIt.sql" />
+    <Build Include="SA_TMPI\Tables\Gdt_TrsPostIt.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_PntCalendrier.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_Commune.sql" />
+    <Build Include="SA_TMPI\Tables\Trn9_TrnTache.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_ComValeur.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_CptCompteur.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_DemEchantillon.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_DivImprimante.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_CptValeur.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_Cpt_MNumero.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_SttChamp.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_EcoReservation.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_GrpCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Trn9_TrnEchantillon.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_DivExercice.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DosSpcParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_CtxContexte.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_DivTVA.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_DosSpcParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_CtxEchantComm.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_SttCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_FouCritereQ.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_CtxIntervComm.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_SttDroit.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_PntIndisponibilite.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_DemGroupeP.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_FouMQualif.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_CtxPlanAnalyse.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_SttFiltre.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_PntContrainte.sql" />
+    <Build Include="SA_TMPI\Tables\Trn9_TrnParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Edi9_DemDemande.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_FouMQualifArt.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_SttModele.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_TrnFlacon.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_FouModePaiement.sql" />
+    <Build Include="SA_TMPI\Tables\Doc_ObjDocument.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_FouModeReglement.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_SttRecherche.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_DivCalCalendrier.sql" />
+    <Build Include="SA_TMPI\Tables\Edi9_DemPrelevement.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_FouQualif.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_DivCalPeriode.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_DemParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_FouQualifArt.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_DivJourFerie.sql" />
+    <Build Include="SA_TMPI\Tables\Trn9_TrnCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_DivIndisponibilite.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_Com_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_MsgHisto.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_GrpCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_SecIntervenant.sql" />
+    <Build Include="SA_TMPI\Tables\USys_Etat.sql" />
+    <Build Include="SA_TMPI\Tables\Trn_MobLicence.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_MsgMessage.sql" />
+    <Build Include="SA_TMPI\Tables\USys_EtatFiltre.sql" />
+    <Build Include="SA_TMPI\Tables\Edi9_DemEchantillon.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_MsgPieceJointe.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_Itv_CttContrainte.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_MagFournisseur.sql" />
+    <Build Include="SA_TMPI\Tables\Usys_MenuLogiciel.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_MsgTypMessage.sql" />
+    <Build Include="SA_TMPI\Tables\USys_Logiciel.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_LogEvenement.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_Pays.sql" />
+    <Build Include="SA_TMPI\Tables\Trn9_TrnRessource.sql" />
+    <Build Include="SA_TMPI\Tables\USys_Menu.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_DemCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_PrfFonction.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_Itv_CttValeur.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_Prf_Fonction.sql" />
+    <Build Include="SA_TMPI\Tables\Equ_Rsv_Planning.sql" />
+    <Build Include="SA_TMPI\Tables\USys_Table.sql" />
+    <Build Include="SA_TMPI\Tables\Edi9_DemGroupeP.sql" />
+    <Build Include="SA_TMPI\Tables\Ach_TarImport.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_SrtCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_Prf_Menu.sql" />
+    <Build Include="SA_TMPI\Tables\Trn9_TrnReservation.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_EtatFiltre.sql" />
+    <Build Include="SA_TMPI\Tables\Ach_TarTarif.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_Spooler.sql" />
+    <Build Include="SA_TMPI\Tables\Lmp_MotProduit.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_Res_Type.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_ItvCttContrainte.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_EtatLigne.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_RsvReservation.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_RscArticle.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_Trs_Propriete.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_LogConnexion.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_SocDevis.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_Trc_Operateur.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_LogErreur.sql" />
+    <Build Include="SA_TMPI\Tables\Edi_ExpDemande.sql" />
+    <Build Include="SA_TMPI\Tables\Ach_TarLigne.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_SrtParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_SocDevisDocument.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_ItvCttValeur.sql" />
+    <Build Include="SA_TMPI\Tables\Edi9_DemParametre.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_SocPersonne.sql" />
+    <Build Include="SA_TMPI\Tables\USys_GenOccurence.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_LogTrace.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_SocPersonneProfil.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_RscArtParametre.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_Rsc_Famille.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_Trc_Objet.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_Trc_Operateur.sql" />
+    <Build Include="SA_TMPI\Tables\Edi9_ExpDemande.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_Vld_Competence.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_SocSecteur.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_ItvIndisponibilite.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_Trc_Dossier.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_Option.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_SocService.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_Trc_Evenement.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_Param.sql" />
+    <Build Include="SA_TMPI\Tables\Edi9_ExpLot.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_GridView.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_SocSite.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_ArtRepartition.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_TrcTrace.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_TrcTrace.sql" />
+    <Build Include="SA_TMPI\Tables\Usr_Personne.sql" />
+    <Build Include="SA_TMPI\Tables\Lms_DosTrace.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_SocSociete.sql" />
+    <Build Include="SA_TMPI\Tables\USys_Lms_DosAction.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_EcoRepartition.sql" />
+    <Build Include="SA_TMPI\Tables\Usys_LstListe.sql" />
+    <Build Include="SA_TMPI\Tables\Edi9_DemCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_Exp_Commemo.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_DemDemande.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_DosTrace.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_Soc_Qualif.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_Pnt_PrfCalJournee.sql" />
+    <Build Include="SA_TMPI\Tables\Sto_EfaRepartition.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_Val_LstListe.sql" />
+    <Build Include="SA_TMPI\Tables\Usys_LstValeur.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_TrsContact.sql" />
+    <Build Include="SA_TMPI\Tables\Usys_Option.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_ExpChamp.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_TrsHabilit.sql" />
+    <Build Include="SA_TMPI\Tables\Usys_Profil.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_DemEchantillon.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_TrsTiers.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_Pnt_PrfProfil.sql" />
+    <Build Include="SA_TMPI\Tables\Usys_Role.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_ExpExport.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_MdtMandat.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_TrsClient.sql" />
+    <Build Include="SA_TMPI\Tables\Usys_Role_Menu.sql" />
+    <Build Include="SA_TMPI\Tables\GenP_MdtMandat.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_MotSortie.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_TrsTiersIdent.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_Pnt_PrfContrainte.sql" />
+    <Build Include="SA_TMPI\Tables\LmsP_Val_LstTexte.sql" />
+    <Build Include="SA_TMPI\Tables\Usys_Role_Utilisateur.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_Tch_Scenario.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_TrsTiersType.sql" />
+    <Build Include="SA_TMPI\Tables\t_Appel.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_TrsTypIdent.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_PntCalJournee.sql" />
+    <Build Include="SA_TMPI\Tables\t_AppelArticle.sql" />
+    <Build Include="SA_TMPI\Tables\EdiP_ExpTransfert.sql" />
+    <Build Include="SA_TMPI\Tables\Lms9_DosLot.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_SecEquipement.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_TrsTypTiers.sql" />
+    <Build Include="SA_TMPI\Tables\t_AppelCritere.sql" />
+    <Build Include="SA_TMPI\Tables\Ope_OpePaiementPrev.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_Trs_Civilite.sql" />
+    <Build Include="SA_TMPI\Tables\t_AppelFourn.sql" />
+    <Build Include="SA_TMPI\Tables\Lms0_DosCommemo.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr_DicLims.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_Trs_Fonction.sql" />
+    <Build Include="SA_TMPI\Tables\TrnP_PntCttContrainte.sql" />
+    <Build Include="SA_TMPI\Tables\t_ArtCritere.sql" />
+    <Build Include="SA_TMPI\Tables\Sdr_DicSandre.sql" />
+    <Build Include="SA_TMPI\Tables\GenP_MdtMandataire.sql" />
+    <Build Include="SA_TMPI\Tables\Gen_Trs_Habilit.sql" />
+    <Build Include="SA_TMPI\Tables\Fct_PaiPaiement.sql" />
+    <Build Include="SA_TMPI\Tables\t_ArtFamille.sql" />
+    <Build Include="SA_TMPI\Tables\Lms0_DosDossier.sql" />
+    <Build Include="SA_TMPI\Tables\Usys_Edi_ExpObjet.sql" />
+    <Build Include="SA_TMPI\Defaults\UW_ZeroDefault.sql" />
+    <Build Include="Security\SA_TMPI.sql" />
+    <Build Include="Security\SA_TMPI_1.sql" />
+    <Build Include="Security\TMPI_NB.sql" />
+    <Build Include="Security\TMPI_NB_1.sql" />
+    <Build Include="Security\SA_TMPI_2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Drawing">
+      <HintPath>Assemblies\System.Drawing.dll</HintPath>
+      <SqlAssemblyName>System.Drawing</SqlAssemblyName>
+      <IsModelAware>True</IsModelAware>
+      <GenerateSqlClrDdl>False</GenerateSqlClrDdl>
+      <SqlOwnerName>dbo</SqlOwnerName>
+      <SqlPermissionSet>UNSAFE</SqlPermissionSet>
+    </Reference>
+    <Reference Include="Tmpi.Pyrene.SqlServer">
+      <HintPath>Assemblies\Tmpi.Pyrene.SqlServer.dll</HintPath>
+      <SqlAssemblyName>Tmpi.Pyrene.SqlServer</SqlAssemblyName>
+      <IsModelAware>True</IsModelAware>
+      <GenerateSqlClrDdl>False</GenerateSqlClrDdl>
+      <SqlOwnerName>dbo</SqlOwnerName>
+      <SqlPermissionSet>SAFE</SqlPermissionSet>
+    </Reference>
+  </ItemGroup>
+</Project>

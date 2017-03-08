@@ -48,7 +48,7 @@ System.register(["@angular/core", "./compteur.service"], function (exports_1, co
             CompteurListComponent = __decorate([
                 core_1.Component({
                     selector: 'compteur-list',
-                    templateUrl: './compteur-list.component.html',
+                    template: require('./compteur-list.cdomponent.html'),
                     providers: [compteur_service_1.CompteurService]
                 }),
                 __metadata("design:paramtypes", [compteur_service_1.CompteurService])

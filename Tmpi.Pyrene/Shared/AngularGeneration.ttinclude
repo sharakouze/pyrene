@@ -225,7 +225,7 @@ import { <#= EntityName #> } from '../../dtos';
 
 @Component({
 	selector: '<#= DashCaseEntityName #>-list',
-	templateUrl: '<#= DashCaseEntityName #>-list.component.html',
+	templateUrl: './<#= DashCaseEntityName #>-list.component.html',
 	providers: [<#= EntityName #>Service]
 })
 export class <#= EntityName #>ListComponent implements OnInit {

@@ -1,0 +1,27 @@
+﻿CREATE TABLE [SA_TMPI].[Gen_SocSociete] (
+    [ClePays]       TINYINT       NULL,
+    [CleSociete]    SMALLINT      IDENTITY (1, 1) NOT NULL,
+    [CleSociete_C]  SMALLINT      NULL,
+    [CleSociete_H]  SMALLINT      NOT NULL,
+    [CodSociete]    VARCHAR (50)  NOT NULL,
+    [LibSociete]    VARCHAR (100) NOT NULL,
+    [TxtSociete]    VARCHAR (255) NULL,
+    [AdrRue]        VARCHAR (100) NULL,
+    [AdrCode]       VARCHAR (10)  NULL,
+    [AdrVille]      VARCHAR (50)  NULL,
+    [NumTelep]      VARCHAR (25)  NULL,
+    [NumTelec]      VARCHAR (25)  NULL,
+    [NumEMail]      VARCHAR (50)  NULL,
+    [EstActif]      BIT           CONSTRAINT [DF_Gen_SocSociete_EstActif] DEFAULT ((1)) NOT NULL,
+    [DatCreation]   SMALLDATETIME CONSTRAINT [DF_Gen_SocSociete_DatCreation] DEFAULT (getdate()) NOT NULL,
+    [CleCreateur]   SMALLINT      CONSTRAINT [DF_Gen_SocSociete_CleCreateur] DEFAULT ((0)) NOT NULL,
+    [DatModif]      SMALLDATETIME NULL,
+    [CleOperateur]  SMALLINT      NULL,
+    [DatValidation] SMALLDATETIME NULL,
+    [CleValideur]   SMALLINT      NULL,
+    [CleOrigine]    TINYINT       NULL,
+    [CleExterne]    INT           NULL,
+    CONSTRAINT [PK_Gen_SocSociete] PRIMARY KEY CLUSTERED ([CleSociete] ASC),
+    CONSTRAINT [UN1_Gen_SocSociete] UNIQUE NONCLUSTERED ([CodSociete] ASC, [CleSociete_H] ASC)
+);
+

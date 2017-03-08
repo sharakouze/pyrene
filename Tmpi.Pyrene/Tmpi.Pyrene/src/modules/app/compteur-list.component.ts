@@ -15,7 +15,7 @@ import { Compteur } from '../../dtos';
 
 @Component({
 	selector: 'compteur-list',
-    templateUrl: './compteur-list.component.html',
+    template: require('./compteur-list.cdomponent.html'),
 	providers: [CompteurService]
 })
 export class CompteurListComponent implements OnInit {

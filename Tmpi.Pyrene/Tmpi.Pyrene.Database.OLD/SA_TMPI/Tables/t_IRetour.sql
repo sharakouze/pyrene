@@ -1,0 +1,26 @@
+﻿CREATE TABLE [SA_TMPI].[t_IRetour] (
+    [CleExercice]   SMALLINT        NOT NULL,
+    [CleFourn]      SMALLINT        NOT NULL,
+    [CleClient]     SMALLINT        NOT NULL,
+    [CleIRetour]    INT             IDENTITY (1, 1) NOT NULL,
+    [CleICommande]  INT             NULL,
+    [CleEngage]     INT             CONSTRAINT [DF_t_IRetour_CleEngage] DEFAULT ((0)) NOT NULL,
+    [NumRetour]     VARCHAR (25)    NOT NULL,
+    [DatRetour]     DATETIME        NOT NULL,
+    [TxtRetour]     VARCHAR (255)   NULL,
+    [IndMagasin]    BIT             CONSTRAINT [DF_t_IRetour_IndMagasin] DEFAULT ((0)) NOT NULL,
+    [CleImput]      SMALLINT        NULL,
+    [CleDevise]     SMALLINT        NULL,
+    [MntHT]         DECIMAL (15, 2) CONSTRAINT [DF_t_IRetour_MntHT] DEFAULT ((0)) NOT NULL,
+    [MntTVA]        DECIMAL (15, 2) CONSTRAINT [DF_t_IRetour_MntTVA] DEFAULT ((0)) NOT NULL,
+    [NomDemandeur]  VARCHAR (50)    NOT NULL,
+    [CleValideur]   SMALLINT        NULL,
+    [NivSaisie]     TINYINT         CONSTRAINT [DF_t_IRetour_NivSaisie] DEFAULT ((0)) NOT NULL,
+    [DatValidation] DATETIME        NULL,
+    [CleFacture]    INT             NULL,
+    CONSTRAINT [PK_t_IRetour] PRIMARY KEY CLUSTERED ([CleIRetour] ASC),
+    CONSTRAINT [FK2_t_IRetour] FOREIGN KEY ([CleClient]) REFERENCES [SA_TMPI].[Gen_SocService] ([CleService]),
+    CONSTRAINT [FK3_t_IRetour] FOREIGN KEY ([CleExercice]) REFERENCES [SA_TMPI].[Gen_DivExercice] ([CleExercice]),
+    CONSTRAINT [UN1_t_IRetour] UNIQUE NONCLUSTERED ([CleFourn] ASC, [NumRetour] ASC)
+);
+
