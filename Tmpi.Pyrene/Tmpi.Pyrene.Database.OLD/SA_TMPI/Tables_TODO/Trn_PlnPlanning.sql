@@ -1,0 +1,25 @@
+﻿CREATE TABLE [SA_TMPI].[Trn_PlnPlanning] (
+    [ClePlanning]   INT            IDENTITY (1, 1) NOT NULL,
+    [CodPlanning]   VARCHAR (50)   NULL,
+    [LibPlanning]   VARCHAR (100)  NULL,
+    [TxtPlanning]   VARCHAR (1000) NULL,
+    [DatDebut]      SMALLDATETIME  NULL,
+    [DatFin]        SMALLDATETIME  NULL,
+    [NumAnnee]      SMALLINT       NOT NULL,
+    [NumMois]       SMALLINT       NULL,
+    [NumSemaine]    SMALLINT       NULL,
+    [EstActif]      BIT            CONSTRAINT [DF_Trn_PlnPlanning_EstActif] DEFAULT ((1)) NOT NULL,
+    [DatCreation]   SMALLDATETIME  CONSTRAINT [DF_Trn_PlnPlanning_DatCreation] DEFAULT (getdate()) NOT NULL,
+    [CleCreateur]   SMALLINT       NOT NULL,
+    [DatModif]      SMALLDATETIME  NULL,
+    [CleOperateur]  SMALLINT       NULL,
+    [DatValidation] DATETIME       NULL,
+    [CleValideur]   SMALLINT       NULL,
+    [CleExterne]    INT            NULL,
+    [CleOrigine]    INT            NULL,
+    [CleSecteur]    SMALLINT       NOT NULL,
+    CONSTRAINT [PK_Trn_PlnPlanning] PRIMARY KEY CLUSTERED ([ClePlanning] ASC),
+    CONSTRAINT [FK9_Trn_PlnPlanning] FOREIGN KEY ([CleSecteur]) REFERENCES [SA_TMPI].[Trp_SecSecteur] ([CleSecteur]),
+    CONSTRAINT [UN_Trn_PlnPlanning] UNIQUE NONCLUSTERED ([CleSecteur] ASC, [NumAnnee] ASC, [NumMois] ASC)
+);
+

@@ -1,0 +1,26 @@
+﻿CREATE TABLE [SA_TMPI].[Lmp_GrcGroupeC] (
+    [CleGroupeC]    SMALLINT      IDENTITY (1, 1) NOT NULL,
+    [CleGroupeC_C]  SMALLINT      NULL,
+    [CleGroupeC_H]  SMALLINT      NOT NULL,
+    [TypCommemo]    TINYINT       NOT NULL,
+    [CodGroupeC]    VARCHAR (50)  NOT NULL,
+    [AbvGroupeC]    VARCHAR (25)  NULL,
+    [LibGroupeC]    VARCHAR (100) NOT NULL,
+    [TxtGroupeC]    VARCHAR (255) NULL,
+    [EstActif]      BIT           CONSTRAINT [DF_Lmp_GrcGroupeC_EstActif] DEFAULT ((1)) NOT NULL,
+    [DatCreation]   SMALLDATETIME CONSTRAINT [DF_Lmp_GrcGroupeC_DatCreation] DEFAULT (getdate()) NOT NULL,
+    [CleCreateur]   SMALLINT      CONSTRAINT [DF_Lmp_GrcGroupeC_CleCreateur] DEFAULT ((0)) NOT NULL,
+    [DatModif]      SMALLDATETIME NULL,
+    [CleOperateur]  SMALLINT      NULL,
+    [DatValidation] SMALLDATETIME NULL,
+    [CleValideur]   SMALLINT      NULL,
+    [CleExterne]    INT           NULL,
+    [CleOrigine]    SMALLINT      NULL,
+    [CleSecteur]    SMALLINT      NULL,
+    [CleService]    SMALLINT      NULL,
+    CONSTRAINT [PK_Lmp_GrcGroupeC] PRIMARY KEY CLUSTERED ([CleGroupeC] ASC),
+    CONSTRAINT [FK1_Lmp_GrcGroupeC] FOREIGN KEY ([CleSecteur]) REFERENCES [SA_TMPI].[Gen_SocSecteur] ([CleSecteur]),
+    CONSTRAINT [FK2_Lmp_GrcGroupeC] FOREIGN KEY ([CleService]) REFERENCES [SA_TMPI].[Gen_SocService] ([CleService]),
+    CONSTRAINT [UN_Lmp_GrcGroupeC] UNIQUE NONCLUSTERED ([CodGroupeC] ASC)
+);
+

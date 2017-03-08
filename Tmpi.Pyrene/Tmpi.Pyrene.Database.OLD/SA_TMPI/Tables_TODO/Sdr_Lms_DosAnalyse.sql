@@ -1,0 +1,28 @@
+﻿CREATE TABLE [SA_TMPI].[Sdr_Lms_DosAnalyse] (
+    [CleDosAnalyse]  INT             IDENTITY (1, 1) NOT NULL,
+    [NumDossier]     VARCHAR (100)   NOT NULL,
+    [NumPrelevement] VARCHAR (25)    NOT NULL,
+    [NumEchant]      VARCHAR (25)    NOT NULL,
+    [CodGroupeP]     VARCHAR (50)    NOT NULL,
+    [CodParametre]   VARCHAR (50)    NOT NULL,
+    [CodMatrice]     VARCHAR (50)    NULL,
+    [CodUnite]       VARCHAR (50)    NULL,
+    [CodSubstrat]    VARCHAR (50)    NULL,
+    [OpeResultat]    VARCHAR (2)     NULL,
+    [ValResultat_N]  DECIMAL (18, 8) NULL,
+    [CodValPossible] VARCHAR (50)    NULL,
+    [TxtResultat]    VARCHAR (255)   NULL,
+    [ValLimitDetec]  DECIMAL (15, 4) NULL,
+    [ValLimitQuant]  DECIMAL (15, 4) NULL,
+    [ValLimitSatur]  DECIMAL (15, 4) NULL,
+    [CodInterp]      VARCHAR (50)    NULL,
+    [EstAccredite]   BIT             NOT NULL,
+    [EstDeTerrain]   BIT             NOT NULL,
+    [EstMesureEnv]   BIT             NOT NULL,
+    [CleExterne]     INT             NULL,
+    [CleOrigine]     TINYINT         NULL,
+    [CodMethode]     VARCHAR (50)    NULL,
+    CONSTRAINT [PK_Sdr_Lms_DosAnalyse] PRIMARY KEY CLUSTERED ([CleDosAnalyse] ASC),
+    CONSTRAINT [UN_Sdr_Lms_DosAnalyse] UNIQUE NONCLUSTERED ([CodParametre] ASC, [NumDossier] ASC, [NumEchant] ASC, [NumPrelevement] ASC)
+);
+

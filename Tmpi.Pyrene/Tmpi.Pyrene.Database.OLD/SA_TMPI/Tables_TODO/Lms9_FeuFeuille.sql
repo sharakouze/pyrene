@@ -1,0 +1,26 @@
+﻿CREATE TABLE [SA_TMPI].[Lms9_FeuFeuille] (
+    [CleSociete]      SMALLINT       NULL,
+    [CleSecteur]      SMALLINT       NULL,
+    [CleService]      SMALLINT       NULL,
+    [CleFeuille]      INT            NOT NULL,
+    [NumFeuille]      VARCHAR (25)   NOT NULL,
+    [TxtFeuille]      VARCHAR (1000) NULL,
+    [CleMFeuille]     SMALLINT       NOT NULL,
+    [CleEtat]         SMALLINT       NOT NULL,
+    [DatDebutAnalyse] SMALLDATETIME  NULL,
+    [DatFinAnalyse]   SMALLDATETIME  NULL,
+    [NivTraitement]   TINYINT        CONSTRAINT [DF_Lms9_FeuFeuille_NivTraitement] DEFAULT ((0)) NOT NULL,
+    [DatCreation]     SMALLDATETIME  CONSTRAINT [DF_Lms9_FeuFeuille_DatCreation] DEFAULT (getdate()) NOT NULL,
+    [CleCreateur]     SMALLINT       NOT NULL,
+    [DatModif]        SMALLDATETIME  NULL,
+    [CleOperateur]    SMALLINT       NULL,
+    [DatValidation]   SMALLDATETIME  NULL,
+    [CleValideur]     SMALLINT       NULL,
+    [CleFamille]      SMALLINT       NULL,
+    [CleDossier]      INT            NULL,
+    CONSTRAINT [PK_Lms9_FeuFeuille] PRIMARY KEY CLUSTERED ([CleFeuille] ASC),
+    CONSTRAINT [FK1_Lms9_FeuFeuille] FOREIGN KEY ([CleSecteur]) REFERENCES [SA_TMPI].[Gen_SocSecteur] ([CleSecteur]),
+    CONSTRAINT [FK2_Lms9_FeuFeuille] FOREIGN KEY ([CleService]) REFERENCES [SA_TMPI].[Gen_SocService] ([CleService]),
+    CONSTRAINT [UN_Lms9_FeuFeuille] UNIQUE NONCLUSTERED ([NumFeuille] ASC)
+);
+

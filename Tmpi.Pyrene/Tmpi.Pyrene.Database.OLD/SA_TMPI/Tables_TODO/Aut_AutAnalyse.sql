@@ -1,0 +1,26 @@
+﻿CREATE TABLE [SA_TMPI].[Aut_AutAnalyse] (
+    [CleAutAnalyse]   INT           IDENTITY (1, 1) NOT NULL,
+    [CleAutomate]     INT           NOT NULL,
+    [CleEquipement]   INT           NULL,
+    [NumDossier]      VARCHAR (50)  NULL,
+    [NumEchantillon]  VARCHAR (50)  NULL,
+    [NumGroupeP]      VARCHAR (50)  NULL,
+    [CodParametre]    VARCHAR (50)  NULL,
+    [NumTraitement]   VARCHAR (25)  NOT NULL,
+    [NumDosParametre] VARCHAR (50)  NOT NULL,
+    [ValDilution]     INT           NULL,
+    [ValResultat]     VARCHAR (200) NULL,
+    [OpeResultat]     VARCHAR (10)  NULL,
+    [ValResultat_N]   REAL          NULL,
+    [ValInterp]       VARCHAR (50)  NULL,
+    [DatPreparation]  SMALLDATETIME NULL,
+    [DatAnalyse]      SMALLDATETIME NULL,
+    [CleOperateur]    SMALLINT      NULL,
+    [DatValidation]   SMALLDATETIME NULL,
+    [CleValideur]     SMALLDATETIME NULL,
+    [NivTraitement]   TINYINT       NOT NULL,
+    [DatTraitement]   SMALLDATETIME NULL,
+    [ValCompteur]     SMALLINT      NULL,
+    CONSTRAINT [PK_Aut_AutAnalyse] PRIMARY KEY CLUSTERED ([NumDosParametre] ASC, [NumTraitement] ASC)
+);
+

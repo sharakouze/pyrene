@@ -1,0 +1,25 @@
+﻿CREATE TABLE [SA_TMPI].[Gen_SocPersonne] (
+    [ClePersonne]   SMALLINT      IDENTITY (1, 1) NOT NULL,
+    [ClePersonne_C] SMALLINT      NULL,
+    [ClePersonne_H] SMALLINT      NOT NULL,
+    [CodPersonne]   VARCHAR (50)  NOT NULL,
+    [PrePersonne]   VARCHAR (50)  NULL,
+    [NomPersonne]   VARCHAR (50)  NOT NULL,
+    [CleGenre]      TINYINT       NULL,
+    [NumTelep]      VARCHAR (25)  NULL,
+    [NumEMail]      VARCHAR (50)  NULL,
+    [EstActif]      BIT           CONSTRAINT [DF_Gen_SocPersonne_EstActif] DEFAULT ((1)) NOT NULL,
+    [DatCreation]   SMALLDATETIME CONSTRAINT [DF_Gen_SocPersonne_DatCreation] DEFAULT (getdate()) NOT NULL,
+    [CleCreateur]   SMALLINT      CONSTRAINT [DF_Gen_SocPersonne_CleCreateur] DEFAULT ((0)) NOT NULL,
+    [DatModif]      SMALLDATETIME NULL,
+    [CleOperateur]  SMALLINT      NULL,
+    [DatValidation] SMALLDATETIME NULL,
+    [CleValideur]   SMALLINT      NULL,
+    [CleOrigine]    TINYINT       NULL,
+    [CleExterne]    INT           NULL,
+    [ImgPersonne]   IMAGE         NULL,
+    [ImgFormat]     VARCHAR (5)   NULL,
+    CONSTRAINT [PK_Gen_SocPersonne] PRIMARY KEY CLUSTERED ([ClePersonne] ASC),
+    CONSTRAINT [UN1_Gen_SocPersonne] UNIQUE NONCLUSTERED ([CodPersonne] ASC, [ClePersonne_H] ASC)
+);
+

@@ -1,0 +1,26 @@
+﻿CREATE TABLE [SA_TMPI].[Gen_SocSite] (
+    [CleSite]       SMALLINT      IDENTITY (1, 1) NOT NULL,
+    [CleSite_C]     SMALLINT      NULL,
+    [CleSite_H]     SMALLINT      NOT NULL,
+    [CodSite]       VARCHAR (50)  NOT NULL,
+    [LibSite]       VARCHAR (100) NOT NULL,
+    [TxtSite]       VARCHAR (255) NULL,
+    [AdrRue]        VARCHAR (100) NULL,
+    [AdrCode]       VARCHAR (10)  NULL,
+    [AdrVille]      VARCHAR (50)  NULL,
+    [NumTelep]      VARCHAR (25)  NULL,
+    [NumTelec]      VARCHAR (25)  NULL,
+    [NumEMail]      VARCHAR (50)  NULL,
+    [EstActif]      BIT           CONSTRAINT [DF_Gen_SocSite_EstActif] DEFAULT ((1)) NOT NULL,
+    [DatCreation]   SMALLDATETIME CONSTRAINT [DF_Gen_SocSite_DatCreation] DEFAULT (getdate()) NOT NULL,
+    [CleCreateur]   SMALLINT      NOT NULL,
+    [DatModif]      SMALLDATETIME NULL,
+    [CleOperateur]  SMALLINT      NULL,
+    [DatValidation] SMALLDATETIME NULL,
+    [CleValideur]   SMALLINT      NULL,
+    [CleExterne]    INT           NULL,
+    [CleOrigine]    TINYINT       NULL,
+    CONSTRAINT [PK_Gen_SocSite] PRIMARY KEY CLUSTERED ([CleSite] ASC),
+    CONSTRAINT [UN_Gen_SocSite] UNIQUE NONCLUSTERED ([CleSite_H] ASC, [CodSite] ASC)
+);
+

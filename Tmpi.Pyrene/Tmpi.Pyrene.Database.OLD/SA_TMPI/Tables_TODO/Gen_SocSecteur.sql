@@ -1,0 +1,28 @@
+﻿CREATE TABLE [SA_TMPI].[Gen_SocSecteur] (
+    [CleSociete]    SMALLINT      NOT NULL,
+    [CleSecteur]    SMALLINT      IDENTITY (1, 1) NOT NULL,
+    [CleSecteur_C]  SMALLINT      NULL,
+    [CleSecteur_H]  SMALLINT      NOT NULL,
+    [CodSecteur]    VARCHAR (50)  NOT NULL,
+    [LibSecteur]    VARCHAR (100) NOT NULL,
+    [TxtSecteur]    VARCHAR (255) NULL,
+    [AdrRue]        VARCHAR (100) NULL,
+    [AdrCode]       VARCHAR (10)  NULL,
+    [AdrVille]      VARCHAR (50)  NULL,
+    [NumTelep]      VARCHAR (25)  NULL,
+    [NumTelec]      VARCHAR (25)  NULL,
+    [NumEMail]      VARCHAR (50)  NULL,
+    [EstActif]      BIT           CONSTRAINT [DF_Gen_SocSecteur_EstActif] DEFAULT ((1)) NOT NULL,
+    [DatCreation]   SMALLDATETIME CONSTRAINT [DF_Gen_SocSecteur_DatCreation] DEFAULT (getdate()) NOT NULL,
+    [CleCreateur]   SMALLINT      CONSTRAINT [DF_Gen_SocSecteur_CleCreateur] DEFAULT ((0)) NOT NULL,
+    [DatModif]      SMALLDATETIME NULL,
+    [CleOperateur]  SMALLINT      NULL,
+    [DatValidation] SMALLDATETIME NULL,
+    [CleValideur]   SMALLINT      NULL,
+    [CleOrigine]    TINYINT       NULL,
+    [CleExterne]    INT           NULL,
+    CONSTRAINT [PK_Gen_SocSecteur] PRIMARY KEY CLUSTERED ([CleSecteur] ASC),
+    CONSTRAINT [FK1_Gen_SocSecteur] FOREIGN KEY ([CleSociete]) REFERENCES [SA_TMPI].[Gen_SocSociete] ([CleSociete]),
+    CONSTRAINT [UN1_Gen_SocSecteur] UNIQUE NONCLUSTERED ([CodSecteur] ASC, [CleSecteur_H] ASC)
+);
+

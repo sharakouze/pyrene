@@ -1,0 +1,25 @@
+﻿CREATE TABLE [SA_TMPI].[Doc_DocDocument] (
+    [CleDocument]     INT           IDENTITY (1, 1) NOT NULL,
+    [CodDocument]     VARCHAR (50)  NOT NULL,
+    [LibDocument]     VARCHAR (100) NOT NULL,
+    [TxtDocument]     VARCHAR (255) NULL,
+    [EstActif]        BIT           CONSTRAINT [DF_Doc_DocDocument_EstActif] DEFAULT ((1)) NOT NULL,
+    [DatCreation]     SMALLDATETIME CONSTRAINT [DF_Doc_DocDocument_DatCreation] DEFAULT (getdate()) NOT NULL,
+    [CleCreateur]     SMALLINT      NOT NULL,
+    [DatModif]        SMALLDATETIME NULL,
+    [CleOperateur]    SMALLINT      NULL,
+    [DatValidation]   SMALLDATETIME NULL,
+    [CleValideur]     SMALLINT      NULL,
+    [CleFamille]      SMALLINT      NULL,
+    [CleSFamille]     SMALLINT      NULL,
+    [CleDocument_Ref] INT           NULL,
+    [NomLocalisation] VARCHAR (100) NULL,
+    [RepFichier]      VARCHAR (255) NULL,
+    [NomFichier]      VARCHAR (255) NULL,
+    [EstPartage]      BIT           CONSTRAINT [DF_Doc_DocDocumentEstPartage] DEFAULT ((0)) NOT NULL,
+    CONSTRAINT [PK_Doc_DocDocument] PRIMARY KEY CLUSTERED ([CleDocument] ASC),
+    CONSTRAINT [FK1_Doc_DocDocument] FOREIGN KEY ([CleFamille]) REFERENCES [SA_TMPI].[Doc_DocFamille] ([CleFamille]),
+    CONSTRAINT [FK2_Doc_DocDocument] FOREIGN KEY ([CleSFamille]) REFERENCES [SA_TMPI].[Doc_DocSFamille] ([CleSFamille]),
+    CONSTRAINT [UN_Doc_DocDocument] UNIQUE NONCLUSTERED ([CodDocument] ASC)
+);
+

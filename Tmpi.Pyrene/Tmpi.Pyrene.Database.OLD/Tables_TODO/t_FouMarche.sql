@@ -1,0 +1,26 @@
+﻿CREATE TABLE [SA_TMPI].[t_FouMarche] (
+    [CleMarche]     SMALLINT        IDENTITY (1, 1) NOT NULL,
+    [CodMarche]     VARCHAR (50)    NOT NULL,
+    [LibMarche]     VARCHAR (200)   NOT NULL,
+    [TxtMarche]     VARCHAR (255)   NULL,
+    [DatOuverture]  DATETIME        NULL,
+    [DatCloture]    DATETIME        NULL,
+    [DatSaisie]     DATETIME        CONSTRAINT [DF_t_FouMarche_DatSaisie] DEFAULT (getdate()) NOT NULL,
+    [CleOperateur]  SMALLINT        CONSTRAINT [DF_t_FouMarche_CleOperateur] DEFAULT ((0)) NOT NULL,
+    [DatValidation] DATETIME        NULL,
+    [CleValideur]   SMALLINT        NULL,
+    [CleFourn]      SMALLINT        NULL,
+    [CleEngage]     INT             NULL,
+    [MntMini]       DECIMAL (15, 2) CONSTRAINT [DF_t_FouMarche_MntMini] DEFAULT ((0)) NOT NULL,
+    [MntMaxi]       DECIMAL (15, 2) CONSTRAINT [DF_t_FouMarche_MntMaxi] DEFAULT ((0)) NOT NULL,
+    [MntAlerte]     DECIMAL (15, 2) NULL,
+    [NumAcompte]    SMALLINT        NULL,
+    [TypMarche]     TINYINT         CONSTRAINT [DF_t_FouMarche_TypMarche] DEFAULT ((1)) NOT NULL,
+    [TauRemise]     DECIMAL (5, 2)  NULL,
+    [DelLivraison]  TINYINT         NULL,
+    [LibContrat]    VARCHAR (255)   NULL,
+    [TauTVA]        DECIMAL (5, 2)  NULL,
+    CONSTRAINT [PK_t_FouMarche] PRIMARY KEY CLUSTERED ([CleMarche] ASC),
+    CONSTRAINT [UN_t_FouMarche] UNIQUE NONCLUSTERED ([CodMarche] ASC)
+);
+

@@ -1,0 +1,8 @@
+﻿CREATE TABLE [SA_TMPI].[t_Etat] (
+    [CleEtat] SMALLINT      IDENTITY (1, 1) NOT NULL,
+    [CodEtat] VARCHAR (50)  NOT NULL,
+    [LibEtat] VARCHAR (100) NOT NULL,
+    CONSTRAINT [PK_t_Etat] PRIMARY KEY CLUSTERED ([CleEtat] ASC),
+    CONSTRAINT [UN_t_Etat] UNIQUE NONCLUSTERED ([CodEtat] ASC)
+);
+
