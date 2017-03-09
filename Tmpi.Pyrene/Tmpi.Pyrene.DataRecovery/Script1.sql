@@ -3,12 +3,12 @@
 Fusion avec Services, qui permet une arborescence récursive.
 
 - Profils d'utilisateurs :
-Suppression de CleSite. (a quoi sert Gen_SocSite ?)
+Suppression de CleSite. A quoi sert Gen_SocSite ?
 
 - Compteurs :
 Gen_CptCompteur disparait et est fusionné avec Gen_Cpt_MNumero.
 Doublons ?
-Le modele de numérotation est fusionné en 1 seul champ
+Le modele de numérotation est fusionné en 1 seul champ.
 
 - Mandats :
 Suppression de CleLogiciel qu'on retrouve par déduction dans TypMandat.
@@ -20,6 +20,9 @@ Suppression de CleProprietaire.
 
 - Exercice :
 NivExercice devient EstActif.
+
+- Tiers :
+
 */
 
 --
@@ -78,50 +81,53 @@ BEGIN TRY
 			S.NumTelep,
 			S.NumTelec as NumFax,
 			S.NumEmail
-		from $(SourceSchemaName).[Gen_SocSociete] S left join $(SourceSchemaName).[Gen_Pays] P on S.ClePays=P.ClePays
+		from $(SourceSchemaName).[Gen_SocSociete] S
+		left join $(SourceSchemaName).[Gen_Pays] P on S.ClePays=P.ClePays and P.ClePays>0
 		where S.CleSociete>0
 		union all
-		select [dbo].[TMP_SOC_TO_SERVICE](null, CleSecteur, null) as CleService,
-			'SEC-'+ltrim(rtrim(CodSecteur)) as CodService,
-			ltrim(rtrim(LibSecteur)) as LibService,
-			ltrim(rtrim(TxtSecteur)) as TxtService,
-			EstActif,
-			DatCreation,
-			CleCreateur,
-			DatModif as DatEdition,
-			CleOperateur as CleEditeur,
-			CleExterne as CodExterne,
-			[dbo].[TMP_SOC_TO_SERVICE](CleSociete, null, null) as CleServiceParent,
-			AdrRue,
-			AdrCode,
-			AdrVille as AdrCommune,
+		select [dbo].[TMP_SOC_TO_SERVICE](null, SEC.CleSecteur, null) as CleService,
+			'SEC-'+ltrim(rtrim(SEC.CodSecteur)) as CodService,
+			ltrim(rtrim(SEC.LibSecteur)) as LibService,
+			ltrim(rtrim(SEC.TxtSecteur)) as TxtService,
+			SEC.EstActif,
+			SEC.DatCreation,
+			SEC.CleCreateur,
+			SEC.DatModif as DatEdition,
+			SEC.CleOperateur as CleEditeur,
+			SEC.CleExterne as CodExterne,
+			[dbo].[TMP_SOC_TO_SERVICE](SOC.CleSociete, null, null) as CleServiceParent,
+			SEC.AdrRue,
+			SEC.AdrCode,
+			SEC.AdrVille as AdrCommune,
 			null as AdrPays,
-			NumTelep,
-			NumTelec as NumFax,
-			NumEmail
-		from $(SourceSchemaName).[Gen_SocSecteur]
-		where CleSecteur>0
+			SEC.NumTelep,
+			SEC.NumTelec as NumFax,
+			SEC.NumEmail
+		from $(SourceSchemaName).[Gen_SocSecteur] SEC
+		left join $(SourceSchemaName).[Gen_SocSociete] SOC on SEC.CleSociete=SOC.CleSociete and SOC.CleSociete>0
+		where SEC.CleSecteur>0
 		union all
-		select [dbo].[TMP_SOC_TO_SERVICE](null, null, CleService) as CleService,
-			'SVC-'+ltrim(rtrim(CodService)) as CodService,
-			ltrim(rtrim(LibService)) as LibService,
-			ltrim(rtrim(TxtService)) as TxtService,
-			EstActif,
-			DatCreation,
-			CleCreateur,
-			DatModif as DatEdition,
-			CleOperateur as CleEditeur,
-			CleExterne as CodExterne,
-			[dbo].[TMP_SOC_TO_SERVICE](null, CleSecteur, null) as CleServiceParent,
-			AdrRue,
-			AdrCode,
-			AdrVille as AdrCommune,
+		select [dbo].[TMP_SOC_TO_SERVICE](null, null, SVC.CleService) as CleService,
+			'SVC-'+ltrim(rtrim(SVC.CodService)) as CodService,
+			ltrim(rtrim(SVC.LibService)) as LibService,
+			ltrim(rtrim(SVC.TxtService)) as TxtService,
+			SVC.EstActif,
+			SVC.DatCreation,
+			SVC.CleCreateur,
+			SVC.DatModif as DatEdition,
+			SVC.CleOperateur as CleEditeur,
+			SVC.CleExterne as CodExterne,
+			[dbo].[TMP_SOC_TO_SERVICE](null, SEC.CleSecteur, null) as CleServiceParent,
+			SVC.AdrRue,
+			SVC.AdrCode,
+			SVC.AdrVille as AdrCommune,
 			null as AdrPays,
-			NumTelep,
-			NumTelec as NumFax,
-			NumEmail
-		from $(SourceSchemaName).[Gen_SocService]
-		where CleService>0
+			SVC.NumTelep,
+			SVC.NumTelec as NumFax,
+			SVC.NumEmail
+		from $(SourceSchemaName).[Gen_SocService] SVC
+		left join $(SourceSchemaName).[Gen_SocSecteur] SEC on SVC.CleSecteur=SEC.CleSecteur and SEC.CleSecteur>0
+		where SVC.CleService>0
 	) as source
 	on (target.CleService=source.CleService)
 	when not matched by target
@@ -249,7 +255,8 @@ BEGIN TRY
 			P.CleCreateur,
 			P.DatModif as DatEdition,
 			P.CleOperateur as CleEditeur
-		from $(SourceSchemaName).[Gen_SocPersonneProfil] PRF inner join $(SourceSchemaName).[Gen_SocPersonne] P on PRF.ClePersonne=P.ClePersonne
+		from $(SourceSchemaName).[Gen_SocPersonneProfil] PRF
+		inner join $(SourceSchemaName).[Gen_SocPersonne] P on PRF.ClePersonne=P.ClePersonne and P.ClePersonne>0
 		where PRF.ClePersonne>0
 	) as source
 	on (target.CleProfil=source.CleProfil)
@@ -309,8 +316,10 @@ BEGIN TRY
 				+coalesce(N.ValSuffixe1,'')
 				+coalesce('{date:'+N.ValDate2+'}','')
 				+coalesce(N.ValSuffixe2,'') as ValFormatNumero
-		from $(SourceSchemaName).[Gen_CptCompteur] C inner join $(SourceSchemaName).[Gen_Cpt_MNumero] N on C.CleCompteur=N.CleCompteur
-		where C.CleCompteur>0 and N.CleMNumero>0
+		from $(SourceSchemaName).[Gen_CptCompteur] C
+		inner join $(SourceSchemaName).[Gen_Cpt_MNumero] N on C.CleCompteur=N.CleCompteur
+		where C.CleCompteur>0
+			and N.CleMNumero>0
 	) as source
 	on (target.CleCompteur=source.CleCompteur)
 	when not matched by target
@@ -342,7 +351,8 @@ BEGIN TRY
 		select N.CleMNumero as CleCompteur,
 			V.CodPeriode as ValPeriode,
 			V.ValCompteur
-		from $(SourceSchemaName).[Gen_Cpt_MNumero] N inner join $(SourceSchemaName).[Gen_CptValeur] V on N.CleCompteur=V.CleCompteur
+		from $(SourceSchemaName).[Gen_Cpt_MNumero] N
+		inner join $(SourceSchemaName).[Gen_CptValeur] V on N.CleCompteur=V.CleCompteur
 		where N.CleMNumero>0
 	) as source
 	on (target.CleCompteur=source.CleCompteur and target.ValPeriode=source.ValPeriode)
@@ -432,7 +442,8 @@ BEGIN TRY
 			M.CleCreateur,
 			M.DatModif as DatEdition,
 			M.CleOperateur as CleEditeur
-		from $(SourceSchemaName).[GenP_MdtMandataire] MM inner join $(SourceSchemaName).[GenP_MdtMandat] M on MM.CleMandat=M.CleMandat 
+		from $(SourceSchemaName).[GenP_MdtMandataire] MM
+		inner join $(SourceSchemaName).[GenP_MdtMandat] M on MM.CleMandat=M.CleMandat 
 		where MM.CleMandat>0
 	) as source
 	on (target.CleMandataire=source.CleMandataire)
@@ -597,7 +608,9 @@ BEGIN TRY
 		ltrim(rtrim(NomContact)) as NomContact
 	from $(SourceSchemaName).[t_Fourn]
 	where CleFourn>0
-		and NomContact is not null and NomContact<>'' and NomContact<>'INACTIF';
+		and NomContact is not null
+		and NomContact<>''
+		and NomContact<>'INACTIF';
 
 	declare TEMP_CURSOR cursor fast_forward for
 	select CleFourn, NomContact
@@ -696,7 +709,8 @@ BEGIN TRY
 			FC.NumEmail, 
 			FC.TypCivilite, 
 			null as LibFonction
-		from @GenFournContact FC inner join $(SourceSchemaName).[t_Fourn] F on FC.CleFourn=F.CleFourn
+		from @GenFournContact FC
+		inner join $(SourceSchemaName).[t_Fourn] F on FC.CleFourn=F.CleFourn
 	) as source
 	on (target.CleFourn=source.CleFourn and target.NomContact=source.NomContact)
 	when not matched by target
@@ -736,7 +750,8 @@ BEGIN TRY
 			coalesce(F.CleOperateur,0) as CleCreateur,
 			F.DatSaisie as DatEdition,
 			F.CleOperateur as CleEditeur
-		from $(SourceSchemaName).[Gen_FouRib] FR inner join $(SourceSchemaName).[t_Fourn] F on FR.CleFourn=F.CleFourn
+		from $(SourceSchemaName).[Gen_FouRib] FR
+		inner join $(SourceSchemaName).[t_Fourn] F on FR.CleFourn=F.CleFourn
 		where FR.CleFourn>0
 			and FR.RibBanque is not null 
 			and FR.RibGuichet is not null 
@@ -974,6 +989,83 @@ END CATCH;
 
 GO
 
+--
+-- TIERS
+--
+
+DECLARE @ErMessage VARCHAR(MAX);
+DECLARE @ErSeverity INT;
+DECLARE @ErState INT;
+
+BEGIN TRY
+	BEGIN TRANSACTION;
+
+	SET IDENTITY_INSERT [Gen].[Tiers] ON;
+
+	merge into [Gen].[Tiers] as target
+	using (
+		select T1.CleTiers,
+			ltrim(rtrim(T1.NumTiers)) as NumTiers,
+			ltrim(rtrim(T1.NomTiers)) as NomTiers,
+			ltrim(rtrim(T1.TxtTiers)) as TxtTiers,
+			coalesce(T1.EstActif,1) as EstActif,
+			coalesce(T1.DatCreation,getdate()) as DatCreation,
+			coalesce(T1.CleCreateur,0) as CleCreateur,
+			T1.DatModif as DatEdition,
+			T1.CleOperateur as CleEditeur,
+			T1.CleExterne as CodExterne,
+			T1.AdrRue,
+			T1.AdrCode,
+			T1.AdrVille as AdrCommune,
+			P.LibPays as AdrPays,
+			T1.NumTelep,
+			T1.NumTelec as NumFax,
+			T1.NumEmail,
+			T1.AdrLatitude,
+			T1.AdrLongitude,
+			T1.AdrVilleSuite as AdrCommuneSuite,
+			T1.CodCompta,
+			--
+			T2.CleTiers as CleTiersPrincipal,
+			C.CleCivilite as CleCiviliteTiers,
+			P1.ClePropriete as CleProprieteTiers1,
+			P2.ClePropriete as CleProprieteTiers2,
+			P3.ClePropriete as CleProprieteTiers3
+		from $(SourceSchemaName).[Gen_TrsTiers] T1
+		left join $(SourceSchemaName).[Gen_Pays] P on T1.ClePays=P.ClePays and P.ClePays>0
+		left join $(SourceSchemaName).[Gen_TrsTiers] T2 on T1.ClePointP=T2.CleTiers and T2.CleTiers>0
+		left join $(SourceSchemaName).[Gen_Trs_Civilite] C on T1.CleCivilite=C.CleCivilite and C.CleCivilite>0
+		left join $(SourceSchemaName).[Gen_Trs_Propriete] P1 on T1.ClePropriete1=P1.ClePropriete and P1.ClePropriete>0
+		left join $(SourceSchemaName).[Gen_Trs_Propriete] P2 on T1.ClePropriete2=P2.ClePropriete and P2.ClePropriete>0
+		left join $(SourceSchemaName).[Gen_Trs_Propriete] P3 on T1.ClePropriete3=P3.ClePropriete and P3.ClePropriete>0
+		where T1.CleTiers>0
+	) as source
+	on (target.CleProprieteTiers=source.CleProprieteTiers)
+	when not matched by target
+	then -- insert new rows
+		insert (CleProprieteTiers, CodProprieteTiers, LibProprieteTiers, TxtProprieteTiers, EstActif, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne)
+		values (CleProprieteTiers, CodProprieteTiers, LibProprieteTiers, TxtProprieteTiers, EstActif, 
+			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne);
+	
+	SET IDENTITY_INSERT [Gen].[Tiers] OFF;
+
+	COMMIT;
+END TRY
+BEGIN CATCH
+	SET IDENTITY_INSERT [Gen].[Tiers] OFF;
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	SET NOEXEC ON;
+END CATCH;
+
+GO
+
+tiersident
+numident is not null
+
+nomcontact
 
 -- NETTOYAGE
 

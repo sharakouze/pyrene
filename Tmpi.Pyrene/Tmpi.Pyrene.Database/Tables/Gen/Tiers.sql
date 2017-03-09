@@ -17,22 +17,22 @@
     [NumTelep] VARCHAR(25) NULL,
     [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
-
-    [AdrLatitude]   DECIMAL (9,6) NULL,
-    [AdrLongitude]  DECIMAL (9,6) NULL,
-    [AdrVilleSuite] VARCHAR (50)     NULL,
-    [CodCompta]     VARCHAR (50)     NULL,
-    [NumInsee]      VARCHAR (25)     NULL,
-    [NomContact]    VARCHAR (50)     NULL,
-
-    [CleCivilite]   SMALLINT         NULL,
-    [CleLangue]     SMALLINT         NULL,
-    [ClePointP]     INT              NULL,
-    [ClePropriete1] SMALLINT         NULL,
-    [ClePropriete2] SMALLINT         NULL,
-    [ClePropriete3] SMALLINT         NULL,
+    [AdrLatitude] DECIMAL(9,6) NULL,
+    [AdrLongitude] DECIMAL(9,6) NULL,
+    [AdrCommuneSuite] VARCHAR(100) NULL,
+    [CodCompta] VARCHAR(100) NULL,
+    [CleTiersPrincipal] INT NULL,
+    [CleCiviliteTiers] INT NULL,
+    [CleProprieteTiers1] INT NULL,
+    [CleProprieteTiers2] INT NULL,
+    [CleProprieteTiers3] INT NULL,
 	CONSTRAINT [PK_Tiers] PRIMARY KEY ([CleTiers]),
-    CONSTRAINT [UK_Tiers] UNIQUE ([NumTiers])
+    CONSTRAINT [UK_Tiers] UNIQUE ([NumTiers]),
+    CONSTRAINT [FK_Tiers_CleTiersPrincipal] FOREIGN KEY ([CleTiersPrincipal]) REFERENCES [Gen].[Tiers] ([CleTiers]),
+    CONSTRAINT [FK_Tiers_CleCiviliteTiers] FOREIGN KEY ([CleCiviliteTiers]) REFERENCES [Gen].[CiviliteTiers] ([CleCiviliteTiers]),
+    CONSTRAINT [FK_Tiers_CleProprieteTiers1] FOREIGN KEY ([CleProprieteTiers1]) REFERENCES [Gen].[ProprieteTiers] ([CleProprieteTiers]),
+    CONSTRAINT [FK_Tiers_CleProprieteTiers2] FOREIGN KEY ([CleProprieteTiers2]) REFERENCES [Gen].[ProprieteTiers] ([CleProprieteTiers]),
+    CONSTRAINT [FK_Tiers_CleProprieteTiers3] FOREIGN KEY ([CleProprieteTiers3]) REFERENCES [Gen].[ProprieteTiers] ([CleProprieteTiers]),
 );
 
 GO
@@ -53,3 +53,57 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1name = N'Tiers',
     @level2type = N'COLUMN',
     @level2name = N'NomTiers'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Code comptabilité.',
+    @level0type = N'SCHEMA',
+    @level0name = N'Gen',
+    @level1type = N'TABLE',
+    @level1name = N'Tiers',
+    @level2type = N'COLUMN',
+    @level2name = N'CodCompta'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Identifiant unique du tiers établissement principal.',
+    @level0type = N'SCHEMA',
+    @level0name = N'Gen',
+    @level1type = N'TABLE',
+    @level1name = N'Tiers',
+    @level2type = N'COLUMN',
+    @level2name = N'CleTiersPrincipal'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Qualification.',
+    @level0type = N'SCHEMA',
+    @level0name = N'Gen',
+    @level1type = N'TABLE',
+    @level1name = N'Tiers',
+    @level2type = N'COLUMN',
+    @level2name = N'CleCiviliteTiers'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Critère 1.',
+    @level0type = N'SCHEMA',
+    @level0name = N'Gen',
+    @level1type = N'TABLE',
+    @level1name = N'Tiers',
+    @level2type = N'COLUMN',
+    @level2name = N'CleProprieteTiers1'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Critère 2.',
+    @level0type = N'SCHEMA',
+    @level0name = N'Gen',
+    @level1type = N'TABLE',
+    @level1name = N'Tiers',
+    @level2type = N'COLUMN',
+    @level2name = N'CleProprieteTiers2'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Critère 3.',
+    @level0type = N'SCHEMA',
+    @level0name = N'Gen',
+    @level1type = N'TABLE',
+    @level1name = N'Tiers',
+    @level2type = N'COLUMN',
+    @level2name = N'CleProprieteTiers3'
