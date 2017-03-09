@@ -1,7 +1,7 @@
-﻿CREATE TABLE [Gen].[FournContact]
+﻿CREATE TABLE [Gen].[TiersContact]
 (
     [CleContact] INT NOT NULL IDENTITY,
-    [CleFourn] INT NOT NULL,
+    [CleTiers] INT NOT NULL,
     [NomContact] VARCHAR(100) NOT NULL,
     [PreContact] VARCHAR(100) NULL,
     [TxtContact] VARCHAR(2000) NULL,
@@ -14,53 +14,53 @@
     [NumEmail] VARCHAR(100) NULL,
     [TypCivilite] INT NULL,
     [LibFonction] VARCHAR(100) NULL,
-    CONSTRAINT [PK_FournContact] PRIMARY KEY ([CleContact]), 
-    CONSTRAINT [UK_FournContact_CleFourn_NomContact] UNIQUE ([CleFourn], [NomContact]), 
-    CONSTRAINT [FK_FournContact_CleFourn] FOREIGN KEY ([CleFourn]) REFERENCES [Gen].[Fourn] ([CleFourn]) ON DELETE CASCADE, 
+    CONSTRAINT [PK_TiersContact] PRIMARY KEY ([CleContact]), 
+    CONSTRAINT [UK_TiersContact_CleTiers_NomContact] UNIQUE ([CleTiers], [NomContact]), 
+    CONSTRAINT [FK_TiersContact_CleTiers] FOREIGN KEY ([CleTiers]) REFERENCES [Gen].[Tiers] ([CleTiers]) ON DELETE CASCADE, 
 );
 
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Titre de civilité.',
+    @value = N'Identifiant unique du tiers parent.',
     @level0type = N'SCHEMA',
     @level0name = N'Gen',
     @level1type = N'TABLE',
-    @level1name = N'FournContact',
+    @level1name = N'TiersContact',
     @level2type = N'COLUMN',
-    @level2name = N'TypCivilite'
-GO
-EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Identifiant unique du fournisseur parent.',
-    @level0type = N'SCHEMA',
-    @level0name = N'Gen',
-    @level1type = N'TABLE',
-    @level1name = N'FournContact',
-    @level2type = N'COLUMN',
-    @level2name = 'CleFourn'
+    @level2name = N'CleTiers'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Nom de famille.',
     @level0type = N'SCHEMA',
     @level0name = N'Gen',
     @level1type = N'TABLE',
-    @level1name = N'FournContact',
+    @level1name = N'TiersContact',
     @level2type = N'COLUMN',
-    @level2name = 'NomContact'
+    @level2name = N'NomContact'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Prénom.',
     @level0type = N'SCHEMA',
     @level0name = N'Gen',
     @level1type = N'TABLE',
-    @level1name = N'FournContact',
+    @level1name = N'TiersContact',
     @level2type = N'COLUMN',
-    @level2name = 'PreContact'
+    @level2name = N'PreContact'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Fonction ou poste du contact chez le fournisseur.',
+    @value = N'Titre de civilité.',
     @level0type = N'SCHEMA',
     @level0name = N'Gen',
     @level1type = N'TABLE',
-    @level1name = N'FournContact',
+    @level1name = N'TiersContact',
     @level2type = N'COLUMN',
-    @level2name = 'LibFonction'
+    @level2name = N'TypCivilite'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Fonction ou poste du contact chez le tiers.',
+    @level0type = N'SCHEMA',
+    @level0name = N'Gen',
+    @level1type = N'TABLE',
+    @level1name = N'TiersContact',
+    @level2type = N'COLUMN',
+    @level2name = N'LibFonction'

@@ -2,7 +2,7 @@
     [CleCompteur] INT NOT NULL IDENTITY,
     [CodCompteur] VARCHAR(100) NOT NULL,
     [LibCompteur] VARCHAR(200) NOT NULL,
-    [TxtCompteur] VARCHAR(500) NULL,
+    [TxtCompteur] VARCHAR(2000) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [CleCreateur] INT NOT NULL,

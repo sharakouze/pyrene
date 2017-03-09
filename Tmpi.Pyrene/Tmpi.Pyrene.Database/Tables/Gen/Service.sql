@@ -3,7 +3,7 @@
     [CleService] INT NOT NULL IDENTITY,
     [CodService] VARCHAR(100)  NOT NULL,
     [LibService] VARCHAR(200) NOT NULL,
-    [TxtService] VARCHAR(500) NULL,
+    [TxtService] VARCHAR(2000) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [CleCreateur] INT NOT NULL,

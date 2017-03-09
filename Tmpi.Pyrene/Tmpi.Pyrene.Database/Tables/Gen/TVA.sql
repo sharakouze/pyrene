@@ -3,7 +3,7 @@
     [CleTVA] INT IDENTITY NOT NULL,
     [CodTVA] VARCHAR(100) NOT NULL,
     [LibTVA] VARCHAR(200) NOT NULL,
-    [TxtTVA] VARCHAR(500) NULL,
+    [TxtTVA] VARCHAR(2000) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [CleCreateur] INT NOT NULL,

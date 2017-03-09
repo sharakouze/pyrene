@@ -102,5 +102,11 @@
     <Build Include="Scripts\FullTextIndex.sql">
       <DependentUpon>Scripts\FullTextIndex.tt</DependentUpon>
     </Build>
+    <Build Include="Tables\Gen\Tiers.sql" />
+    <Build Include="Tables\Gen\TiersContact.sql" />
+    <Build Include="Tables\Gen\TiersIdent.sql" />
+    <Build Include="Tables\Gen\TypeIdent.sql" />
+    <Build Include="Tables\Gen\CiviliteTiers.sql" />
+    <Build Include="Tables\Gen\ProprieteTiers.sql" />
   </ItemGroup>
 </Project>

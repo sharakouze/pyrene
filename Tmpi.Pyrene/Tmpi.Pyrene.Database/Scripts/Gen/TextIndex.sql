@@ -25,3 +25,19 @@ GO
 CREATE INDEX [IX_TVA_LibTVA] ON [Gen].[TVA] ([LibTVA]);
 
 GO
+
+CREATE INDEX [IX_Tiers_NomTiers] ON [Gen].[Tiers] ([NomTiers]);
+
+GO
+
+CREATE INDEX [IX_TypeIdent_LibTypeIdent] ON [Gen].[TypeIdent] ([LibTypeIdent]);
+
+GO
+
+CREATE INDEX [IX_CiviliteTiers_LibCiviliteTiers] ON [Gen].[CiviliteTiers] ([LibCiviliteTiers]);
+
+GO
+
+CREATE INDEX [IX_ProprieteTiers_LibProprieteTiers] ON [Gen].[ProprieteTiers] ([LibProprieteTiers]);
+
+GO

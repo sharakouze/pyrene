@@ -3,7 +3,7 @@
     [CleFourn] INT NOT NULL IDENTITY,
     [CodFourn] VARCHAR(100) NOT NULL,
     [LibFourn] VARCHAR(200) NOT NULL,
-    [TxtFourn] VARCHAR(500) NULL,
+    [TxtFourn] VARCHAR(2000) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [CleCreateur] INT NOT NULL,

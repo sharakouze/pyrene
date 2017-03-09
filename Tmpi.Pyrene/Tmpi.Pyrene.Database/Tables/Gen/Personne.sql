@@ -4,7 +4,7 @@
     [CodPersonne] VARCHAR(100) NOT NULL,
     [NomPersonne] VARCHAR(100) NOT NULL,
     [PrePersonne] VARCHAR(100) NULL,
-    [TxtPersonne] VARCHAR(500) NULL,
+    [TxtPersonne] VARCHAR(2000) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [CleCreateur] INT NOT NULL,

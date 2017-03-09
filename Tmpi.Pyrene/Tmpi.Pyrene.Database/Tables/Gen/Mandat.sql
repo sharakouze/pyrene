@@ -3,7 +3,7 @@
     [CleMandat] INT NOT NULL IDENTITY,
     [CodMandat] VARCHAR(100) NOT NULL,
     [LibMandat] VARCHAR(200) NOT NULL,
-    [TxtMandat] VARCHAR(500) NULL,
+    [TxtMandat] VARCHAR(2000) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [CleCreateur] INT NOT NULL,

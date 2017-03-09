@@ -3,7 +3,7 @@
     [CleExercice] INT NOT NULL IDENTITY,
     [CodExercice] VARCHAR(100) NOT NULL,
     [LibExercice] VARCHAR(200) NOT NULL,
-    [TxtExercice] VARCHAR(500) NULL,
+    [TxtExercice] VARCHAR(2000) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [CleCreateur] INT NOT NULL,
