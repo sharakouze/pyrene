@@ -7,9 +7,7 @@
     [LibEtablissement] VARCHAR(200) NOT NULL,
     [EstDefaut] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
-    [CleCreateur] INT NOT NULL,
-    [DatEdition] DATETIME NULL,
-    [CleEditeur] INT NULL,
+    [DatModif] DATETIME NULL,
     CONSTRAINT [PK_FournBanque] PRIMARY KEY ([CleBanque]),
     CONSTRAINT [UK_FournBanque_CleFourn_CodIBAN] UNIQUE ([CleFourn], [CodIBAN]), 
     CONSTRAINT [FK_FournBanque_CleFourn] FOREIGN KEY ([CleFourn]) REFERENCES [Gen].[Fourn] ([CleFourn]) ON DELETE CASCADE

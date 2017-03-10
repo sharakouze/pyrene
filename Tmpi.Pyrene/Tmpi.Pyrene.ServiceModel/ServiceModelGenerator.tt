@@ -244,9 +244,7 @@ namespace <#= pocoNamespace #>
         if (AddCustomInterfaces)
         {
             if (table.Columns.Any(c => c.PropertyName == "DatCreation" && c.ProperPropertyType == "DateTime") &&
-                table.Columns.Any(c => c.PropertyName == "DatEdition" && c.ProperPropertyType == "DateTime?") &&
-				table.Columns.Any(c => c.PropertyName == "CleCreateur" && c.ProperPropertyType == "int") &&
-				table.Columns.Any(c => c.PropertyName == "CleEditeur" && c.ProperPropertyType == "int?"))
+                table.Columns.Any(c => c.PropertyName == "DatModif" && c.ProperPropertyType == "DateTime?"))
             {
                 lstInterfaces.Add("IAuditable");
             }
@@ -1141,14 +1139,8 @@ public static class ServiceModelUtils
 						case "DatCreation":
 							col.Description = "Date de création (immutable)";
 							break;
-						case "CleCreateur":
-							col.Description = "Identifiant unique de l'utilisateur responsable de la création (immutable)";
-							break;
-						case "DatEdition":
+						case "DatModif":
 							col.Description = "Date de dernière modification (immutable)";
-							break;
-						case "CleEditeur":
-							col.Description = "Identifiant unique de l'utilisateur responsable de la dernière modification (immutable)";
 							break;
 						case "CodExterne":
 							col.Description = "Identifiant de synchronisation externe";
@@ -1205,7 +1197,7 @@ public static class ServiceModelUtils
 	public static Dictionary<string, string> GetApiMemberProps(Column col, IEnumerable<string> lstEnums, List<string> lstInterfaces)
 	{
 		if (lstInterfaces.Contains("IAuditable") &&
-			(col.PropertyName == "DatCreation" || col.PropertyName == "CleCreateur" || col.PropertyName == "DatEdition" || col.PropertyName == "CleEditeur"))
+			(col.PropertyName == "DatCreation" || col.PropertyName == "DatModif"))
 		{
 			return null;
 		}

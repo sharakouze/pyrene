@@ -6,9 +6,7 @@
     [TxtTypeIdent] VARCHAR (2000) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
-    [CleCreateur] INT NOT NULL,
-    [DatEdition] DATETIME NULL,
-    [CleEditeur] INT NULL,
+    [DatModif] DATETIME NULL,
     [CodExterne] VARCHAR(100) NULL,
     CONSTRAINT [PK_TypeIdent] PRIMARY KEY ([CleTypeIdent]),
     CONSTRAINT [UK_TypeIdent_CodTypeIdent] UNIQUE ([CodTypeIdent])

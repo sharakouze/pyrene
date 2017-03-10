@@ -23,7 +23,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 	[Route("/TVA", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité TVA à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité TVA spécifiée est un doublon")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité TVA spécifiée est introuvable")]
-	public partial class TVA : IReturn<TVA>, IPost, IAuditable
+	public partial class TVA : IReturn<TVA>, IPost
 	{
 		/// <summary>
 		/// Identifiant unique (immutable).
@@ -72,22 +72,17 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Date de création (immutable).
 		/// </summary>
 		[Required]
+		[ApiMember(Description = "Date de création (immutable)", DataType = SwaggerDataTypes.DateTime, IsRequired = true)]
 		public DateTime DatCreation { get; set; }
 
-		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la création (immutable).
-		/// </summary>
 		[Required]
+		[ApiMember(DataType = SwaggerDataTypes.Int, IsRequired = true)]
 		public int CleCreateur { get; set; }
 
-		/// <summary>
-		/// Date de dernière modification (immutable).
-		/// </summary>
+		[ApiMember(DataType = SwaggerDataTypes.DateTime)]
 		public DateTime? DatEdition { get; set; }
 
-		/// <summary>
-		/// Identifiant unique de l'utilisateur responsable de la dernière modification (immutable).
-		/// </summary>
+		[ApiMember(DataType = SwaggerDataTypes.Int)]
 		public int? CleEditeur { get; set; }
 
 		/// <summary>

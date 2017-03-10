@@ -1311,13 +1311,5 @@
       <SqlOwnerName>dbo</SqlOwnerName>
       <SqlPermissionSet>UNSAFE</SqlPermissionSet>
     </Reference>
-    <Reference Include="Tmpi.Pyrene.SqlServer">
-      <HintPath>Assemblies\Tmpi.Pyrene.SqlServer.dll</HintPath>
-      <SqlAssemblyName>Tmpi.Pyrene.SqlServer</SqlAssemblyName>
-      <IsModelAware>True</IsModelAware>
-      <GenerateSqlClrDdl>False</GenerateSqlClrDdl>
-      <SqlOwnerName>dbo</SqlOwnerName>
-      <SqlPermissionSet>SAFE</SqlPermissionSet>
-    </Reference>
   </ItemGroup>
 </Project>

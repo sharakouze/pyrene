@@ -19,20 +19,18 @@ BEGIN TRY
 			ltrim(rtrim(TxtCivilite)) as TxtCiviliteTiers,
 			coalesce(EstActif,1) as EstActif,
 			coalesce(DatModif,getdate()) as DatCreation,
-			coalesce(CleOperateur,0) as CleCreateur,
-			DatModif as DatEdition,
-			CleOperateur as CleEditeur,
+			DatModif,
 			null as CodExterne
 		from $(SourceSchemaName).[Gen_Trs_Civilite]
 		where CleCivilite>0
 	) as source
-	on (target.CleTypIdent=source.CleTypIdent)
+	on (target.CleCiviliteTiers=source.CleCiviliteTiers)
 	when not matched by target
 	then -- insert new rows
 		insert (CleCiviliteTiers, CodCiviliteTiers, LibCiviliteTiers, TxtCiviliteTiers, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne)
+			DatCreation, DatModif, CodExterne)
 		values (CleCiviliteTiers, CodCiviliteTiers, LibCiviliteTiers, TxtCiviliteTiers, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne);
+			DatCreation, DatModif, CodExterne);
 	
 	SET IDENTITY_INSERT [Gen].[CiviliteTiers] OFF;
 
