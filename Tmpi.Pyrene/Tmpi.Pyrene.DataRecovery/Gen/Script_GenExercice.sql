@@ -28,9 +28,7 @@ BEGIN TRY
 				else 0
 			end as EstActif,
 			DatCreation,
-			CleCreateur,
-			DatModif as DatEdition,
-			CleOperateur as CleEditeur,
+			DatModif,
 			CleExterne as CodExterne,
 			DatDebut,
 			DatFin
@@ -41,10 +39,10 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleExercice, CodExercice, LibExercice, TxtExercice, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
+			DatCreation, DatModif, CodExterne,
 			DatDebut, DatFin)
 		values (CleExercice, CodExercice, LibExercice, TxtExercice, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
+			DatCreation, DatModif, CodExterne,
 			DatDebut, DatFin);
 	
 	SET IDENTITY_INSERT [Gen].[Exercice] OFF;

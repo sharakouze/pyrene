@@ -19,9 +19,7 @@ BEGIN TRY
 			ltrim(rtrim(TxtTVA)) as TxtTVA,
 			EstActif,
 			DatCreation,
-			CleCreateur,
-			DatModif as DatEdition,
-			CleOperateur as CleEditeur,
+			DatModif,
 			CleExterne as CodExterne,
 			TauTVA
 		from $(SourceSchemaName).[Gen_DivTVA]
@@ -31,9 +29,9 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleTVA, CodTVA, LibTVA, TxtTVA, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne, TauTVA)
+			DatCreation, DatModif, CodExterne, TauTVA)
 		values (CleTVA, CodTVA, LibTVA, TxtTVA, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne, TauTVA);
+			DatCreation, DatModif, CodExterne, TauTVA);
 	
 	SET IDENTITY_INSERT [Gen].[TVA] OFF;
 

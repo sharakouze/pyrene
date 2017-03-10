@@ -25,9 +25,7 @@ BEGIN TRY
 			ltrim(rtrim(N.TxtMNumero)) as TxtCompteur, 
 			N.EstActif, 
 			N.DatCreation,
-			N.CleCreateur,
-			N.DatModif as DatEdition,
-			N.CleOperateur as CleEditeur,
+			N.DatModif,
 			N.CleExterne as CodExterne,
 			N.TypCompteur, 
 			C.TypPeriodicite, 
@@ -48,10 +46,10 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleCompteur, CodCompteur, LibCompteur, TxtCompteur, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
+			DatCreation, DatModif, CodExterne,
 			TypCompteur, TypPeriodicite, CleService, ValFormatNumero)
 		values (CleCompteur, CodCompteur, LibCompteur, TxtCompteur, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
+			DatCreation, DatModif, CodExterne,
 			TypCompteur, TypPeriodicite, CleService, ValFormatNumero);
 	
 	SET IDENTITY_INSERT [Gen].[Compteur] OFF;

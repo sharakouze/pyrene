@@ -19,9 +19,7 @@ BEGIN TRY
 			ltrim(rtrim(T1.TxtTiers)) as TxtTiers,
 			coalesce(T1.EstActif,1) as EstActif,
 			coalesce(T1.DatCreation,getdate()) as DatCreation,
-			coalesce(T1.CleCreateur,0) as CleCreateur,
-			T1.DatModif as DatEdition,
-			T1.CleOperateur as CleEditeur,
+			T1.DatModif,
 			T1.CleExterne as CodExterne,
 			T1.AdrRue,
 			T1.AdrCode,
@@ -52,11 +50,11 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleTiers, NumTiers, NomTiers, TxtTiers, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
+			DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail, AdrLatitude, AdrLongitude, AdrCommuneSuite,
 			CodCompta, CleTiersPrincipal, CleCiviliteTiers, CleProprieteTiers1, CleProprieteTiers2, CleProprieteTiers3)
 		values (CleTiers, NumTiers, NomTiers, TxtTiers, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
+			DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail, AdrLatitude, AdrLongitude, AdrCommuneSuite,
 			CodCompta, CleTiersPrincipal, CleCiviliteTiers, CleProprieteTiers1, CleProprieteTiers2, CleProprieteTiers3);
 	
@@ -184,9 +182,7 @@ BEGIN TRY
 			null as PreContact,
 			null as TxtContact, 
 			coalesce(F.DatSaisie,getdate()) as DatCreation,
-			coalesce(F.CleOperateur,0) as CleCreateur,
-			F.DatSaisie as DatEdition,
-			F.CleOperateur as CleEditeur,
+			F.DatSaisie as DatModif,
 			FC.NumTelep, 
 			null as NumFax, 
 			FC.NumEmail, 
@@ -199,10 +195,10 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleTiers, NomContact, PreContact, TxtContact, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur,
+			DatCreation, DatModif, 
 			NumTelep, NumFax, NumEmail, TypCivilite, LibFonction)
 		values (CleTiers, NomContact, PreContact, TxtContact, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur,
+			DatCreation, DatModif, 
 			NumTelep, NumFax, NumEmail, TypCivilite, LibFonction);
 
 	COMMIT;
@@ -227,9 +223,7 @@ BEGIN TRY
 			ltrim(rtrim(TxtCivilite)) as TxtCiviliteTiers,
 			coalesce(EstActif,1) as EstActif,
 			coalesce(DatModif,getdate()) as DatCreation,
-			coalesce(CleOperateur,0) as CleCreateur,
-			DatModif as DatEdition,
-			CleOperateur as CleEditeur,
+			DatModif,
 			null as CodExterne
 		from $(SourceSchemaName).[Gen_TrsTiersIdent]
 		where CleTiers>0
@@ -239,9 +233,9 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleCiviliteTiers, CodCiviliteTiers, LibCiviliteTiers, TxtCiviliteTiers, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne)
+			DatCreation, DatModif, CodExterne)
 		values (CleCiviliteTiers, CodCiviliteTiers, LibCiviliteTiers, TxtCiviliteTiers, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne);
+			DatCreation, DatModif, CodExterne);
 	
 	SET IDENTITY_INSERT [Gen].[TiersIdent] OFF;
 

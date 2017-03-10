@@ -23,9 +23,7 @@ BEGIN TRY
 			ltrim(rtrim(S.TxtSociete)) as TxtService,
 			S.EstActif,
 			S.DatCreation,
-			S.CleCreateur,
-			S.DatModif as DatEdition,
-			S.CleOperateur as CleEditeur,
+			S.DatModif,
 			S.CleExterne as CodExterne,
 			null as CleServiceParent,
 			S.AdrRue,
@@ -45,9 +43,7 @@ BEGIN TRY
 			ltrim(rtrim(SEC.TxtSecteur)) as TxtService,
 			SEC.EstActif,
 			SEC.DatCreation,
-			SEC.CleCreateur,
-			SEC.DatModif as DatEdition,
-			SEC.CleOperateur as CleEditeur,
+			SEC.DatModif,
 			SEC.CleExterne as CodExterne,
 			[dbo].[TMP_SOC_TO_SERVICE](SOC.CleSociete, null, null) as CleServiceParent,
 			SEC.AdrRue,
@@ -67,9 +63,7 @@ BEGIN TRY
 			ltrim(rtrim(SVC.TxtService)) as TxtService,
 			SVC.EstActif,
 			SVC.DatCreation,
-			SVC.CleCreateur,
-			SVC.DatModif as DatEdition,
-			SVC.CleOperateur as CleEditeur,
+			SVC.DatModif,
 			SVC.CleExterne as CodExterne,
 			[dbo].[TMP_SOC_TO_SERVICE](null, SEC.CleSecteur, null) as CleServiceParent,
 			SVC.AdrRue,
@@ -87,10 +81,10 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleService, CodService, LibService, TxtService, EstActif,
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
+			DatCreation, DatModif, CodExterne,
 			CleServiceParent, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail)
 		values (CleService, CodService, LibService, TxtService, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
+			DatCreation, DatModif, CodExterne,
 			CleServiceParent, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail);
 	
 	SET IDENTITY_INSERT [Gen].[Service] OFF;

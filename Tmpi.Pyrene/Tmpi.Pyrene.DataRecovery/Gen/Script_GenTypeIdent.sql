@@ -19,9 +19,7 @@ BEGIN TRY
 			ltrim(rtrim(TxtTypIdent)) as TxtTypeIdent,
 			EstActif,
 			DatCreation,
-			CleCreateur,
-			DatModif as DatEdition,
-			CleOperateur as CleEditeur,
+			DatModif,
 			CleExterne as CodExterne
 		from $(SourceSchemaName).[Gen_TrsTypIdent]
 		where CleTypIdent>0
@@ -30,9 +28,9 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleTypeIdent, CodTypeIdent, LibTypeIdent, TxtTypeIdent, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne)
+			DatCreation, DatModif, CodExterne)
 		values (CleTypeIdent, CodTypeIdent, LibTypeIdent, TxtTypeIdent, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne);
+			DatCreation, DatModif, CodExterne);
 	
 	SET IDENTITY_INSERT [Gen].[TypeIdent] OFF;
 

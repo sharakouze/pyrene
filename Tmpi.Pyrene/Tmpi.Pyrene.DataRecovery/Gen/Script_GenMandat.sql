@@ -23,9 +23,7 @@ BEGIN TRY
 			ltrim(rtrim(TxtMandat)) as TxtMandat,
 			EstActif,
 			DatCreation,
-			CleCreateur,
-			DatModif as DatEdition,
-			CleOperateur as CleEditeur,
+			DatModif,
 			null as CodExterne,
 			TypMandat,
 			NivMandat,
@@ -38,10 +36,10 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleMandat, CodMandat, LibMandat, TxtMandat, EstActif,
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
+			DatCreation, DatModif, CodExterne,
 			TypMandat, NivMandat, NbrSignature, TxtMessage)
 		values (CleMandat, CodMandat, LibMandat, TxtMandat, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
+			DatCreation, DatModif, CodExterne,
 			TypMandat, NivMandat, NbrSignature, TxtMessage);
 	
 	SET IDENTITY_INSERT [Gen].[Mandat] OFF;
@@ -69,9 +67,7 @@ BEGIN TRY
 			[dbo].[TMP_SOC_TO_SERVICE](MM.CleSociete, MM.CleSecteur, MM.CleService) as CleService,
 			MM.EstSuspendu,
 			M.DatCreation,
-			M.CleCreateur,
-			M.DatModif as DatEdition,
-			M.CleOperateur as CleEditeur
+			M.DatModif
 		from $(SourceSchemaName).[GenP_MdtMandataire] MM
 		inner join $(SourceSchemaName).[GenP_MdtMandat] M on MM.CleMandat=M.CleMandat 
 		where MM.CleMandat>0
@@ -80,9 +76,9 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleMandataire, CleMandat, ClePersonne, CleService, EstSuspendu,
-			DatCreation, CleCreateur, DatEdition, CleEditeur)
+			DatCreation, DatModif)
 		values (CleMandataire, CleMandat, ClePersonne, CleService, EstSuspendu,
-			DatCreation, CleCreateur, DatEdition, CleEditeur);
+			DatCreation, DatModif);
 	
 	SET IDENTITY_INSERT [Gen].[MandatMandataire] OFF;
 

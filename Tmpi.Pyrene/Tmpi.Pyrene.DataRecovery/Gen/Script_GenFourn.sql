@@ -25,9 +25,7 @@ BEGIN TRY
 			ltrim(rtrim(TxtFourn)) as TxtFourn,
 			1 as EstActif,
 			coalesce(DatSaisie,getdate()) as DatCreation,
-			coalesce(CleOperateur,0) as CleCreateur,
-			DatSaisie as DatEdition,
-			CleOperateur as CleEditeur,
+			DatSaisie as DatModif,
 			null as CodExterne,
 			AdrRue,
 			AdrCode,
@@ -54,12 +52,12 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleFourn, CodFourn, LibFourn, TxtFourn, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
+			DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail, CodCompta, NumClient, 
 			NumTVAIntra, MntFPort, MntFPortGratuit, MntCommandeMin, DelLivraison, DelPaiement, ValNote,
 			TypModeReglement, EstEnvoiMailBonCde)
 		values (CleFourn, CodFourn, LibFourn, TxtFourn, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
+			DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail, CodCompta, NumClient, 
 			NumTVAIntra, MntFPort, MntFPortGratuit, MntCommandeMin, DelLivraison, DelPaiement, ValNote,
 			TypModeReglement, EstEnvoiMailBonCde);
@@ -186,9 +184,7 @@ BEGIN TRY
 			null as PreContact,
 			null as TxtContact, 
 			coalesce(F.DatSaisie,getdate()) as DatCreation,
-			coalesce(F.CleOperateur,0) as CleCreateur,
-			F.DatSaisie as DatEdition,
-			F.CleOperateur as CleEditeur,
+			F.DatSaisie as DatModif,
 			FC.NumTelep, 
 			null as NumFax, 
 			FC.NumEmail, 
@@ -201,10 +197,10 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleFourn, NomContact, PreContact, TxtContact, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur,
+			DatCreation, DatModif, 
 			NumTelep, NumFax, NumEmail, TypCivilite, LibFonction)
 		values (CleFourn, NomContact, PreContact, TxtContact, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur,
+			DatCreation, DatModif, 
 			NumTelep, NumFax, NumEmail, TypCivilite, LibFonction);
 
 	COMMIT;
@@ -232,9 +228,7 @@ BEGIN TRY
 			FR.LibBanque as LibEtablissement,
 			FR.EstDefaut,
 			coalesce(F.DatSaisie,getdate()) as DatCreation,
-			coalesce(F.CleOperateur,0) as CleCreateur,
-			F.DatSaisie as DatEdition,
-			F.CleOperateur as CleEditeur
+			F.DatSaisie as DatModif
 		from $(SourceSchemaName).[Gen_FouRib] FR
 		inner join $(SourceSchemaName).[t_Fourn] F on FR.CleFourn=F.CleFourn
 		where FR.CleFourn>0
@@ -247,9 +241,9 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleBanque, CleFourn, CodIBAN, CodBIC, LibEtablissement, EstDefaut, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur)
+			DatCreation, DatModif)
 		values (CleBanque, CleFourn, CodIBAN, CodBIC, LibEtablissement, EstDefaut, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur);
+			DatCreation, DatModif);
 	
 	SET IDENTITY_INSERT [Gen].[FournBanque] OFF;
 

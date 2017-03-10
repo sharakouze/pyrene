@@ -24,9 +24,7 @@ BEGIN TRY
 			null as TxtPersonne,
 			EstActif,
 			DatCreation,
-			CleCreateur,
-			DatModif as DatEdition,
-			CleOperateur as CleEditeur,
+			DatModif,
 			CleExterne as CodExterne,
 			nullif(CleGenre,0) as TypCivilite,
 			NumTelep,
@@ -39,10 +37,10 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (ClePersonne, CodPersonne, NomPersonne, PrePersonne, TxtPersonne, EstActif,
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
+			DatCreation, DatModif, CodExterne,
 			TypCivilite, NumTelep, NumFax, NumEmail)
 		values (ClePersonne, CodPersonne, NomPersonne, PrePersonne, TxtPersonne, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne,
+			DatCreation, DatModif, CodExterne,
 			TypCivilite, NumTelep, NumFax, NumEmail);
 	
 	SET IDENTITY_INSERT [Gen].[Personne] OFF;
@@ -101,9 +99,7 @@ BEGIN TRY
 			PRF.CodProfil,
 			[dbo].[TMP_SOC_TO_SERVICE](PRF.CleSociete, PRF.CleSecteur, PRF.CleService) as CleService,
 			P.DatCreation,
-			P.CleCreateur,
-			P.DatModif as DatEdition,
-			P.CleOperateur as CleEditeur
+			P.DatModif
 		from $(SourceSchemaName).[Gen_SocPersonneProfil] PRF
 		inner join $(SourceSchemaName).[Gen_SocPersonne] P on PRF.ClePersonne=P.ClePersonne and P.ClePersonne>0
 		where PRF.ClePersonne>0
@@ -112,9 +108,9 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleProfil, ClePersonne, CodProfil, CleService, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur)
+			DatCreation, DatModif)
 		values (CleProfil, ClePersonne, CodProfil, CleService, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur);
+			DatCreation, DatModif);
 	
 	SET IDENTITY_INSERT [Gen].[PersonneProfil] OFF;
 

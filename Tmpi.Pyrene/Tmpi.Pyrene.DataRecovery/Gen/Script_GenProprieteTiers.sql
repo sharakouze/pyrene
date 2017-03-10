@@ -19,9 +19,7 @@ BEGIN TRY
 			ltrim(rtrim(TxtPropriete)) as TxtProprieteTiers,
 			1 as EstActif,
 			getdate() as DatCreation,
-			0 as CleCreateur,
-			null as DatEdition,
-			null as CleEditeur,
+			null as DatModif,
 			CleExterne as CodExterne
 		from $(SourceSchemaName).[Gen_Trs_Propriete]
 		where ClePropriete>0
@@ -30,9 +28,9 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (CleProprieteTiers, CodProprieteTiers, LibProprieteTiers, TxtProprieteTiers, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne)
+			DatCreation, DatModif, CodExterne)
 		values (CleProprieteTiers, CodProprieteTiers, LibProprieteTiers, TxtProprieteTiers, EstActif, 
-			DatCreation, CleCreateur, DatEdition, CleEditeur, CodExterne);
+			DatCreation, DatModif, CodExterne);
 	
 	SET IDENTITY_INSERT [Gen].[ProprieteTiers] OFF;
 
