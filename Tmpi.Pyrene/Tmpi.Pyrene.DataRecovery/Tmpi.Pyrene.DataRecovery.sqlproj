@@ -60,12 +60,45 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="Gen" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment1.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Script1.sql" />
     <None Include="TempFunctions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Gen\Script_GenCiviliteTiers.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Gen\Script_GenCompteur.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Gen\Script_GenExercice.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Gen\Script_GenFourn.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Gen\Script_GenMandat.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Gen\Script_GenPersonne.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Gen\Script_GenProprieteTiers.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Gen\Script_GenService.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Gen\Script_GenTiers.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Gen\Script_GenTVA.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Gen\Script_GenTypeIdent.sql" />
   </ItemGroup>
 </Project>
