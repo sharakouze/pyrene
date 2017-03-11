@@ -20,12 +20,12 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
-	[CompositeIndex(true, nameof(ClePersonne), nameof(CleService))]
-	[CompositeIndex(true, nameof(CodProfil), nameof(ClePersonne))]
-	[Route("/Personne/{ClePersonne}/Profil", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité PersonneProfil à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+	[CompositeIndex(true, nameof(CodProfil), nameof(PersonneId))]
+	[CompositeIndex(true, nameof(PersonneId), nameof(ServiceId))]
+	[Route("/Personne/{Id}/Profil", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité PersonneProfil à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité PersonneProfil spécifiée est un doublon")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité PersonneProfil spécifiée est introuvable")]
-	public partial class PersonneProfil : IReturn<PersonneProfil>, IPost
+	public partial class PersonneProfil : IHasId<int>, IAuditable, IReturn<PersonneProfil>, IPost
 	{
 		/// <summary>
 		/// Identifiant unique (immutable).
@@ -34,23 +34,22 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Clé primaire auto-incrémentée.
 		/// </remarks>
 		[AutoIncrement]
-		[PrimaryKey]
 		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int CleProfil { get; set; }
+		public int Id { get; set; }
 
 		/// <summary>
 		/// Identifiant unique de l'utilisateur parent.
 		/// </summary>
 		/// <remarks>
-		/// Référence <see cref="Personne.ClePersonne"/>.
+		/// Référence <see cref="Personne.Id"/>.
 		/// </remarks>
 		[ForeignKey(typeof(Personne), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique de l'utilisateur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int ClePersonne { get; set; }
+		[ApiMember(Description = "Identifiant unique de l'utilisateur parent", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		public int PersonneId { get; set; }
 
 		/// <summary>
-		/// Entité référencée par <see cref="ClePersonne"/>.
+		/// Entité référencée par <see cref="PersonneId"/>.
 		/// </summary>
 		[Reference]
 		public Personne Personne { get; set; }
@@ -67,31 +66,25 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Date de création (immutable).
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création (immutable)", DataType = SwaggerDataTypes.DateTime, IsRequired = true)]
 		public DateTime DatCreation { get; set; }
 
-		[Required]
-		[ApiMember(DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int CleCreateur { get; set; }
-
-		[ApiMember(DataType = SwaggerDataTypes.DateTime)]
-		public DateTime? DatEdition { get; set; }
-
-		[ApiMember(DataType = SwaggerDataTypes.Int)]
-		public int? CleEditeur { get; set; }
+		/// <summary>
+		/// Date de dernière modification (immutable).
+		/// </summary>
+		public DateTime? DatModif { get; set; }
 
 		/// <summary>
 		/// Identifiant unique du service auquel a accès le profil, ou null pour tous les services.
 		/// </summary>
 		/// <remarks>
-		/// Référence <see cref="Service.CleService"/>.
+		/// Référence <see cref="Service.Id"/>.
 		/// </remarks>
 		[References(typeof(Service))]
 		[ApiMember(Description = "Identifiant unique du service auquel a accès le profil, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]
-		public int? CleService { get; set; }
+		public int? ServiceId { get; set; }
 
 		/// <summary>
-		/// Entité référencée par <see cref="CleService"/>.
+		/// Entité référencée par <see cref="ServiceId"/>.
 		/// </summary>
 		[Reference]
 		public Service Service { get; set; }

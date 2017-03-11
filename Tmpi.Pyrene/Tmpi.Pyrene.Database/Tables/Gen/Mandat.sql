@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [Gen].[Mandat]
 (
-    [CleMandat] INT NOT NULL IDENTITY,
+    [Id] INT NOT NULL IDENTITY,
     [CodMandat] VARCHAR(100) NOT NULL,
     [LibMandat] VARCHAR(200) NOT NULL,
     [TxtMandat] VARCHAR(2000) NULL,
@@ -12,7 +12,7 @@
     [NivMandat] TINYINT NOT NULL,
     [NbrSignature] TINYINT NOT NULL,
     [TxtMessage] VARCHAR(MAX) NULL,
-    CONSTRAINT [PK_Mandat] PRIMARY KEY ([CleMandat]),
+    CONSTRAINT [PK_Mandat] PRIMARY KEY ([Id]),
     CONSTRAINT [UK_Mandat_CodMandat] UNIQUE ([CodMandat]),
     CONSTRAINT [UK_Mandat_TypMandat_NivMandat] UNIQUE ([TypMandat], [NivMandat]),
 );

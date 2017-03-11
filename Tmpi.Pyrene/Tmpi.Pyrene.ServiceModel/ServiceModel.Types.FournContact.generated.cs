@@ -20,11 +20,11 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
-	[CompositeIndex(true, nameof(CleFourn), nameof(NomContact))]
-	[Route("/Fourn/{CleFourn}/Contact", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité FournContact à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+	[CompositeIndex(true, nameof(FournId), nameof(NomContact))]
+	[Route("/Fourn/{Id}/Contact", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité FournContact à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité FournContact spécifiée est un doublon")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité FournContact spécifiée est introuvable")]
-	public partial class FournContact : IReturn<FournContact>, IPost
+	public partial class FournContact : IHasId<int>, IAuditable, IReturn<FournContact>, IPost
 	{
 		/// <summary>
 		/// Identifiant unique (immutable).
@@ -33,23 +33,22 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Clé primaire auto-incrémentée.
 		/// </remarks>
 		[AutoIncrement]
-		[PrimaryKey]
 		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int CleContact { get; set; }
+		public int Id { get; set; }
 
 		/// <summary>
 		/// Identifiant unique du fournisseur parent.
 		/// </summary>
 		/// <remarks>
-		/// Référence <see cref="Fourn.CleFourn"/>.
+		/// Référence <see cref="Fourn.Id"/>.
 		/// </remarks>
 		[ForeignKey(typeof(Fourn), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du fournisseur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleFourn { get; set; }
+		[ApiMember(Description = "Identifiant unique du fournisseur parent", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		public int FournId { get; set; }
 
 		/// <summary>
-		/// Entité référencée par <see cref="CleFourn"/>.
+		/// Entité référencée par <see cref="FournId"/>.
 		/// </summary>
 		[Reference]
 		public Fourn Fourn { get; set; }
@@ -72,7 +71,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
-		[StringLength(500)]
+		[StringLength(2000)]
 		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
 		public string TxtContact { get; set; }
 
@@ -80,18 +79,12 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Date de création (immutable).
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création (immutable)", DataType = SwaggerDataTypes.DateTime, IsRequired = true)]
 		public DateTime DatCreation { get; set; }
 
-		[Required]
-		[ApiMember(DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int CleCreateur { get; set; }
-
-		[ApiMember(DataType = SwaggerDataTypes.DateTime)]
-		public DateTime? DatEdition { get; set; }
-
-		[ApiMember(DataType = SwaggerDataTypes.Int)]
-		public int? CleEditeur { get; set; }
+		/// <summary>
+		/// Date de dernière modification (immutable).
+		/// </summary>
+		public DateTime? DatModif { get; set; }
 
 		/// <summary>
 		/// Numéro de téléphone.

@@ -20,10 +20,10 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
-	[Route("/Fourn", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Fourn à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
-	[ApiResponse(HttpStatusCode.Conflict, "L'entité Fourn spécifiée est un doublon")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Fourn spécifiée est introuvable")]
-	public partial class Fourn : IHasId<int>, IAuditable, IReturn<Fourn>, IPost
+	[Route("/Tiers", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Tiers à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+	[ApiResponse(HttpStatusCode.Conflict, "L'entité Tiers spécifiée est un doublon")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité Tiers spécifiée est introuvable")]
+	public partial class Tiers : IHasId<int>, IAuditable, IReturn<Tiers>, IPost
 	{
 		/// <summary>
 		/// Identifiant unique (immutable).
@@ -36,29 +36,29 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int Id { get; set; }
 
 		/// <summary>
-		/// Code (unique).
+		/// Numéro interne. (unique).
 		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code (unique)", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string CodFourn { get; set; }
+		[ApiMember(Description = "Numéro interne. (unique)", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string NumTiers { get; set; }
 
 		/// <summary>
-		/// Désignation.
+		/// Nom.
 		/// </summary>
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "Désignation", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string LibFourn { get; set; }
+		[ApiMember(Description = "Nom", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string NomTiers { get; set; }
 
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(2000)]
 		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
-		public string TxtFourn { get; set; }
+		public string TxtTiers { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.
@@ -134,6 +134,18 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[ApiMember(Description = "Adresse email", DataType = SwaggerDataTypes.String)]
 		public string NumEmail { get; set; }
 
+		[DecimalLength(9, 6)]
+		[ApiMember(DataType = SwaggerDataTypes.Decimal)]
+		public decimal? AdrLatitude { get; set; }
+
+		[DecimalLength(9, 6)]
+		[ApiMember(DataType = SwaggerDataTypes.Decimal)]
+		public decimal? AdrLongitude { get; set; }
+
+		[StringLength(100)]
+		[ApiMember(DataType = SwaggerDataTypes.String)]
+		public string AdrCommuneSuite { get; set; }
+
 		/// <summary>
 		/// Code comptabilité.
 		/// </summary>
@@ -142,69 +154,84 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public string CodCompta { get; set; }
 
 		/// <summary>
-		/// Numéro de client.
+		/// Identifiant unique du tiers établissement principal.
 		/// </summary>
-		[StringLength(100)]
-		[ApiMember(Description = "Numéro de client", DataType = SwaggerDataTypes.String)]
-		public string NumClient { get; set; }
+		/// <remarks>
+		/// Référence <see cref="Tiers.Id"/>.
+		/// </remarks>
+		[References(typeof(Tiers))]
+		[ApiMember(Description = "Identifiant unique du tiers établissement principal", DataType = SwaggerDataTypes.Int)]
+		public int? TiersPrincipalId { get; set; }
 
 		/// <summary>
-		/// Numéro de TVA intracommunautaire.
+		/// Entité référencée par <see cref="TiersPrincipalId"/>.
 		/// </summary>
-		[StringLength(25)]
-		[ApiMember(Description = "Numéro de TVA intracommunautaire", DataType = SwaggerDataTypes.String)]
-		public string NumTVAIntra { get; set; }
+		[Reference]
+		public Tiers TiersPrincipal { get; set; }
 
 		/// <summary>
-		/// Frais de port.
+		/// Qualification.
 		/// </summary>
-		[DecimalLength(15, 2)]
-		[ApiMember(Description = "Frais de port", DataType = SwaggerDataTypes.Decimal)]
-		public decimal? MntFPort { get; set; }
+		/// <remarks>
+		/// Référence <see cref="CiviliteTiers.Id"/>.
+		/// </remarks>
+		[References(typeof(CiviliteTiers))]
+		[ApiMember(Description = "Qualification", DataType = SwaggerDataTypes.Int)]
+		public int? CiviliteTiersId { get; set; }
 
 		/// <summary>
-		/// Montant minimum pour frais de port gratuits.
+		/// Entité référencée par <see cref="CiviliteTiersId"/>.
 		/// </summary>
-		[DecimalLength(15, 2)]
-		[ApiMember(Description = "Montant minimum pour frais de port gratuits", DataType = SwaggerDataTypes.Decimal)]
-		public decimal? MntFPortGratuit { get; set; }
+		[Reference]
+		public CiviliteTiers CiviliteTiers { get; set; }
 
 		/// <summary>
-		/// Montant minimum à commander.
+		/// Critère 1.
 		/// </summary>
-		[DecimalLength(15, 2)]
-		[ApiMember(Description = "Montant minimum à commander", DataType = SwaggerDataTypes.Decimal)]
-		public decimal? MntCommandeMin { get; set; }
+		/// <remarks>
+		/// Référence <see cref="ProprieteTiers.Id"/>.
+		/// </remarks>
+		[References(typeof(ProprieteTiers))]
+		[ApiMember(Description = "Critère 1", DataType = SwaggerDataTypes.Int)]
+		public int? ProprieteTiers1Id { get; set; }
 
 		/// <summary>
-		/// Délais de livraison en jours.
+		/// Entité référencée par <see cref="ProprieteTiers1Id"/>.
 		/// </summary>
-		[ApiMember(Description = "Délais de livraison en jours", DataType = SwaggerDataTypes.Byte)]
-		public byte? DelLivraison { get; set; }
+		[Reference]
+		public ProprieteTiers ProprieteTiers1 { get; set; }
 
 		/// <summary>
-		/// Délais de paiement en jours.
+		/// Critère 2.
 		/// </summary>
-		[ApiMember(Description = "Délais de paiement en jours", DataType = SwaggerDataTypes.Byte)]
-		public byte? DelPaiement { get; set; }
+		/// <remarks>
+		/// Référence <see cref="ProprieteTiers.Id"/>.
+		/// </remarks>
+		[References(typeof(ProprieteTiers))]
+		[ApiMember(Description = "Critère 2", DataType = SwaggerDataTypes.Int)]
+		public int? ProprieteTiers2Id { get; set; }
 
 		/// <summary>
-		/// Note globale.
+		/// Entité référencée par <see cref="ProprieteTiers2Id"/>.
 		/// </summary>
-		[DecimalLength(5, 2)]
-		[ApiMember(Description = "Note globale", DataType = SwaggerDataTypes.Decimal)]
-		public decimal? ValNote { get; set; }
+		[Reference]
+		public ProprieteTiers ProprieteTiers2 { get; set; }
 
 		/// <summary>
-		/// Mode de règlement.
+		/// Critère 3.
 		/// </summary>
-		[ApiMember(Description = "Mode de règlement")]
-		[ApiAllowableValues(nameof(TypModeReglement), typeof(TypModeReglement))]
-		public TypModeReglement? TypModeReglement { get; set; }
+		/// <remarks>
+		/// Référence <see cref="ProprieteTiers.Id"/>.
+		/// </remarks>
+		[References(typeof(ProprieteTiers))]
+		[ApiMember(Description = "Critère 3", DataType = SwaggerDataTypes.Int)]
+		public int? ProprieteTiers3Id { get; set; }
 
-		[Required]
-		[ApiMember(DataType = SwaggerDataTypes.Bool, IsRequired = true)]
-		public bool EstEnvoiMailBonCde { get; set; }
+		/// <summary>
+		/// Entité référencée par <see cref="ProprieteTiers3Id"/>.
+		/// </summary>
+		[Reference]
+		public ProprieteTiers ProprieteTiers3 { get; set; }
 
 	}
 }

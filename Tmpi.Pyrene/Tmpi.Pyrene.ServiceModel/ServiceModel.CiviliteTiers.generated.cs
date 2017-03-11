@@ -21,11 +21,11 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel
 {
 	/// <summary>
-	/// Retourne une collection des entités <see cref="Service"/>.
+	/// Retourne une collection des entités <see cref="CiviliteTiers"/>.
 	/// </summary>
-	[Route("/Service", HttpVerbs.Get, Summary = "Retourne une collection des entités Service", Notes = SwaggerDescriptions.SelectRequestNotes)]
-	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Service ne contient pas tous les champs demandés")]
-	public partial class SelectService : IReturn<SelectServiceResponse>, IGet
+	[Route("/CiviliteTiers", HttpVerbs.Get, Summary = "Retourne une collection des entités CiviliteTiers", Notes = SwaggerDescriptions.SelectRequestNotes)]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité CiviliteTiers ne contient pas tous les champs demandés")]
+	public partial class SelectCiviliteTiers : IReturn<SelectCiviliteTiersResponse>, IGet
 	{
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.
@@ -60,9 +60,9 @@ namespace Tmpi.Pyrene.ServiceModel
 	}
 
 	/// <summary>
-	/// Réponse à la requête <see cref="SelectService"/>.
+	/// Réponse à la requête <see cref="SelectCiviliteTiers"/>.
 	/// </summary>
-	public partial class SelectServiceResponse : IHasResponseStatus
+	public partial class SelectCiviliteTiersResponse : IHasResponseStatus
 	{
 		/// <summary>
 		/// Détail de l'erreur éventuelle.
@@ -75,18 +75,18 @@ namespace Tmpi.Pyrene.ServiceModel
 		public int TotalCount { get; set; }
 
 		/// <summary>
-		/// Collection des entités <see cref="Service"/>.
+		/// Collection des entités <see cref="CiviliteTiers"/>.
 		/// </summary>
-		public List<Service> Results { get; set; }
+		public List<CiviliteTiers> Results { get; set; }
 	}
 
 	/// <summary>
-	/// Retourne une entité <see cref="Service"/> à partir de son id.
+	/// Retourne une entité <see cref="CiviliteTiers"/> à partir de son id.
 	/// </summary>
-	[Route("/Service/{Id}", HttpVerbs.Get, Summary = "Retourne une entité Service à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Service ne contient pas tous les champs demandés")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
-	public partial class GetService : IReturn<Service>, IGet
+	[Route("/CiviliteTiers/{Id}", HttpVerbs.Get, Summary = "Retourne une entité CiviliteTiers à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité CiviliteTiers ne contient pas tous les champs demandés")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité CiviliteTiers spécifiée est introuvable")]
+	public partial class GetCiviliteTiers : IReturn<CiviliteTiers>, IGet
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à retourner.
@@ -102,11 +102,11 @@ namespace Tmpi.Pyrene.ServiceModel
 	}
 
 	/// <summary>
-	/// Supprime une entité <see cref="Service"/> à partir de son id.
+	/// Supprime une entité <see cref="CiviliteTiers"/> à partir de son id.
 	/// </summary>
-	[Route("/Service/{Id}", HttpVerbs.Delete, Summary = "Supprime une entité Service à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
-	public partial class DeleteService : IReturnVoid, IDelete
+	[Route("/CiviliteTiers/{Id}", HttpVerbs.Delete, Summary = "Supprime une entité CiviliteTiers à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité CiviliteTiers spécifiée est introuvable")]
+	public partial class DeleteCiviliteTiers : IReturnVoid, IDelete
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à supprimer.
@@ -117,13 +117,13 @@ namespace Tmpi.Pyrene.ServiceModel
 	}
 
 	/// <summary>
-	/// Modifie partiellement une entité <see cref="Service"/> à partir de son id.
+	/// Modifie partiellement une entité <see cref="CiviliteTiers"/> à partir de son id.
 	/// </summary>
-	[Route("/Service/{Id}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Service à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Service ne contient pas tous les champs demandés")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
-	[ApiResponse(HttpStatusCode.Conflict, "L'entité Service spécifiée est un doublon")]
-	public partial class PatchService : IReturnVoid, IPatch
+	[Route("/CiviliteTiers/{Id}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité CiviliteTiers à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité CiviliteTiers ne contient pas tous les champs demandés")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité CiviliteTiers spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.Conflict, "L'entité CiviliteTiers spécifiée est un doublon")]
+	public partial class PatchCiviliteTiers : IReturnVoid, IPatch
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à modifier.
@@ -139,10 +139,10 @@ namespace Tmpi.Pyrene.ServiceModel
 	}
 
 	/// <summary>
-	/// Retourne le résultat d'une recherche sur les entités <see cref="Service"/>.
+	/// Retourne le résultat d'une recherche sur les entités <see cref="CiviliteTiers"/>.
 	/// </summary>
-	[Route("/Service/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Service", Notes = SwaggerDescriptions.SearchRequestNotes)]
-	public partial class SearchService : IReturn<SearchServiceResponse>, IGet
+	[Route("/CiviliteTiers/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités CiviliteTiers", Notes = SwaggerDescriptions.SearchRequestNotes)]
+	public partial class SearchCiviliteTiers : IReturn<SearchCiviliteTiersResponse>, IGet
 	{
 		/// <summary>
 		/// Texte à rechercher.
@@ -158,9 +158,9 @@ namespace Tmpi.Pyrene.ServiceModel
 	}
 
 	/// <summary>
-	/// Réponse à la requête <see cref="SearchService"/>.
+	/// Réponse à la requête <see cref="SearchCiviliteTiers"/>.
 	/// </summary>
-	public partial class SearchServiceResponse : IHasResponseStatus
+	public partial class SearchCiviliteTiersResponse : IHasResponseStatus
 	{
 		/// <summary>
 		/// Détail de l'erreur éventuelle.

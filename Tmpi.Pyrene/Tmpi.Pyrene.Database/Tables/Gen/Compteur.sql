@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [Gen].[Compteur]
 (
-	[CleCompteur] INT NOT NULL IDENTITY,
+	[Id] INT NOT NULL IDENTITY,
 	[CodCompteur] VARCHAR(100) NOT NULL,
 	[LibCompteur] VARCHAR(200) NOT NULL,
 	[TxtCompteur] VARCHAR(2000) NULL,
@@ -10,12 +10,12 @@
 	[CodExterne] VARCHAR(100) NULL,
 	[TypPeriodicite] INT NOT NULL,
 	[TypCompteur] INT NOT NULL,
-	[CleService] INT NULL,
+	[ServiceId] INT NULL,
 	[ValFormatNumero] VARCHAR(100) NOT NULL,
-	CONSTRAINT [PK_Compteur] PRIMARY KEY ([CleCompteur]),
+	CONSTRAINT [PK_Compteur] PRIMARY KEY ([Id]),
 	CONSTRAINT [UK_Compteur_CodCompteur] UNIQUE ([CodCompteur]),
-	CONSTRAINT [UK_Compteur_TypCompteur_CleService] UNIQUE ([TypCompteur], [CleService]),
-	CONSTRAINT [FK_Compteur_CleService] FOREIGN KEY ([CleService]) REFERENCES [Gen].[Service] ([CleService]),
+	CONSTRAINT [UK_Compteur_TypCompteur_ServiceId] UNIQUE ([TypCompteur], [ServiceId]),
+	CONSTRAINT [FK_Compteur_ServiceId] FOREIGN KEY ([ServiceId]) REFERENCES [Gen].[Service] ([Id]),
 );
 
 GO
@@ -54,4 +54,4 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1type = N'TABLE',
     @level1name = N'Compteur',
     @level2type = N'COLUMN',
-    @level2name = 'CleService'
+    @level2name = 'ServiceId'

@@ -31,7 +31,7 @@ namespace Tmpi.Pyrene.ServiceModel
 		/// Champs à retourner, ou null pour retourner tous les champs.
 		/// </summary>
 		/// <example>
-		/// CleCompteur,CodCompteur,LibCompteur,EstActif,Service(CodService,LibService)
+		/// Id,CodCompteur,LibCompteur,EstActif,Service(CodService,LibService)
 		/// </example>
 		[ApiMember(Description = "Champs à retourner, ou null pour retourner tous les champs", DataType = SwaggerDataTypes.String)]
 		public string Fields { get; set; }
@@ -83,7 +83,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// <summary>
 	/// Retourne une entité <see cref="Personne"/> à partir de son id.
 	/// </summary>
-	[Route("/Personne/{ClePersonne}", HttpVerbs.Get, Summary = "Retourne une entité Personne à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
+	[Route("/Personne/{Id}", HttpVerbs.Get, Summary = "Retourne une entité Personne à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
 	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Personne ne contient pas tous les champs demandés")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité Personne spécifiée est introuvable")]
 	public partial class GetPersonne : IReturn<Personne>, IGet
@@ -92,7 +92,7 @@ namespace Tmpi.Pyrene.ServiceModel
 		/// Identifiant unique de l'entité à retourner.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à retourner", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int ClePersonne { get; set; }
+		public int Id { get; set; }
 
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.
@@ -104,7 +104,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// <summary>
 	/// Supprime une entité <see cref="Personne"/> à partir de son id.
 	/// </summary>
-	[Route("/Personne/{ClePersonne}", HttpVerbs.Delete, Summary = "Supprime une entité Personne à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
+	[Route("/Personne/{Id}", HttpVerbs.Delete, Summary = "Supprime une entité Personne à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité Personne spécifiée est introuvable")]
 	public partial class DeletePersonne : IReturnVoid, IDelete
 	{
@@ -112,14 +112,14 @@ namespace Tmpi.Pyrene.ServiceModel
 		/// Identifiant unique de l'entité à supprimer.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à supprimer", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int ClePersonne { get; set; }
+		public int Id { get; set; }
 
 	}
 
 	/// <summary>
 	/// Modifie partiellement une entité <see cref="Personne"/> à partir de son id.
 	/// </summary>
-	[Route("/Personne/{ClePersonne}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Personne à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
+	[Route("/Personne/{Id}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Personne à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
 	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Personne ne contient pas tous les champs demandés")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité Personne spécifiée est introuvable")]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité Personne spécifiée est un doublon")]
@@ -129,7 +129,7 @@ namespace Tmpi.Pyrene.ServiceModel
 		/// Identifiant unique de l'entité à modifier.
 		/// </summary>
 		[ApiMember(Description = "Identifiant unique de l'entité à modifier", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int ClePersonne { get; set; }
+		public int Id { get; set; }
 
 		/// <summary>
 		/// Liste des modifications à appliquer.

@@ -23,528 +23,529 @@ using Tmpi.Pyrene.ServiceModel.Types;
 
 namespace Tmpi.Pyrene.ServiceInterface
 {
-	/// <summary>
-	/// Service qui traite les requêtes sur les entités <see cref="Compteur"/>.
-	/// </summary>
-	/// <seealso cref="CompteurValeur"/>
-	public partial class CompteurService : ServiceStack.Service
-	{
-		private static readonly object _compteurLock = new object();
-
-		private static readonly object _compteurValeurLock = new object();
-
-		/// <summary>
-		/// Teste l'unicité d'une entité <see cref="Compteur"/>.
-		/// </summary>
-		/// <param name="model"></param>
-		/// <param name="fields"></param>
-		/// <returns></returns>
-		protected bool Compteur_CodCompteur_EstUnique(Compteur model, IEnumerable<string> fields = null)
-		{
-			var q = Db.From<Compteur>();
-
-			if (fields == null || fields.Contains(nameof(Compteur.CodCompteur), StringComparer.OrdinalIgnoreCase))
-			{
-				q.Where(t1 => t1.CodCompteur == model.CodCompteur);
-			}
-			else
-			{
-				return true;
-			}
-
-			if (model.CleCompteur != 0)
-			{
-				q.Where(t1 => t1.CleCompteur != model.CleCompteur);
-			}
-
-			return !Db.Exists(q);
-		}
-
-		/// <summary>
-		/// Teste l'unicité d'une entité <see cref="Compteur"/>.
-		/// </summary>
-		/// <param name="model"></param>
-		/// <param name="fields"></param>
-		/// <returns></returns>
-		protected bool Compteur_TypCompteur_CleService_EstUnique(Compteur model, IEnumerable<string> fields = null)
-		{
-			var q = Db.From<Compteur>();
-
-			if (fields != null)
-			{
-				var uniqueFields = new[] { nameof(Compteur.TypCompteur), nameof(Compteur.CleService) };
-				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
-				{
-					// INNER JOIN Compteur t2 ON t2.CleCompteur=xxx [...]
-					Expression<Func<Compteur, Compteur, bool>> joinExpr = (t1, t2)
-						=> (t2.CleCompteur == model.CleCompteur);
-
-					if (!fields.Contains(nameof(Compteur.TypCompteur), StringComparer.OrdinalIgnoreCase))
-					{
-						// [...] AND t1.TypCompteur=t2.TypCompteur
-						joinExpr = joinExpr.And((t1, t2) => t1.TypCompteur == t2.TypCompteur);
-					}
-					if (!fields.Contains(nameof(Compteur.CleService), StringComparer.OrdinalIgnoreCase))
-					{
-						// [...] AND t1.CleService=t2.CleService
-						joinExpr = joinExpr.And((t1, t2) => t1.CleService == t2.CleService);
-					}
-
-					q.Join<Compteur>(joinExpr, Db.JoinAlias("t2"));
-				}
-				else
-				{
-					return true;
-				}
-			}
-			
-			if (fields == null || fields.Contains(nameof(Compteur.TypCompteur), StringComparer.OrdinalIgnoreCase))
-			{
-				q.Where(t1 => t1.TypCompteur == model.TypCompteur);
-			}
-			if (fields == null || fields.Contains(nameof(Compteur.CleService), StringComparer.OrdinalIgnoreCase))
-			{
-				q.Where(t1 => t1.CleService == model.CleService);
-			}
-
-			if (model.CleCompteur != 0)
-			{
-				q.Where(t1 => t1.CleCompteur != model.CleCompteur);
-			}
-
-			return !Db.Exists(q);
-		}
-
-		/// <summary>
-		/// Ajoute ou remplace l'entité <see cref="Compteur"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="Compteur"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public Compteur Post(Compteur request)
-		{
-			lock (_compteurLock)
-			{
-				bool unique1 = Compteur_CodCompteur_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Compteur)));
-				}
-				bool unique2 = Compteur_TypCompteur_CleService_EstUnique(request);
-				if (!unique2)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Compteur)));
-				}
-
-				if (request.CleCompteur == 0)
-				{
-					using (var scope = AuditScope.Create("Compteur:Insert", () => request))
-					{
-						long id = Db.Insert(request, selectIdentity: true);
-						request.CleCompteur = (int)id;
-
-						scope.Save();
-					}
-				}
-				else
-				{
-					using (var scope = AuditScope.Create("Compteur:Update", () => request))
-					{
-						int count = Db.Update(request);
-						if (count == 0)
-						{
-							throw HttpError.NotFound(
-								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Compteur), request.CleCompteur));
-						}
-
-						scope.Save();
-					}
-				}
-
-				return request;
-			}
-		}
-
-		/// <summary>
-		/// Teste l'unicité d'une entité <see cref="CompteurValeur"/>.
-		/// </summary>
-		/// <param name="model"></param>
-		/// <param name="fields"></param>
-		/// <returns></returns>
-		protected bool CompteurValeur_CleCompteur_ValPeriode_EstUnique(CompteurValeur model, IEnumerable<string> fields = null)
-		{
-			var q = Db.From<CompteurValeur>();
-
-			if (fields != null)
-			{
-				var uniqueFields = new[] { nameof(CompteurValeur.CleCompteur), nameof(CompteurValeur.ValPeriode) };
-				if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
-				{
-					// INNER JOIN CompteurValeur t2 ON t2.CleValeur=xxx [...]
-					Expression<Func<CompteurValeur, CompteurValeur, bool>> joinExpr = (t1, t2)
-						=> (t2.CleValeur == model.CleValeur);
-
-					if (!fields.Contains(nameof(CompteurValeur.CleCompteur), StringComparer.OrdinalIgnoreCase))
-					{
-						// [...] AND t1.CleCompteur=t2.CleCompteur
-						joinExpr = joinExpr.And((t1, t2) => t1.CleCompteur == t2.CleCompteur);
-					}
-					if (!fields.Contains(nameof(CompteurValeur.ValPeriode), StringComparer.OrdinalIgnoreCase))
-					{
-						// [...] AND t1.ValPeriode=t2.ValPeriode
-						joinExpr = joinExpr.And((t1, t2) => t1.ValPeriode == t2.ValPeriode);
-					}
-
-					q.Join<CompteurValeur>(joinExpr, Db.JoinAlias("t2"));
-				}
-				else
-				{
-					return true;
-				}
-			}
-			
-			if (fields == null || fields.Contains(nameof(CompteurValeur.CleCompteur), StringComparer.OrdinalIgnoreCase))
-			{
-				q.Where(t1 => t1.CleCompteur == model.CleCompteur);
-			}
-			if (fields == null || fields.Contains(nameof(CompteurValeur.ValPeriode), StringComparer.OrdinalIgnoreCase))
-			{
-				q.Where(t1 => t1.ValPeriode == model.ValPeriode);
-			}
-
-			if (model.CleValeur != 0)
-			{
-				q.Where(t1 => t1.CleValeur != model.CleValeur);
-			}
-
-			return !Db.Exists(q);
-		}
-
-		/// <summary>
-		/// Ajoute ou remplace l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="CompteurValeur"/> ajoutée.</returns>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public CompteurValeur Post(CompteurValeur request)
-		{
-			lock (_compteurValeurLock)
-			{
-				bool unique1 = CompteurValeur_CleCompteur_ValPeriode_EstUnique(request);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(CompteurValeur)));
-				}
-
-				if (request.CleValeur == 0)
-				{
-					using (var scope = AuditScope.Create("CompteurValeur:Insert", () => request))
-					{
-						long id = Db.Insert(request, selectIdentity: true);
-						request.CleValeur = (int)id;
-
-						scope.Save();
-					}
-				}
-				else
-				{
-					using (var scope = AuditScope.Create("CompteurValeur:Update", () => request))
-					{
-						int count = Db.Update(request);
-						if (count == 0)
-						{
-							throw HttpError.NotFound(
-								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(CompteurValeur), request.CleValeur));
-						}
-
-						scope.Save();
-					}
-				}
-
-				return request;
-			}
-		}
-
-		/// <summary>
-		/// Supprime l'entité <see cref="Compteur"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public void Delete(DeleteCompteur request)
-		{
-			using (var scope = AuditScope.Create("Compteur:Delete", () => request))
-			{
-				int count = Db.DeleteById<Compteur>(request.CleCompteur);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Compteur), request.CleCompteur));
-				}
-
-				scope.Save();
-			}
-		}
-
-		/// <summary>
-		/// Supprime l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public void Delete(DeleteCompteurValeur request)
-		{
-			using (var scope = AuditScope.Create("CompteurValeur:Delete", () => request))
-			{
-				int count = Db.DeleteById<CompteurValeur>(request.CleValeur);
-				if (count == 0)
-				{
-					throw HttpError.NotFound(
-						string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(CompteurValeur), request.CleValeur));
-				}
-
-				scope.Save();
-			}
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="Compteur"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="Compteur"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public Compteur Get(GetCompteur request)
-		{
-			//ModelDefinitionHelper.UndefinedFields<Compteur>(request.Fields);
-
-			var q = Db.From<Compteur>().Where(x => x.CleCompteur == request.CleCompteur).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Compteur), request.CleCompteur));
-			}
-
-			return entity;
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="CompteurValeur"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public CompteurValeur Get(GetCompteurValeur request)
-		{
-			//ModelDefinitionHelper.UndefinedFields<CompteurValeur>(request.Fields);
-
-			var q = Db.From<CompteurValeur>().Where(x => x.CleValeur == request.CleValeur).Select(request.Fields);
-
-			var entity = Db.Single(q);
-			if (entity == null)
-			{
-				throw HttpError.NotFound(
-					string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(CompteurValeur), request.CleValeur));
-			}
-
-			return entity;
-		}
-
-		/// <summary>
-		/// Met à jour l'entité <see cref="Compteur"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Patch(PatchCompteur request)
-		{
-			if (request.Operations.IsNullOrEmpty())
-			{
-				throw new ArgumentNullException(nameof(request.Operations));
-			}
-
-			var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
-
-			//ModelDefinitionHelper.UndefinedFields<Compteur>(patchDic.Keys);
-
-			var entity = new Compteur();
-			PatchHelper.PopulateFromPatch(entity, patchDic);
-
-			var q = Db.From<Compteur>().Where(x => x.CleCompteur == request.CleCompteur).Update(patchDic.Keys);
-
-			lock (_compteurLock)
-			{
-				bool unique1 = Compteur_CodCompteur_EstUnique(entity, patchDic.Keys);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Compteur)));
-				}
-				bool unique2 = Compteur_TypCompteur_CleService_EstUnique(entity, patchDic.Keys);
-				if (!unique2)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Compteur)));
-				}
-
-				using (var scope = AuditScope.Create("Compteur:Update", () => entity))
-				{
-					int count = Db.UpdateOnly(entity, q);
-					if (count == 0)
-					{
-						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Compteur), request.CleCompteur));
-					}
-
-					scope.Save();
-				}
-			}
-		}
-
-		/// <summary>
-		/// Met à jour l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		/// <exception cref="HttpError.Conflict"></exception>
-		public void Patch(PatchCompteurValeur request)
-		{
-			if (request.Operations.IsNullOrEmpty())
-			{
-				throw new ArgumentNullException(nameof(request.Operations));
-			}
-
-			var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
-
-			//ModelDefinitionHelper.UndefinedFields<CompteurValeur>(patchDic.Keys);
-
-			var entity = new CompteurValeur();
-			PatchHelper.PopulateFromPatch(entity, patchDic);
-
-			var q = Db.From<CompteurValeur>().Where(x => x.CleValeur == request.CleValeur).Update(patchDic.Keys);
-
-			lock (_compteurValeurLock)
-			{
-				bool unique1 = CompteurValeur_CleCompteur_ValPeriode_EstUnique(entity, patchDic.Keys);
-				if (!unique1)
-				{
-					throw HttpError.Conflict(
-						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(CompteurValeur)));
-				}
-
-				using (var scope = AuditScope.Create("CompteurValeur:Update", () => entity))
-				{
-					int count = Db.UpdateOnly(entity, q);
-					if (count == 0)
-					{
-						throw HttpError.NotFound(
-							string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(CompteurValeur), request.CleValeur));
-					}
-
-					scope.Save();
-				}
-			}
-		}
-
-		/// <summary>
-		/// Retourne le résultat d'une recherche.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns></returns>
-		public SearchCompteurResponse Get(SearchCompteur request)
-		{
-			if (string.IsNullOrWhiteSpace(request.Text))
-			{
-				return null;
-			}
-
-			var q = Db.From<Compteur>()
-				.Where(x => x.LibCompteur.Contains(request.Text))
-				.Select(x => new { CleObjet = x.CleCompteur,  CodObjet = x.CodCompteur, LibObjet = x.LibCompteur });
-			if (request.Max > 0)
-			{
-				q.Limit(request.Max);
-			}
-
-			var items = Db.Select<BaseEntity>(q);
-
-			return new SearchCompteurResponse
-			{
-				Results = items
-			};
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="Compteur"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="Compteur"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public SelectCompteurResponse Get(SelectCompteur request)
-		{
-			var q = Db.From<Compteur>()
-				.Limit(request.Skip, request.Take);
-
-			if (request.Sort.IsNullOrEmpty())
-			{
-				q.OrderBy(x => x.LibCompteur); // Tri par défaut.
-			}
-			else
-			{
-				q.OrderByFields(request.Sort);
-			}
-
-			long count = Db.Count(q);
-			var lst = Db.LoadSelect(q);
-
-			return new SelectCompteurResponse
-			{
-				TotalCount = (int)count,
-				Results = lst
-			};
-		}
-
-		/// <summary>
-		/// Retourne l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
-		/// </summary>
-		/// <param name="request">Requête à traiter.</param>
-		/// <returns>Entité <see cref="CompteurValeur"/> trouvée.</returns>
-		/// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
-		/// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
-		public SelectCompteurValeurResponse Get(SelectCompteurValeur request)
-		{
-			var q = Db.From<CompteurValeur>()
-				.Limit(request.Skip, request.Take);
-
-			if (request.Sort.IsNullOrEmpty())
-			{
-				q.OrderBy(x => x.CleValeur); // Tri par défaut.
-			}
-			else
-			{
-				q.OrderByFields(request.Sort);
-			}
-
-			long count = Db.Count(q);
-			var lst = Db.LoadSelect(q);
-
-			return new SelectCompteurValeurResponse
-			{
-				TotalCount = (int)count,
-				Results = lst
-			};
-		}
-
-	}
+    /// <summary>
+    /// Service qui traite les requêtes sur les entités <see cref="Compteur"/>.
+    /// </summary>
+    /// <seealso cref="CompteurValeur"/>
+    public partial class CompteurService : ServiceStack.Service
+    {
+        private static readonly object _compteurLock = new object();
+
+        private static readonly object _compteurValeurLock = new object();
+
+        /// <summary>
+        /// Teste l'unicité d'une entité <see cref="Compteur"/>.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="fields"></param>
+        /// <returns></returns>
+        protected bool Compteur_CodCompteur_EstUnique(Compteur model, IEnumerable<string> fields = null)
+        {
+            var q = Db.From<Compteur>();
+
+            if (fields == null || fields.Contains(nameof(Compteur.CodCompteur), StringComparer.OrdinalIgnoreCase))
+            {
+                q.Where(t1 => t1.CodCompteur == model.CodCompteur);
+            }
+            else
+            {
+                return true;
+            }
+
+            if (model.CleCompteur != 0)
+            {
+                q.Where(t1 => t1.CleCompteur != model.CleCompteur);
+            }
+
+            return !Db.Exists(q);
+        }
+
+        /// <summary>
+        /// Teste l'unicité d'une entité <see cref="Compteur"/>.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="fields"></param>
+        /// <returns></returns>
+        protected bool Compteur_TypCompteur_CleService_EstUnique(Compteur model, IEnumerable<string> fields = null)
+        {
+            return true;
+            //var q = Db.From<Compteur>();
+
+            //if (fields != null)
+            //{
+            //	var uniqueFields = new[] { nameof(Compteur.TypCompteur), nameof(Compteur.CleService) };
+            //	if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+            //	{
+            //		// INNER JOIN Compteur t2 ON t2.CleCompteur=xxx [...]
+            //		Expression<Func<Compteur, Compteur, bool>> joinExpr = (t1, t2)
+            //			=> (t2.CleCompteur == model.CleCompteur);
+
+            //		if (!fields.Contains(nameof(Compteur.TypCompteur), StringComparer.OrdinalIgnoreCase))
+            //		{
+            //			// [...] AND t1.TypCompteur=t2.TypCompteur
+            //			joinExpr = joinExpr.And((t1, t2) => t1.TypCompteur == t2.TypCompteur);
+            //		}
+            //		if (!fields.Contains(nameof(Compteur.CleService), StringComparer.OrdinalIgnoreCase))
+            //		{
+            //			// [...] AND t1.CleService=t2.CleService
+            //			joinExpr = joinExpr.And((t1, t2) => t1.CleService == t2.CleService);
+            //		}
+
+            //		q.Join<Compteur>(joinExpr, Db.JoinAlias("t2"));
+            //	}
+            //	else
+            //	{
+            //		return true;
+            //	}
+            //}
+
+            //if (fields == null || fields.Contains(nameof(Compteur.TypCompteur), StringComparer.OrdinalIgnoreCase))
+            //{
+            //	q.Where(t1 => t1.TypCompteur == model.TypCompteur);
+            //}
+            //if (fields == null || fields.Contains(nameof(Compteur.CleService), StringComparer.OrdinalIgnoreCase))
+            //{
+            //	q.Where(t1 => t1.CleService == model.CleService);
+            //}
+
+            //if (model.CleCompteur != 0)
+            //{
+            //	q.Where(t1 => t1.CleCompteur != model.CleCompteur);
+            //}
+
+            //return !Db.Exists(q);
+        }
+
+        /// <summary>
+        /// Ajoute ou remplace l'entité <see cref="Compteur"/> spécifiée dans la requête.
+        /// </summary>
+        /// <param name="request">Requête à traiter.</param>
+        /// <returns>Entité <see cref="Compteur"/> ajoutée.</returns>
+        /// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+        /// <exception cref="HttpError.Conflict"></exception>
+        public Compteur Post(Compteur request)
+        {
+            lock (_compteurLock)
+            {
+                bool unique1 = Compteur_CodCompteur_EstUnique(request);
+                if (!unique1)
+                {
+                    throw HttpError.Conflict(
+                        string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Compteur)));
+                }
+                bool unique2 = Compteur_TypCompteur_CleService_EstUnique(request);
+                if (!unique2)
+                {
+                    throw HttpError.Conflict(
+                        string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Compteur)));
+                }
+
+                if (request.CleCompteur == 0)
+                {
+                    using (var scope = AuditScope.Create("Compteur:Insert", () => request))
+                    {
+                        long id = Db.Insert(request, selectIdentity: true);
+                        request.CleCompteur = (int)id;
+
+                        scope.Save();
+                    }
+                }
+                else
+                {
+                    using (var scope = AuditScope.Create("Compteur:Update", () => request))
+                    {
+                        int count = Db.Update(request);
+                        if (count == 0)
+                        {
+                            throw HttpError.NotFound(
+                                string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Compteur), request.CleCompteur));
+                        }
+
+                        scope.Save();
+                    }
+                }
+
+                return request;
+            }
+        }
+
+        /// <summary>
+        /// Teste l'unicité d'une entité <see cref="CompteurValeur"/>.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="fields"></param>
+        /// <returns></returns>
+        protected bool CompteurValeur_CleCompteur_ValPeriode_EstUnique(CompteurValeur model, IEnumerable<string> fields = null)
+        {
+            var q = Db.From<CompteurValeur>();
+
+            if (fields != null)
+            {
+                var uniqueFields = new[] { nameof(CompteurValeur.CleCompteur), nameof(CompteurValeur.ValPeriode) };
+                if (fields.Any(f => uniqueFields.Contains(f, StringComparer.OrdinalIgnoreCase)))
+                {
+                    // INNER JOIN CompteurValeur t2 ON t2.CleValeur=xxx [...]
+                    Expression<Func<CompteurValeur, CompteurValeur, bool>> joinExpr = (t1, t2)
+                        => (t2.CleValeur == model.CleValeur);
+
+                    if (!fields.Contains(nameof(CompteurValeur.CleCompteur), StringComparer.OrdinalIgnoreCase))
+                    {
+                        // [...] AND t1.CleCompteur=t2.CleCompteur
+                        joinExpr = joinExpr.And((t1, t2) => t1.CleCompteur == t2.CleCompteur);
+                    }
+                    if (!fields.Contains(nameof(CompteurValeur.ValPeriode), StringComparer.OrdinalIgnoreCase))
+                    {
+                        // [...] AND t1.ValPeriode=t2.ValPeriode
+                        joinExpr = joinExpr.And((t1, t2) => t1.ValPeriode == t2.ValPeriode);
+                    }
+
+                    q.Join<CompteurValeur>(joinExpr, Db.JoinAlias("t2"));
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            if (fields == null || fields.Contains(nameof(CompteurValeur.CleCompteur), StringComparer.OrdinalIgnoreCase))
+            {
+                q.Where(t1 => t1.CleCompteur == model.CleCompteur);
+            }
+            if (fields == null || fields.Contains(nameof(CompteurValeur.ValPeriode), StringComparer.OrdinalIgnoreCase))
+            {
+                q.Where(t1 => t1.ValPeriode == model.ValPeriode);
+            }
+
+            if (model.CleValeur != 0)
+            {
+                q.Where(t1 => t1.CleValeur != model.CleValeur);
+            }
+
+            return !Db.Exists(q);
+        }
+
+        /// <summary>
+        /// Ajoute ou remplace l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
+        /// </summary>
+        /// <param name="request">Requête à traiter.</param>
+        /// <returns>Entité <see cref="CompteurValeur"/> ajoutée.</returns>
+        /// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+        /// <exception cref="HttpError.Conflict"></exception>
+        public CompteurValeur Post(CompteurValeur request)
+        {
+            lock (_compteurValeurLock)
+            {
+                bool unique1 = CompteurValeur_CleCompteur_ValPeriode_EstUnique(request);
+                if (!unique1)
+                {
+                    throw HttpError.Conflict(
+                        string.Format(ServiceErrorMessages.EntityNotUnique, nameof(CompteurValeur)));
+                }
+
+                if (request.CleValeur == 0)
+                {
+                    using (var scope = AuditScope.Create("CompteurValeur:Insert", () => request))
+                    {
+                        long id = Db.Insert(request, selectIdentity: true);
+                        request.CleValeur = (int)id;
+
+                        scope.Save();
+                    }
+                }
+                else
+                {
+                    using (var scope = AuditScope.Create("CompteurValeur:Update", () => request))
+                    {
+                        int count = Db.Update(request);
+                        if (count == 0)
+                        {
+                            throw HttpError.NotFound(
+                                string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(CompteurValeur), request.CleValeur));
+                        }
+
+                        scope.Save();
+                    }
+                }
+
+                return request;
+            }
+        }
+
+        /// <summary>
+        /// Supprime l'entité <see cref="Compteur"/> spécifiée dans la requête.
+        /// </summary>
+        /// <param name="request">Requête à traiter.</param>
+        /// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+        public void Delete(DeleteCompteur request)
+        {
+            using (var scope = AuditScope.Create("Compteur:Delete", () => request))
+            {
+                int count = Db.DeleteById<Compteur>(request.CleCompteur);
+                if (count == 0)
+                {
+                    throw HttpError.NotFound(
+                        string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Compteur), request.CleCompteur));
+                }
+
+                scope.Save();
+            }
+        }
+
+        /// <summary>
+        /// Supprime l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
+        /// </summary>
+        /// <param name="request">Requête à traiter.</param>
+        /// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+        public void Delete(DeleteCompteurValeur request)
+        {
+            using (var scope = AuditScope.Create("CompteurValeur:Delete", () => request))
+            {
+                int count = Db.DeleteById<CompteurValeur>(request.CleValeur);
+                if (count == 0)
+                {
+                    throw HttpError.NotFound(
+                        string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(CompteurValeur), request.CleValeur));
+                }
+
+                scope.Save();
+            }
+        }
+
+        /// <summary>
+        /// Retourne l'entité <see cref="Compteur"/> spécifiée dans la requête.
+        /// </summary>
+        /// <param name="request">Requête à traiter.</param>
+        /// <returns>Entité <see cref="Compteur"/> trouvée.</returns>
+        /// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+        /// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+        public Compteur Get(GetCompteur request)
+        {
+            //ModelDefinitionHelper.UndefinedFields<Compteur>(request.Fields);
+
+            var q = Db.From<Compteur>().Where(x => x.CleCompteur == request.CleCompteur).Select(request.Fields);
+
+            var entity = Db.LoadSingleById<Compteur>(request.CleCompteur);
+            if (entity == null)
+            {
+                throw HttpError.NotFound(
+                    string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Compteur), request.CleCompteur));
+            }
+
+            return entity;
+        }
+
+        /// <summary>
+        /// Retourne l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
+        /// </summary>
+        /// <param name="request">Requête à traiter.</param>
+        /// <returns>Entité <see cref="CompteurValeur"/> trouvée.</returns>
+        /// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+        /// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+        public CompteurValeur Get(GetCompteurValeur request)
+        {
+            //ModelDefinitionHelper.UndefinedFields<CompteurValeur>(request.Fields);
+
+            var q = Db.From<CompteurValeur>().Where(x => x.CleValeur == request.CleValeur).Select(request.Fields);
+
+            var entity = Db.Single(q);
+            if (entity == null)
+            {
+                throw HttpError.NotFound(
+                    string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(CompteurValeur), request.CleValeur));
+            }
+
+            return entity;
+        }
+
+        /// <summary>
+        /// Met à jour l'entité <see cref="Compteur"/> spécifiée dans la requête.
+        /// </summary>
+        /// <param name="request">Requête à traiter.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+        /// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+        /// <exception cref="HttpError.Conflict"></exception>
+        public void Patch(PatchCompteur request)
+        {
+            if (request.Operations.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException(nameof(request.Operations));
+            }
+
+            var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
+
+            //ModelDefinitionHelper.UndefinedFields<Compteur>(patchDic.Keys);
+
+            var entity = new Compteur();
+            PatchHelper.PopulateFromPatch(entity, patchDic);
+
+            var q = Db.From<Compteur>().Where(x => x.CleCompteur == request.CleCompteur).Update(patchDic.Keys);
+
+            lock (_compteurLock)
+            {
+                bool unique1 = Compteur_CodCompteur_EstUnique(entity, patchDic.Keys);
+                if (!unique1)
+                {
+                    throw HttpError.Conflict(
+                        string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Compteur)));
+                }
+                bool unique2 = Compteur_TypCompteur_CleService_EstUnique(entity, patchDic.Keys);
+                if (!unique2)
+                {
+                    throw HttpError.Conflict(
+                        string.Format(ServiceErrorMessages.EntityNotUnique, nameof(Compteur)));
+                }
+
+                using (var scope = AuditScope.Create("Compteur:Update", () => entity))
+                {
+                    int count = Db.UpdateOnly(entity, q);
+                    if (count == 0)
+                    {
+                        throw HttpError.NotFound(
+                            string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(Compteur), request.CleCompteur));
+                    }
+
+                    scope.Save();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Met à jour l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
+        /// </summary>
+        /// <param name="request">Requête à traiter.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+        /// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+        /// <exception cref="HttpError.Conflict"></exception>
+        public void Patch(PatchCompteurValeur request)
+        {
+            if (request.Operations.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException(nameof(request.Operations));
+            }
+
+            var patchDic = request.Operations.ToDictionary(f => f.Field, f => f.Value);
+
+            //ModelDefinitionHelper.UndefinedFields<CompteurValeur>(patchDic.Keys);
+
+            var entity = new CompteurValeur();
+            PatchHelper.PopulateFromPatch(entity, patchDic);
+
+            var q = Db.From<CompteurValeur>().Where(x => x.CleValeur == request.CleValeur).Update(patchDic.Keys);
+
+            lock (_compteurValeurLock)
+            {
+                bool unique1 = CompteurValeur_CleCompteur_ValPeriode_EstUnique(entity, patchDic.Keys);
+                if (!unique1)
+                {
+                    throw HttpError.Conflict(
+                        string.Format(ServiceErrorMessages.EntityNotUnique, nameof(CompteurValeur)));
+                }
+
+                using (var scope = AuditScope.Create("CompteurValeur:Update", () => entity))
+                {
+                    int count = Db.UpdateOnly(entity, q);
+                    if (count == 0)
+                    {
+                        throw HttpError.NotFound(
+                            string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(CompteurValeur), request.CleValeur));
+                    }
+
+                    scope.Save();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Retourne le résultat d'une recherche.
+        /// </summary>
+        /// <param name="request">Requête à traiter.</param>
+        /// <returns></returns>
+        public SearchCompteurResponse Get(SearchCompteur request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Text))
+            {
+                return null;
+            }
+
+            var q = Db.From<Compteur>()
+                .Where(x => x.LibCompteur.Contains(request.Text))
+                .Select(x => new { CleObjet = x.CleCompteur, CodObjet = x.CodCompteur, LibObjet = x.LibCompteur });
+            if (request.Max > 0)
+            {
+                q.Limit(request.Max);
+            }
+
+            var items = Db.Select<BaseEntity>(q);
+
+            return new SearchCompteurResponse
+            {
+                Results = items
+            };
+        }
+
+        /// <summary>
+        /// Retourne l'entité <see cref="Compteur"/> spécifiée dans la requête.
+        /// </summary>
+        /// <param name="request">Requête à traiter.</param>
+        /// <returns>Entité <see cref="Compteur"/> trouvée.</returns>
+        /// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+        /// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+        public SelectCompteurResponse Get(SelectCompteur request)
+        {
+            var q = Db.From<Compteur>()
+                .Limit(request.Skip, request.Take);
+
+            if (request.Sort.IsNullOrEmpty())
+            {
+                q.OrderBy(x => x.LibCompteur); // Tri par défaut.
+            }
+            else
+            {
+                q.OrderByFields(request.Sort);
+            }
+
+            long count = Db.Count(q);
+            var lst = Db.LoadSelect(q);
+
+            return new SelectCompteurResponse
+            {
+                TotalCount = (int)count,
+                Results = lst
+            };
+        }
+
+        /// <summary>
+        /// Retourne l'entité <see cref="CompteurValeur"/> spécifiée dans la requête.
+        /// </summary>
+        /// <param name="request">Requête à traiter.</param>
+        /// <returns>Entité <see cref="CompteurValeur"/> trouvée.</returns>
+        /// <exception cref="ArgumentException">L'entité ne contient pas tous les champs spécifiés.</exception>
+        /// <exception cref="HttpError.NotFound">L'entité spécifiée est introuvable.</exception>
+        public SelectCompteurValeurResponse Get(SelectCompteurValeur request)
+        {
+            var q = Db.From<CompteurValeur>()
+                .Limit(request.Skip, request.Take);
+
+            if (request.Sort.IsNullOrEmpty())
+            {
+                q.OrderBy(x => x.CleValeur); // Tri par défaut.
+            }
+            else
+            {
+                q.OrderByFields(request.Sort);
+            }
+
+            long count = Db.Count(q);
+            var lst = Db.LoadSelect(q);
+
+            return new SelectCompteurValeurResponse
+            {
+                TotalCount = (int)count,
+                Results = lst
+            };
+        }
+
+    }
 }

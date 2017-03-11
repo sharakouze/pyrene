@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [Gen].[FournContact]
 (
-    [CleContact] INT NOT NULL IDENTITY,
-    [CleFourn] INT NOT NULL,
+    [Id] INT NOT NULL IDENTITY,
+    [FournId] INT NOT NULL,
     [NomContact] VARCHAR(100) NOT NULL,
     [PreContact] VARCHAR(100) NULL,
     [TxtContact] VARCHAR(2000) NULL,
@@ -12,9 +12,9 @@
     [NumEmail] VARCHAR(100) NULL,
     [TypCivilite] INT NULL,
     [LibFonction] VARCHAR(100) NULL,
-    CONSTRAINT [PK_FournContact] PRIMARY KEY ([CleContact]), 
-    CONSTRAINT [UK_FournContact_CleFourn_NomContact] UNIQUE ([CleFourn], [NomContact]), 
-    CONSTRAINT [FK_FournContact_CleFourn] FOREIGN KEY ([CleFourn]) REFERENCES [Gen].[Fourn] ([CleFourn]) ON DELETE CASCADE, 
+    CONSTRAINT [PK_FournContact] PRIMARY KEY ([Id]), 
+    CONSTRAINT [UK_FournContact_FournId_NomContact] UNIQUE ([FournId], [NomContact]), 
+    CONSTRAINT [FK_FournContact_FournId] FOREIGN KEY ([FournId]) REFERENCES [Gen].[Fourn] ([Id]) ON DELETE CASCADE, 
 );
 
 GO
@@ -34,7 +34,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1type = N'TABLE',
     @level1name = N'FournContact',
     @level2type = N'COLUMN',
-    @level2name = 'CleFourn'
+    @level2name = 'FournId'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Nom de famille.',

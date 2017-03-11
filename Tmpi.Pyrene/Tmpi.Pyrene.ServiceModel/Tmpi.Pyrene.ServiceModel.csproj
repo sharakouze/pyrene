@@ -46,6 +46,9 @@
     <Compile Include="BaseEntity.cs" />
     <Compile Include="HttpVerbs.cs" />
     <Compile Include="Patch.cs" />
+    <Compile Include="ServiceModel.CiviliteTiers.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="ServiceModel.Compteur.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
@@ -62,6 +65,39 @@
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="ServiceModel.FournContact.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceModel.ProprieteTiers.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceModel.Tiers.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceModel.TiersContact.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceModel.TiersIdent.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceModel.TypeIdent.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceModel.Types.CiviliteTiers.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceModel.Types.ProprieteTiers.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceModel.Types.Tiers.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceModel.Types.TiersContact.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceModel.Types.TiersIdent.generated.cs">
+      <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceModel.Types.TypeIdent.generated.cs">
       <DependentUpon>ServiceModelGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="ServiceModelGenerator.generated.cs">

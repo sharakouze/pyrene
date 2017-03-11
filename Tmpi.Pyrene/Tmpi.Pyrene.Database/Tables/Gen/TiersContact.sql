@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [Gen].[TiersContact]
 (
-    [CleContact] INT NOT NULL IDENTITY,
-    [CleTiers] INT NOT NULL,
+    [Id] INT NOT NULL IDENTITY,
+    [TiersId] INT NOT NULL,
     [NomContact] VARCHAR(100) NOT NULL,
     [PreContact] VARCHAR(100) NULL,
     [TxtContact] VARCHAR(2000) NULL,
@@ -12,9 +12,9 @@
     [NumEmail] VARCHAR(100) NULL,
     [TypCivilite] INT NULL,
     [LibFonction] VARCHAR(100) NULL,
-    CONSTRAINT [PK_TiersContact] PRIMARY KEY ([CleContact]), 
-    CONSTRAINT [UK_TiersContact_CleTiers_NomContact] UNIQUE ([CleTiers], [NomContact]), 
-    CONSTRAINT [FK_TiersContact_CleTiers] FOREIGN KEY ([CleTiers]) REFERENCES [Gen].[Tiers] ([CleTiers]) ON DELETE CASCADE, 
+    CONSTRAINT [PK_TiersContact] PRIMARY KEY ([Id]), 
+    CONSTRAINT [UK_TiersContact_TiersId_NomContact] UNIQUE ([TiersId], [NomContact]), 
+    CONSTRAINT [FK_TiersContact_TiersId] FOREIGN KEY ([TiersId]) REFERENCES [Gen].[Tiers] ([Id]) ON DELETE CASCADE, 
 );
 
 GO
@@ -25,7 +25,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1type = N'TABLE',
     @level1name = N'TiersContact',
     @level2type = N'COLUMN',
-    @level2name = N'CleTiers'
+    @level2name = 'TiersId'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Nom de famille.',

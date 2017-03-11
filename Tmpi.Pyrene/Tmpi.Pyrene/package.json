@@ -38,8 +38,6 @@
     "requirejs": "^2.3.2",
     "run-sequence": "^1.2.2",
     "yargs": "^6.4.0",
-    "@types/node": "latest",
-    "@types/requirejs": "latest"
   },
   "jspm": {
     "name": "app",

@@ -20,11 +20,11 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
-	[CompositeIndex(true, nameof(CleMandat), nameof(ClePersonne), nameof(CleService))]
-	[Route("/Mandat/{CleMandat}/Mandataire", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité MandatMandataire à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+	[CompositeIndex(true, nameof(MandatId), nameof(PersonneId), nameof(ServiceId))]
+	[Route("/Mandat/{Id}/Mandataire", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité MandatMandataire à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité MandatMandataire spécifiée est un doublon")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité MandatMandataire spécifiée est introuvable")]
-	public partial class MandatMandataire : IReturn<MandatMandataire>, IPost
+	public partial class MandatMandataire : IHasId<int>, IAuditable, IReturn<MandatMandataire>, IPost
 	{
 		/// <summary>
 		/// Identifiant unique (immutable).
@@ -33,23 +33,22 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Clé primaire auto-incrémentée.
 		/// </remarks>
 		[AutoIncrement]
-		[PrimaryKey]
 		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int CleMandataire { get; set; }
+		public int Id { get; set; }
 
 		/// <summary>
 		/// Identifiant unique du mandat parent.
 		/// </summary>
 		/// <remarks>
-		/// Référence <see cref="Mandat.CleMandat"/>.
+		/// Référence <see cref="Mandat.Id"/>.
 		/// </remarks>
 		[ForeignKey(typeof(Mandat), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du mandat parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleMandat { get; set; }
+		[ApiMember(Description = "Identifiant unique du mandat parent", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		public int MandatId { get; set; }
 
 		/// <summary>
-		/// Entité référencée par <see cref="CleMandat"/>.
+		/// Entité référencée par <see cref="MandatId"/>.
 		/// </summary>
 		[Reference]
 		public Mandat Mandat { get; set; }
@@ -58,15 +57,15 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Identifiant unique de l'utilisateur mandataire.
 		/// </summary>
 		/// <remarks>
-		/// Référence <see cref="Personne.ClePersonne"/>.
+		/// Référence <see cref="Personne.Id"/>.
 		/// </remarks>
 		[References(typeof(Personne))]
 		[Required]
 		[ApiMember(Description = "Identifiant unique de l'utilisateur mandataire", DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int ClePersonne { get; set; }
+		public int PersonneId { get; set; }
 
 		/// <summary>
-		/// Entité référencée par <see cref="ClePersonne"/>.
+		/// Entité référencée par <see cref="PersonneId"/>.
 		/// </summary>
 		[Reference]
 		public Personne Personne { get; set; }
@@ -75,14 +74,14 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Identifiant unique du service ayant accès au mandat, ou null pour tous les services.
 		/// </summary>
 		/// <remarks>
-		/// Référence <see cref="Service.CleService"/>.
+		/// Référence <see cref="Service.Id"/>.
 		/// </remarks>
 		[References(typeof(Service))]
 		[ApiMember(Description = "Identifiant unique du service ayant accès au mandat, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]
-		public int? CleService { get; set; }
+		public int? ServiceId { get; set; }
 
 		/// <summary>
-		/// Entité référencée par <see cref="CleService"/>.
+		/// Entité référencée par <see cref="ServiceId"/>.
 		/// </summary>
 		[Reference]
 		public Service Service { get; set; }
@@ -98,18 +97,12 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Date de création (immutable).
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création (immutable)", DataType = SwaggerDataTypes.DateTime, IsRequired = true)]
 		public DateTime DatCreation { get; set; }
 
-		[Required]
-		[ApiMember(DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int CleCreateur { get; set; }
-
-		[ApiMember(DataType = SwaggerDataTypes.DateTime)]
-		public DateTime? DatEdition { get; set; }
-
-		[ApiMember(DataType = SwaggerDataTypes.Int)]
-		public int? CleEditeur { get; set; }
+		/// <summary>
+		/// Date de dernière modification (immutable).
+		/// </summary>
+		public DateTime? DatModif { get; set; }
 
 	}
 }

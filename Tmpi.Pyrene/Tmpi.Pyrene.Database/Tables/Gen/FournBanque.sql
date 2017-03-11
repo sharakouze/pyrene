@@ -1,16 +1,16 @@
 ﻿CREATE TABLE [Gen].[FournBanque]
 (
-    [CleBanque] INT NOT NULL IDENTITY,
-    [CleFourn] INT NOT NULL,
+    [Id] INT NOT NULL IDENTITY,
+    [FournId] INT NOT NULL,
     [CodIBAN] VARCHAR(34) NOT NULL,
     [CodBIC] VARCHAR(11) NOT NULL,
     [LibEtablissement] VARCHAR(200) NOT NULL,
     [EstDefaut] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NULL,
-    CONSTRAINT [PK_FournBanque] PRIMARY KEY ([CleBanque]),
-    CONSTRAINT [UK_FournBanque_CleFourn_CodIBAN] UNIQUE ([CleFourn], [CodIBAN]), 
-    CONSTRAINT [FK_FournBanque_CleFourn] FOREIGN KEY ([CleFourn]) REFERENCES [Gen].[Fourn] ([CleFourn]) ON DELETE CASCADE
+    CONSTRAINT [PK_FournBanque] PRIMARY KEY ([Id]),
+    CONSTRAINT [UK_FournBanque_FournId_CodIBAN] UNIQUE ([FournId], [CodIBAN]), 
+    CONSTRAINT [FK_FournBanque_FournId] FOREIGN KEY ([FournId]) REFERENCES [Gen].[Fourn] ([Id]) ON DELETE CASCADE
 );
 
 GO
@@ -21,7 +21,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1type = N'TABLE',
     @level1name = N'FournBanque',
     @level2type = N'COLUMN',
-    @level2name = 'CleFourn'
+    @level2name = 'FournId'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Nom de l''établissement bancaire.',

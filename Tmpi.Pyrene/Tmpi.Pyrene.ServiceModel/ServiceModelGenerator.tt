@@ -304,12 +304,12 @@ namespace <#= pocoNamespace #>
         }
 
 		var pocoInterfaces = new List<string>();
+		pocoInterfaces.AddRange(lstInterfaces);
 		if (!msgExcluded)
         {
 			pocoInterfaces.Add("IReturn<" + table.ClassName + ">");
 			pocoInterfaces.Add("IPost");
         }
-		pocoInterfaces.AddRange(lstInterfaces);
 #>
 	public <#= MakeClassesPartial ? "partial " : "" #>class <#= table.ClassName #><#= pocoInterfaces.Any() ? " : " + string.Join(", ", pocoInterfaces) : "" #>
 	{
@@ -472,10 +472,17 @@ namespace <#= pocoNamespace #>
             {
 				if (colFkey != null)
                 {
-					var refCol = colFkey.ReferencedColumns.First();
+					string propName = null;
 
-					string format = col.PropertyName.Replace(refCol.PropertyName, "{0}");
-					string propName = string.Format(format, colFkey.ReferencedTable.ClassName);
+					var refCol = colFkey.ReferencedColumns.First();
+					if (col.PropertyName.EndsWith(refCol.PropertyName))
+					{
+						int len = col.PropertyName.Length - refCol.PropertyName.Length;
+						propName = col.PropertyName.Substring(0, len);
+					}
+
+					if (!string.IsNullOrEmpty(propName))
+					{
 #>
 		/// <summary>
 		/// <#= ServiceModelUtils.FormatXmlDoc("Entité référencée par <see cref=\"" + col.PropertyName + "\"/>.") #>
@@ -484,7 +491,7 @@ namespace <#= pocoNamespace #>
 		public <#= MakePocoPropertiesVirtual ? "virtual " : "" #><#= colFkey.ReferencedTable.ClassName #> <#= propName #> { get; set; }
 
 <#
-
+					}
                 }
             }
         } // end foreach (col)
@@ -598,7 +605,7 @@ namespace <#= msgNamespace #>
 					continue; // on ne prend que les colonnes foreign key
 				}
 				var newCol = phCol.Clone();
-				var refCol = table.Columns.First(c => c.PropertyName == phCol.PropertyName);
+				var refCol = table.Columns.FirstOrDefault(c => c.PropertyName == phCol.PropertyName);
 				if (refCol != null)
                 {
 					newCol.Description = refCol.Description;
@@ -634,7 +641,7 @@ namespace <#= msgNamespace #>
 		/// <#= ServiceModelUtils.FormatXmlDoc(fieldsPropDescription) #>
 		/// </summary>
 		/// <example>
-		/// CleCompteur,CodCompteur,LibCompteur,EstActif,Service(CodService,LibService)
+		/// Id,CodCompteur,LibCompteur,EstActif,Service(CodService,LibService)
 		/// </example>
 <#
 			if (AddApiAttributes)

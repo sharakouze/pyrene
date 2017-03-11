@@ -20,11 +20,10 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
-	[CompositeIndex(true, nameof(TypCompteur), nameof(ServiceId))]
-	[Route("/Compteur", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Compteur à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
-	[ApiResponse(HttpStatusCode.Conflict, "L'entité Compteur spécifiée est un doublon")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Compteur spécifiée est introuvable")]
-	public partial class Compteur : IHasId<int>, IAuditable, IReturn<Compteur>, IPost
+	[Route("/CiviliteTiers", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité CiviliteTiers à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+	[ApiResponse(HttpStatusCode.Conflict, "L'entité CiviliteTiers spécifiée est un doublon")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité CiviliteTiers spécifiée est introuvable")]
+	public partial class CiviliteTiers : IHasId<int>, IAuditable, IReturn<CiviliteTiers>, IPost
 	{
 		/// <summary>
 		/// Identifiant unique (immutable).
@@ -43,7 +42,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[Required]
 		[Index(true)]
 		[ApiMember(Description = "Code (unique)", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string CodCompteur { get; set; }
+		public string CodCiviliteTiers { get; set; }
 
 		/// <summary>
 		/// Désignation.
@@ -52,14 +51,14 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[Required]
 		[Index]
 		[ApiMember(Description = "Désignation", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string LibCompteur { get; set; }
+		public string LibCiviliteTiers { get; set; }
 
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(2000)]
 		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
-		public string TxtCompteur { get; set; }
+		public string TxtCiviliteTiers { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.
@@ -85,46 +84,6 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[StringLength(100)]
 		[ApiMember(Description = "Identifiant de synchronisation externe", DataType = SwaggerDataTypes.String)]
 		public string CodExterne { get; set; }
-
-		/// <summary>
-		/// Périodicité.
-		/// </summary>
-		[Required]
-		[ApiMember(Description = "Périodicité", IsRequired = true)]
-		[ApiAllowableValues(nameof(TypPeriodicite), typeof(TypPeriodicite))]
-		public TypPeriodicite TypPeriodicite { get; set; }
-
-		/// <summary>
-		/// Type de compteur.
-		/// </summary>
-		[Required]
-		[ApiMember(Description = "Type de compteur", IsRequired = true)]
-		[ApiAllowableValues(nameof(TypCompteur), typeof(TypCompteur))]
-		public TypCompteur TypCompteur { get; set; }
-
-		/// <summary>
-		/// Identifiant unique du service ayant accès au compteur, ou null pour tous les services.
-		/// </summary>
-		/// <remarks>
-		/// Référence <see cref="Service.Id"/>.
-		/// </remarks>
-		[References(typeof(Service))]
-		[ApiMember(Description = "Identifiant unique du service ayant accès au compteur, ou null pour tous les services", DataType = SwaggerDataTypes.Int)]
-		public int? ServiceId { get; set; }
-
-		/// <summary>
-		/// Entité référencée par <see cref="ServiceId"/>.
-		/// </summary>
-		[Reference]
-		public Service Service { get; set; }
-
-		/// <summary>
-		/// Format du modèle de numérotation.
-		/// </summary>
-		[StringLength(100)]
-		[Required]
-		[ApiMember(Description = "Format du modèle de numérotation", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string ValFormatNumero { get; set; }
 
 	}
 }

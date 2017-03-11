@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [Gen].[Personne]
 (
-    [ClePersonne] INT NOT NULL IDENTITY,
+    [Id] INT NOT NULL IDENTITY,
     [CodPersonne] VARCHAR(100) NOT NULL,
     [NomPersonne] VARCHAR(100) NOT NULL,
     [PrePersonne] VARCHAR(100) NULL,
@@ -13,7 +13,7 @@
     [NumTelep] VARCHAR(25) NULL,
     [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
-    CONSTRAINT [PK_Personne] PRIMARY KEY ([ClePersonne]),
+    CONSTRAINT [PK_Personne] PRIMARY KEY ([Id]),
     CONSTRAINT [UK_Personne_CodPersonne] UNIQUE ([CodPersonne])
 );
 

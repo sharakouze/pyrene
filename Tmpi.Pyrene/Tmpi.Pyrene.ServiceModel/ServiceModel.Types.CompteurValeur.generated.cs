@@ -20,11 +20,11 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
-	[CompositeIndex(true, nameof(CleCompteur), nameof(ValPeriode))]
-	[Route("/Compteur/{CleCompteur}/Valeur", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité CompteurValeur à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+	[CompositeIndex(true, nameof(CompteurId), nameof(ValPeriode))]
+	[Route("/Compteur/{Id}/Valeur", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité CompteurValeur à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité CompteurValeur spécifiée est un doublon")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité CompteurValeur spécifiée est introuvable")]
-	public partial class CompteurValeur : IReturn<CompteurValeur>, IPost
+	public partial class CompteurValeur : IHasId<int>, IReturn<CompteurValeur>, IPost
 	{
 		/// <summary>
 		/// Identifiant unique (immutable).
@@ -33,23 +33,22 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Clé primaire auto-incrémentée.
 		/// </remarks>
 		[AutoIncrement]
-		[PrimaryKey]
 		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int CleValeur { get; set; }
+		public int Id { get; set; }
 
 		/// <summary>
 		/// Identifiant unique du compteur parent.
 		/// </summary>
 		/// <remarks>
-		/// Référence <see cref="Compteur.CleCompteur"/>.
+		/// Référence <see cref="Compteur.Id"/>.
 		/// </remarks>
 		[ForeignKey(typeof(Compteur), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du compteur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int CleCompteur { get; set; }
+		[ApiMember(Description = "Identifiant unique du compteur parent", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		public int CompteurId { get; set; }
 
 		/// <summary>
-		/// Entité référencée par <see cref="CleCompteur"/>.
+		/// Entité référencée par <see cref="CompteurId"/>.
 		/// </summary>
 		[Reference]
 		public Compteur Compteur { get; set; }

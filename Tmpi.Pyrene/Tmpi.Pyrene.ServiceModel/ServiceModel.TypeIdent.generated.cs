@@ -21,11 +21,11 @@ using Tmpi.Pyrene.ServiceModel.Types;
 namespace Tmpi.Pyrene.ServiceModel
 {
 	/// <summary>
-	/// Retourne une collection des entités <see cref="Service"/>.
+	/// Retourne une collection des entités <see cref="TypeIdent"/>.
 	/// </summary>
-	[Route("/Service", HttpVerbs.Get, Summary = "Retourne une collection des entités Service", Notes = SwaggerDescriptions.SelectRequestNotes)]
-	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Service ne contient pas tous les champs demandés")]
-	public partial class SelectService : IReturn<SelectServiceResponse>, IGet
+	[Route("/TypeIdent", HttpVerbs.Get, Summary = "Retourne une collection des entités TypeIdent", Notes = SwaggerDescriptions.SelectRequestNotes)]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité TypeIdent ne contient pas tous les champs demandés")]
+	public partial class SelectTypeIdent : IReturn<SelectTypeIdentResponse>, IGet
 	{
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.
@@ -60,9 +60,9 @@ namespace Tmpi.Pyrene.ServiceModel
 	}
 
 	/// <summary>
-	/// Réponse à la requête <see cref="SelectService"/>.
+	/// Réponse à la requête <see cref="SelectTypeIdent"/>.
 	/// </summary>
-	public partial class SelectServiceResponse : IHasResponseStatus
+	public partial class SelectTypeIdentResponse : IHasResponseStatus
 	{
 		/// <summary>
 		/// Détail de l'erreur éventuelle.
@@ -75,18 +75,18 @@ namespace Tmpi.Pyrene.ServiceModel
 		public int TotalCount { get; set; }
 
 		/// <summary>
-		/// Collection des entités <see cref="Service"/>.
+		/// Collection des entités <see cref="TypeIdent"/>.
 		/// </summary>
-		public List<Service> Results { get; set; }
+		public List<TypeIdent> Results { get; set; }
 	}
 
 	/// <summary>
-	/// Retourne une entité <see cref="Service"/> à partir de son id.
+	/// Retourne une entité <see cref="TypeIdent"/> à partir de son id.
 	/// </summary>
-	[Route("/Service/{Id}", HttpVerbs.Get, Summary = "Retourne une entité Service à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Service ne contient pas tous les champs demandés")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
-	public partial class GetService : IReturn<Service>, IGet
+	[Route("/TypeIdent/{Id}", HttpVerbs.Get, Summary = "Retourne une entité TypeIdent à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité TypeIdent ne contient pas tous les champs demandés")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité TypeIdent spécifiée est introuvable")]
+	public partial class GetTypeIdent : IReturn<TypeIdent>, IGet
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à retourner.
@@ -102,11 +102,11 @@ namespace Tmpi.Pyrene.ServiceModel
 	}
 
 	/// <summary>
-	/// Supprime une entité <see cref="Service"/> à partir de son id.
+	/// Supprime une entité <see cref="TypeIdent"/> à partir de son id.
 	/// </summary>
-	[Route("/Service/{Id}", HttpVerbs.Delete, Summary = "Supprime une entité Service à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
-	public partial class DeleteService : IReturnVoid, IDelete
+	[Route("/TypeIdent/{Id}", HttpVerbs.Delete, Summary = "Supprime une entité TypeIdent à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité TypeIdent spécifiée est introuvable")]
+	public partial class DeleteTypeIdent : IReturnVoid, IDelete
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à supprimer.
@@ -117,13 +117,13 @@ namespace Tmpi.Pyrene.ServiceModel
 	}
 
 	/// <summary>
-	/// Modifie partiellement une entité <see cref="Service"/> à partir de son id.
+	/// Modifie partiellement une entité <see cref="TypeIdent"/> à partir de son id.
 	/// </summary>
-	[Route("/Service/{Id}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Service à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
-	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Service ne contient pas tous les champs demandés")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
-	[ApiResponse(HttpStatusCode.Conflict, "L'entité Service spécifiée est un doublon")]
-	public partial class PatchService : IReturnVoid, IPatch
+	[Route("/TypeIdent/{Id}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité TypeIdent à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
+	[ApiResponse(HttpStatusCode.BadRequest, "L'entité TypeIdent ne contient pas tous les champs demandés")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité TypeIdent spécifiée est introuvable")]
+	[ApiResponse(HttpStatusCode.Conflict, "L'entité TypeIdent spécifiée est un doublon")]
+	public partial class PatchTypeIdent : IReturnVoid, IPatch
 	{
 		/// <summary>
 		/// Identifiant unique de l'entité à modifier.
@@ -139,10 +139,10 @@ namespace Tmpi.Pyrene.ServiceModel
 	}
 
 	/// <summary>
-	/// Retourne le résultat d'une recherche sur les entités <see cref="Service"/>.
+	/// Retourne le résultat d'une recherche sur les entités <see cref="TypeIdent"/>.
 	/// </summary>
-	[Route("/Service/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités Service", Notes = SwaggerDescriptions.SearchRequestNotes)]
-	public partial class SearchService : IReturn<SearchServiceResponse>, IGet
+	[Route("/TypeIdent/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités TypeIdent", Notes = SwaggerDescriptions.SearchRequestNotes)]
+	public partial class SearchTypeIdent : IReturn<SearchTypeIdentResponse>, IGet
 	{
 		/// <summary>
 		/// Texte à rechercher.
@@ -158,9 +158,9 @@ namespace Tmpi.Pyrene.ServiceModel
 	}
 
 	/// <summary>
-	/// Réponse à la requête <see cref="SearchService"/>.
+	/// Réponse à la requête <see cref="SearchTypeIdent"/>.
 	/// </summary>
-	public partial class SearchServiceResponse : IHasResponseStatus
+	public partial class SearchTypeIdentResponse : IHasResponseStatus
 	{
 		/// <summary>
 		/// Détail de l'erreur éventuelle.

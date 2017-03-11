@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [Gen].[Fourn]
 (
-    [CleFourn] INT NOT NULL IDENTITY,
+    [Id] INT NOT NULL IDENTITY,
     [CodFourn] VARCHAR(100) NOT NULL,
     [LibFourn] VARCHAR(200) NOT NULL,
     [TxtFourn] VARCHAR(2000) NULL,
@@ -26,7 +26,7 @@
     [ValNote] DECIMAL(5,2) NULL,
     [TypModeReglement] INT NULL,
     [EstEnvoiMailBonCde] BIT NOT NULL,
-    CONSTRAINT [PK_Fourn] PRIMARY KEY ([CleFourn]),
+    CONSTRAINT [PK_Fourn] PRIMARY KEY ([Id]),
     CONSTRAINT [UK_Fourn_CodFourn] UNIQUE ([CodFourn]), 
 );
 

@@ -1,11 +1,11 @@
 ﻿CREATE TABLE [Gen].[CompteurValeur] (
-    [CleValeur] INT NOT NULL IDENTITY,
-    [CleCompteur] INT NOT NULL,
+    [Id] INT NOT NULL IDENTITY,
+    [CompteurId] INT NOT NULL,
     [ValPeriode] INT NOT NULL,
     [ValCompteur] INT NOT NULL,
-    CONSTRAINT [PK_CompteurValeur] PRIMARY KEY ([CleValeur]),
-    CONSTRAINT [UK_CompteurValeur_CleCompteur_ValPeriode] UNIQUE ([CleCompteur], [ValPeriode]),
-    CONSTRAINT [FK_CompteurValeur_CleCompteur] FOREIGN KEY ([CleCompteur]) REFERENCES [Gen].[Compteur] ([CleCompteur]) ON DELETE CASCADE,
+    CONSTRAINT [PK_CompteurValeur] PRIMARY KEY ([Id]),
+    CONSTRAINT [UK_CompteurValeur_CompteurId_ValPeriode] UNIQUE ([CompteurId], [ValPeriode]),
+    CONSTRAINT [FK_CompteurValeur_CompteurId] FOREIGN KEY ([CompteurId]) REFERENCES [Gen].[Compteur] ([Id]) ON DELETE CASCADE,
 );
 
 
@@ -17,7 +17,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1type = N'TABLE',
     @level1name = N'CompteurValeur',
     @level2type = N'COLUMN',
-    @level2name = 'CleCompteur'
+    @level2name = 'CompteurId'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Valeur de la période.',

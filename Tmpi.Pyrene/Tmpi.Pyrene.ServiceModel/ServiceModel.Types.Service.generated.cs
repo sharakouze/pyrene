@@ -23,7 +23,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 	[Route("/Service", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Service à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité Service spécifiée est un doublon")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité Service spécifiée est introuvable")]
-	public partial class Service : IReturn<Service>, IPost
+	public partial class Service : IHasId<int>, IAuditable, IReturn<Service>, IPost
 	{
 		/// <summary>
 		/// Identifiant unique (immutable).
@@ -32,9 +32,8 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Clé primaire auto-incrémentée.
 		/// </remarks>
 		[AutoIncrement]
-		[PrimaryKey]
 		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int CleService { get; set; }
+		public int Id { get; set; }
 
 		/// <summary>
 		/// Code (unique).
@@ -57,7 +56,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
-		[StringLength(500)]
+		[StringLength(2000)]
 		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
 		public string TxtService { get; set; }
 
@@ -72,18 +71,12 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Date de création (immutable).
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création (immutable)", DataType = SwaggerDataTypes.DateTime, IsRequired = true)]
 		public DateTime DatCreation { get; set; }
 
-		[Required]
-		[ApiMember(DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int CleCreateur { get; set; }
-
-		[ApiMember(DataType = SwaggerDataTypes.DateTime)]
-		public DateTime? DatEdition { get; set; }
-
-		[ApiMember(DataType = SwaggerDataTypes.Int)]
-		public int? CleEditeur { get; set; }
+		/// <summary>
+		/// Date de dernière modification (immutable).
+		/// </summary>
+		public DateTime? DatModif { get; set; }
 
 		/// <summary>
 		/// Identifiant de synchronisation externe.
@@ -96,15 +89,15 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Identifiant unique du service parent.
 		/// </summary>
 		/// <remarks>
-		/// Référence <see cref="Service.CleService"/>.
+		/// Référence <see cref="Service.Id"/>.
 		/// </remarks>
 		[References(typeof(Service))]
 		[Index]
 		[ApiMember(Description = "Identifiant unique du service parent", DataType = SwaggerDataTypes.Int)]
-		public int? CleServiceParent { get; set; }
+		public int? ServiceParentId { get; set; }
 
 		/// <summary>
-		/// Entité référencée par <see cref="CleServiceParent"/>.
+		/// Entité référencée par <see cref="ServiceParentId"/>.
 		/// </summary>
 		[Reference]
 		public Service ServiceParent { get; set; }

@@ -20,10 +20,11 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
-	[Route("/Personne", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Personne à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
-	[ApiResponse(HttpStatusCode.Conflict, "L'entité Personne spécifiée est un doublon")]
-	[ApiResponse(HttpStatusCode.NotFound, "L'entité Personne spécifiée est introuvable")]
-	public partial class Personne : IHasId<int>, IAuditable, IReturn<Personne>, IPost
+	[CompositeIndex(true, nameof(TiersId), nameof(NomContact))]
+	[Route("/Tiers/{Id}/Contact", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité TiersContact à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+	[ApiResponse(HttpStatusCode.Conflict, "L'entité TiersContact spécifiée est un doublon")]
+	[ApiResponse(HttpStatusCode.NotFound, "L'entité TiersContact spécifiée est introuvable")]
+	public partial class TiersContact : IHasId<int>, IAuditable, IReturn<TiersContact>, IPost
 	{
 		/// <summary>
 		/// Identifiant unique (immutable).
@@ -36,43 +37,43 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int Id { get; set; }
 
 		/// <summary>
-		/// Code (unique).
+		/// Identifiant unique du tiers parent.
 		/// </summary>
-		[StringLength(100)]
+		/// <remarks>
+		/// Référence <see cref="Tiers.Id"/>.
+		/// </remarks>
+		[ForeignKey(typeof(Tiers), OnDelete = "CASCADE")]
 		[Required]
-		[Index(true)]
-		[ApiMember(Description = "Code (unique)", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string CodPersonne { get; set; }
+		[ApiMember(Description = "Identifiant unique du tiers parent", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		public int TiersId { get; set; }
+
+		/// <summary>
+		/// Entité référencée par <see cref="TiersId"/>.
+		/// </summary>
+		[Reference]
+		public Tiers Tiers { get; set; }
 
 		/// <summary>
 		/// Nom de famille.
 		/// </summary>
 		[StringLength(100)]
 		[Required]
-		[Index]
 		[ApiMember(Description = "Nom de famille", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string NomPersonne { get; set; }
+		public string NomContact { get; set; }
 
 		/// <summary>
 		/// Prénom.
 		/// </summary>
 		[StringLength(100)]
 		[ApiMember(Description = "Prénom", DataType = SwaggerDataTypes.String)]
-		public string PrePersonne { get; set; }
+		public string PreContact { get; set; }
 
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
 		[StringLength(2000)]
 		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
-		public string TxtPersonne { get; set; }
-
-		/// <summary>
-		/// Actif ou inactif.
-		/// </summary>
-		[Required]
-		[ApiMember(Description = "Actif ou inactif", DataType = SwaggerDataTypes.Bool, IsRequired = true)]
-		public bool EstActif { get; set; }
+		public string TxtContact { get; set; }
 
 		/// <summary>
 		/// Date de création (immutable).
@@ -84,20 +85,6 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Date de dernière modification (immutable).
 		/// </summary>
 		public DateTime? DatModif { get; set; }
-
-		/// <summary>
-		/// Identifiant de synchronisation externe.
-		/// </summary>
-		[StringLength(100)]
-		[ApiMember(Description = "Identifiant de synchronisation externe", DataType = SwaggerDataTypes.String)]
-		public string CodExterne { get; set; }
-
-		/// <summary>
-		/// Titre de civilité.
-		/// </summary>
-		[ApiMember(Description = "Titre de civilité")]
-		[ApiAllowableValues(nameof(TypCivilite), typeof(TypCivilite))]
-		public TypCivilite? TypCivilite { get; set; }
 
 		/// <summary>
 		/// Numéro de téléphone.
@@ -119,6 +106,19 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[StringLength(100)]
 		[ApiMember(Description = "Adresse email", DataType = SwaggerDataTypes.String)]
 		public string NumEmail { get; set; }
+
+		/// <summary>
+		/// Titre de civilité.
+		/// </summary>
+		[ApiMember(Description = "Titre de civilité", DataType = SwaggerDataTypes.Int)]
+		public int? TypCivilite { get; set; }
+
+		/// <summary>
+		/// Fonction ou poste du contact chez le tiers.
+		/// </summary>
+		[StringLength(100)]
+		[ApiMember(Description = "Fonction ou poste du contact chez le tiers", DataType = SwaggerDataTypes.String)]
+		public string LibFonction { get; set; }
 
 	}
 }

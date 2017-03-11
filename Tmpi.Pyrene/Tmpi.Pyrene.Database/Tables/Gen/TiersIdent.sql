@@ -1,13 +1,13 @@
 ﻿CREATE TABLE [Gen].[TiersIdent]
 (
-    [CleIdent] INT NOT NULL IDENTITY,
-    [CleTiers] INT NOT NULL,
-    [CleTypeIdent] INT NOT NULL,
+    [Id] INT NOT NULL IDENTITY,
+    [TiersId] INT NOT NULL,
+    [TypeIdentId] INT NOT NULL,
     [NumIdent] VARCHAR(100) NOT NULL,
-    CONSTRAINT [PK_TiersIdent] PRIMARY KEY ([CleIdent]),
-    CONSTRAINT [UK_TiersIdent_CleTiers_CleTypeIdent] UNIQUE ([CleTiers], [CleTypeIdent]),
-    CONSTRAINT [FK_TiersIdent_CleTiers] FOREIGN KEY ([CleTiers]) REFERENCES [Gen].[Tiers] ([CleTiers]) ON DELETE CASCADE,
-    CONSTRAINT [FK_TiersIdent_CleTypeIdent] FOREIGN KEY ([CleTypeIdent]) REFERENCES [Gen].[TypeIdent] ([CleTypeIdent])
+    CONSTRAINT [PK_TiersIdent] PRIMARY KEY ([Id]),
+    CONSTRAINT [UK_TiersIdent_TiersId_TypeIdentId] UNIQUE ([TiersId], [TypeIdentId]),
+    CONSTRAINT [FK_TiersIdent_TiersId] FOREIGN KEY ([TiersId]) REFERENCES [Gen].[Tiers] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_TiersIdent_TypeIdentId] FOREIGN KEY ([TypeIdentId]) REFERENCES [Gen].[TypeIdent] ([Id])
 );
 
 GO
@@ -18,7 +18,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1type = N'TABLE',
     @level1name = N'TiersIdent',
     @level2type = N'COLUMN',
-    @level2name = N'CleTiers'
+    @level2name = 'TiersId'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Identifiant unique du type d''identifiant.',
@@ -27,7 +27,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1type = N'TABLE',
     @level1name = N'TiersIdent',
     @level2type = N'COLUMN',
-    @level2name = N'CleTypeIdent'
+    @level2name = 'TypeIdentId'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Numéro de l''identifiant.',

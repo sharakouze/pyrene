@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [Gen].[Exercice]
 (
-	[CleExercice] INT NOT NULL IDENTITY,
+	[Id] INT NOT NULL IDENTITY,
 	[CodExercice] VARCHAR(100) NOT NULL,
 	[LibExercice] VARCHAR(200) NOT NULL,
 	[TxtExercice] VARCHAR(2000) NULL,
@@ -10,7 +10,7 @@
 	[CodExterne] VARCHAR(100) NULL,
 	[DatDebut] DATETIME NOT NULL,
 	[DatFin] DATETIME NOT NULL,
-	CONSTRAINT [PK_Exercice] PRIMARY KEY ([CleExercice]), 
+	CONSTRAINT [PK_Exercice] PRIMARY KEY ([Id]), 
 	CONSTRAINT [UK_Exercice_CodExercice] UNIQUE ([CodExercice]),
 );
 

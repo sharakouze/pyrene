@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [Gen].[Service]
 (
-    [CleService] INT NOT NULL IDENTITY,
+    [Id] INT NOT NULL IDENTITY,
     [CodService] VARCHAR(100)  NOT NULL,
     [LibService] VARCHAR(200) NOT NULL,
     [TxtService] VARCHAR(2000) NULL,
@@ -8,7 +8,7 @@
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NULL,
     [CodExterne] VARCHAR(100) NULL,
-    [CleServiceParent] INT NULL,
+    [ServiceParentId] INT NULL,
     [AdrRue] VARCHAR(200) NULL,
     [AdrCode] VARCHAR(10) NULL,
     [AdrCommune] VARCHAR(100) NULL,
@@ -16,14 +16,14 @@
     [NumTelep] VARCHAR(25) NULL,
     [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
-    CONSTRAINT [PK_Service] PRIMARY KEY ([CleService]),
+    CONSTRAINT [PK_Service] PRIMARY KEY ([Id]),
     CONSTRAINT [UK_Service_CodService] UNIQUE ([CodService]),
-    CONSTRAINT [FK_Service_CleServiceParent] FOREIGN KEY ([CleServiceParent]) REFERENCES [Gen].[Service] ([CleService]),
+    CONSTRAINT [FK_Service_ServiceParentId] FOREIGN KEY ([ServiceParentId]) REFERENCES [Gen].[Service] ([Id]),
 );
 
 GO
 
-CREATE INDEX [IX_Service_CleServiceParent] ON [Gen].[Service] ([CleServiceParent]);
+CREATE INDEX [IX_Service_ServiceParentId] ON [Gen].[Service] ([ServiceParentId]);
 
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
@@ -33,4 +33,4 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1type = N'TABLE',
     @level1name = N'Service',
     @level2type = N'COLUMN',
-    @level2name = 'CleServiceParent'
+    @level2name = 'ServiceParentId'

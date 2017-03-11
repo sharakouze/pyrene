@@ -38,23 +38,24 @@ namespace Tmpi.Pyrene.ServiceInterface
 		/// <returns></returns>
 		protected bool Service_CodService_EstUnique(ServiceModel.Types.Service model, IEnumerable<string> fields = null)
 		{
-			var q = Db.From<ServiceModel.Types.Service>();
+            return true;
+			//var q = Db.From<ServiceModel.Types.Service>();
 
-			if (fields == null || fields.Contains(nameof(ServiceModel.Types.Service.CodService), StringComparer.OrdinalIgnoreCase))
-			{
-				q.Where(t1 => t1.CodService == model.CodService);
-			}
-			else
-			{
-				return true;
-			}
+			//if (fields == null || fields.Contains(nameof(ServiceModel.Types.Service.CodService), StringComparer.OrdinalIgnoreCase))
+			//{
+			//	q.Where(t1 => t1.CodService == model.CodService);
+			//}
+			//else
+			//{
+			//	return true;
+			//}
 
-			if (model.CleService != 0)
-			{
-				q.Where(t1 => t1.CleService != model.CleService);
-			}
+			//if (model.CleService != 0)
+			//{
+			//	q.Where(t1 => t1.CleService != model.CleService);
+			//}
 
-			return !Db.Exists(q);
+			//return !Db.Exists(q);
 		}
 
 		/// <summary>
@@ -88,7 +89,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 		{
 			//ModelDefinitionHelper.UndefinedFields<ServiceModel.Types.Service>(request.Fields);
 
-			var q = Db.From<ServiceModel.Types.Service>().Where(x => x.CleService == request.CleService).Select(request.Fields);
+			var q = Db.From<ServiceModel.Types.Service>().Where(x => x.Id == request.CleService).Select(request.Fields);
 
 			var entity = Db.Single(q);
 			if (entity == null)
@@ -122,7 +123,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 			var entity = new ServiceModel.Types.Service();
 			PatchHelper.PopulateFromPatch(entity, patchDic);
 
-			var q = Db.From<ServiceModel.Types.Service>().Where(x => x.CleService == request.CleService).Update(patchDic.Keys);
+			var q = Db.From<ServiceModel.Types.Service>().Where(x => x.Id == request.CleService).Update(patchDic.Keys);
 
 			lock (_serviceLock)
 			{
@@ -161,7 +162,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 
 			var q = Db.From<ServiceModel.Types.Service>()
 				.Where(x => x.LibService.Contains(request.Text))
-				.Select(x => new { CleObjet = x.CleService,  CodObjet = x.CodService, LibObjet = x.LibService });
+				.Select(x => new { CleObjet = x.Id,  CodObjet = x.CodService, LibObjet = x.LibService });
 			if (request.Max > 0)
 			{
 				q.Limit(request.Max);
@@ -224,12 +225,12 @@ namespace Tmpi.Pyrene.ServiceInterface
 						string.Format(ServiceErrorMessages.EntityNotUnique, nameof(ServiceModel.Types.Service)));
 				}
 
-				if (request.CleService == 0)
+				if (request.Id == 0)
 				{
 					using (var scope = AuditScope.Create("Service:Insert", () => request))
 					{
 						long id = Db.Insert(request, selectIdentity: true);
-						request.CleService = (int)id;
+						request.Id = (int)id;
 
 						scope.Save();
 					}
@@ -242,7 +243,7 @@ namespace Tmpi.Pyrene.ServiceInterface
 						if (count == 0)
 						{
 							throw HttpError.NotFound(
-								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.CleService));
+								string.Format(ServiceErrorMessages.EntityByIdNotFound, nameof(ServiceModel.Types.Service), request.Id));
 						}
 
 						scope.Save();

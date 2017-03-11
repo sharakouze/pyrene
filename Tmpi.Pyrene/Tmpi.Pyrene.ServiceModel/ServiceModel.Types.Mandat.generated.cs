@@ -24,7 +24,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 	[Route("/Mandat", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité Mandat à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité Mandat spécifiée est un doublon")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité Mandat spécifiée est introuvable")]
-	public partial class Mandat : IReturn<Mandat>, IPost
+	public partial class Mandat : IHasId<int>, IAuditable, IReturn<Mandat>, IPost
 	{
 		/// <summary>
 		/// Identifiant unique (immutable).
@@ -33,9 +33,8 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Clé primaire auto-incrémentée.
 		/// </remarks>
 		[AutoIncrement]
-		[PrimaryKey]
 		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int CleMandat { get; set; }
+		public int Id { get; set; }
 
 		/// <summary>
 		/// Code (unique).
@@ -58,7 +57,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Commentaire ou description.
 		/// </summary>
-		[StringLength(500)]
+		[StringLength(2000)]
 		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
 		public string TxtMandat { get; set; }
 
@@ -73,18 +72,12 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// Date de création (immutable).
 		/// </summary>
 		[Required]
-		[ApiMember(Description = "Date de création (immutable)", DataType = SwaggerDataTypes.DateTime, IsRequired = true)]
 		public DateTime DatCreation { get; set; }
 
-		[Required]
-		[ApiMember(DataType = SwaggerDataTypes.Int, IsRequired = true)]
-		public int CleCreateur { get; set; }
-
-		[ApiMember(DataType = SwaggerDataTypes.DateTime)]
-		public DateTime? DatEdition { get; set; }
-
-		[ApiMember(DataType = SwaggerDataTypes.Int)]
-		public int? CleEditeur { get; set; }
+		/// <summary>
+		/// Date de dernière modification (immutable).
+		/// </summary>
+		public DateTime? DatModif { get; set; }
 
 		/// <summary>
 		/// Identifiant de synchronisation externe.

@@ -20,7 +20,7 @@ using ServiceStack.Model;
 namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
-	[Route("/Personne/{ClePersonne}/Signature", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité PersonneSignature à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+	[Route("/Personne/{Id}/Signature", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité PersonneSignature à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité PersonneSignature spécifiée est un doublon")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité PersonneSignature spécifiée est introuvable")]
 	public partial class PersonneSignature : IReturn<PersonneSignature>, IPost
@@ -30,16 +30,16 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// </summary>
 		/// <remarks>
 		/// Clé primaire.
-		/// Référence <see cref="Personne.ClePersonne"/>.
+		/// Référence <see cref="Personne.Id"/>.
 		/// </remarks>
 		[ForeignKey(typeof(Personne), OnDelete = "CASCADE")]
 		[Required]
 		[PrimaryKey]
 		[ApiMember(Description = "Identifiant unique de l'utilisateur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int ClePersonne { get; set; }
+		public int PersonneId { get; set; }
 
 		/// <summary>
-		/// Entité référencée par <see cref="ClePersonne"/>.
+		/// Entité référencée par <see cref="PersonneId"/>.
 		/// </summary>
 		[Reference]
 		public Personne Personne { get; set; }

@@ -1,17 +1,17 @@
 ﻿CREATE TABLE [Gen].[MandatMandataire]
 (
-    [CleMandataire] INT IDENTITY NOT NULL,
-    [CleMandat] INT NOT NULL,
-    [ClePersonne] INT NOT NULL,
-    [CleService] INT NULL,
+    [Id] INT IDENTITY NOT NULL,
+    [MandatId] INT NOT NULL,
+    [PersonneId] INT NOT NULL,
+    [ServiceId] INT NULL,
     [EstSuspendu] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
     [DatModif] DATETIME NULL,
-    CONSTRAINT [PK_MandatMandataire] PRIMARY KEY ([CleMandataire]),
-    CONSTRAINT [UK_MandatMandataire_CleMandat_ClePersonne_CleService] UNIQUE ([CleMandat], [ClePersonne], [CleService]),
-    CONSTRAINT [FK_MandatMandataire_CleMandat] FOREIGN KEY ([CleMandat]) REFERENCES [Gen].[Mandat] ([CleMandat]) ON DELETE CASCADE,
-    CONSTRAINT [FK_MandatMandataire_ClePersonne] FOREIGN KEY ([ClePersonne]) REFERENCES [Gen].[Personne] ([ClePersonne]),
-    CONSTRAINT [FK_MandatMandataire_CleService] FOREIGN KEY ([CleService]) REFERENCES [Gen].[Service] ([CleService]),
+    CONSTRAINT [PK_MandatMandataire] PRIMARY KEY ([Id]),
+    CONSTRAINT [UK_MandatMandataire_MandatId_PersonneId_ServiceId] UNIQUE ([MandatId], [PersonneId], [ServiceId]),
+    CONSTRAINT [FK_MandatMandataire_MandatId] FOREIGN KEY ([MandatId]) REFERENCES [Gen].[Mandat] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_MandatMandataire_PersonneId] FOREIGN KEY ([PersonneId]) REFERENCES [Gen].[Personne] ([Id]),
+    CONSTRAINT [FK_MandatMandataire_ServiceId] FOREIGN KEY ([ServiceId]) REFERENCES [Gen].[Service] ([Id]),
 );
 
 GO
@@ -22,7 +22,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1type = N'TABLE',
     @level1name = N'MandatMandataire',
     @level2type = N'COLUMN',
-    @level2name = 'CleMandat'
+    @level2name = 'MandatId'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Identifiant unique de l''utilisateur mandataire.',
@@ -31,7 +31,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1type = N'TABLE',
     @level1name = N'MandatMandataire',
     @level2type = N'COLUMN',
-    @level2name = 'ClePersonne'
+    @level2name = 'PersonneId'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Identifiant unique du service ayant accès au mandat, ou null pour tous les services.',
@@ -40,7 +40,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1type = N'TABLE',
     @level1name = N'MandatMandataire',
     @level2type = N'COLUMN',
-    @level2name = 'CleService'
+    @level2name = 'ServiceId'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Si true, le mandat est suspendu.',
