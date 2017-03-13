@@ -93,7 +93,8 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Date de dernière modification (immutable).
 		/// </summary>
-		public DateTime? DatModif { get; set; }
+		[Required]
+		public DateTime DatModif { get; set; }
 
 	}
 }

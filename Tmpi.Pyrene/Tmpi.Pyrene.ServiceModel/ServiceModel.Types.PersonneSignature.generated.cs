@@ -23,7 +23,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 	[Route("/Personne/{PersonneId}/Signature", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité PersonneSignature à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité PersonneSignature spécifiée est un doublon")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité PersonneSignature spécifiée est introuvable")]
-	public partial class PersonneSignature : IReturn<PersonneSignature>, IPost
+	public partial class PersonneSignature : IAuditable, IReturn<PersonneSignature>, IPost
 	{
 		/// <summary>
 		/// Identifiant unique de l'utilisateur parent.
@@ -58,6 +58,18 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[Required]
 		[ApiMember(Description = "Type MIME de l'image", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string TypMime { get; set; }
+
+		/// <summary>
+		/// Date de création (immutable).
+		/// </summary>
+		[Required]
+		public DateTime DatCreation { get; set; }
+
+		/// <summary>
+		/// Date de dernière modification (immutable).
+		/// </summary>
+		[Required]
+		public DateTime DatModif { get; set; }
 
 	}
 }

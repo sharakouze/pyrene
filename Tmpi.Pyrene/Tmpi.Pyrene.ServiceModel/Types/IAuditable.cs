@@ -15,6 +15,6 @@ namespace Tmpi.Pyrene.ServiceModel.Types
         /// <summary>
         /// Obtient ou définit la date de dernière modification.
         /// </summary>
-        DateTime? DatModif { get; set; }
+        DateTime DatModif { get; set; }
     }
 }

@@ -36,29 +36,23 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		public int Id { get; set; }
 
 		/// <summary>
-		/// Code (unique).
+		/// (unique).
 		/// </summary>
 		[StringLength(100)]
 		[Required]
 		[Index(true)]
-		[ApiMember(Description = "Code (unique)", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string CodCiviliteTiers { get; set; }
+		[ApiMember(Description = "(unique)", DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string CodObjet { get; set; }
 
-		/// <summary>
-		/// Désignation.
-		/// </summary>
 		[StringLength(200)]
 		[Required]
 		[Index]
-		[ApiMember(Description = "Désignation", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string LibCiviliteTiers { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String, IsRequired = true)]
+		public string LibObjet { get; set; }
 
-		/// <summary>
-		/// Commentaire ou description.
-		/// </summary>
 		[StringLength(2000)]
-		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
-		public string TxtCiviliteTiers { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String)]
+		public string TxtObjet { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.
@@ -76,7 +70,8 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Date de dernière modification (immutable).
 		/// </summary>
-		public DateTime? DatModif { get; set; }
+		[Required]
+		public DateTime DatModif { get; set; }
 
 		/// <summary>
 		/// Identifiant de synchronisation externe.

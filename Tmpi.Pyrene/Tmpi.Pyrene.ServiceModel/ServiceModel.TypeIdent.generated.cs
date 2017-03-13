@@ -138,39 +138,4 @@ namespace Tmpi.Pyrene.ServiceModel
 		public Patch[] Operations { get; set; }
 	}
 
-	/// <summary>
-	/// Retourne le résultat d'une recherche sur les entités <see cref="TypeIdent"/>.
-	/// </summary>
-	[Route("/TypeIdent/Recherche/{Text}", HttpVerbs.Get, Summary = "Retourne le résultat d'une recherche sur les entités TypeIdent", Notes = SwaggerDescriptions.SearchRequestNotes)]
-	public partial class SearchTypeIdent : IReturn<SearchTypeIdentResponse>, IGet
-	{
-		/// <summary>
-		/// Texte à rechercher.
-		/// </summary>
-		[ApiMember(Description = "Texte à rechercher", DataType = SwaggerDataTypes.String, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public string Text { get; set; }
-
-		/// <summary>
-		/// Nombre maximum de résultats à retourner.
-		/// </summary>
-		[ApiMember(Description = "Nombre maximum de résultats à retourner", DataType = SwaggerDataTypes.Int)]
-		public int Max { get; set; }
-	}
-
-	/// <summary>
-	/// Réponse à la requête <see cref="SearchTypeIdent"/>.
-	/// </summary>
-	public partial class SearchTypeIdentResponse : IHasResponseStatus
-	{
-		/// <summary>
-		/// Détail de l'erreur éventuelle.
-		/// </summary>
-		public ResponseStatus ResponseStatus { get; set; }
-
-		/// <summary>
-		/// Résultat de la recherche.
-		/// </summary>
-		public List<BaseEntity> Results { get; set; }
-	}
-
 }

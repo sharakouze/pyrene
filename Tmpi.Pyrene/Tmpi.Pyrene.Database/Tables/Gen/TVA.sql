@@ -1,16 +1,16 @@
 ﻿CREATE TABLE [Gen].[TVA]
 (
     [Id] INT IDENTITY NOT NULL,
-    [CodTVA] VARCHAR(100) NOT NULL,
-    [LibTVA] VARCHAR(200) NOT NULL,
-    [TxtTVA] VARCHAR(2000) NULL,
+    [CodObjet] VARCHAR(100) NOT NULL,
+    [LibObjet] VARCHAR(200) NOT NULL,
+    [TxtObjet] VARCHAR(2000) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
-    [DatModif] DATETIME NULL,
+    [DatModif] DATETIME NOT NULL,
     [CodExterne] VARCHAR(100) NULL,
     [TauTVA] DECIMAL(5,2) NOT NULL,
     CONSTRAINT [PK_TVA] PRIMARY KEY ([Id]),
-    CONSTRAINT [UK_TVA_CodTVA] UNIQUE ([CodTVA])
+    CONSTRAINT [UK_TVA_CodObjet] UNIQUE ([CodObjet])
 );
 
 GO

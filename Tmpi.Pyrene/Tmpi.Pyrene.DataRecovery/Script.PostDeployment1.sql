@@ -2,12 +2,6 @@
 -- START
 --
 
-SET XACT_ABORT ON;
-SET NOCOUNT ON;
-SET NOEXEC OFF;
-
-GO
-
 --
 -- CONSTANTES POUR LA REPRISE
 --
@@ -16,6 +10,12 @@ GO
 
 :setvar CleSecteurBase "1000"
 :setvar CleServiceBase "20000"
+
+GO
+
+SET XACT_ABORT ON;
+SET NOCOUNT ON;
+SET NOEXEC OFF;
 
 GO
 

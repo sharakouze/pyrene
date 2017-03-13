@@ -71,7 +71,8 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Date de dernière modification (immutable).
 		/// </summary>
-		public DateTime? DatModif { get; set; }
+		[Required]
+		public DateTime DatModif { get; set; }
 
 		/// <summary>
 		/// Identifiant unique du service auquel a accès le profil, ou null pour tous les services.

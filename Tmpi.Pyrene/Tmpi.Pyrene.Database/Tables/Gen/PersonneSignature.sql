@@ -3,6 +3,8 @@
     [PersonneId] INT NOT NULL,
     [ImgSignature] VARBINARY(MAX) NOT NULL,
     [TypMime] VARCHAR(255) NOT NULL,
+    [DatCreation] DATETIME NOT NULL,
+    [DatModif] DATETIME NOT NULL,
     CONSTRAINT [PK_PersonneSignature] PRIMARY KEY ([PersonneId]), 
     CONSTRAINT [FK_PersonneSignature_PersonneId] FOREIGN KEY ([PersonneId]) REFERENCES [Gen].[Personne] ([Id]) ON DELETE CASCADE,
 );

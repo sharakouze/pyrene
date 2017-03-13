@@ -6,7 +6,7 @@
     [ServiceId] INT NULL,
     [EstSuspendu] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
-    [DatModif] DATETIME NULL,
+    [DatModif] DATETIME NOT NULL,
     CONSTRAINT [PK_MandatMandataire] PRIMARY KEY ([Id]),
     CONSTRAINT [UK_MandatMandataire_MandatId_PersonneId_ServiceId] UNIQUE ([MandatId], [PersonneId], [ServiceId]),
     CONSTRAINT [FK_MandatMandataire_MandatId] FOREIGN KEY ([MandatId]) REFERENCES [Gen].[Mandat] ([Id]) ON DELETE CASCADE,

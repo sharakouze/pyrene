@@ -1,12 +1,12 @@
 ﻿CREATE TABLE [Gen].[Fourn]
 (
     [Id] INT NOT NULL IDENTITY,
-    [CodFourn] VARCHAR(100) NOT NULL,
-    [LibFourn] VARCHAR(200) NOT NULL,
-    [TxtFourn] VARCHAR(2000) NULL,
+    [CodObjet] VARCHAR(100) NOT NULL,
+    [LibObjet] VARCHAR(200) NOT NULL,
+    [TxtObjet] VARCHAR(2000) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
-    [DatModif] DATETIME NULL,
+    [DatModif] DATETIME NOT NULL,
     [CodExterne] VARCHAR(100) NULL,
     [AdrRue] VARCHAR(200) NULL,
     [AdrCode] VARCHAR(10) NULL,
@@ -27,7 +27,7 @@
     [TypModeReglement] INT NULL,
     [EstEnvoiMailBonCde] BIT NOT NULL,
     CONSTRAINT [PK_Fourn] PRIMARY KEY ([Id]),
-    CONSTRAINT [UK_Fourn_CodFourn] UNIQUE ([CodFourn]), 
+    CONSTRAINT [UK_Fourn_CodObjet] UNIQUE ([CodObjet]), 
 );
 
 GO

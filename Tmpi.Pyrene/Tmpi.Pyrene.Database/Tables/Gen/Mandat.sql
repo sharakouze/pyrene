@@ -1,19 +1,19 @@
 ﻿CREATE TABLE [Gen].[Mandat]
 (
     [Id] INT NOT NULL IDENTITY,
-    [CodMandat] VARCHAR(100) NOT NULL,
-    [LibMandat] VARCHAR(200) NOT NULL,
-    [TxtMandat] VARCHAR(2000) NULL,
+    [CodObjet] VARCHAR(100) NOT NULL,
+    [LibObjet] VARCHAR(200) NOT NULL,
+    [TxtObjet] VARCHAR(2000) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
-    [DatModif] DATETIME NULL,
+    [DatModif] DATETIME NOT NULL,
     [CodExterne] VARCHAR(100) NULL,
     [TypMandat] INT NOT NULL,
     [NivMandat] TINYINT NOT NULL,
     [NbrSignature] TINYINT NOT NULL,
     [TxtMessage] VARCHAR(MAX) NULL,
     CONSTRAINT [PK_Mandat] PRIMARY KEY ([Id]),
-    CONSTRAINT [UK_Mandat_CodMandat] UNIQUE ([CodMandat]),
+    CONSTRAINT [UK_Mandat_CodObjet] UNIQUE ([CodObjet]),
     CONSTRAINT [UK_Mandat_TypMandat_NivMandat] UNIQUE ([TypMandat], [NivMandat]),
 );
 

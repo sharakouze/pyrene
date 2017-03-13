@@ -1,12 +1,12 @@
 ﻿CREATE TABLE [Gen].[Tiers]
 (
     [Id] INT NOT NULL IDENTITY,
-    [NumTiers] VARCHAR(100) NOT NULL,
+    [NumObjet] VARCHAR(100) NOT NULL,
     [NomTiers] VARCHAR(200) NOT NULL,
-    [TxtTiers] VARCHAR(2000) NULL,
+    [TxtObjet] VARCHAR(2000) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
-    [DatModif] DATETIME NULL,
+    [DatModif] DATETIME NOT NULL,
     [CodExterne] VARCHAR(100) NULL,
     [AdrRue] VARCHAR(200) NULL,
     [AdrCode] VARCHAR(10) NULL,
@@ -25,7 +25,7 @@
     [ProprieteTiers2Id] INT NULL,
     [ProprieteTiers3Id] INT NULL,
 	CONSTRAINT [PK_Tiers] PRIMARY KEY ([Id]),
-    CONSTRAINT [UK_Tiers] UNIQUE ([NumTiers]),
+    CONSTRAINT [UK_Tiers_NumObjet] UNIQUE ([NumObjet]),
     CONSTRAINT [FK_Tiers_TiersPrincipalId] FOREIGN KEY ([TiersPrincipalId]) REFERENCES [Gen].[Tiers] ([Id]),
     CONSTRAINT [FK_Tiers_CiviliteTiersId] FOREIGN KEY ([CiviliteTiersId]) REFERENCES [Gen].[CiviliteTiers] ([Id]),
     CONSTRAINT [FK_Tiers_ProprieteTiers1Id] FOREIGN KEY ([ProprieteTiers1Id]) REFERENCES [Gen].[ProprieteTiers] ([Id]),
@@ -41,7 +41,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1type = N'TABLE',
     @level1name = N'Tiers',
     @level2type = N'COLUMN',
-    @level2name = N'NumTiers'
+    @level2name = 'NumObjet'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Nom.',

@@ -4,7 +4,7 @@
     [PersonneId] INT NOT NULL,
     [CodProfil] VARCHAR(100) NOT NULL,
     [DatCreation] DATETIME NOT NULL,
-    [DatModif] DATETIME NULL,
+    [DatModif] DATETIME NOT NULL,
     [ServiceId] INT NULL,
     CONSTRAINT [PK_PersonneProfil] PRIMARY KEY ([Id]), 
     CONSTRAINT [UK_PersonneProfil_CodProfil_PersonneId] UNIQUE ([CodProfil], [PersonneId]), 

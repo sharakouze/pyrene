@@ -6,7 +6,7 @@
     [PreContact] VARCHAR(100) NULL,
     [TxtContact] VARCHAR(2000) NULL,
     [DatCreation] DATETIME NOT NULL,
-    [DatModif] DATETIME NULL,
+    [DatModif] DATETIME NOT NULL,
     [NumTelep] VARCHAR(25) NULL,
     [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,

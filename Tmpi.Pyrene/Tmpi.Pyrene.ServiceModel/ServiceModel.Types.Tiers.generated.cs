@@ -42,7 +42,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[Required]
 		[Index(true)]
 		[ApiMember(Description = "Numéro interne. (unique)", DataType = SwaggerDataTypes.String, IsRequired = true)]
-		public string NumTiers { get; set; }
+		public string NumObjet { get; set; }
 
 		/// <summary>
 		/// Nom.
@@ -53,12 +53,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[ApiMember(Description = "Nom", DataType = SwaggerDataTypes.String, IsRequired = true)]
 		public string NomTiers { get; set; }
 
-		/// <summary>
-		/// Commentaire ou description.
-		/// </summary>
 		[StringLength(2000)]
-		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
-		public string TxtTiers { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String)]
+		public string TxtObjet { get; set; }
 
 		/// <summary>
 		/// Actif ou inactif.
@@ -76,7 +73,8 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Date de dernière modification (immutable).
 		/// </summary>
-		public DateTime? DatModif { get; set; }
+		[Required]
+		public DateTime DatModif { get; set; }
 
 		/// <summary>
 		/// Identifiant de synchronisation externe.

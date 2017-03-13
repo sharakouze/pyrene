@@ -13,7 +13,7 @@ BEGIN TRY
 
 	merge into [Gen].[CiviliteTiers] as target
 	using (
-		select CleCivilite as CleCiviliteTiers,
+		select CleCivilite as Id,
 			ltrim(rtrim(CodCivilite)) as CodCiviliteTiers,
 			ltrim(rtrim(LibCivilite)) as LibCiviliteTiers,
 			ltrim(rtrim(TxtCivilite)) as TxtCiviliteTiers,
@@ -24,12 +24,12 @@ BEGIN TRY
 		from $(SourceSchemaName).[Gen_Trs_Civilite]
 		where CleCivilite>0
 	) as source
-	on (target.CleCiviliteTiers=source.CleCiviliteTiers)
+	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (CleCiviliteTiers, CodCiviliteTiers, LibCiviliteTiers, TxtCiviliteTiers, EstActif, 
+		insert (Id, CodCiviliteTiers, LibCiviliteTiers, TxtCiviliteTiers, EstActif, 
 			DatCreation, DatModif, CodExterne)
-		values (CleCiviliteTiers, CodCiviliteTiers, LibCiviliteTiers, TxtCiviliteTiers, EstActif, 
+		values (Id, CodCiviliteTiers, LibCiviliteTiers, TxtCiviliteTiers, EstActif, 
 			DatCreation, DatModif, CodExterne);
 	
 	SET IDENTITY_INSERT [Gen].[CiviliteTiers] OFF;

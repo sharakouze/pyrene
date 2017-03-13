@@ -1,12 +1,12 @@
 ﻿CREATE TABLE [Gen].[Service]
 (
     [Id] INT NOT NULL IDENTITY,
-    [CodService] VARCHAR(100)  NOT NULL,
-    [LibService] VARCHAR(200) NOT NULL,
-    [TxtService] VARCHAR(2000) NULL,
+    [CodObjet] VARCHAR(100)  NOT NULL,
+    [LibObjet] VARCHAR(200) NOT NULL,
+    [TxtObjet] VARCHAR(2000) NULL,
     [EstActif] BIT NOT NULL,
     [DatCreation] DATETIME NOT NULL,
-    [DatModif] DATETIME NULL,
+    [DatModif] DATETIME NOT NULL,
     [CodExterne] VARCHAR(100) NULL,
     [ServiceParentId] INT NULL,
     [AdrRue] VARCHAR(200) NULL,
@@ -17,7 +17,7 @@
     [NumFax] VARCHAR(25) NULL,
     [NumEmail] VARCHAR(100) NULL,
     CONSTRAINT [PK_Service] PRIMARY KEY ([Id]),
-    CONSTRAINT [UK_Service_CodService] UNIQUE ([CodService]),
+    CONSTRAINT [UK_Service_CodObjet] UNIQUE ([CodObjet]),
     CONSTRAINT [FK_Service_ServiceParentId] FOREIGN KEY ([ServiceParentId]) REFERENCES [Gen].[Service] ([Id]),
 );
 

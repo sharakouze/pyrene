@@ -245,7 +245,7 @@ namespace <#= pocoNamespace #>
         if (AddCustomInterfaces)
         {
             if (table.Columns.Any(c => c.PropertyName == "DatCreation" && c.ProperPropertyType == "DateTime") &&
-                table.Columns.Any(c => c.PropertyName == "DatModif" && c.ProperPropertyType == "DateTime?"))
+                table.Columns.Any(c => c.PropertyName == "DatModif" && c.ProperPropertyType == "DateTime"))
             {
                 lstInterfaces.Add("IAuditable");
             }

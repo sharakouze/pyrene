@@ -68,12 +68,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		[ApiMember(Description = "Prénom", DataType = SwaggerDataTypes.String)]
 		public string PreContact { get; set; }
 
-		/// <summary>
-		/// Commentaire ou description.
-		/// </summary>
 		[StringLength(2000)]
-		[ApiMember(Description = "Commentaire ou description", DataType = SwaggerDataTypes.String)]
-		public string TxtContact { get; set; }
+		[ApiMember(DataType = SwaggerDataTypes.String)]
+		public string TxtObjet { get; set; }
 
 		/// <summary>
 		/// Date de création (immutable).
@@ -84,7 +81,8 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Date de dernière modification (immutable).
 		/// </summary>
-		public DateTime? DatModif { get; set; }
+		[Required]
+		public DateTime DatModif { get; set; }
 
 		/// <summary>
 		/// Numéro de téléphone.
