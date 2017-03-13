@@ -1334,7 +1334,18 @@ public static class ServiceModelUtils
 				currentTable = phCol.ParentTable.ClassName;
 			}
 
-			string strCol = "{" + phCol.PropertyName + "}";
+			string strCol = "";
+
+			var fk = tbl.ForeignKeys.FirstOrDefault(f => f.ReferencedColumns.Contains(phCol));
+			if (fk == null)
+            {
+				strCol = "{" + phCol.PropertyName + "}";
+            }
+			else
+            {
+				var col = fk.FromColumns.FirstOrDefault();
+				strCol = "{" + col.PropertyName + "}";
+            }
 			if (!strRoute.Contains(strCol))
 			{
 				if (removeUselessCols && lastCol.IsPKey && phCol != lastCol)

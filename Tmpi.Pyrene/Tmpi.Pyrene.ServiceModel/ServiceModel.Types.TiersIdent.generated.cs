@@ -21,7 +21,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
 	[CompositeIndex(true, nameof(TiersId), nameof(TypeIdentId))]
-	[Route("/Tiers/{Id}/Ident", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité TiersIdent à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+	[Route("/Tiers/{TiersId}/Ident", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité TiersIdent à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité TiersIdent spécifiée est un doublon")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité TiersIdent spécifiée est introuvable")]
 	public partial class TiersIdent : IHasId<int>, IReturn<TiersIdent>, IPost

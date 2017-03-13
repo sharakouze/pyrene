@@ -23,7 +23,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// <summary>
 	/// Retourne une collection des entités <see cref="FournContact"/>.
 	/// </summary>
-	[Route("/Fourn/{Id}/Contact", HttpVerbs.Get, Summary = "Retourne une collection des entités FournContact", Notes = SwaggerDescriptions.SelectRequestNotes)]
+	[Route("/Fourn/{FournId}/Contact", HttpVerbs.Get, Summary = "Retourne une collection des entités FournContact", Notes = SwaggerDescriptions.SelectRequestNotes)]
 	[ApiResponse(HttpStatusCode.BadRequest, "L'entité FournContact ne contient pas tous les champs demandés")]
 	public partial class SelectFournContact : IReturn<SelectFournContactResponse>, IGet
 	{

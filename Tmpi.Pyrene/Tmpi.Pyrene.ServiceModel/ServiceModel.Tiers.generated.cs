@@ -83,7 +83,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// <summary>
 	/// Retourne une entité <see cref="Tiers"/> à partir de son id.
 	/// </summary>
-	[Route("/Tiers/{Id}", HttpVerbs.Get, Summary = "Retourne une entité Tiers à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
+	[Route("/Tiers/{TiersPrincipalId}", HttpVerbs.Get, Summary = "Retourne une entité Tiers à partir de son id", Notes = SwaggerDescriptions.GetByIdRequestNotes)]
 	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Tiers ne contient pas tous les champs demandés")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité Tiers spécifiée est introuvable")]
 	public partial class GetTiers : IReturn<Tiers>, IGet
@@ -104,7 +104,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// <summary>
 	/// Supprime une entité <see cref="Tiers"/> à partir de son id.
 	/// </summary>
-	[Route("/Tiers/{Id}", HttpVerbs.Delete, Summary = "Supprime une entité Tiers à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
+	[Route("/Tiers/{TiersPrincipalId}", HttpVerbs.Delete, Summary = "Supprime une entité Tiers à partir de son id", Notes = SwaggerDescriptions.DeleteByIdRequestNotes)]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité Tiers spécifiée est introuvable")]
 	public partial class DeleteTiers : IReturnVoid, IDelete
 	{
@@ -119,7 +119,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// <summary>
 	/// Modifie partiellement une entité <see cref="Tiers"/> à partir de son id.
 	/// </summary>
-	[Route("/Tiers/{Id}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Tiers à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
+	[Route("/Tiers/{TiersPrincipalId}", HttpVerbs.Patch, Summary = "Modifie partiellement une entité Tiers à partir de son id", Notes = SwaggerDescriptions.PatchByIdRequestNotes)]
 	[ApiResponse(HttpStatusCode.BadRequest, "L'entité Tiers ne contient pas tous les champs demandés")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité Tiers spécifiée est introuvable")]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité Tiers spécifiée est un doublon")]

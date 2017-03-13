@@ -23,7 +23,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// <summary>
 	/// Retourne une collection des entités <see cref="PersonneSignature"/>.
 	/// </summary>
-	[Route("/Personne/{Id}/Signature", HttpVerbs.Get, Summary = "Retourne une collection des entités PersonneSignature", Notes = SwaggerDescriptions.SelectRequestNotes)]
+	[Route("/Personne/{PersonneId}/Signature", HttpVerbs.Get, Summary = "Retourne une collection des entités PersonneSignature", Notes = SwaggerDescriptions.SelectRequestNotes)]
 	[ApiResponse(HttpStatusCode.BadRequest, "L'entité PersonneSignature ne contient pas tous les champs demandés")]
 	public partial class SelectPersonneSignature : IReturn<SelectPersonneSignatureResponse>, IGet
 	{

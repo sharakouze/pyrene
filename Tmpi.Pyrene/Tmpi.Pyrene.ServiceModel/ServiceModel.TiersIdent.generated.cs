@@ -23,7 +23,7 @@ namespace Tmpi.Pyrene.ServiceModel
 	/// <summary>
 	/// Retourne une collection des entités <see cref="TiersIdent"/>.
 	/// </summary>
-	[Route("/Tiers/{Id}/Ident", HttpVerbs.Get, Summary = "Retourne une collection des entités TiersIdent", Notes = SwaggerDescriptions.SelectRequestNotes)]
+	[Route("/Tiers/{TiersId}/Ident", HttpVerbs.Get, Summary = "Retourne une collection des entités TiersIdent", Notes = SwaggerDescriptions.SelectRequestNotes)]
 	[ApiResponse(HttpStatusCode.BadRequest, "L'entité TiersIdent ne contient pas tous les champs demandés")]
 	public partial class SelectTiersIdent : IReturn<SelectTiersIdentResponse>, IGet
 	{

@@ -21,7 +21,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 {
 	[Schema("Gen")]
 	[CompositeIndex(true, nameof(TiersId), nameof(NomContact))]
-	[Route("/Tiers/{Id}/Contact", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité TiersContact à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
+	[Route("/Tiers/{TiersId}/Contact", HttpVerbs.Post, Summary = "Ajoute ou remplace une entité TiersContact à partir de son id", Notes = SwaggerDescriptions.UpsertRequestNotes)]
 	[ApiResponse(HttpStatusCode.Conflict, "L'entité TiersContact spécifiée est un doublon")]
 	[ApiResponse(HttpStatusCode.NotFound, "L'entité TiersContact spécifiée est introuvable")]
 	public partial class TiersContact : IHasId<int>, IAuditable, IReturn<TiersContact>, IPost
