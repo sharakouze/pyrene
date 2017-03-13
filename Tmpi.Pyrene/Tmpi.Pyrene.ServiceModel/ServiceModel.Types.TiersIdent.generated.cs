@@ -44,7 +44,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// </remarks>
 		[ForeignKey(typeof(Tiers), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du tiers parent", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Identifiant unique du tiers parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int TiersId { get; set; }
 
 		/// <summary>

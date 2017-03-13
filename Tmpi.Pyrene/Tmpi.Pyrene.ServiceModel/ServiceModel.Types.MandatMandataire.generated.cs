@@ -44,7 +44,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// </remarks>
 		[ForeignKey(typeof(Mandat), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du mandat parent", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Identifiant unique du mandat parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int MandatId { get; set; }
 
 		/// <summary>

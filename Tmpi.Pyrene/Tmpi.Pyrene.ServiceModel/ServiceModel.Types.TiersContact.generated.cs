@@ -44,7 +44,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// </remarks>
 		[ForeignKey(typeof(Tiers), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du tiers parent", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Identifiant unique du tiers parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int TiersId { get; set; }
 
 		/// <summary>
@@ -110,8 +110,9 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// <summary>
 		/// Titre de civilité.
 		/// </summary>
-		[ApiMember(Description = "Titre de civilité", DataType = SwaggerDataTypes.Int)]
-		public int? TypCivilite { get; set; }
+		[ApiMember(Description = "Titre de civilité")]
+		[ApiAllowableValues(nameof(TypCivilite), typeof(TypCivilite))]
+		public TypCivilite? TypCivilite { get; set; }
 
 		/// <summary>
 		/// Fonction ou poste du contact chez le tiers.

@@ -97,6 +97,7 @@
         { "Gen.Personne.TypCivilite", "TypCivilite" },
         { "Gen.Fourn.TypModeReglement", "TypModeReglement" },
         { "Gen.FournContact.TypCivilite", "TypCivilite" },
+        { "Gen.TiersContact.TypCivilite", "TypCivilite" },
     };
 
     // Si non null, méthode appliquée sur la collection des tables
@@ -444,13 +445,14 @@ namespace <#= pocoNamespace #>
 				var dicApiMemberProps = ServiceModelUtils.GetApiMemberProps(col, allEnums.Values, lstInterfaces);
 				if (dicApiMemberProps != null)
                 {
-					if (lstPlaceholderCols.Any(c => c.PropertyName == col.PropertyName))
-					{
-						if (!col.IsPKey || col.IsFKey)
-                        {
+					if (colFkey != null && (!col.IsPKey || col.IsFKey))
+                    {
+						bool flag = lstPlaceholderCols.Any(c => colFkey.ReferencedColumns.Contains(c) && !table.PrimaryKey.PKeyColumns.Contains(c));
+						if (flag)
+						{
 							dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
-                        }
-					}
+						}
+                    }
 #>
 		[ApiMember(<#= string.Join(", ", dicApiMemberProps.Select(kvp => kvp.Key + " = " + kvp.Value)) #>)]
 <#

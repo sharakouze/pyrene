@@ -44,7 +44,7 @@ namespace Tmpi.Pyrene.ServiceModel.Types
 		/// </remarks>
 		[ForeignKey(typeof(Compteur), OnDelete = "CASCADE")]
 		[Required]
-		[ApiMember(Description = "Identifiant unique du compteur parent", DataType = SwaggerDataTypes.Int, IsRequired = true)]
+		[ApiMember(Description = "Identifiant unique du compteur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
 		public int CompteurId { get; set; }
 
 		/// <summary>
