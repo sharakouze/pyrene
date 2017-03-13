@@ -1,10 +1,11 @@
-﻿/* REMARQUES :
+﻿/*
+SOURCES :
+- Gen_DivExercice
+
+REMARQUES :
 - Exercice :
 NivExercice devient EstActif.
 */
---
--- EXERCICES
---
 
 DECLARE @ErMessage VARCHAR(MAX);
 DECLARE @ErSeverity INT;
@@ -17,10 +18,10 @@ BEGIN TRY
 
 	merge into [Gen].[Exercice] as target
 	using (
-		select CleExercice,
-			ltrim(rtrim(CodExercice)) as CodExercice,
-			ltrim(rtrim(LibExercice)) as LibExercice,
-			ltrim(rtrim(TxtExercice)) as TxtExercice,
+		select CleExercice as Id,
+			ltrim(rtrim(CodExercice)) as CodObjet,
+			ltrim(rtrim(LibExercice)) as LibObjet,
+			ltrim(rtrim(TxtExercice)) as TxtObjet,
 			case NivExercice
 				when 9 then 1 -- Actif
 				when 1 then 0 -- Inactif
@@ -28,21 +29,19 @@ BEGIN TRY
 				else 0
 			end as EstActif,
 			DatCreation,
-			DatModif,
+			coalesce(DatModif,DatCreation) as DatModif,
 			CleExterne as CodExterne,
 			DatDebut,
 			DatFin
 		from $(SourceSchemaName).[Gen_DivExercice]
 		where CleExercice>0
 	) as source
-	on (target.CleExercice=source.CleExercice)
+	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (CleExercice, CodExercice, LibExercice, TxtExercice, EstActif, 
-			DatCreation, DatModif, CodExterne,
+		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			DatDebut, DatFin)
-		values (CleExercice, CodExercice, LibExercice, TxtExercice, EstActif, 
-			DatCreation, DatModif, CodExterne,
+		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			DatDebut, DatFin);
 	
 	SET IDENTITY_INSERT [Gen].[Exercice] OFF;

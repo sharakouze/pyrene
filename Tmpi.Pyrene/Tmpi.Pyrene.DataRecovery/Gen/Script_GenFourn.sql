@@ -1,12 +1,14 @@
-﻿/* REMARQUES :
+﻿/*
+SOURCES :
+- t_Fourn
+- Gen_FouRib
+
+REMARQUES :
 - Fournisseurs :
 Plusieurs contacts possibles.
 Transformation de RIB en IBAN pour les coordonnées banquaires.
 Suppression de CleProprietaire.
 */
---
--- FOURNISSEURS, CONTACTS et COORDONNEES BANQUAIRES
---
 
 DECLARE @ErMessage VARCHAR(MAX);
 DECLARE @ErSeverity INT;
@@ -19,13 +21,13 @@ BEGIN TRY
 
 	merge into [Gen].[Fourn] as target
 	using (
-		select CleFourn, 
-			ltrim(rtrim(CodFourn)) as CodFourn,
-			ltrim(rtrim(LibFourn)) as LibFourn,
-			ltrim(rtrim(TxtFourn)) as TxtFourn,
+		select CleFourn as Id, 
+			ltrim(rtrim(CodFourn)) as CodObjet,
+			ltrim(rtrim(LibFourn)) as LibObjet,
+			ltrim(rtrim(TxtFourn)) as TxtObjet,
 			1 as EstActif,
 			coalesce(DatSaisie,getdate()) as DatCreation,
-			DatSaisie as DatModif,
+			coalesce(DatSaisie,getdate()) as DatModif,
 			null as CodExterne,
 			AdrRue,
 			AdrCode,
@@ -48,16 +50,14 @@ BEGIN TRY
 		from $(SourceSchemaName).[t_Fourn]
 		where CleFourn>0
 	) as source
-	on (target.CleFourn=source.CleFourn)
+	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (CleFourn, CodFourn, LibFourn, TxtFourn, EstActif, 
-			DatCreation, DatModif, CodExterne,
+		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail, CodCompta, NumClient, 
 			NumTVAIntra, MntFPort, MntFPortGratuit, MntCommandeMin, DelLivraison, DelPaiement, ValNote,
 			TypModeReglement, EstEnvoiMailBonCde)
-		values (CleFourn, CodFourn, LibFourn, TxtFourn, EstActif, 
-			DatCreation, DatModif, CodExterne,
+		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail, CodCompta, NumClient, 
 			NumTVAIntra, MntFPort, MntFPortGratuit, MntCommandeMin, DelLivraison, DelPaiement, ValNote,
 			TypModeReglement, EstEnvoiMailBonCde);

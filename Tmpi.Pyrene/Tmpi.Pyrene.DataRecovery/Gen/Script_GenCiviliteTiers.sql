@@ -1,6 +1,7 @@
-﻿--
--- CIVILITE DES TIERS
---
+﻿/*
+SOURCES :
+- Gen_Trs_Civilite
+*/
 
 DECLARE @ErMessage VARCHAR(MAX);
 DECLARE @ErSeverity INT;
@@ -14,12 +15,12 @@ BEGIN TRY
 	merge into [Gen].[CiviliteTiers] as target
 	using (
 		select CleCivilite as Id,
-			ltrim(rtrim(CodCivilite)) as CodCiviliteTiers,
-			ltrim(rtrim(LibCivilite)) as LibCiviliteTiers,
-			ltrim(rtrim(TxtCivilite)) as TxtCiviliteTiers,
+			ltrim(rtrim(CodCivilite)) as CodObjet,
+			ltrim(rtrim(LibCivilite)) as LibObjet,
+			ltrim(rtrim(TxtCivilite)) as TxtObjet,
 			coalesce(EstActif,1) as EstActif,
 			coalesce(DatModif,getdate()) as DatCreation,
-			DatModif,
+			coalesce(DatModif,getdate()) as DatModif,
 			null as CodExterne
 		from $(SourceSchemaName).[Gen_Trs_Civilite]
 		where CleCivilite>0
@@ -27,10 +28,8 @@ BEGIN TRY
 	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, CodCiviliteTiers, LibCiviliteTiers, TxtCiviliteTiers, EstActif, 
-			DatCreation, DatModif, CodExterne)
-		values (Id, CodCiviliteTiers, LibCiviliteTiers, TxtCiviliteTiers, EstActif, 
-			DatCreation, DatModif, CodExterne);
+		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne)
+		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne);
 	
 	SET IDENTITY_INSERT [Gen].[CiviliteTiers] OFF;
 

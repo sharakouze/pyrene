@@ -1,12 +1,15 @@
-﻿/* REMARQUES :
+﻿/*
+SOURCES :
+- Gen_CptCompteur
+- Gen_Cpt_MNumero
+- Gen_CptValeur
+
+REMARQUES :
 - Compteurs :
 Gen_CptCompteur disparait et est fusionné avec Gen_Cpt_MNumero.
 Doublons ?
-Le modele de numérotation est fusionné en 1 seul champ.
+Le modele de numérotation est fusionné en 1 seul champ (ValFormatNumero).
 */
---
--- COMPTEURS, MODELES DE NUMEROTATION et VALEUR DES COMPTEURS
---
 
 DECLARE @ErMessage VARCHAR(MAX);
 DECLARE @ErSeverity INT;
@@ -19,13 +22,13 @@ BEGIN TRY
 
 	merge into [Gen].[Compteur] as target
 	using (
-		select N.CleMNumero as CleCompteur, 
-			ltrim(rtrim(N.CodMNumero)) as CodCompteur, 
-			ltrim(rtrim(N.LibMNumero)) as LibCompteur, 
-			ltrim(rtrim(N.TxtMNumero)) as TxtCompteur, 
+		select N.CleMNumero as Id, 
+			ltrim(rtrim(N.CodMNumero)) as CodObjet, 
+			ltrim(rtrim(N.LibMNumero)) as LibObjet, 
+			ltrim(rtrim(N.TxtMNumero)) as TxtObjet, 
 			N.EstActif, 
 			N.DatCreation,
-			N.DatModif,
+			coalesce(N.DatModif,N.DatCreation) as DatModif,
 			N.CleExterne as CodExterne,
 			N.TypCompteur, 
 			C.TypPeriodicite, 
@@ -42,14 +45,12 @@ BEGIN TRY
 		where C.CleCompteur>0
 			and N.CleMNumero>0
 	) as source
-	on (target.CleCompteur=source.CleCompteur)
+	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (CleCompteur, CodCompteur, LibCompteur, TxtCompteur, EstActif, 
-			DatCreation, DatModif, CodExterne,
+		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			TypCompteur, TypPeriodicite, CleService, ValFormatNumero)
-		values (CleCompteur, CodCompteur, LibCompteur, TxtCompteur, EstActif, 
-			DatCreation, DatModif, CodExterne,
+		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			TypCompteur, TypPeriodicite, CleService, ValFormatNumero);
 	
 	SET IDENTITY_INSERT [Gen].[Compteur] OFF;
@@ -69,18 +70,18 @@ BEGIN TRY
 
 	merge into [Gen].[CompteurValeur] as target
 	using (
-		select N.CleMNumero as CleCompteur,
+		select N.CleMNumero as CompteurId,
 			V.CodPeriode as ValPeriode,
 			V.ValCompteur
 		from $(SourceSchemaName).[Gen_Cpt_MNumero] N
 		inner join $(SourceSchemaName).[Gen_CptValeur] V on N.CleCompteur=V.CleCompteur
 		where N.CleMNumero>0
 	) as source
-	on (target.CleCompteur=source.CleCompteur and target.ValPeriode=source.ValPeriode)
+	on (target.CompteurId=source.CompteurId and target.ValPeriode=source.ValPeriode)
 	when not matched by target
 	then -- insert new rows
-		insert (CleCompteur, ValPeriode, ValCompteur)
-		values (CleCompteur, ValPeriode, ValCompteur);
+		insert (CompteurId, ValPeriode, ValCompteur)
+		values (CompteurId, ValPeriode, ValCompteur);
 	
 	COMMIT;
 END TRY
