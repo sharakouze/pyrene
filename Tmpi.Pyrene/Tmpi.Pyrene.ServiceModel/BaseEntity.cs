@@ -11,7 +11,7 @@ namespace Tmpi.Pyrene.ServiceModel
         /// Identifiant unique.
         /// </summary>
         [ApiMember(Description = "Identifiant unique", DataType = SwaggerDataTypes.Int, IsRequired = true)]
-        public int CleObjet { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Code.
