@@ -28,10 +28,10 @@ namespace Tmpi.Pyrene.ServiceModel
 	public partial class SelectCompteurValeur : IReturn<SelectCompteurValeurResponse>, IGet
 	{
 		/// <summary>
-		/// Identifiant unique (immutable).
+		/// Identifiant unique du compteur parent.
 		/// </summary>
-		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int Id { get; set; }
+		[ApiMember(Description = "Identifiant unique du compteur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		public int CompteurId { get; set; }
 
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.

@@ -28,10 +28,10 @@ namespace Tmpi.Pyrene.ServiceModel
 	public partial class SelectTiersIdent : IReturn<SelectTiersIdentResponse>, IGet
 	{
 		/// <summary>
-		/// Identifiant unique (immutable).
+		/// Identifiant unique du tiers parent.
 		/// </summary>
-		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int Id { get; set; }
+		[ApiMember(Description = "Identifiant unique du tiers parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		public int TiersId { get; set; }
 
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.

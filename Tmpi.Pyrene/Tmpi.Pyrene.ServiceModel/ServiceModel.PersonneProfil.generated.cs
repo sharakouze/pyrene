@@ -28,10 +28,10 @@ namespace Tmpi.Pyrene.ServiceModel
 	public partial class SelectPersonneProfil : IReturn<SelectPersonneProfilResponse>, IGet
 	{
 		/// <summary>
-		/// Identifiant unique (immutable).
+		/// Identifiant unique de l'utilisateur parent.
 		/// </summary>
-		[ApiMember(Description = "Identifiant unique (immutable)", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
-		public int Id { get; set; }
+		[ApiMember(Description = "Identifiant unique de l'utilisateur parent", DataType = SwaggerDataTypes.Int, IsRequired = true, ParameterType = SwaggerParamTypes.Path)]
+		public int PersonneId { get; set; }
 
 		/// <summary>
 		/// Champs à retourner, ou null pour retourner tous les champs.

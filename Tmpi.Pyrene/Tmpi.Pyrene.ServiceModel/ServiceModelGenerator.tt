@@ -447,8 +447,7 @@ namespace <#= pocoNamespace #>
                 {
 					if (colFkey != null && (!col.IsPKey || col.IsFKey))
                     {
-						bool flag = lstPlaceholderCols.Any(c => colFkey.ReferencedColumns.Contains(c) && !table.PrimaryKey.PKeyColumns.Contains(c));
-						if (flag)
+						if (lstPlaceholderCols.Any(c => colFkey.ReferencedColumns.Contains(c) && !table.PrimaryKey.PKeyColumns.Contains(c)))
 						{
 							dicApiMemberProps.Add("ParameterType", "SwaggerParamTypes.Path");
 						}
@@ -606,13 +605,14 @@ namespace <#= msgNamespace #>
 				{
 					continue; // on ne prend que les colonnes foreign key
 				}
-				var newCol = phCol.Clone();
-				var refCol = table.Columns.FirstOrDefault(c => c.PropertyName == phCol.PropertyName);
-				if (refCol != null)
-                {
-					newCol.Description = refCol.Description;
-                }
 
+				var newCol = phCol.Clone();
+				var fk = table.ForeignKeys.FirstOrDefault(f => f.ReferencedColumns.Contains(phCol));
+				if (fk != null)
+                {
+					var col = fk.FromColumns.FirstOrDefault();
+					newCol = col.Clone();
+                }
 				if (!string.IsNullOrWhiteSpace(newCol.Description))
 				{
 #>
@@ -1336,18 +1336,14 @@ public static class ServiceModelUtils
 				currentTable = phCol.ParentTable.ClassName;
 			}
 
-			string strCol = "";
-
+			var col = phCol;
 			var fk = tbl.ForeignKeys.FirstOrDefault(f => f.ReferencedColumns.Contains(phCol));
-			if (fk == null)
+			if (fk != null)
             {
-				strCol = "{" + phCol.PropertyName + "}";
+				col = fk.FromColumns.FirstOrDefault();
             }
-			else
-            {
-				var col = fk.FromColumns.FirstOrDefault();
-				strCol = "{" + col.PropertyName + "}";
-            }
+
+			string strCol = "{" + col.PropertyName + "}";
 			if (!strRoute.Contains(strCol))
 			{
 				if (removeUselessCols && lastCol.IsPKey && phCol != lastCol)
