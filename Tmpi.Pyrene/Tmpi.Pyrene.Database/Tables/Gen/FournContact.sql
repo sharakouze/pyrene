@@ -13,7 +13,7 @@
     [TypCivilite] INT NULL,
     [LibFonction] VARCHAR(100) NULL,
     CONSTRAINT [PK_FournContact] PRIMARY KEY ([Id]), 
-    CONSTRAINT [UK_FournContact_FournId_NomContact] UNIQUE ([FournId], [NomContact]), 
+    CONSTRAINT [UK_FournContact_FournId_NomContact_PreContact] UNIQUE ([FournId], [NomContact], [PreContact]), 
     CONSTRAINT [FK_FournContact_FournId] FOREIGN KEY ([FournId]) REFERENCES [Gen].[Fourn] ([Id]) ON DELETE CASCADE, 
 );
 

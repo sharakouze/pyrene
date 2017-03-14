@@ -1,10 +1,12 @@
-﻿/* REMARQUES :
+﻿/*
+SOURCES :
+- [Gen_SocPersonne]
+- [Gen_SocPersonneProfil]
+
+REMARQUES :
 - Profils d'utilisateurs :
 Suppression de CleSite. A quoi sert Gen_SocSite ?
 */
---
--- PERSONNES, SIGNATURES et PROFILS UTILISATEURS
---
 
 DECLARE @ErMessage VARCHAR(MAX);
 DECLARE @ErSeverity INT;
@@ -17,14 +19,14 @@ BEGIN TRY
 
 	merge into [Gen].[Personne] as target
 	using (
-		select ClePersonne,
-			ltrim(rtrim(CodPersonne)) as CodPersonne,
+		select ClePersonne as Id,
+			ltrim(rtrim(CodPersonne)) as CodObjet,
 			ltrim(rtrim(NomPersonne)) as NomPersonne,
 			ltrim(rtrim(PrePersonne)) as PrePersonne,
-			null as TxtPersonne,
+			null as TxtObjet,
 			EstActif,
 			DatCreation,
-			DatModif,
+			coalesce(DatModif,DatCreation) as DatModif,
 			CleExterne as CodExterne,
 			nullif(CleGenre,0) as TypCivilite,
 			NumTelep,
@@ -33,14 +35,12 @@ BEGIN TRY
 		from $(SourceSchemaName).[Gen_SocPersonne]
 		where ClePersonne>0
 	) as source
-	on (target.ClePersonne=source.ClePersonne)
+	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (ClePersonne, CodPersonne, NomPersonne, PrePersonne, TxtPersonne, EstActif,
-			DatCreation, DatModif, CodExterne,
+		insert (Id, CodObjet, NomPersonne, PrePersonne, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			TypCivilite, NumTelep, NumFax, NumEmail)
-		values (ClePersonne, CodPersonne, NomPersonne, PrePersonne, TxtPersonne, EstActif, 
-			DatCreation, DatModif, CodExterne,
+		values (Id, CodObjet, NomPersonne, PrePersonne, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			TypCivilite, NumTelep, NumFax, NumEmail);
 	
 	SET IDENTITY_INSERT [Gen].[Personne] OFF;
@@ -60,14 +60,16 @@ BEGIN TRY
 
 	merge into [Gen].[PersonneSignature] as target
 	using (
-		select ClePersonne,
+		select ClePersonne as PersonneId,
 			ImgPersonne as ImgSignature,
 			case lower(ImgFormat)
 				when null then 'image/jpeg'
 				when '' then 'image/jpeg'
 				when 'jpg' then 'image/jpeg'
 				else 'image/'+lower(ImgFormat)
-			end as TypMime
+			end as TypMime,
+			DatCreation,
+			coalesce(DatModif,DatCreation) as DatModif
 		from $(SourceSchemaName).[Gen_SocPersonne]
 		where ClePersonne>0
 			and ImgPersonne is not null
@@ -75,8 +77,8 @@ BEGIN TRY
 	on (target.ClePersonne=source.ClePersonne)
 	when not matched by target
 	then -- insert new rows
-		insert (ClePersonne, ImgSignature, TypMime)
-		values (ClePersonne, ImgSignature, TypMime);
+		insert (PersonneId, ImgSignature, TypMime, DatCreation, DatModif)
+		values (PersonneId, ImgSignature, TypMime, DatCreation, DatModif);
 
 	COMMIT;
 END TRY
@@ -94,22 +96,22 @@ BEGIN TRY
 
 	merge into [Gen].[PersonneProfil] as target
 	using (
-		select PRF.ClePersonneProfil as CleProfil,
-			PRF.ClePersonne,
+		select PRF.ClePersonneProfil as Id,
+			PRF.ClePersonne as PersonneId,
 			PRF.CodProfil,
-			[dbo].[TMP_SOC_TO_SERVICE](PRF.CleSociete, PRF.CleSecteur, PRF.CleService) as CleService,
+			[dbo].[TMP_SOC_TO_SERVICE](PRF.CleSociete, PRF.CleSecteur, PRF.CleService) as ServiceId,
 			P.DatCreation,
-			P.DatModif
+			coalesce(P.DatModif,P.DatCreation) as DatModif
 		from $(SourceSchemaName).[Gen_SocPersonneProfil] PRF
-		inner join $(SourceSchemaName).[Gen_SocPersonne] P on PRF.ClePersonne=P.ClePersonne and P.ClePersonne>0
+		inner join $(SourceSchemaName).[Gen_SocPersonne] P on PRF.ClePersonne=P.ClePersonne
 		where PRF.ClePersonne>0
 	) as source
-	on (target.CleProfil=source.CleProfil)
+	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (CleProfil, ClePersonne, CodProfil, CleService, 
+		insert (Id, PersonneId, CodProfil, ServiceId, 
 			DatCreation, DatModif)
-		values (CleProfil, ClePersonne, CodProfil, CleService, 
+		values (Id, PersonneId, CodProfil, ServiceId, 
 			DatCreation, DatModif);
 	
 	SET IDENTITY_INSERT [Gen].[PersonneProfil] OFF;

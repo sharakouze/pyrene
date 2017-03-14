@@ -1,6 +1,7 @@
-﻿--
--- PROPRIETES DES TIERS
---
+﻿/*
+SOURCES :
+- [Gen_Trs_Propriete]
+*/
 
 DECLARE @ErMessage VARCHAR(MAX);
 DECLARE @ErSeverity INT;
@@ -13,13 +14,13 @@ BEGIN TRY
 
 	merge into [Gen].[ProprieteTiers] as target
 	using (
-		select ClePropriete as CleProprieteTiers,
-			ltrim(rtrim(CodPropriete)) as CodProprieteTiers,
-			ltrim(rtrim(LibPropriete)) as LibProprieteTiers,
-			ltrim(rtrim(TxtPropriete)) as TxtProprieteTiers,
+		select ClePropriete as Id,
+			ltrim(rtrim(CodPropriete)) as CodObjet,
+			ltrim(rtrim(LibPropriete)) as LibObjet,
+			ltrim(rtrim(TxtPropriete)) as TxtObjet,
 			1 as EstActif,
 			getdate() as DatCreation,
-			null as DatModif,
+			getdate() as DatModif,
 			CleExterne as CodExterne
 		from $(SourceSchemaName).[Gen_Trs_Propriete]
 		where ClePropriete>0
@@ -27,10 +28,8 @@ BEGIN TRY
 	on (target.CleProprieteTiers=source.CleProprieteTiers)
 	when not matched by target
 	then -- insert new rows
-		insert (CleProprieteTiers, CodProprieteTiers, LibProprieteTiers, TxtProprieteTiers, EstActif, 
-			DatCreation, DatModif, CodExterne)
-		values (CleProprieteTiers, CodProprieteTiers, LibProprieteTiers, TxtProprieteTiers, EstActif, 
-			DatCreation, DatModif, CodExterne);
+		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne)
+		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne);
 	
 	SET IDENTITY_INSERT [Gen].[ProprieteTiers] OFF;
 

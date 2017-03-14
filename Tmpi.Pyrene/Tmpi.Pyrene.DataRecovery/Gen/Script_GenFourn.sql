@@ -1,7 +1,7 @@
 ﻿/*
 SOURCES :
-- t_Fourn
-- Gen_FouRib
+- [t_Fourn]
+- [Gen_FouRib]
 
 REMARQUES :
 - Fournisseurs :
@@ -179,12 +179,12 @@ BEGIN TRY
 
 	merge into [Gen].[FournContact] as target
 	using (
-		select FC.CleFourn,
+		select FC.CleFourn as FournId,
 			coalesce(FC.NomContact_Clean,FC.NomContact) as NomContact,
 			null as PreContact,
-			null as TxtContact, 
+			null as TxtObjet, 
 			coalesce(F.DatSaisie,getdate()) as DatCreation,
-			F.DatSaisie as DatModif,
+			coalesce(F.DatSaisie,getdate()) as DatModif,
 			FC.NumTelep, 
 			null as NumFax, 
 			FC.NumEmail, 
@@ -192,15 +192,14 @@ BEGIN TRY
 			null as LibFonction
 		from @GenFournContact FC
 		inner join $(SourceSchemaName).[t_Fourn] F on FC.CleFourn=F.CleFourn
+		where FC.CleFourn>0
 	) as source
-	on (target.CleFourn=source.CleFourn and target.NomContact=source.NomContact)
+	on (target.FournId=source.FournId and target.NomContact=source.NomContact and target.PreContact=source.PreContact)
 	when not matched by target
 	then -- insert new rows
-		insert (CleFourn, NomContact, PreContact, TxtContact, 
-			DatCreation, DatModif, 
+		insert (FournId, NomContact, PreContact, TxtObjet, DatCreation, DatModif, 
 			NumTelep, NumFax, NumEmail, TypCivilite, LibFonction)
-		values (CleFourn, NomContact, PreContact, TxtContact, 
-			DatCreation, DatModif, 
+		values (FournId, NomContact, PreContact, TxtObjet, DatCreation, DatModif, 
 			NumTelep, NumFax, NumEmail, TypCivilite, LibFonction);
 
 	COMMIT;
@@ -221,14 +220,14 @@ BEGIN TRY
 
 	merge into [Gen].[FournBanque] as target
 	using (
-		select FR.CleRib as CleBanque,
-			FR.CleFourn as CleFourn,
+		select FR.CleRib as Id,
+			FR.CleFourn as FournId,
 			[dbo].[TMP_BBAN_TO_IBAN](FR.RibBanque+FR.RibGuichet+FR.RibCompte+FR.RibCle, @CodePaysIBAN) as CodIBAN,
 			@CodePaysIBAN as CodBIC,
 			FR.LibBanque as LibEtablissement,
 			FR.EstDefaut,
 			coalesce(F.DatSaisie,getdate()) as DatCreation,
-			F.DatSaisie as DatModif
+			coalesce(F.DatSaisie,getdate()) as DatModif
 		from $(SourceSchemaName).[Gen_FouRib] FR
 		inner join $(SourceSchemaName).[t_Fourn] F on FR.CleFourn=F.CleFourn
 		where FR.CleFourn>0
@@ -237,12 +236,12 @@ BEGIN TRY
 			and FR.RibCompte is not null 
 			and FR.RibCle is not null 
 	) as source
-	on (target.CleBanque=source.CleBanque)
+	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (CleBanque, CleFourn, CodIBAN, CodBIC, LibEtablissement, EstDefaut, 
+		insert (Id, FournId, CodIBAN, CodBIC, LibEtablissement, EstDefaut, 
 			DatCreation, DatModif)
-		values (CleBanque, CleFourn, CodIBAN, CodBIC, LibEtablissement, EstDefaut, 
+		values (Id, FournId, CodIBAN, CodBIC, LibEtablissement, EstDefaut, 
 			DatCreation, DatModif);
 	
 	SET IDENTITY_INSERT [Gen].[FournBanque] OFF;

@@ -3,6 +3,8 @@
     [CompteurId] INT NOT NULL,
     [ValPeriode] INT NOT NULL,
     [ValCompteur] INT NOT NULL,
+	[DatCreation] DATETIME NOT NULL,
+	[DatModif] DATETIME NOT NULL,
     CONSTRAINT [PK_CompteurValeur] PRIMARY KEY ([Id]),
     CONSTRAINT [UK_CompteurValeur_CompteurId_ValPeriode] UNIQUE ([CompteurId], [ValPeriode]),
     CONSTRAINT [FK_CompteurValeur_CompteurId] FOREIGN KEY ([CompteurId]) REFERENCES [Gen].[Compteur] ([Id]) ON DELETE CASCADE,

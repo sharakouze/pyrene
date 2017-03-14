@@ -1,10 +1,12 @@
-﻿/* REMARQUES :
+﻿/* 
+SOURCES :
+- [GenP_MdtMandat]
+- [GenP_MdtMandataire]
+
+REMARQUES :
 - Mandats :
 Suppression de CleLogiciel qu'on retrouve par déduction dans TypMandat.
 */
---
--- MANDATS et MANDATAIRES
---
 
 DECLARE @ErMessage VARCHAR(MAX);
 DECLARE @ErSeverity INT;
@@ -17,13 +19,13 @@ BEGIN TRY
 
 	merge into [Gen].[Mandat] as target
 	using (
-		select CleMandat,
-			ltrim(rtrim(CodMandat)) as CodMandat,
-			ltrim(rtrim(LibMandat)) as LibMandat,
-			ltrim(rtrim(TxtMandat)) as TxtMandat,
+		select CleMandat as Id,
+			ltrim(rtrim(CodMandat)) as CodObjet,
+			ltrim(rtrim(LibMandat)) as LibObjet,
+			ltrim(rtrim(TxtMandat)) as TxtObjet,
 			EstActif,
 			DatCreation,
-			DatModif,
+			coalesce(DatModif,DatCreation) as DatModif,
 			null as CodExterne,
 			TypMandat,
 			NivMandat,
@@ -32,14 +34,12 @@ BEGIN TRY
 		from $(SourceSchemaName).[GenP_MdtMandat]
 		where CleMandat>0
 	) as source
-	on (target.CleMandat=source.CleMandat)
+	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (CleMandat, CodMandat, LibMandat, TxtMandat, EstActif,
-			DatCreation, DatModif, CodExterne,
+		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			TypMandat, NivMandat, NbrSignature, TxtMessage)
-		values (CleMandat, CodMandat, LibMandat, TxtMandat, EstActif, 
-			DatCreation, DatModif, CodExterne,
+		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
 			TypMandat, NivMandat, NbrSignature, TxtMessage);
 	
 	SET IDENTITY_INSERT [Gen].[Mandat] OFF;
@@ -61,23 +61,23 @@ BEGIN TRY
 
 	merge into [Gen].[MandatMandataire] as target
 	using (
-		select MM.CleMdtMandataire as CleMandataire,
-			MM.CleMandat,
-			MM.CleMandataire as ClePersonne,
-			[dbo].[TMP_SOC_TO_SERVICE](MM.CleSociete, MM.CleSecteur, MM.CleService) as CleService,
+		select MM.CleMdtMandataire as Id,
+			MM.CleMandat as MandatId,
+			MM.CleMandataire as PersonneId,
+			[dbo].[TMP_SOC_TO_SERVICE](MM.CleSociete, MM.CleSecteur, MM.CleService) as ServiceId,
 			MM.EstSuspendu,
 			M.DatCreation,
-			M.DatModif
+			coalesce(M.DatModif,M.DatCreation) as DatModif
 		from $(SourceSchemaName).[GenP_MdtMandataire] MM
-		inner join $(SourceSchemaName).[GenP_MdtMandat] M on MM.CleMandat=M.CleMandat 
-		where MM.CleMandat>0
+		inner join $(SourceSchemaName).[GenP_MdtMandat] M on MM.CleMandat=M.CleMandat and MM.CleMandat>0
+		where MM.CleMdtMandataire>0
 	) as source
-	on (target.CleMandataire=source.CleMandataire)
+	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (CleMandataire, CleMandat, ClePersonne, CleService, EstSuspendu,
+		insert (Id, MandatId, PersonneId, ServiceId, EstSuspendu,
 			DatCreation, DatModif)
-		values (CleMandataire, CleMandat, ClePersonne, CleService, EstSuspendu,
+		values (Id, MandatId, PersonneId, ServiceId, EstSuspendu,
 			DatCreation, DatModif);
 	
 	SET IDENTITY_INSERT [Gen].[MandatMandataire] OFF;

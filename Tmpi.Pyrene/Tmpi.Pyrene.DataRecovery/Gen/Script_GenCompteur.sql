@@ -1,8 +1,8 @@
 ﻿/*
 SOURCES :
-- Gen_CptCompteur
-- Gen_Cpt_MNumero
-- Gen_CptValeur
+- [Gen_CptCompteur]
+- [Gen_Cpt_MNumero]
+- [Gen_CptValeur]
 
 REMARQUES :
 - Compteurs :
@@ -32,7 +32,7 @@ BEGIN TRY
 			N.CleExterne as CodExterne,
 			N.TypCompteur, 
 			C.TypPeriodicite, 
-			[dbo].[TMP_SOC_TO_SERVICE](null, coalesce(N.CleSecteur,C.CleSecteur), coalesce(N.CleService,C.CleService)) as CleService,
+			[dbo].[TMP_SOC_TO_SERVICE](null, coalesce(N.CleSecteur,C.CleSecteur), coalesce(N.CleService,C.CleService)) as ServiceId,
 			coalesce(N.ValPrefixe1,'')
 				+coalesce('{date:'+N.ValDate1+'}','')
 				+coalesce(N.ValPrefixe2,'')
@@ -40,18 +40,17 @@ BEGIN TRY
 				+coalesce(N.ValSuffixe1,'')
 				+coalesce('{date:'+N.ValDate2+'}','')
 				+coalesce(N.ValSuffixe2,'') as ValFormatNumero
-		from $(SourceSchemaName).[Gen_CptCompteur] C
-		inner join $(SourceSchemaName).[Gen_Cpt_MNumero] N on C.CleCompteur=N.CleCompteur
-		where C.CleCompteur>0
-			and N.CleMNumero>0
+		from $(SourceSchemaName).[Gen_Cpt_MNumero] N 
+		inner join $(SourceSchemaName).[Gen_CptCompteur] C on N.CleCompteur=C.CleCompteur and C.CleCompteur>0
+		where N.CleMNumero>0
 	) as source
 	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
 		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
-			TypCompteur, TypPeriodicite, CleService, ValFormatNumero)
+			TypCompteur, TypPeriodicite, ServiceId, ValFormatNumero)
 		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
-			TypCompteur, TypPeriodicite, CleService, ValFormatNumero);
+			TypCompteur, TypPeriodicite, ServiceId, ValFormatNumero);
 	
 	SET IDENTITY_INSERT [Gen].[Compteur] OFF;
 
@@ -72,16 +71,19 @@ BEGIN TRY
 	using (
 		select N.CleMNumero as CompteurId,
 			V.CodPeriode as ValPeriode,
-			V.ValCompteur
-		from $(SourceSchemaName).[Gen_Cpt_MNumero] N
-		inner join $(SourceSchemaName).[Gen_CptValeur] V on N.CleCompteur=V.CleCompteur
-		where N.CleMNumero>0
+			V.ValCompteur,
+			getdate() as DatCreation,
+			getdate() as DatModif
+		from $(SourceSchemaName).[Gen_CptValeur] V
+		inner join $(SourceSchemaName).[Gen_Cpt_MNumero] N on V.CleCompteur=N.CleCompteur
+		where V.CleCompteur>0
+			and N.CleMNumero>0
 	) as source
 	on (target.CompteurId=source.CompteurId and target.ValPeriode=source.ValPeriode)
 	when not matched by target
 	then -- insert new rows
-		insert (CompteurId, ValPeriode, ValCompteur)
-		values (CompteurId, ValPeriode, ValCompteur);
+		insert (CompteurId, ValPeriode, ValCompteur, DatCreation, DatModif)
+		values (CompteurId, ValPeriode, ValCompteur, DatCreation, DatModif);
 	
 	COMMIT;
 END TRY

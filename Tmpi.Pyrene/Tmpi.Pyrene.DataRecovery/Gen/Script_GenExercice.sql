@@ -1,6 +1,6 @@
 ﻿/*
 SOURCES :
-- Gen_DivExercice
+- [Gen_DivExercice]
 
 REMARQUES :
 - Exercice :
