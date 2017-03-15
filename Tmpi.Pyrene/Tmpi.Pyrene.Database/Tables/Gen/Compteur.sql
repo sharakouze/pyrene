@@ -8,13 +8,13 @@
 	[DatCreation] DATETIME NOT NULL,
 	[DatModif] DATETIME NOT NULL,
 	[CodExterne] VARCHAR(100) NULL,
-	[TypPeriodicite] INT NOT NULL,
 	[TypCompteur] INT NOT NULL,
 	[ServiceId] INT NULL,
+    [EstDefaut] BIT NOT NULL,
+	[TypPeriodicite] INT NOT NULL,
 	[ValFormatNumero] VARCHAR(100) NOT NULL,
 	CONSTRAINT [PK_Compteur] PRIMARY KEY ([Id]),
 	CONSTRAINT [UK_Compteur_CodObjet] UNIQUE ([CodObjet]),
-	CONSTRAINT [UK_Compteur_TypCompteur_ServiceId] UNIQUE ([TypCompteur], [ServiceId]),
 	CONSTRAINT [FK_Compteur_ServiceId] FOREIGN KEY ([ServiceId]) REFERENCES [Gen].[Service] ([Id]),
 );
 
@@ -55,3 +55,12 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level1name = N'Compteur',
     @level2type = N'COLUMN',
     @level2name = 'ServiceId'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'Indique si le compteur est celui par défaut pour ce type et service.',
+    @level0type = N'SCHEMA',
+    @level0name = N'Gen',
+    @level1type = N'TABLE',
+    @level1name = N'Compteur',
+    @level2type = N'COLUMN',
+    @level2name = N'EstDefaut'

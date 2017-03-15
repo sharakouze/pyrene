@@ -28,7 +28,7 @@ BEGIN TRY
 			S.DatCreation,
 			coalesce(S.DatModif,S.DatCreation) as DatModif,
 			S.CleExterne as CodExterne,
-			null as CleServiceParent,
+			null as ServiceParentId,
 			S.AdrRue,
 			S.AdrCode,
 			S.AdrVille as AdrCommune,
@@ -48,7 +48,7 @@ BEGIN TRY
 			SEC.DatCreation,
 			coalesce(SEC.DatModif,SEC.DatCreation) as DatModif,
 			SEC.CleExterne as CodExterne,
-			[dbo].[TMP_SOC_TO_SERVICE](SOC.CleSociete, null, null) as CleServiceParent,
+			[dbo].[TMP_SOC_TO_SERVICE](SOC.CleSociete, null, null) as ServiceParentId,
 			SEC.AdrRue,
 			SEC.AdrCode,
 			SEC.AdrVille as AdrCommune,
@@ -68,7 +68,7 @@ BEGIN TRY
 			SVC.DatCreation,
 			coalesce(SVC.DatModif,SVC.DatCreation) as DatModif,
 			SVC.CleExterne as CodExterne,
-			[dbo].[TMP_SOC_TO_SERVICE](null, SEC.CleSecteur, null) as CleServiceParent,
+			[dbo].[TMP_SOC_TO_SERVICE](null, SEC.CleSecteur, null) as ServiceParentId,
 			SVC.AdrRue,
 			SVC.AdrCode,
 			SVC.AdrVille as AdrCommune,
@@ -84,9 +84,9 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
-			CleServiceParent, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail)
+			ServiceParentId, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail)
 		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
-			CleServiceParent, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail);
+			ServiceParentId, AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail);
 	
 	SET IDENTITY_INSERT [Gen].[Service] OFF;
 
@@ -97,7 +97,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 GO

@@ -13,11 +13,15 @@
     [TypCivilite] INT NULL,
     [LibFonction] VARCHAR(100) NULL,
     CONSTRAINT [PK_FournContact] PRIMARY KEY ([Id]), 
-    CONSTRAINT [UK_FournContact_FournId_NomContact_PreContact] UNIQUE ([FournId], [NomContact], [PreContact]), 
     CONSTRAINT [FK_FournContact_FournId] FOREIGN KEY ([FournId]) REFERENCES [Gen].[Fourn] ([Id]) ON DELETE CASCADE, 
 );
 
 GO
+
+CREATE INDEX [IX_FournContact_FournId] ON [Gen].[FournContact] ([FournId]);
+
+GO
+
 EXEC sp_addextendedproperty @name = N'MS_Description',
     @value = N'Titre de civilité.',
     @level0type = N'SCHEMA',

@@ -25,7 +25,7 @@ BEGIN TRY
 		from $(SourceSchemaName).[Gen_Trs_Propriete]
 		where ClePropriete>0
 	) as source
-	on (target.CleProprieteTiers=source.CleProprieteTiers)
+	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
 		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne)
@@ -40,7 +40,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 GO

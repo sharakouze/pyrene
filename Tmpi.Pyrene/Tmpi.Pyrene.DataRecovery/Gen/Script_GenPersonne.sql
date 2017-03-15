@@ -52,7 +52,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 BEGIN TRY
@@ -74,7 +74,7 @@ BEGIN TRY
 		where ClePersonne>0
 			and ImgPersonne is not null
 	) as source
-	on (target.ClePersonne=source.ClePersonne)
+	on (target.PersonneId=source.PersonneId)
 	when not matched by target
 	then -- insert new rows
 		insert (PersonneId, ImgSignature, TypMime, DatCreation, DatModif)
@@ -86,7 +86,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 BEGIN TRY
@@ -98,7 +98,7 @@ BEGIN TRY
 	using (
 		select PRF.ClePersonneProfil as Id,
 			PRF.ClePersonne as PersonneId,
-			PRF.CodProfil,
+			PRF.CodProfil as CodObjet,
 			[dbo].[TMP_SOC_TO_SERVICE](PRF.CleSociete, PRF.CleSecteur, PRF.CleService) as ServiceId,
 			P.DatCreation,
 			coalesce(P.DatModif,P.DatCreation) as DatModif
@@ -109,10 +109,8 @@ BEGIN TRY
 	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (Id, PersonneId, CodProfil, ServiceId, 
-			DatCreation, DatModif)
-		values (Id, PersonneId, CodProfil, ServiceId, 
-			DatCreation, DatModif);
+		insert (Id, PersonneId, CodObjet, ServiceId, DatCreation, DatModif)
+		values (Id, PersonneId, CodObjet, ServiceId, DatCreation, DatModif);
 	
 	SET IDENTITY_INSERT [Gen].[PersonneProfil] OFF;
 
@@ -123,7 +121,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 GO

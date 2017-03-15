@@ -51,7 +51,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 BEGIN TRY
@@ -89,7 +89,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 GO

@@ -2,6 +2,8 @@
 -- START
 --
 
+--:on error exit
+
 --
 -- CONSTANTES POUR LA REPRISE
 --
@@ -15,7 +17,6 @@ GO
 
 SET XACT_ABORT ON;
 SET NOCOUNT ON;
-SET NOEXEC OFF;
 
 GO
 

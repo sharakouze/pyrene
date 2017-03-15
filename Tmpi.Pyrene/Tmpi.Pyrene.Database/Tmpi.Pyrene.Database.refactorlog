@@ -1911,4 +1911,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="TxtObjet" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="f8a3d4db-e646-4c02-bdff-6f8481cb7085" ChangeDateTime="03/15/2017 14:09:16">
+    <Property Name="ElementName" Value="[Gen].[PersonneProfil].[CodProfil]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Gen].[PersonneProfil]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CodObjet" />
+  </Operation>
 </Operations>

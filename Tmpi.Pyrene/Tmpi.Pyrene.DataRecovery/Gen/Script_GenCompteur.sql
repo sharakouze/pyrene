@@ -7,8 +7,8 @@ SOURCES :
 REMARQUES :
 - Compteurs :
 Gen_CptCompteur disparait et est fusionné avec Gen_Cpt_MNumero.
-Doublons ?
 Le modele de numérotation est fusionné en 1 seul champ (ValFormatNumero).
+Ajout de EstDefaut pour choisir le bon compteur dans le cas d'un TypCompteur en doublon.
 */
 
 DECLARE @ErMessage VARCHAR(MAX);
@@ -32,7 +32,8 @@ BEGIN TRY
 			N.CleExterne as CodExterne,
 			N.TypCompteur, 
 			C.TypPeriodicite, 
-			[dbo].[TMP_SOC_TO_SERVICE](null, coalesce(N.CleSecteur,C.CleSecteur), coalesce(N.CleService,C.CleService)) as ServiceId,
+			[dbo].[TMP_SOC_TO_SERVICE](null, N.CleSecteur, N.CleService) as ServiceId,
+			0 as EstDefaut,
 			coalesce(N.ValPrefixe1,'')
 				+coalesce('{date:'+N.ValDate1+'}','')
 				+coalesce(N.ValPrefixe2,'')
@@ -48,11 +49,20 @@ BEGIN TRY
 	when not matched by target
 	then -- insert new rows
 		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
-			TypCompteur, TypPeriodicite, ServiceId, ValFormatNumero)
+			TypCompteur, TypPeriodicite, ServiceId, EstDefaut, ValFormatNumero)
 		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne,
-			TypCompteur, TypPeriodicite, ServiceId, ValFormatNumero);
+			TypCompteur, TypPeriodicite, ServiceId, EstDefaut, ValFormatNumero);
 	
 	SET IDENTITY_INSERT [Gen].[Compteur] OFF;
+
+	-- Maj du compteur par défaut par groupe TypCompteur/ServiceId
+	update [Gen].[Compteur]
+	set EstDefaut=1
+	where Id in (
+		select min(Id) as Id
+		from [Gen].[Compteur]
+		group by TypCompteur, ServiceId
+	);
 
 	COMMIT;
 END TRY
@@ -61,7 +71,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 BEGIN TRY
@@ -72,8 +82,8 @@ BEGIN TRY
 		select N.CleMNumero as CompteurId,
 			V.CodPeriode as ValPeriode,
 			V.ValCompteur,
-			getdate() as DatCreation,
-			getdate() as DatModif
+			N.DatCreation,
+			coalesce(N.DatModif,N.DatCreation) as DatModif
 		from $(SourceSchemaName).[Gen_CptValeur] V
 		inner join $(SourceSchemaName).[Gen_Cpt_MNumero] N on V.CleCompteur=N.CleCompteur
 		where V.CleCompteur>0
@@ -91,7 +101,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 GO

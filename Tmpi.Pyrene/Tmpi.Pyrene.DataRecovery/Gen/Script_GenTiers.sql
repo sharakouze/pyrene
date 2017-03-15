@@ -1,6 +1,11 @@
-﻿--
--- TIERS
---
+﻿/*
+SOURCES :
+- [Gen_TrsTiers]
+- [Gen_TrsTiersIdent]
+
+REMARQUES :
+ClePropriete1, ClePropriete et ClePropriete3 vont dans la table enfant TiersPropriete.
+*/
 
 DECLARE @ErMessage VARCHAR(MAX);
 DECLARE @ErSeverity INT;
@@ -33,17 +38,11 @@ BEGIN TRY
 			T1.AdrVilleSuite as AdrCommuneSuite,
 			T1.CodCompta,
 			T2.CleTiers as CleTiersPrincipal,
-			C.CleCivilite as CleCiviliteTiers,
-			P1.ClePropriete as CleProprieteTiers1,
-			P2.ClePropriete as CleProprieteTiers2,
-			P3.ClePropriete as CleProprieteTiers3
+			C.CleCivilite as CleCiviliteTiers
 		from $(SourceSchemaName).[Gen_TrsTiers] T1
 		left join $(SourceSchemaName).[Gen_Pays] P on T1.ClePays=P.ClePays and P.ClePays>0
 		left join $(SourceSchemaName).[Gen_TrsTiers] T2 on T1.ClePointP=T2.CleTiers and T2.CleTiers>0
 		left join $(SourceSchemaName).[Gen_Trs_Civilite] C on T1.CleCivilite=C.CleCivilite and C.CleCivilite>0
-		left join $(SourceSchemaName).[Gen_Trs_Propriete] P1 on T1.ClePropriete1=P1.ClePropriete and P1.ClePropriete>0
-		left join $(SourceSchemaName).[Gen_Trs_Propriete] P2 on T1.ClePropriete2=P2.ClePropriete and P2.ClePropriete>0
-		left join $(SourceSchemaName).[Gen_Trs_Propriete] P3 on T1.ClePropriete3=P3.ClePropriete and P3.ClePropriete>0
 		where T1.CleTiers>0
 	) as source
 	on (target.CleTiers=source.CleTiers)
@@ -52,11 +51,11 @@ BEGIN TRY
 		insert (CleTiers, NumTiers, NomTiers, TxtTiers, EstActif, 
 			DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail, AdrLatitude, AdrLongitude, AdrCommuneSuite,
-			CodCompta, CleTiersPrincipal, CleCiviliteTiers, CleProprieteTiers1, CleProprieteTiers2, CleProprieteTiers3)
+			CodCompta, CleTiersPrincipal, CleCiviliteTiers)
 		values (CleTiers, NumTiers, NomTiers, TxtTiers, EstActif, 
 			DatCreation, DatModif, CodExterne,
 			AdrRue, AdrCode, AdrCommune, AdrPays, NumTelep, NumFax, NumEmail, AdrLatitude, AdrLongitude, AdrCommuneSuite,
-			CodCompta, CleTiersPrincipal, CleCiviliteTiers, CleProprieteTiers1, CleProprieteTiers2, CleProprieteTiers3);
+			CodCompta, CleTiersPrincipal, CleCiviliteTiers);
 	
 	SET IDENTITY_INSERT [Gen].[Tiers] OFF;
 
@@ -67,10 +66,49 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
-GO
+BEGIN TRY
+	BEGIN TRANSACTION;
+
+	merge into [Gen].[TiersPropriete] as target
+	using (
+		select T.CleTiers as TiersId,
+			P1.ClePropriete as ProprieteTiersId
+		from $(SourceSchemaName).[Gen_TrsTiers] T
+		left join $(SourceSchemaName).[Gen_Trs_Propriete] P1 on T.ClePropriete1=P1.ClePropriete and P1.ClePropriete>0
+		where T.CleTiers>0
+			and P1.ClePropriete is not null
+		union
+		select T.CleTiers as TiersId,
+			P2.ClePropriete as ProprieteTiersId
+		from $(SourceSchemaName).[Gen_TrsTiers] T
+		left join $(SourceSchemaName).[Gen_Trs_Propriete] P2 on T.ClePropriete2=P2.ClePropriete and P2.ClePropriete>0
+		where T.CleTiers>0
+			and P2.ClePropriete is not null
+		union
+		select T.CleTiers as TiersId,
+			P3.ClePropriete as ProprieteTiersId
+		from $(SourceSchemaName).[Gen_TrsTiers] T
+		left join $(SourceSchemaName).[Gen_Trs_Propriete] P3 on T.ClePropriete3=P3.ClePropriete and P3.ClePropriete>0
+		where T.CleTiers>0
+			and P3.ClePropriete is not null
+	) as source
+	on (target.TiersId=source.TiersId and target.ProprieteTiersId=source.ProprieteTiersId)
+	when not matched by target
+	then -- insert new rows
+		insert (TiersId, ProprieteTiersId)
+		values (TiersId, ProprieteTiersId);
+
+	COMMIT;
+END TRY
+BEGIN CATCH
+	-- THROW
+	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
+	RAISERROR(@ErMessage, @ErSeverity, @ErState);
+	RETURN;
+END CATCH;
 
 BEGIN TRY
 	BEGIN TRANSACTION;
@@ -177,10 +215,10 @@ BEGIN TRY
 
 	merge into [Gen].[TiersContact] as target
 	using (
-		select FC.CleTiers,
+		select FC.CleTiers as TiersId,
 			coalesce(FC.NomContact_Clean,FC.NomContact) as NomContact,
 			null as PreContact,
-			null as TxtContact, 
+			null as TxtObjet, 
 			coalesce(F.DatSaisie,getdate()) as DatCreation,
 			F.DatSaisie as DatModif,
 			FC.NumTelep, 
@@ -191,14 +229,12 @@ BEGIN TRY
 		from @GenTiersContact FC
 		inner join $(SourceSchemaName).[t_Tiers] F on FC.CleTiers=F.CleTiers
 	) as source
-	on (target.CleTiers=source.CleTiers and target.NomContact=source.NomContact)
+	on (target.TiersId=source.TiersId and target.NomContact=source.NomContact)
 	when not matched by target
 	then -- insert new rows
-		insert (CleTiers, NomContact, PreContact, TxtContact, 
-			DatCreation, DatModif, 
+		insert (TiersId, NomContact, PreContact, TxtObjet, DatCreation, DatModif, 
 			NumTelep, NumFax, NumEmail, TypCivilite, LibFonction)
-		values (CleTiers, NomContact, PreContact, TxtContact, 
-			DatCreation, DatModif, 
+		values (TiersId, NomContact, PreContact, TxtObjet, DatCreation, DatModif, 
 			NumTelep, NumFax, NumEmail, TypCivilite, LibFonction);
 
 	COMMIT;
@@ -207,7 +243,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 BEGIN TRY
@@ -217,25 +253,18 @@ BEGIN TRY
 
 	merge into [Gen].[TiersIdent] as target
 	using (
-		select CleCivilite as CleCiviliteTiers,
-			ltrim(rtrim(CodCivilite)) as CodCiviliteTiers,
-			ltrim(rtrim(LibCivilite)) as LibCiviliteTiers,
-			ltrim(rtrim(TxtCivilite)) as TxtCiviliteTiers,
-			coalesce(EstActif,1) as EstActif,
-			coalesce(DatModif,getdate()) as DatCreation,
-			DatModif,
-			null as CodExterne
+		select CleTiers as TiersId,
+			CleTypIdent as TypeIdentId,
+			NumIdent
 		from $(SourceSchemaName).[Gen_TrsTiersIdent]
 		where CleTiers>0
 			and NumIdent is not null
 	) as source
-	on (target.CleTypIdent=source.CleTypIdent)
+	on (target.TiersId=source.TiersId and target.TypeIdentId=source.TypeIdentId)
 	when not matched by target
 	then -- insert new rows
-		insert (CleCiviliteTiers, CodCiviliteTiers, LibCiviliteTiers, TxtCiviliteTiers, EstActif, 
-			DatCreation, DatModif, CodExterne)
-		values (CleCiviliteTiers, CodCiviliteTiers, LibCiviliteTiers, TxtCiviliteTiers, EstActif, 
-			DatCreation, DatModif, CodExterne);
+		insert (TiersId, TypeIdentId, NumIdent)
+		values (TiersId, TypeIdentId, NumIdent);
 	
 	SET IDENTITY_INSERT [Gen].[TiersIdent] OFF;
 
@@ -246,7 +275,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 GO

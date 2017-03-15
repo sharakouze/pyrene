@@ -33,7 +33,7 @@ EXEC sp_addextendedproperty @name = N'MS_Description',
     @level2name = N'LibEtablissement'
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',
-    @value = N'Si true, les coordonnées bancaires sont celles par défaut pour le fournisseur.',
+    @value = N'Indique si les coordonnées bancaires sont celles par défaut pour le fournisseur.',
     @level0type = N'SCHEMA',
     @level0name = N'Gen',
     @level1type = N'TABLE',

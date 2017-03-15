@@ -1,6 +1,7 @@
-﻿--
--- TVA
---
+﻿/*
+SOURCES :
+- [Gen_DivTVA]
+*/
 
 DECLARE @ErMessage VARCHAR(MAX);
 DECLARE @ErSeverity INT;
@@ -13,25 +14,25 @@ BEGIN TRY
 
 	merge into [Gen].[TVA] as target
 	using (
-		select CleTVA,
-			ltrim(rtrim(CodTVA)) as CodTVA,
-			ltrim(rtrim(LibTVA)) as LibTVA,
-			ltrim(rtrim(TxtTVA)) as TxtTVA,
+		select CleTVA as Id,
+			ltrim(rtrim(CodTVA)) as CodObjet,
+			ltrim(rtrim(LibTVA)) as LibObjet,
+			ltrim(rtrim(TxtTVA)) as TxtObjet,
 			EstActif,
 			DatCreation,
-			DatModif,
+			coalesce(DatModif,DatCreation) as DatModif,
 			CleExterne as CodExterne,
 			TauTVA
 		from $(SourceSchemaName).[Gen_DivTVA]
 		where CleTVA>0
 	) as source
-	on (target.CleTVA=source.CleTVA)
+	on (target.Id=source.Id)
 	when not matched by target
 	then -- insert new rows
-		insert (CleTVA, CodTVA, LibTVA, TxtTVA, EstActif, 
-			DatCreation, DatModif, CodExterne, TauTVA)
-		values (CleTVA, CodTVA, LibTVA, TxtTVA, EstActif, 
-			DatCreation, DatModif, CodExterne, TauTVA);
+		insert (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne, 
+			TauTVA)
+		values (Id, CodObjet, LibObjet, TxtObjet, EstActif, DatCreation, DatModif, CodExterne, 
+			TauTVA);
 	
 	SET IDENTITY_INSERT [Gen].[TVA] OFF;
 
@@ -42,7 +43,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 GO

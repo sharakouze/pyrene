@@ -71,7 +71,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 BEGIN TRY
@@ -194,7 +194,7 @@ BEGIN TRY
 		inner join $(SourceSchemaName).[t_Fourn] F on FC.CleFourn=F.CleFourn
 		where FC.CleFourn>0
 	) as source
-	on (target.FournId=source.FournId and target.NomContact=source.NomContact and target.PreContact=source.PreContact)
+	on (target.FournId=source.FournId and target.NomContact=source.NomContact)
 	when not matched by target
 	then -- insert new rows
 		insert (FournId, NomContact, PreContact, TxtObjet, DatCreation, DatModif, 
@@ -208,7 +208,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 BEGIN TRY
@@ -253,7 +253,7 @@ BEGIN CATCH
 	-- THROW
 	SELECT @ErMessage=ERROR_MESSAGE(), @ErSeverity=ERROR_SEVERITY(), @ErState=ERROR_STATE();
 	RAISERROR(@ErMessage, @ErSeverity, @ErState);
-	SET NOEXEC ON;
+	RETURN;
 END CATCH;
 
 GO

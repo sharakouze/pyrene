@@ -108,5 +108,6 @@
     <Build Include="Tables\Gen\TypeIdent.sql" />
     <Build Include="Tables\Gen\CiviliteTiers.sql" />
     <Build Include="Tables\Gen\ProprieteTiers.sql" />
+    <Build Include="Tables\Gen\TiersPropriete.sql" />
   </ItemGroup>
 </Project>
